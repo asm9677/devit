@@ -209,7 +209,7 @@
 		WHERE lecture_id = #{lectureId}
 	</update>
 	
-		<!-- 프로젝트 기본 정보 수정 -->
+	<!-- 프로젝트 기본 정보 수정 -->
 	<update id="updateContentLecture">
 		UPDATE lecture
 		SET
