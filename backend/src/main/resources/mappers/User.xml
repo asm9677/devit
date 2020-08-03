@@ -54,17 +54,20 @@
 		SELECT 
 		    a.user_id userId, a.nickname, a.email
 		FROM
-		    (SELECT 
-		        user_id, nickname, email, nickname AS val
-		    FROM
-		        user
+		    (SELECT user_id, nickname, email, nickname AS val
+		    FROM user
 		    WHERE
-		        UPPER(nickname) LIKE CONCAT(UPPER(#{search}), '%') UNION ALL SELECT 
-		        user_id, nickname, email, email AS val
-		    FROM
-		        user
+		        UPPER(nickname) LIKE CONCAT(UPPER(#{search}), '%')
+		    UNION ALL
+		    SELECT user_id, nickname, email, email AS val
+		    FROM user
 		    WHERE
-		        UPPER(email) LIKE CONCAT(UPPER(#{search}), '%')) a
+		        UPPER(email) LIKE CONCAT(UPPER(#{search}), '%')
+		    ) a
+		WHERE
+		    NOT EXISTS( SELECT 1
+		        FROM lecture_auth la
+		        WHERE la.user_id = a.user_id  AND la.lecture_id = #{lectureId})
 		GROUP BY a.user_id , a.nickname , a.email
 		ORDER BY a.val
 		LIMIT 0 , 10;
