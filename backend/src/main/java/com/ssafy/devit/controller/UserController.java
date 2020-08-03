@@ -51,15 +51,15 @@ public class UserController {
 
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
-	@GetMapping("/nickname/{nickname}")
+	@GetMapping("/{search}")
 	@ApiOperation(value = "입력으로 준 닉네임이 포함 되어있는 회원 정보를 가져옴")
-	public ResponseEntity<CommonResponse> getUsersByLikeNickname(@PathVariable String nickname){
+	public ResponseEntity<CommonResponse> getUsersByLikeNickname(@PathVariable String search){
 		log.info(">> Load : GetUsersByLikeNickname <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		
 		try {
-			result.result = userService.getUsersByLikeNickname(nickname);
+			result.result = userService.getUsersByLikeSearchText(search);
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
