@@ -2,6 +2,8 @@ package com.ssafy.devit.model.lecture;
 
 public class LecturesResponse {
 	private long lectureId;
+	private long commonId;
+	private long userId;
 	private String title;
 	private String thumbnailUrl;
 	private String nickname;
@@ -15,9 +17,12 @@ public class LecturesResponse {
 
 	}
 
-	public LecturesResponse(long lectureId, String title, String thumbnailUrl, String nickname, int lectureCount,
-			int viewCount, int likeCount, String tagName, boolean userLikeYn) {
+	public LecturesResponse(long lectureId, long commonId, long userId, String title, String thumbnailUrl,
+			String nickname, int lectureCount, int viewCount, int likeCount, String tagName, boolean userLikeYn) {
+		super();
 		this.lectureId = lectureId;
+		this.commonId = commonId;
+		this.userId = userId;
 		this.title = title;
 		this.thumbnailUrl = thumbnailUrl;
 		this.nickname = nickname;
@@ -34,6 +39,22 @@ public class LecturesResponse {
 
 	public void setLectureId(long lectureId) {
 		this.lectureId = lectureId;
+	}
+
+	public long getCommonId() {
+		return commonId;
+	}
+
+	public void setCommonId(long commonId) {
+		this.commonId = commonId;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 	public String getTitle() {
@@ -102,9 +123,10 @@ public class LecturesResponse {
 
 	@Override
 	public String toString() {
-		return "LectureResponse [lectureId=" + lectureId + ", title=" + title + ", thumbnailUrl=" + thumbnailUrl
-				+ ", nickname=" + nickname + ", lectureCount=" + lectureCount + ", viewCount=" + viewCount
-				+ ", likeCount=" + likeCount + ", tagName=" + tagName + ", userLikeYn=" + userLikeYn + "]";
+		return "LecturesResponse [lectureId=" + lectureId + ", commonId=" + commonId + ", userId=" + userId + ", title="
+				+ title + ", thumbnailUrl=" + thumbnailUrl + ", nickname=" + nickname + ", lectureCount=" + lectureCount
+				+ ", viewCount=" + viewCount + ", likeCount=" + likeCount + ", tagName=" + tagName + ", userLikeYn="
+				+ userLikeYn + "]";
 	}
 
 }

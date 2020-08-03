@@ -8,14 +8,22 @@ import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
 import com.ssafy.devit.model.lecture.TagResponse;
-import com.ssafy.devit.model.request.LectrueRequest;
+import com.ssafy.devit.model.request.LectureRequest;
 
 public interface LectureRepository {
 	public void insertCommonId() throws Exception;
 
 	public int selectCommonId() throws Exception;
 	
-	public void insertLecture(LectrueRequest lecture) throws Exception;
+//	public void insertLecture(LectrueRequest lecture) throws Exception;
+	
+	public void insertLecture(@Param("userId") long userId, @Param("commonId") long commonId) throws Exception;
+	
+	public LectureOneResponse selectLectureId(@Param("commonId") long commonId) throws Exception;
+	
+	public void updateFoundationLecture(LectureRequest lecture) throws Exception;
+	
+	public void updateContentLecture(LectureRequest lecture) throws Exception;
 	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
 	

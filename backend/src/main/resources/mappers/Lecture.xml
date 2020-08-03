@@ -15,16 +15,33 @@
 	</select>
 	
 	<!-- 대표 프로젝트 생성 -->
-	<insert id="insertLecture">
+	<!-- <insert id="insertLecture">
 		INSERT INTO lecture(user_id, common_id, title, content, thumbnail_url, type)
 		VALUES(#{userId}, #{commonId}, #{title}, #{content}, #{thumbnailUrl}, #{type})
+	</insert>  -->
+	
+	<!-- 대표 더미 프로젝트 생성 -->
+	<insert id="insertLecture">
+		INSERT INTO lecture(user_id, common_id)
+		VALUES(#{userId}, #{commonId})
 	</insert>
+	
+	<!-- 대표 프로젝트 id 가져오기 -->
+	<select id="selectLectureId" resultType="LectureOneResponse">
+		SELECT
+			lecture_id lectureId,
+			user_id userId,
+			common_id commonId
+		FROM lecture WHERE common_id = #{commonId}
+	</select>
 	
 	<!-- 대표 프로젝트  -->
 	<select id="selectLectures" resultType="LecturesResponse">		
 		SELECT 
 		    l.lecture_id lectureId,
 		    l.title,
+		    l.user_id userId,
+		    l.common_id commonId,
 		    l.view_count viewCount,
 		    l.thumbnail_Url thumbnailUrl,
 		    u.nickname,
@@ -90,6 +107,8 @@
 		SELECT 
 		    l.lecture_id lectureId,
 		    l.title,
+		    l.user_id userId,
+		    l.common_id commonId,
 		    l.content,
 		    l.thumbnail_url thumbnailUrl,
 		    u.nickname,
@@ -178,5 +197,23 @@
 	<update id="updateLectureViewCount">
 		UPDATE lecture SET view_count = view_count+1
 		WHERE lecture_id = #{lectureId};
+	</update>
+	
+	<!-- 프로젝트 기본 정보 수정 -->
+	<update id="updateFoundationLecture">
+		UPDATE lecture
+		SET
+			title = #{title},
+			thumbnail_url = #{thumbnailUrl},
+			type = #{type}
+		WHERE lecture_id = #{lectureId}
+	</update>
+	
+		<!-- 프로젝트 기본 정보 수정 -->
+	<update id="updateContentLecture">
+		UPDATE lecture
+		SET
+			content = #{content}
+		WHERE lecture_id = #{lectureId}
 	</update>
 </mapper>

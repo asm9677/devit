@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
-import com.ssafy.devit.model.request.LectrueRequest;
+import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.service.CommonService;
 import com.ssafy.devit.service.LectureService;

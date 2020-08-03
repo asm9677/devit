@@ -4,6 +4,8 @@ import java.util.Date;
 
 public class LectureOneResponse {
 	private long lectureId;
+	private long userId;
+	private long commonId;
 	private String title;
 	private String content;
 	private String thumbnailUrl;
@@ -19,10 +21,13 @@ public class LectureOneResponse {
 
 	}
 
-	public LectureOneResponse(long lectureId, String title, String content, String thumbnailUrl, String nickname,
-			Date created, int lectureCount, int viewCount, int likeCount, String tagName, boolean userLikeYn) {
+	public LectureOneResponse(long lectureId, long userId, long commonId, String title, String content,
+			String thumbnailUrl, String nickname, Date created, int lectureCount, int viewCount, int likeCount,
+			String tagName, boolean userLikeYn) {
 		super();
 		this.lectureId = lectureId;
+		this.userId = userId;
+		this.commonId = commonId;
 		this.title = title;
 		this.content = content;
 		this.thumbnailUrl = thumbnailUrl;
@@ -41,6 +46,22 @@ public class LectureOneResponse {
 
 	public void setLectureId(long lectureId) {
 		this.lectureId = lectureId;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	public long getCommonId() {
+		return commonId;
+	}
+
+	public void setCommonId(long commonId) {
+		this.commonId = commonId;
 	}
 
 	public String getTitle() {
@@ -125,10 +146,10 @@ public class LectureOneResponse {
 
 	@Override
 	public String toString() {
-		return "LectureOneResponse [lectureId=" + lectureId + ", title=" + title + ", content=" + content
-				+ ", thumbnailUrl=" + thumbnailUrl + ", nickname=" + nickname + ", created=" + created
-				+ ", lectureCount=" + lectureCount + ", viewCount=" + viewCount + ", likeCount=" + likeCount
-				+ ", tagName=" + tagName + ", userLikeYn=" + userLikeYn + "]";
+		return "LectureOneResponse [lectureId=" + lectureId + ", userId=" + userId + ", commonId=" + commonId
+				+ ", title=" + title + ", content=" + content + ", thumbnailUrl=" + thumbnailUrl + ", nickname="
+				+ nickname + ", created=" + created + ", lectureCount=" + lectureCount + ", viewCount=" + viewCount
+				+ ", likeCount=" + likeCount + ", tagName=" + tagName + ", userLikeYn=" + userLikeYn + "]";
 	}
 
 }

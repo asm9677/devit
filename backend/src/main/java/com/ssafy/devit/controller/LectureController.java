@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
-import com.ssafy.devit.model.request.LectrueRequest;
+import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.service.LectureService;
 
@@ -42,20 +42,20 @@ public class LectureController {
 			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
 	@ApiOperation(value = "대표  프로젝트 생성")
 	@PostMapping
-	public ResponseEntity<CommonResponse> createLecture(@RequestBody LectrueRequest request) {
+	public ResponseEntity<CommonResponse> createLecture() {
 		log.info(">> loadCreateLecture <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 
 		try {
-			lectureService.registLecture(request);
+			result.result = lectureService.createLecture();
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.CREATED);
 		} catch (Exception e) {
 			result.msg = "fail";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
-			log.debug(">> Error : createLecture <<");
-			log.debug(e.getMessage().toString());
+			log.info(">> Error : createLecture <<");
+			log.info(e.getMessage().toString());
 		}
 		return response;
 	}
@@ -166,6 +166,48 @@ public class LectureController {
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			log.info(">> Error : updateLectureLike <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "대표 프로젝트 기본 요소 수정")
+	@PutMapping("/foundation")
+	public ResponseEntity<CommonResponse> updateFoundationLecture(@RequestBody LectureRequest request) {
+		log.info(">> Load : updateLectureLike <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			lectureService.updateFoundationLecture(request);
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			log.info(">> Error : updateLectureLike <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "대표 프로젝트 내용 수정")
+	@PutMapping("/content")
+	public ResponseEntity<CommonResponse> updateContentLecture(@RequestBody LectureRequest request) {
+		log.info(">> Load : updateContentLecture <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			lectureService.updateContentLecture(request);
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			log.info(">> Error : updateContentLecture <<");
 			log.info(e.getMessage().toString());
 			result.msg = "fail";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
