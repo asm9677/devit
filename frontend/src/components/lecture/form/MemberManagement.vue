@@ -49,16 +49,17 @@
                                                 </v-list-item>
                                             </template>
                                         </v-combobox> -->
+                                        
                                         <v-combobox
-                                            v-model="model"
-                                            :filter="filter"
-                                            :hide-no-data="!search"
+                                            v-model="model"                                            
                                             :items="items"
                                             :search-input.sync="search"
-                                            hide-selected
                                             multiple
-                                            small-chips
+                                            small-chips                                            
+                                            no-filter
                                             auto-select-first
+                                            hide-selected
+                                            @keydown.enter.stop.capture="selectMember"
                                         >                                            
                                             <template v-slot:selection="{ attrs, item, parent, selected }">
                                                 <v-chip
@@ -147,8 +148,23 @@ import axios from "axios"
 import store from "@/store/index.js"
 export default {
     props: ['option'],
+    created(){
+        // console.dir(`/api/v1/users/${this.search?this.search:""}?lectureid=${this.$route.params.id}`)
+        http.axios.get(`/api/v1/users/${this.search?this.search:""}?lectureid=${this.$route.params.id}`)
+            .then(({data}) => {
+                console.dir(data)
+                for(let i in data.result){
+                    this.items.push({
+                        text: data.result[i].nickname,
+                        email: data.result[i].email,
+                        avatar: `https://picsum.photos/500/300?image=${data.result[i].userId}`,
+                    })
+                }
+            })
+    },
     watch: {
         model (val, prev) {
+            this.search = '';
             if (val.length === prev.length) return
 
             this.model = val.map(v => {
@@ -165,45 +181,37 @@ export default {
 
                 return v
             })
-        },
+        },        
+        search(){
+            http.axios.get(`/api/v1/users/${this.search?this.search:""}?lectureid=${this.$route.params.id}`)
+            .then(({data}) => {
+                console.dir(data)
+                this.items = []
+                for(let i in data.result){                    
+                    this.items.push({
+                        text: data.result[i].nickname,
+                        email: data.result[i].email,
+                        avatar: `https://picsum.photos/500/300?image=${data.result[i].userId}`,
+                    })
+                }
+            })
+        }
     },
     data() {
         return {         
+            // mo:'123',
             content: '',
             snackbar: false,
             msg: '',
             tags:[],           
             items: [
-                { header: 'Select an option or create one' },
-                {
-                    text: '안성민',
-                    email: '@asm9677',
-                    avatar: 'https://picsum.photos/500/300?image=5',
-                    
-                },
-                {
-                    text: '미용쓰기',
-                    email: '@msnodeve',
-                    avatar: 'https://picsum.photos/500/300?image=10',
-                    
-                }
+                
             ],
             activator: null,
             attach: null,
             colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'orange'],
             editing: null,
             index: -1,
-            // items: [
-            // { header: 'Select an option or create one' },
-            // {
-            //     text: 'Foo',
-            //     color: 'blue',
-            // },
-            // {
-            //     text: 'Bar',
-            //     color: 'red',
-            // },
-            // ],
             nonce: 1,
             menu: false,
             model: [
@@ -251,22 +259,24 @@ export default {
                 this.index = -1
             }
         },
-        filter (item, queryText, itemText) {
-            console.log(item,queryText,itemText)
-            if (item.header) return false
+        // filter (item, queryText, itemText) {
+        //     console.log(item,queryText,itemText)
+        //     if (item.header) return false
 
-            const hasValue = val => val != null ? val : ''
+        //     const hasValue = val => val != null ? val : ''
 
-            const text = hasValue(itemText)
-            const query = hasValue(queryText)
+        //     const text = hasValue(itemText)
+        //     const query = hasValue(queryText)
 
-            return text.toString()
-                .toLowerCase()
-                .indexOf(query.toString().toLowerCase()) > -1
-        },
-        selectList(e){
-            console.dir(this.items[0])
-            e.stopPropagation()
+        //     return text.toString()
+        //         .toLowerCase()
+        //         .indexOf(query.toString().toLowerCase()) > -1
+        // },
+        selectMember(){
+            this.search = ''
+            if(this.items[0]){
+                this.model.push(this.items[0])                
+            }            
         }
         
     }
