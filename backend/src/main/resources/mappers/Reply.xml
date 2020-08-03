@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.devit.repository.ReplyRepository">
+	
+	<!-- 댓글 등록 -->
+	<insert id="upload">
+		insert into board_reply(board_id, user_id, reply_created, reply_content, parent_reply_id)
+		values
+	</insert>
+	
+</mapper>

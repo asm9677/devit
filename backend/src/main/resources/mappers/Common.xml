@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.devit.repository.CommonRepository">
+	
+	<!-- 모든 정보 검색 -->
+	<select id="selectInfomationBySearch" resultType="SearchInfoResponse">
+		SELECT 
+		    l.lecture_id lectureId,
+		    l.title,
+	        l.content,
+		    l.thumbnail_Url thumbnailUrl,
+		    u.nickname,
+		    IFNULL(lsi.lectureCount, 0) AS lectureCount,
+		    IFNULL(lsi.viewCount, 0) AS viewCount,
+		    IFNULL(likeCount, 0) AS likeCount,
+		    lt.tagName,
+		    l.type,
+		    CASE
+		        WHEN lk.lecture_id IS NULL THEN FALSE
+		        ELSE TRUE
+		    END AS userLikeYn
+		FROM
+		    lecture l
+		        INNER JOIN
+		    (SELECT DISTINCT
+		        (a.lecture_id) AS lecture_id
+		    FROM
+		        lecture a
+		    LEFT OUTER JOIN lecture_tag b ON a.common_id = b.common_id
+		    WHERE
+		        a.title LIKE CONCAT('%', #{searchText},'%')
+		            OR a.content LIKE CONCAT('%', #{searchText},'%')
+		            OR b.tag_name LIKE CONCAT('%', #{searchText},'%')) s ON l.lecture_id = s.lecture_id
+		        LEFT OUTER JOIN
+		    user u ON l.user_id = u.user_id
+		        LEFT OUTER JOIN
+		    (SELECT 
+		        lmi.lecture_id,
+		            COUNT(lsi.sub_id) AS lectureCount,
+		            SUM(lsi.view_count) viewCount
+		    FROM
+		        lecture_main_index lmi
+		    LEFT OUTER JOIN lecture_sub_index lsi ON lmi.lecture_id = lsi.lecture_id
+		        AND lmi.main_id = lsi.main_id
+		    GROUP BY lmi.lecture_id) lsi ON l.lecture_id = lsi.lecture_id
+		        LEFT OUTER JOIN
+		    (SELECT 
+		        lecture_id, COUNT(1) AS likeCount
+		    FROM
+		        lecture_like
+		    WHERE
+		        like_flag = 'Y' AND like_type = 1
+		    GROUP BY lecture_id) ll ON l.lecture_id = ll.lecture_id
+		        LEFT OUTER JOIN
+		    (SELECT 
+		        common_id, GROUP_CONCAT(tag_name) tagName
+		    FROM
+		        lecture_tag
+		    GROUP BY common_id) lt ON l.common_id = lt.common_id
+		        LEFT OUTER JOIN
+		    (SELECT 
+		        *
+		    FROM
+		        lecture_like
+		    WHERE
+		        user_id = #{userId} AND like_flag = 'Y'
+		            AND like_type = 1) lk ON lk.lecture_id = l.lecture_id
+		WHERE
+		    1 = 1
+		GROUP BY l.lecture_id
+		ORDER BY l.lecture_id
+		LIMIT #{startPage} , 20;
+	</select>
+</mapper>
