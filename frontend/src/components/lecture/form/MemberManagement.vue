@@ -165,22 +165,6 @@ export default {
     watch: {
         model (val, prev) {
             this.search = '';
-            if (val.length === prev.length) return
-
-            this.model = val.map(v => {
-                if (typeof v === 'string') {
-                v = {
-                    text: v,
-                    color: this.colors[this.nonce - 1],
-                }
-
-                this.items.push(v)
-
-                this.nonce++
-                }
-
-                return v
-            })
         },        
         search(){
             http.axios.get(`/api/v1/users/${this.search?this.search:""}?lectureid=${this.$route.params.id}`)
@@ -191,7 +175,7 @@ export default {
                     this.items.push({
                         text: data.result[i].nickname,
                         email: data.result[i].email,
-                        avatar: `https://picsum.photos/500/300?image=${data.result[i].userId}`,
+                        avatar: `https://picsum.photos/500/300?image=${data.result[i].userId}`, 
                     })
                 }
             })
@@ -275,7 +259,8 @@ export default {
         selectMember(){
             this.search = ''
             if(this.items[0]){
-                this.model.push(this.items[0])                
+                this.model.push(this.items[0])          
+                this.model.pop()      
             }            
         }
         
