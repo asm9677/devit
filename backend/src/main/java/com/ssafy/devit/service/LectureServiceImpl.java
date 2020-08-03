@@ -5,12 +5,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
 import com.ssafy.devit.model.lecture.TagResponse;
-import com.ssafy.devit.model.request.LectrueRequest;
+import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.repository.LectureRepository;
 
@@ -21,7 +22,8 @@ public class LectureServiceImpl implements LectureService {
 	LectureRepository lectureRepository;
 
 	@Override
-	public void registLecture(LectrueRequest lecture) throws Exception {
+	@Transactional
+	public LectureOneResponse createLecture() throws Exception {
 		// common id 생성
 		lectureRepository.insertCommonId();
 		// 값 가져오기
@@ -29,16 +31,24 @@ public class LectureServiceImpl implements LectureService {
 		// 사용자 id 가져오기
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		lecture.setUserId(user.getUserId());
-		lecture.setCommonId(commonId);
-
-		// 프로젝트 강의 생성
-		lectureRepository.insertLecture(lecture);
-
+		// 더미 프로젝트 강의 생성
+		lectureRepository.insertLecture(user.getUserId(), commonId);
+		
+		return lectureRepository.selectLectureId(commonId);
+	}
+	
+	@Override
+	public void updateFoundationLecture(LectureRequest lecture) throws Exception {
+		lectureRepository.updateFoundationLecture(lecture);
 		// 태그 삽입
 		for (String tagName : lecture.getTags()) {
-			lectureRepository.insertTags(commonId, tagName);
+			lectureRepository.insertTags(lecture.getCommonId(), tagName);
 		}
+	}
+	
+	@Override
+	public void updateContentLecture(LectureRequest lecture) throws Exception {
+		lectureRepository.updateContentLecture(lecture);
 	}
 
 	@Override
