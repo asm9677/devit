@@ -1,7 +1,5 @@
 <template>
-  <div style="background-color:'red'; margin-top:20px;">
-        <v-container>            
-        <h1>신규 프로젝트</h1>
+  <div style="; margin-top:20px;">
         <v-card tile flat outlined >
                 <v-layout wrap ref="main">
                     <v-flex xs12 sm12 md9 lg9 xl9 ref="left" style="margin-left:0px;">                         
@@ -18,26 +16,7 @@
                                     ></v-text-field></v-list-item-title>
                                 </v-list-item>
                             </v-list> 
-                            <v-list style="padding:20px 100px;">
-                                <v-list-item>
-                                    <v-list-item-title>소개</v-list-item-title> 
-                                </v-list-item>
-                                <v-list-item>
-                                    <v-list-item-title>
-                                        <div style="margin-top:15px;">
-                                            <v-textarea
-                                                v-model="content"
-                                                no-resize
-                                                rows=10
-                                                outlined
-                                                placeholder="마크다운 에디터 개발 예정입니다."      
-                                                ref="content"                                                                                           
-                                                id="content"
-                                            ></v-textarea>
-                                        </div>
-                                    </v-list-item-title>
-                                </v-list-item>
-                            </v-list> 
+                            
                             <v-list style="padding:20px 100px;">
                                 <v-list-item>
                                     <v-list-item-title>대표 이미지</v-list-item-title> 
@@ -209,7 +188,6 @@
         >
             {{msg}}
         </v-snackbar>
-      </v-container>
   </div>
 </template>
 
@@ -219,6 +197,7 @@ import http from "@/util/http_common.js"
 import axios from "axios"
 import store from "@/store/index.js"
 export default {
+    props: ['option'],
     watch: {
         tags(val,prev){
             if(val.length > 10)
@@ -226,34 +205,17 @@ export default {
         }
     },
     data() {
-        return {            
-            option: true,
+        return {         
             title: '',
             thumbnailUrl:'',
             type: 0,
-            content: '',
             tags: [],
 
             snackbar: false,
-            msg: '',
+            msg: '',            
         }
-    },
-    created(){
-        if(!store.state.token) {
-            this.$router.push('/')
-        }
-    },
-    mounted() {
-        window.addEventListener('resize', this.handleResize)
-        this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
-    },
-    beforeDestroy(){
-        window.removeEventListener('resize', this.handleResize)
     },
     methods: {
-        handleResize() {
-            this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
-        },
         clickImg(){
             $("#file").click();
         },
@@ -290,9 +252,6 @@ export default {
             if(!this.title){
                 this.goto('#title', '프로젝트명을 입력해주세요.')
                 this.$refs.title.focus();                
-            }else if(!this.content){          
-                this.goto('#content', '설명을 입력해주세요.')
-                this.$refs.content.focus();                                
             }
             else if(!this.thumbnailUrl){
                 this.goto('#image', '대표 이미지를 선택해주세요.')                
@@ -305,11 +264,9 @@ export default {
             }else{
                 this.createProject();
             }
-
         },
         createProject(){
-            http.axios.post('/api/v1/lectures', {            
-                "content": this.content,
+            http.axios.post('/api/v1/lectures', {   
                 "tags": this.tags,
                 "thumbnailUrl": this.thumbnailUrl,
                 "title": this.title,
@@ -329,9 +286,9 @@ export default {
         font-weight: 400;
     }
     h1 {
-        font-size: 30px;
+        font-size: 26px;
         font-weight: 500;
-        margin-bottom:50px;
+        margin-bottom:30px;
     }
     
 </style>

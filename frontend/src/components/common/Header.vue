@@ -46,7 +46,7 @@
                 <v-hover
                     v-slot:default="{ hover }"                    
                 >
-                    <v-btn depressed text small @click="$router.app.$store.state.token ? move('/lecture/create') : dialog = true">                        
+                    <v-btn depressed text small @click="$router.app.$store.state.token ? createProject() : dialog = true">                        
                         <font :color="hover ? 'primary' : 'gray'" size="2">프로젝트 생성</font>                        
                     </v-btn>
                 </v-hover>
@@ -176,6 +176,14 @@ export default {
                 this.search = false;
                 this.keyword = ''
             }
+        },
+        createProject(){            
+            /*
+                http.axios.get('/api/v1/lectures/create').get(({data}) => {
+                    this.move(`/lecture/management/${data.result}/default`);
+                })
+            */
+            this.move('/lecture/management/0/default');
         },
         moveJoin(){
             this.$router.push('/join').catch(()=>{location.reload(true);});    
