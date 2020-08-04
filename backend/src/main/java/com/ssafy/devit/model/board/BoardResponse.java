@@ -12,11 +12,12 @@ public class BoardResponse {
 	private Date boardCreated;
 	private Date boardModified;
 	private long boardCount;
+	private String isMine;
 	
 	public BoardResponse() {}
 	
 	public BoardResponse(long boardId, long userId, String nickName, String boardTitle, String boardContent, 
-			long boardType, Date boardCreated, Date boardModified, long boardCount){
+			long boardType, Date boardCreated, Date boardModified, long boardCount, String isMine){
 		this.boardId = boardId;
 		this.userId = userId;
 		this.userName = nickName;
@@ -26,6 +27,7 @@ public class BoardResponse {
 		this.boardCreated = boardCreated;
 		this.boardModified = boardModified;
 		this.boardCount = boardCount;
+		this.isMine = isMine;
 	}
 
 	public String getUserName() {
@@ -106,5 +108,13 @@ public class BoardResponse {
 
 	public void setBoardCount(long boardCount) {
 		this.boardCount = boardCount;
+	}
+	
+	public String getIsMine() {
+		return isMine;
+	}
+	
+	public void setIsMine(String isMine) {
+		this.isMine = isMine;
 	}
 }

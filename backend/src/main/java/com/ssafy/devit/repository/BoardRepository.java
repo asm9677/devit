@@ -9,7 +9,7 @@ import com.ssafy.devit.model.board.BoardResponse;
 
 public interface BoardRepository {
 	public void upload(Board board) throws Exception;
-	public BoardResponse info(long bid) throws Exception;
+	public BoardResponse info(@Param("bid") long bid, @Param("userId") long userId) throws Exception;
 	public void delete(long bid) throws Exception;
 	public void update(@Param("Board") BoardResponse boardResponse, @Param("bid") long bid) throws Exception;
 	public List<BoardResponse> listinfo(long type) throws Exception;

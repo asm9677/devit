@@ -81,8 +81,18 @@ public class BoardController {
 		Board board = null;
 		BoardResponse boardResponse = null;
 		try {
+			
+			User user = null;
+			try {
+				user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			} catch (Exception e) {
+				user = new User();
+				user.setUserId(0);
+			}
+
 			//board = boardService.info(bid);
-			boardResponse = boardService.info(bid);
+			boardResponse = boardService.info(bid, user.getUserId());
+			
 			if(boardResponse != null) {
 				result.msg = "success";
 				System.out.println(boardResponse.getBoardTitle());
@@ -131,7 +141,15 @@ public class BoardController {
 		//Board board = null;
 		BoardResponse boardResponse = null;
 		try {
-			boardResponse = boardService.info(request.getBoardId());
+			User user = null;
+			try {
+				user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			} catch (Exception e) {
+				user = new User();
+				user.setUserId(0);
+			}
+
+			boardResponse = boardService.info(request.getBoardId(), user.getUserId());
 			if(boardResponse != null) {
 				boardResponse.setBoardTitle(request.getBoardTitle());
 				boardResponse.setBoardContent(request.getBoardContent());

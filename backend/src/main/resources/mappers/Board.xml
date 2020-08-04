@@ -12,7 +12,16 @@
 		
    <!--  게시글 조회 -->
       <select id="info" resultType="BoardResponse">
-         select a.board_id as boardId, a.user_id as userId, b.nickname as userName, a.title as boardTitle, a.content as boardContent, a.type as boardType, a.created as boardCreated, a.count as boardCount, a.modified as boardModified
+         select a.board_id as boardId, 
+         		a.user_id as userId, 
+         		b.nickname as userName, 
+         		a.title as boardTitle, 
+         		a.content as boardContent, 
+         		a.type as boardType, 
+         		a.created as boardCreated, 
+         		a.count as boardCount, 
+         		a.modified as boardModified,
+         		if(a.user_id = #{userId}, 'Y', 'N') as isMine
          from board a
 		 left outer join user b on a.user_id = b.user_id
          where a.board_id = #{bid} and a.flag = 'Y'
