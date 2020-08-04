@@ -133,9 +133,8 @@ CREATE TABLE `lecture_sub_index` (
   `common_id` int(11) NOT NULL COMMENT '태그를 관리할 common id',
   `title` varchar(300) DEFAULT NULL COMMENT '소분류 제목',
   `order` int(11) DEFAULT '1' COMMENT '소분류 순서',
-  `player_url` varchar(300) DEFAULT NULL COMMENT '동영상 위치',
-  `lecture_wiki_content` text COMMENT 'wiki의 순수 텍스트 내용',
-  `lecture_wiki_content_html` text COMMENT 'html tag를 포함한 내용',
+  `video_id` int(11) DEFAULT NULL COMMENT 'lecture_sub_history로 부터 반영되어 보여질 동영상을 포함하고 있는 lectrue_sub_history.sub_his_id',
+  `wiki_id` int(11) DEFAULT NULL COMMENT 'lecture_sub_history로 부터 반영되어 보여질 wiki를 포함하고 있는 lectrue_sub_history.sub_his_id',
   `view_count` int(11) DEFAULT NULL COMMENT '조회수',
   `created` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
   `modified` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '수정일',
@@ -150,6 +149,36 @@ CREATE TABLE `lecture_sub_index` (
   CONSTRAINT `lecture_sub_index_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lecture_sub_modifier_fk` FOREIGN KEY (`modifier`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `lecture_sub_history` (
+  `sub_his_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '강의 참여 요청 이력 테이블 PK',
+  `lecture_id` int(11) NOT NULL COMMENT '프로젝트 단위',
+  `sub_id` int(11) NOT NULL COMMENT '강의(목차) 단위',
+  `user_id` int(11) NOT NULL COMMENT '요청한 사람',
+  `modifier` int(11) NOT NULL COMMENT '수정한 사람',
+  `created` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '생성일자',
+  `modified` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '수정일자',
+  `player_url` varchar(300) DEFAULT NULL COMMENT '동영상 강의 URL',
+  `wiki_content` text COMMENT '강의 WIKI 내용 TEXT만',
+  `wiki_content_html` text COMMENT '강의 WIKI 내용 HTML',
+  `view_count` int(11) NOT NULL DEFAULT '0' COMMENT '조회수 (요청타입이 동영상일 경우에만 count되는 컬럼)',
+  `req_type` varchar(20) NOT NULL COMMENT '요청타입 (동영상인지 강의내용인지)\nex. video/wiki',
+  `accept_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT '요청을 받아들일지 거절할지 여부',
+  `delete_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT 'accept_yn 여부와 상관 없이 부적절한 동영상일 경우 목록에서 보이지 않도록...',
+  PRIMARY KEY (`sub_his_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='강의 참여 요청 이력 테이블';
+
+CREATE TABLE `lecture_sub_his_like` (
+  `sub_his_like_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'lecture_sub_his_like의 PK',
+  `lecture_id` int(11) NOT NULL,
+  `sub_id` int(11) NOT NULL,
+  `sub_his_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `like_flag` varchar(1) DEFAULT 'Y' COMMENT '좋아요 여부',
+  `created` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '생성일자',
+  `modified` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '수정일자',
+  PRIMARY KEY (`sub_his_like_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='lecture_sub_history에 존재하는 동영상들에 대한 좋아요 관리 테이블';
 
 CREATE TABLE `lecture_tag` (
   `tag_id` int(11) NOT NULL AUTO_INCREMENT,
