@@ -9,7 +9,7 @@ import BoardEdit from '@/components/board/BoardEdit.vue'
 import TempBoard from "@/components/board/TempBoard.vue";
 
 import LectureList from '@/components/lecture/view/LectureList.vue'
-import LectureCreate from '@/components/lecture/form/LectureCreate.vue'
+import LectureManagement from '@/components/lecture/form/LectureManagement.vue'
 import LectureDetail from '@/components/lecture/view/LectureDetail.vue'
 
 import SearchList from '@/components/search/SearchList.vue'
@@ -49,9 +49,9 @@ const routes = [
     component: LectureList
   },
   {
-    path: '/lecture/create',
-    name: 'LectureCreate',
-    component: LectureCreate
+    path: '/lecture/management/:id/default',
+    name: 'LectureManagement',
+    component: LectureManagement
   },
   {
     path: '/lecture/detail/:id',
