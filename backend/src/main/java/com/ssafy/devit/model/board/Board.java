@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 public class Board {
 
+	private long boardId;
 	private long userId;
 	private String boardTitle;
 	private String boardContent;
@@ -20,12 +21,21 @@ public class Board {
 
 	}
 
-	public Board(long userId, String boardTitle, String boardContent, long boardType, long boardCount) {
+	public Board (long userId, String boardTitle, String boardContent, long boardType, long boardCount) {
+//		this.boardId = boardId;
 		this.userId = userId;
 		this.boardTitle = boardTitle;
 		this.boardContent = boardContent;
 		this.boardType = boardType;
 		this.boardCount = boardCount;
+	}
+	
+	public long getBoardId() {
+		return boardId;
+	}
+//	
+	public void setBoardId(long boardId) {
+		this.boardId = boardId;
 	}
 	
 	public String getBoardTitle() {

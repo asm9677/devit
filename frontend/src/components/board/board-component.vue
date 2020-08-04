@@ -78,10 +78,10 @@
                             dense
                             flat="flat"
                             outlined="outlined"
-                            @keydown.enter="keywordSearch"></v-text-field>
+                            @keydown.enter="searchByPage"></v-text-field>
                     </v-card>
 
-                    <v-btn dense icon="icon" @click="keywordSearch" ref="searchBtn">
+                    <v-btn dense icon="icon" @click="searchByPage" ref="searchBtn">
                         <v-icon ref="searchIcon">
                             mdi-magnify
                         </v-icon>
@@ -160,10 +160,11 @@
             searchByPage(){
                 http
                 .axios
-                .get(`/api/v1/board/list?page=${this.page}&type=${this.boardtype}&itemsperpage=${this.itemsPerPage}`, {
+                .get(`/api/v1/board/list?page=${this.page}&type=${this.boardtype}&itemsperpage=${this.itemsPerPage}&searchselect=${item.searchselect}&searchtxt=${searchTxt}`, {
                 })
                 .then(({data}) => {                    
                     this.items = data.result;
+                    this.page = data.result.pageCnt;
                 })
                 .catch((error) => {
                     console.dir(error)
@@ -191,9 +192,6 @@
                 }else{
                     eventBus.$emit('doLogin');
                 }
-            },
-            keywordSearch(){
-
             }
         }
     }
