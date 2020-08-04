@@ -10,5 +10,5 @@ public interface BoardService {
 	public BoardResponse info(long bid, long userId) throws Exception;
 	public void delete(long bid) throws Exception;
 	public void update(BoardResponse boardResponse, long bid) throws Exception;
-	public List<BoardResponse> listinfo(long type) throws Exception;
+	public List<BoardResponse> listinfo(long startPage, long type, long itemsperpage) throws Exception;
 }

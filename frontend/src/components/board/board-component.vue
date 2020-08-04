@@ -100,6 +100,11 @@
         props:[
             'boardtype'
         ],
+        watch:{
+            page() {
+                this.searchByPage()
+            }
+        },
         data() {
             return {
                 searchTxt:"",
@@ -128,10 +133,13 @@
         },
         mounted(){
             //boardtype별 조회
-            
-            http
+            this.searchByPage();
+            /*http
                 .axios
-                .get("/api/v1/board/list/" + this.boardtype, {
+                //.get("/api/v1/board/list/" + this.boardtype, {
+                .get("/api/v1/board/list?page=${this.page}&type=${this.boardtype}&itemsperpage=${this.itemsPerPage}", {
+                    //http.axios.get(`/api/v1/lectures?page=${this.page}&type=${this.level}`).then(({data}) => {
+                    //itemsPerPage
                     // page 0:공지사항, 1:자유, 2:질문, 3:신고
                     // boardTitle: this.boardTitle,
                     // boardContent: this.boardContent,
@@ -146,9 +154,21 @@
                 })
                 .catch((error) => {
                     console.dir(error)
-                })
+                })*/
         },
         methods: {
+            searchByPage(){
+                http
+                .axios
+                .get("/api/v1/board/list?page=${this.page}&type=${this.boardtype}&itemsperpage=${this.itemsPerPage}", {
+                })
+                .then(({data}) => {                    
+                    this.items = data.result;
+                })
+                .catch((error) => {
+                    console.dir(error)
+                })
+            },
             goToDetail(boardId) {
                 //alert("board-component boardId = " + boardId);
                 //alert("board-component goToDetail "+boardId);
