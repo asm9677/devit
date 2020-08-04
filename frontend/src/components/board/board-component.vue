@@ -59,7 +59,7 @@
         <v-container>
             <v-row justify="center">
                 <v-col cols="8">
-                    <v-pagination v-model="page" class="my-4" :length="10"></v-pagination>
+                    <v-pagination v-model="page" class="my-4" :length="20"></v-pagination>
                 </v-col>
             </v-row>
         </v-container>
@@ -160,7 +160,7 @@
             searchByPage(){
                 http
                 .axios
-                .get("/api/v1/board/list?page=${this.page}&type=${this.boardtype}&itemsperpage=${this.itemsPerPage}", {
+                .get(`/api/v1/board/list?page=${this.page}&type=${this.boardtype}&itemsperpage=${this.itemsPerPage}`, {
                 })
                 .then(({data}) => {                    
                     this.items = data.result;
