@@ -36,11 +36,11 @@ public interface LectureRepository {
 	
 	public List<TagResponse> selectTags() throws Exception;
 	
-	public LikeDTO checkLikeLectureByUserId(@Param("userId") long userId, @Param("lectureId") long lectureId, @Param("likeType") int likeType) throws Exception;
+	public LikeDTO checkLikeLectureByUserId(@Param("userId") long userId, @Param("lectureId") long lectureId) throws Exception;
 	
-	public void updateLikeLectureByUserId(@Param("userId") long userId, @Param("lectureId") long lectureId, @Param("likeType") int likeType, @Param("likeFlag") String likeFlag) throws Exception;
+	public void updateLikeLectureByUserId(@Param("userId") long userId, @Param("lectureId") long lectureId, @Param("likeFlag") String likeFlag) throws Exception;
 	
-	public void insertLikeLectureByUserId(@Param("userId") long userId, @Param("lectureId") long lectureId, @Param("likeType") int likeType) throws Exception;
+	public void insertLikeLectureByUserId(@Param("userId") long userId, @Param("lectureId") long lectureId) throws Exception;
 	
 	public void updateLectureViewCount(@Param("lectureId") long lectureId) throws Exception;
 	

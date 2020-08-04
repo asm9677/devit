@@ -158,13 +158,12 @@ public class LectureController {
 			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
 	@ApiOperation(value = "사용자 좋아요 처리")
 	@PutMapping("/like")
-	public ResponseEntity<CommonResponse> updateLectureLike(@RequestParam("lectureId") long lectureId,
-			@RequestParam("likeType") int likeType) {
+	public ResponseEntity<CommonResponse> updateLectureLike(@RequestParam("lectureId") long lectureId) {
 		log.info(">> Load : updateLectureLike <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		try {
-			lectureService.updateLikeLectureByUserId(lectureId, likeType);
+			lectureService.updateLikeLectureByUserId(lectureId);
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {

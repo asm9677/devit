@@ -171,22 +171,22 @@
 		FROM
 		    lecture_like
 		WHERE
-		    user_id = #{userId} AND lecture_id = #{lectureId} AND like_type = #{likeType};
+		    user_id = #{userId} AND lecture_id = #{lectureId};
 	</select>
 	
 	<!-- 사용자가 좋아요를 누른 경험이 있다면 -->
 	<update id="updateLikeLectureByUserId">
 		UPDATE lecture_like 
 		SET 
-		    like_flag = #{likeFlag}
+		    like_flag = #{likeFlag}, modified = now()
 		WHERE
-		    user_id = #{userId} AND lecture_id = #{lectureId} AND like_type = #{likeType};
+		    user_id = #{userId} AND lecture_id = #{lectureId}
 	</update>
 	
 	<!-- 좋아요 등록하기 -->
 	<insert id="insertLikeLectureByUserId">
-		INSERT INTO lecture_like(user_id, lecture_id, like_type)
-		VALUES(#{userId}, #{lectureId}, #{likeType});
+		INSERT INTO lecture_like(user_id, lecture_id)
+		VALUES(#{userId}, #{lectureId});
 	</insert>
 	
 	<!-- 프로젝트 조회수 1증가 -->
@@ -201,7 +201,8 @@
 		SET
 			title = #{title},
 			thumbnail_url = #{thumbnailUrl},
-			type = #{type}
+			type = #{type},
+			modified = now()
 		WHERE lecture_id = #{lectureId}
 	</update>
 	
@@ -209,7 +210,8 @@
 	<update id="updateContentLecture">
 		UPDATE lecture
 		SET
-			content = #{content}
+			content = #{content},
+			modified = now()
 		WHERE lecture_id = #{lectureId}
 	</update>
 	
@@ -221,11 +223,11 @@
 	
 	<!-- 프로젝트에 포함된 공동 작업자 가져오기 -->
 	<select id="selectRoleUsersByLectureId" resultType="LectureRoleUsersResponse">
-	SELECT u.nickname, u.email, u.profile, la.lecture_role role, la.created, la.modified
-	FROM user u
-	INNER JOIN lecture_auth la
-	ON
-	u.user_id = la.user_id AND
-	lecture_id = #{lectureId}
+		SELECT u.nickname, u.email, u.profile, la.lecture_role role, la.created, la.modified
+		FROM user u
+		INNER JOIN lecture_auth la
+		ON
+		u.user_id = la.user_id AND
+		lecture_id = #{lectureId}
 	</select>
 </mapper>

@@ -19,7 +19,7 @@ public interface LectureService {
 	
 	public LectureOneResponse getLectureBylectureId(long lectureId, long userId) throws Exception;
 	
-	public void updateLikeLectureByUserId(long lectureId, int likeType) throws Exception;
+	public void updateLikeLectureByUserId(long lectureId) throws Exception;
 	
 	public void updateFoundationLecture(LectureRequest lectureRequest) throws Exception;
 	
