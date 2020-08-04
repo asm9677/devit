@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
@@ -51,15 +52,15 @@ public class UserController {
 
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
-	@GetMapping("/nickname/{nickname}")
+	@GetMapping("/{search}")
 	@ApiOperation(value = "입력으로 준 닉네임이 포함 되어있는 회원 정보를 가져옴")
-	public ResponseEntity<CommonResponse> getUsersByLikeNickname(@PathVariable String nickname){
+	public ResponseEntity<CommonResponse> getUsersByLikeNickname(@PathVariable String search, @RequestParam("lectureid") long lectureId){
 		log.info(">> Load : GetUsersByLikeNickname <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		
 		try {
-			result.result = userService.getUsersByLikeNickname(nickname);
+			result.result = userService.getUsersByLikeSearchText(search, lectureId);
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {

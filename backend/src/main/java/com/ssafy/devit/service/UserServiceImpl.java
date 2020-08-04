@@ -104,11 +104,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public List<UserResponse> getUsersByLikeNickname(String nickname) throws Exception {
-		if(nickname.equals("")) {
-			throw new Exception("Nickname의 값이 비어있습니다.");
-		}
-		return userRepository.findUsersByLikeNickname(nickname);
+	public List<UserResponse> getUsersByLikeSearchText(String search, long lectureId) throws Exception {
+		return userRepository.findUsersByLikeSearchText(search, lectureId);
 	}
 
 	@Override

@@ -22,7 +22,7 @@ public interface UserService {
 
 	public void signUp(User user) throws Exception;
 	
-	public List<UserResponse> getUsersByLikeNickname(String nickname) throws Exception;
+	public List<UserResponse> getUsersByLikeSearchText(String search,  long lectureId) throws Exception;
 	
 	public int getUsersCount() throws Exception;
 }
