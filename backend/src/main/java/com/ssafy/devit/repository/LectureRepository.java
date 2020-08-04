@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.ssafy.devit.model.lecture.LectureOneResponse;
+import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
 import com.ssafy.devit.model.lecture.TagResponse;
@@ -35,11 +36,15 @@ public interface LectureRepository {
 	
 	public List<TagResponse> selectTags() throws Exception;
 	
-	public LikeDTO checkLikeLectureByUserId(@Param("userId") long userId, @Param("lectureId") long lectureId, @Param("likeType") int likeType) throws Exception;
+	public LikeDTO checkLikeLectureByUserId(@Param("userId") long userId, @Param("lectureId") long lectureId) throws Exception;
 	
-	public void updateLikeLectureByUserId(@Param("userId") long userId, @Param("lectureId") long lectureId, @Param("likeType") int likeType, @Param("likeFlag") String likeFlag) throws Exception;
+	public void updateLikeLectureByUserId(@Param("userId") long userId, @Param("lectureId") long lectureId, @Param("likeFlag") String likeFlag) throws Exception;
 	
-	public void insertLikeLectureByUserId(@Param("userId") long userId, @Param("lectureId") long lectureId, @Param("likeType") int likeType) throws Exception;
+	public void insertLikeLectureByUserId(@Param("userId") long userId, @Param("lectureId") long lectureId) throws Exception;
 	
 	public void updateLectureViewCount(@Param("lectureId") long lectureId) throws Exception;
+	
+	public void insertAuthLecture(@Param("lectureId") long lectureId, @Param("userId") long userId, @Param("role") String role) throws Exception;
+	
+	public List<LectureRoleUsersResponse> selectRoleUsersByLectureId(@Param("lectureId") long lectureId) throws Exception;
 }

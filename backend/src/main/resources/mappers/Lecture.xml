@@ -36,7 +36,7 @@
 	</select>
 	
 	<!-- 대표 프로젝트  -->
-	<select id="selectLectures" resultType="LecturesResponse">		
+	<select id="selectLectures" resultType="LecturesResponse">
 		SELECT 
 		    l.lecture_id lectureId,
 		    l.title,
@@ -58,10 +58,7 @@
 		        LEFT OUTER JOIN
 		    user u ON l.user_id = u.user_id
 		        LEFT OUTER JOIN
-		    lecture_main_index lmi ON l.lecture_id = lmi.lecture_id
-		        LEFT OUTER JOIN
 		    lecture_sub_index lsi ON l.lecture_id = lsi.lecture_id
-		        AND lmi.main_id = lsi.main_id
 		        LEFT OUTER JOIN
 		    (SELECT 
 		        lecture_id, COUNT(1) AS likeCount
@@ -87,8 +84,7 @@
 		    l.type = ${type}
 		GROUP BY l.lecture_id
 		ORDER BY l.lecture_id
-		LIMIT #{startPage} , 20;
-		
+		LIMIT #{startPage}, 20;
 	</select>
 	
 	<!-- Tag 삽입하기 -->
@@ -115,7 +111,7 @@
 		    l.created,
 		    COUNT(lsi.sub_id) lectureCount,
    		    l.view_count viewCount,
-			ifnull(ll.likeCount, 0) likeCount,
+			ifnull(likeCount, 0) likeCount,
 		    lt.tagName,
 		    CASE
 		        WHEN lk.lecture_id IS NULL THEN FALSE
@@ -126,17 +122,16 @@
 		        LEFT OUTER JOIN
 		    user u ON l.user_id = u.user_id
 		        LEFT OUTER JOIN
-		    lecture_main_index lmi ON l.lecture_id = lmi.lecture_id
-		        LEFT OUTER JOIN
 		    lecture_sub_index lsi ON l.lecture_id = lsi.lecture_id
-		        AND lmi.main_id = lsi.main_id
 		        LEFT OUTER JOIN
 		    (SELECT 
 		        lecture_id, count(1) AS likeCount
 		    FROM
 		        lecture_like
 		    WHERE
-		        lecture_id = #{lectureId} AND like_flag = 'Y') ll ON l.lecture_id = ll.lecture_id
+		        lecture_id = #{lectureId} AND like_flag = 'Y'
+            ) ll ON
+            l.lecture_id = ll.lecture_id
 		        LEFT OUTER JOIN
 		    (SELECT 
 		        common_id, GROUP_CONCAT(tag_name) tagName
@@ -149,8 +144,9 @@
 		    FROM
 		        lecture_like
 		    WHERE
-		        user_id = #{userId}
-		            AND like_flag = 'Y') lk ON lk.lecture_id = l.lecture_id
+		        user_id = #{userId} AND like_flag = 'Y'
+			) lk
+            ON lk.lecture_id = l.lecture_id
 		WHERE
 		    l.lecture_id = #{lectureId}
 		GROUP BY l.lecture_id
@@ -175,22 +171,22 @@
 		FROM
 		    lecture_like
 		WHERE
-		    user_id = #{userId} AND lecture_id = #{lectureId} AND like_type = #{likeType};
+		    user_id = #{userId} AND lecture_id = #{lectureId};
 	</select>
 	
 	<!-- 사용자가 좋아요를 누른 경험이 있다면 -->
 	<update id="updateLikeLectureByUserId">
 		UPDATE lecture_like 
 		SET 
-		    like_flag = #{likeFlag}
+		    like_flag = #{likeFlag}, modified = now()
 		WHERE
-		    user_id = #{userId} AND lecture_id = #{lectureId} AND like_type = #{likeType};
+		    user_id = #{userId} AND lecture_id = #{lectureId}
 	</update>
 	
 	<!-- 좋아요 등록하기 -->
 	<insert id="insertLikeLectureByUserId">
-		INSERT INTO lecture_like(user_id, lecture_id, like_type)
-		VALUES(#{userId}, #{lectureId}, #{likeType});
+		INSERT INTO lecture_like(user_id, lecture_id)
+		VALUES(#{userId}, #{lectureId});
 	</insert>
 	
 	<!-- 프로젝트 조회수 1증가 -->
@@ -205,7 +201,8 @@
 		SET
 			title = #{title},
 			thumbnail_url = #{thumbnailUrl},
-			type = #{type}
+			type = #{type},
+			modified = now()
 		WHERE lecture_id = #{lectureId}
 	</update>
 	
@@ -213,7 +210,24 @@
 	<update id="updateContentLecture">
 		UPDATE lecture
 		SET
-			content = #{content}
+			content = #{content},
+			modified = now()
 		WHERE lecture_id = #{lectureId}
 	</update>
+	
+	<!-- 프로젝트 권한 생성 -->
+	<insert id="insertAuthLecture">
+		INSERT INTO lecture_auth(lecture_id, user_id, lecture_role)
+		VALUES(#{lectureId}, #{userId}, #{role})
+	</insert>
+	
+	<!-- 프로젝트에 포함된 공동 작업자 가져오기 -->
+	<select id="selectRoleUsersByLectureId" resultType="LectureRoleUsersResponse">
+		SELECT u.nickname, u.email, u.profile, la.lecture_role role, la.created, la.modified
+		FROM user u
+		INNER JOIN lecture_auth la
+		ON
+		u.user_id = la.user_id AND
+		lecture_id = #{lectureId}
+	</select>
 </mapper>

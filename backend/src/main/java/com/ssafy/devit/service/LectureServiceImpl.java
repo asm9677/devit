@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.devit.model.lecture.LectureOneResponse;
+import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
 import com.ssafy.devit.model.lecture.TagResponse;
@@ -74,17 +75,28 @@ public class LectureServiceImpl implements LectureService {
 	}
 
 	@Override
-	public void updateLikeLectureByUserId(long lectureId, int likeType) throws Exception {
+	public void updateLikeLectureByUserId(long lectureId) throws Exception {
 		// 사용자 id 가져오기
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		LikeDTO dto = lectureRepository.checkLikeLectureByUserId(user.getUserId(), lectureId, likeType);
+		LikeDTO dto = lectureRepository.checkLikeLectureByUserId(user.getUserId(), lectureId);
 		if(dto.getLikeCount() > 0) {
 			// 좋아요를 누른 적이 있다면
 			String likeFlag = dto.getLikeFlag().equals("Y") ? "N" : "Y";
-			lectureRepository.updateLikeLectureByUserId(user.getUserId(), lectureId, likeType, likeFlag);
+			lectureRepository.updateLikeLectureByUserId(user.getUserId(), lectureId, likeFlag);
 		}else {
 			// 좋아요를 누른 적이 한번도 없다면
-			lectureRepository.insertLikeLectureByUserId(user.getUserId(), lectureId, likeType);
+			lectureRepository.insertLikeLectureByUserId(user.getUserId(), lectureId);
 		}
+	}
+
+	@Override
+	public void insertAuthLecture(long lectureId, String role) throws Exception {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		lectureRepository.insertAuthLecture(lectureId, user.getUserId(), role);
+	}
+
+	@Override
+	public List<LectureRoleUsersResponse> selectRoleUsersByLectureId(long lectureId) throws Exception {
+		return lectureRepository.selectRoleUsersByLectureId(lectureId);
 	}
 }

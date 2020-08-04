@@ -6,17 +6,20 @@ USE devit;
 
 # user 테이블 생성
 CREATE TABLE `user` (
-  `user_id` int(11) NOT NULL AUTO_INCREMENT,
-  `nickname` varchar(45) DEFAULT NULL,
-  `email` varchar(45) DEFAULT NULL,
-  `password` varchar(500) DEFAULT NULL,
-  `active` varchar(1) DEFAULT 'Y',
-  `created` datetime DEFAULT CURRENT_TIMESTAMP,
-  `deleted` datetime DEFAULT NULL,
+  `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '유저 사용자 고유 id',
+  `nickname` varchar(45) DEFAULT NULL COMMENT '사용자 닉네임',
+  `email` varchar(45) DEFAULT NULL COMMENT '사용자 이메일',
+  `password` varchar(500) DEFAULT NULL COMMENT '사용자 비밀번호',
+  `active` varchar(1) DEFAULT 'Y' COMMENT ' 탈퇴여부',
+  `created` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
+  `deleted` datetime DEFAULT NULL COMMENT '삭제일',
+  `email_confirm` varchar(1) NOT NULL DEFAULT 'N' COMMENT '이메일 인증 확인 여부',
+  `code` varchar(45) DEFAULT NULL,
+  `profile` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `nickname_UNIQUE` (`nickname`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 # temp data 삽입
 INSERT INTO `user` (`nickname`, `email`, `password`) VALUES ('admin', 'admin@admin.com', '{bcrypt}$2a$10$pcUo/H7ABf42BYF9QTTf0uq.cIV0d8Hu4Bnhh0JxAksWlVdz42m4e');
@@ -94,50 +97,37 @@ CREATE TABLE `lecture` (
   `title` varchar(300) DEFAULT NULL,
   `content` text,
   `thumbnail_url` varchar(45) DEFAULT NULL,
+  `created` datetime DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime DEFAULT CURRENT_TIMESTAMP,
   `type` int(11) DEFAULT NULL,
   `deleted_flag` varchar(1) DEFAULT 'N',
   `view_count` int(11) DEFAULT '0',
-  `created` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`lecture_id`),
   UNIQUE KEY `cid_UNIQUE` (`common_id`),
   KEY `lecture_cid_fk_idx` (`common_id`),
   KEY `lecture_uid_fk_idx` (`user_id`),
   CONSTRAINT `lecture_cid_fk` FOREIGN KEY (`common_id`) REFERENCES `lecture_common` (`common_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lecture_uid_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `lecture_auth` (
-  `auth_id` int(11) NOT NULL,
-  `lecture_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `role_name` varchar(20) DEFAULT NULL,
+  `auth_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '권한 id',
+  `lecture_id` int(11) NOT NULL COMMENT '프로젝트 id',
+  `user_id` int(11) NOT NULL COMMENT '사용자 id',
+  `lecture_role` varchar(20) DEFAULT NULL COMMENT '권한 이름',
+  `created` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '생성 일자',
+  `modified` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '수정 일자',
+  `delete_yn` varchar(1) DEFAULT 'N' COMMENT '삭제 여부',
   PRIMARY KEY (`auth_id`),
   KEY `lecture_auth_uid_fk_idx` (`user_id`),
   KEY `lecture_auth_lid_fk` (`lecture_id`),
   CONSTRAINT `lecture_auth_lid_fk` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`lecture_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lecture_auth_uid_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE `lecture_main_index` (
-  `main_id` int(11) NOT NULL AUTO_INCREMENT,
-  `lecture_id` int(11) NOT NULL,
-  `common_id` int(11) NOT NULL,
-  `title` varchar(300) DEFAULT NULL,
-  `order` int(11) DEFAULT '1',
-  `created` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`main_id`),
-  UNIQUE KEY `cid_UNIQUE` (`common_id`),
-  KEY `lecture_main_index_lid_fk_idx` (`lecture_id`),
-  KEY `lecture_main_index_cid_fk_idx` (`common_id`),
-  CONSTRAINT `lecture_main_index_cid_fk` FOREIGN KEY (`common_id`) REFERENCES `lecture_common` (`common_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `lecture_main_index_lid_fk` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`lecture_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `lecture_sub_index` (
   `sub_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '소분류 테이블 자동 증가 id',
   `lecture_id` int(11) NOT NULL COMMENT '대표 프로젝트 id',
-  `main_id` int(11) NOT NULL COMMENT '대분류 테이블 id 일단 1:1 매칭',
   `user_id` int(11) NOT NULL COMMENT '생성한 사람',
   `modifier` int(11) NOT NULL COMMENT '수정한 사람',
   `common_id` int(11) NOT NULL COMMENT '태그를 관리할 common id',
@@ -152,16 +142,14 @@ CREATE TABLE `lecture_sub_index` (
   PRIMARY KEY (`sub_id`),
   UNIQUE KEY `cid_UNIQUE` (`common_id`),
   KEY `lecture_sub_index_cid_fk_idx` (`common_id`),
-  KEY `lecture_sub_index_mid_fk_idx` (`main_id`),
   KEY `lecture_sub_index_lid_fk_idx` (`lecture_id`),
   KEY `lecture_sub_index_user_id_fk_idx` (`user_id`),
   KEY `lecture_sub_modifier_fk_idx` (`modifier`),
   CONSTRAINT `lecture_sub_index_cid_fk` FOREIGN KEY (`common_id`) REFERENCES `lecture_common` (`common_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lecture_sub_index_lecture_id_fk` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`lecture_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `lecture_sub_index_main_id_fk` FOREIGN KEY (`main_id`) REFERENCES `lecture_main_index` (`main_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lecture_sub_index_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lecture_sub_modifier_fk` FOREIGN KEY (`modifier`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `lecture_tag` (
   `tag_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -176,14 +164,12 @@ CREATE TABLE `lecture_like` (
   `like_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `lecture_id` int(11) NOT NULL,
-  `main_id` int(11) DEFAULT NULL,
-  `sub_id` int(11) DEFAULT NULL,
-  `created` datetime DEFAULT CURRENT_TIMESTAMP,
   `like_flag` varchar(1) DEFAULT 'Y',
-  `like_type` int(11) NOT NULL COMMENT '1 : lecture\n2 : main (not used)\n3 : sub',
+  `created` datetime DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`like_id`),
   KEY `lecture_like_uid_fk_idx` (`user_id`),
   KEY `lecture_like_lecture_id_fk_idx` (`lecture_id`),
   CONSTRAINT `lecture_like_lecture_id_fk` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`lecture_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lecture_like_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
