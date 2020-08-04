@@ -30,9 +30,8 @@
                             <Default :option='option'> </Default>
                         </v-tab-item>
                         <v-tab-item>
-                            <Default :option='option'> </Default>
+                            <ChapterManagement :option='option'> </ChapterManagement>
                         </v-tab-item>
-                        <Default v-show="false"/>
                     </v-tabs>           
                 </v-flex>       
 
@@ -48,11 +47,15 @@ import store from "@/store/index.js"
 import Default from "@/components/lecture/form/Default.vue"
 import Intro from "@/components/lecture/form/Intro.vue"
 import MemberManagement from "@/components/lecture/form/MemberManagement.vue"
+
+import ChapterManagement from "@/components/lecture/form/ChapterManagement.vue"
 export default {
     components: {
         Default,
         Intro,
         MemberManagement,
+
+        ChapterManagement,
     },
     data() {
         return {          

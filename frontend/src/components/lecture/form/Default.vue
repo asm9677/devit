@@ -148,17 +148,7 @@
                                     </div>                                
                                 </v-list-item-content>                                    
                             </v-list-item>
-                            <v-list-item>                                       
-                                <v-list-item-content style="font-size:14px">                                
-                                    <div>
-                                        소개는 
-                                        <span class="primary--text"> 
-                                            지식 공유자와 수강자에게 프로젝트의 방향성에 대해 소개
-                                        </span>하는 공간입니다. 
-                                        누구를 위해 무엇을 만들어나갈지 설명해주세요!
-                                    </div>                                
-                                </v-list-item-content>                                    
-                            </v-list-item>
+                            
                             <v-list-item>                                       
                                 <v-list-item-content style="font-size:14px">                                
                                     <div>
