@@ -216,4 +216,20 @@
 			content = #{content}
 		WHERE lecture_id = #{lectureId}
 	</update>
+	
+	<!-- 프로젝트 권한 생성 -->
+	<insert id="insertAuthLecture">
+		INSERT INTO lecture_auth(lecture_id, user_id, lecture_role)
+		VALUES(#{lectureId}, #{userId}, #{role})
+	</insert>
+	
+	<!-- 프로젝트에 포함된 공동 작업자 가져오기 -->
+	<select id="selectRoleUsersByLectureId" resultType="LectureRoleUsersResponse">
+	SELECT u.nickname, u.email, u.profile, la.lecture_role role, la.created, la.modified
+	FROM user u
+	INNER JOIN lecture_auth la
+	ON
+	u.user_id = la.user_id AND
+	lecture_id = #{lectureId}
+	</select>
 </mapper>

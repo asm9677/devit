@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
+import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.service.LectureService;
@@ -48,7 +49,9 @@ public class LectureController {
 		final CommonResponse result = new CommonResponse();
 
 		try {
-			result.result = lectureService.createLecture();
+			LectureOneResponse lectureOneResponse = lectureService.createLecture();
+			lectureService.insertAuthLecture(lectureOneResponse.getLectureId(), "owner");
+			result.result = lectureOneResponse;
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.CREATED);
 		} catch (Exception e) {
@@ -208,6 +211,27 @@ public class LectureController {
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			log.info(">> Error : updateContentLecture <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "대표 프로젝트 관리 맴버 가져오기")
+	@GetMapping("/role/{lectureid}")
+	public ResponseEntity<CommonResponse> selectRoleUsersByLectureId(@PathVariable("lectureid") long lectureId) {
+		log.info(">> Load : selectRoleUsersByLectureId <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			result.result = lectureService.selectRoleUsersByLectureId(lectureId);
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			log.info(">> Error : selectRoleUsersByLectureId <<");
 			log.info(e.getMessage().toString());
 			result.msg = "fail";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);

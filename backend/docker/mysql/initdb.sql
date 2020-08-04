@@ -15,6 +15,7 @@ CREATE TABLE `user` (
   `deleted` datetime DEFAULT NULL COMMENT '삭제일',
   `email_confirm` varchar(1) NOT NULL DEFAULT 'N' COMMENT '이메일 인증 확인 여부',
   `code` varchar(45) DEFAULT NULL,
+  `profile` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `nickname_UNIQUE` (`nickname`),
   UNIQUE KEY `email_UNIQUE` (`email`)
@@ -96,18 +97,18 @@ CREATE TABLE `lecture` (
   `title` varchar(300) DEFAULT NULL,
   `content` text,
   `thumbnail_url` varchar(45) DEFAULT NULL,
+  `created` datetime DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime DEFAULT CURRENT_TIMESTAMP,
   `type` int(11) DEFAULT NULL,
   `deleted_flag` varchar(1) DEFAULT 'N',
   `view_count` int(11) DEFAULT '0',
-  `created` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`lecture_id`),
   UNIQUE KEY `cid_UNIQUE` (`common_id`),
   KEY `lecture_cid_fk_idx` (`common_id`),
   KEY `lecture_uid_fk_idx` (`user_id`),
   CONSTRAINT `lecture_cid_fk` FOREIGN KEY (`common_id`) REFERENCES `lecture_common` (`common_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lecture_uid_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `lecture_auth` (
   `auth_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '권한 id',
