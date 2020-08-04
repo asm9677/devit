@@ -2,8 +2,9 @@ package com.ssafy.devit.model.request;
 
 import java.util.Arrays;
 
-public class LectrueRequest {
+public class LectureRequest {
 	private long userId;
+	private long lectureId;
 	private long commonId;
 	private String title;
 	private String content;
@@ -11,13 +12,15 @@ public class LectrueRequest {
 	private int type;
 	private String[] tags;
 
-	public LectrueRequest() {
+	public LectureRequest() {
 
 	}
 
-	public LectrueRequest(long userId, long commonId, String title, String content, String thumbnailUrl, int type,
-			String[] tags) {
+	public LectureRequest(long userId, long lectureId, long commonId, String title, String content, String thumbnailUrl,
+			int type, String[] tags) {
+		super();
 		this.userId = userId;
+		this.lectureId = lectureId;
 		this.commonId = commonId;
 		this.title = title;
 		this.content = content;
@@ -26,12 +29,12 @@ public class LectrueRequest {
 		this.tags = tags;
 	}
 
-	public long getUserId() {
-		return userId;
+	public long getLectureId() {
+		return lectureId;
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public void setLectureId(long lectureId) {
+		this.lectureId = lectureId;
 	}
 
 	public long getCommonId() {
@@ -82,11 +85,19 @@ public class LectrueRequest {
 		this.tags = tags;
 	}
 
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
 	@Override
 	public String toString() {
-		return "LectureRequest [userId=" + userId + ", commonId=" + commonId + ", title=" + title + ", content="
-				+ content + ", thumbnailUrl=" + thumbnailUrl + ", type=" + type + ", tags=" + Arrays.toString(tags)
-				+ "]";
+		return "LectrueRequest [userId=" + userId + ", lectureId=" + lectureId + ", commonId=" + commonId + ", title="
+				+ title + ", content=" + content + ", thumbnailUrl=" + thumbnailUrl + ", type=" + type + ", tags="
+				+ Arrays.toString(tags) + "]";
 	}
 
 }

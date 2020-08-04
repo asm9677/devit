@@ -27,7 +27,7 @@ public interface UserRepository {
 
 	public void insertRole(@Param("userId") long userId, @Param("role") String role) throws Exception;
 	
-	public List<UserResponse> findUsersByLikeNickname(String nickname) throws Exception;
+	public List<UserResponse> findUsersByLikeSearchText(@Param("search") String search, @Param("lectureId") long lectureId) throws Exception;
 	
 	public int getUsersCount() throws Exception;
 }
