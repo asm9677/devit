@@ -28,6 +28,7 @@ import com.ssafy.devit.service.UserService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -179,7 +180,9 @@ public class BoardController {
 	@ApiOperation(value = "게시글 목록 조회")
 //	public ResponseEntity<CommonResponse> listinfo(@PathVariable final long type) throws Exception {
 	public ResponseEntity<CommonResponse> listinfo(@RequestParam("page") int startPage,
-			@RequestParam("type") int type, @RequestParam("itemsperpage") int itemsperpage) throws Exception {
+			@RequestParam("type") int type, @RequestParam("itemsperpage") int itemsperpage,
+			@ApiParam(value = "검색조건", required = false)@RequestParam("searchselect") String searchselect, 
+			@ApiParam(value = "검색할단어", required = false)@RequestParam("searchtxt") String searchtxt) throws Exception {
 		log.info(">> board list info <<");
 		// PathVariable로 type를 받아서 해당 게시글 목록을 조회한다.
 		ResponseEntity<CommonResponse> response = null;
@@ -187,7 +190,7 @@ public class BoardController {
 		try {
 			result.msg = "success";
 //			result.result = boardService.listinfo(type);
-			result.result = boardService.listinfo(startPage, type, itemsperpage);
+			result.result = boardService.listinfo(startPage, type, itemsperpage, searchselect, searchtxt);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

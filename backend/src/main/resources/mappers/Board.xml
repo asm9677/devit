@@ -44,15 +44,71 @@
 		
 	<!-- 게시글 목록 조회 -->
 	      <select id="listinfo" resultType="BoardResponse">
-         select a.board_id as boardId, a.user_id as userId, b.nickname as userName, a.title as boardTitle, a.content as boardContent, a.type as boardType, a.created as boardCreated, a.count as boardCount, a.modified as boardModified
+         select a.board_id as boardId, 
+         		a.user_id as userId, 
+         		b.nickname as userName, 
+         		a.title as boardTitle, 
+         		a.content as boardContent, 
+         		a.type as boardType, 
+         		a.created as boardCreated, 
+         		a.count as boardCount, 
+         		a.modified as boardModified,
+         		case when c.cnt is null then 0
+                     when c.cnt = 0 then 0
+                     else ceil(c.cnt/#{itemsperpage})
+				end as pageCnt
            from board a
 		        left outer join 
 		        user b 
 		        on 
 		        a.user_id = b.user_id
-          where a.type = #{type} 
+                left outer join
+                (
+         		 select count(1) as cnt
+         		   from board
+         		  where type = #{type}
+            		and flag = 'Y'
+            		<if test="searchtxt != null and searchtxt != ''">
+						<if test="searchselect == '전체'">
+						and (upper(a.title) like concat('%', upper(#{searchtxt}), '%') or
+							upper(a.content) like concat('%', upper(#{searchtxt}), '%') or
+							upper(b.nickname) like concat('%', upper(#{searchtxt}), '%')
+							)
+						</if>
+						<if test="searchselect == '제목'">
+						and upper(a.title) like concat('%', upper(#{searchtxt}), '%')
+						</if>
+						<if test="searchselect == '내용'">
+						and upper(a.content) like concat('%', upper(#{searchtxt}), '%')
+						</if>
+						<if test="searchselect == '작성자'">
+						and upper(b.nickname) like concat('%', upper(#{searchtxt}), '%')
+						</if>
+					</if>
+				) c
+				on
+				1=1
+          where a.type = #{type}
+			<if test="searchtxt != null and searchtxt != ''">
+				<if test="searchselect == '전체'">
+				and (upper(a.title) like concat('%', upper(#{searchtxt}), '%') or
+					upper(a.content) like concat('%', upper(#{searchtxt}), '%') or
+					upper(b.nickname) like concat('%', upper(#{searchtxt}), '%')
+					)
+				</if>
+				<if test="searchselect == '제목'">
+				and upper(a.title) like concat('%', upper(#{searchtxt}), '%')
+				</if>
+				<if test="searchselect == '내용'">
+				and upper(a.content) like concat('%', upper(#{searchtxt}), '%')
+				</if>
+				<if test="searchselect == '작성자'">
+				and upper(b.nickname) like concat('%', upper(#{searchtxt}), '%')
+				</if>
+			</if>
             and a.flag = 'Y'
        order by a.board_id desc
 		  limit #{startPage} , #{itemsperpage};
+		  
       </select>
 </mapper>
