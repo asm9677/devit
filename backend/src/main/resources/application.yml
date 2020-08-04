@@ -3,6 +3,6 @@ spring:
   profiles: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/devit
+    url: jdbc:mysql://i3a101.p.ssafy.io:3306/devit
     username: root
     password: devit  devtools:    livereload:      enabled: true  jwt:    secret: testJWT  file:#    location: ./upload     location: /home/ubuntu/uploads  servlet:    multipart:      max-file-size: 512MB      max-request-size: 512MBmybatis:  type-aliases-package: com.ssafy.devit.model  mapper-locations: classpath:mappers/**/*.xmlserver:  port: 8080

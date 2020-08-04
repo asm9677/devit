@@ -6,8 +6,9 @@
                     <v-col :key="item.boardId">
                         <div class="board_detail">
                             <v-list-item style="margin-bottom:5px;">
-                                <v-hover v-slot:default="{ hover }" v-show="isMine">
-                                    <v-btn
+                                <v-hover v-slot:default="{ hover }">
+                                    <v-btn 
+                                        v-show="isBtnShow"
                                         outlined="outlined"
                                         depressed="depressed"
                                         text="text"
@@ -17,8 +18,9 @@
                                         <font :color="hover ? '' : 'gray'" size="2">수정</font>
                                     </v-btn>
                                 </v-hover>
-                                <v-hover v-slot:default="{ hover }" v-show="isMine">
+                                <v-hover v-slot:default="{ hover }">
                                     <v-btn
+                                        v-show="isBtnShow"
                                         outlined="outlined"
                                         depressed="depressed"
                                         text="text"
@@ -184,7 +186,7 @@
         name: 'app',
         data() {
             return {
-                isMine: true,
+                isBtnShow: false,
                 itemsPerPage: 10,
                 item:{},
                 /*boardType: '',
@@ -241,8 +243,10 @@
                     this.comment_count = data.result.comment_count;*/
                     this.item = data.result;
 
-                    if(this.user_id == '현재로그인한아이디'){ //수정/삭제 버튼
-                        this.isMine = true;
+                    if(this.item.isMine == 'Y'){ //수정/삭제 버튼
+                        this.isBtnShow = true;
+                    }else{
+                        this.isBtnShow = false;
                     }
                 })
                 .catch((error) => {

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
@@ -81,8 +82,18 @@ public class BoardController {
 		Board board = null;
 		BoardResponse boardResponse = null;
 		try {
+			
+			User user = null;
+			try {
+				user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			} catch (Exception e) {
+				user = new User();
+				user.setUserId(0);
+			}
+
 			//board = boardService.info(bid);
-			boardResponse = boardService.info(bid);
+			boardResponse = boardService.info(bid, user.getUserId());
+			
 			if(boardResponse != null) {
 				result.msg = "success";
 				System.out.println(boardResponse.getBoardTitle());
@@ -131,7 +142,15 @@ public class BoardController {
 		//Board board = null;
 		BoardResponse boardResponse = null;
 		try {
-			boardResponse = boardService.info(request.getBoardId());
+			User user = null;
+			try {
+				user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			} catch (Exception e) {
+				user = new User();
+				user.setUserId(0);
+			}
+
+			boardResponse = boardService.info(request.getBoardId(), user.getUserId());
 			if(boardResponse != null) {
 				boardResponse.setBoardTitle(request.getBoardTitle());
 				boardResponse.setBoardContent(request.getBoardContent());
@@ -155,16 +174,20 @@ public class BoardController {
 	
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
-	@GetMapping("board/list/{type}")
+//	@GetMapping("board/list/{type}")
+	@GetMapping("board/list")
 	@ApiOperation(value = "게시글 목록 조회")
-	public ResponseEntity<CommonResponse> listinfo(@PathVariable final long type) throws Exception {
+//	public ResponseEntity<CommonResponse> listinfo(@PathVariable final long type) throws Exception {
+	public ResponseEntity<CommonResponse> listinfo(@RequestParam("page") int startPage,
+			@RequestParam("type") int type, @RequestParam("itemsperpage") int itemsperpage) throws Exception {
 		log.info(">> board list info <<");
 		// PathVariable로 type를 받아서 해당 게시글 목록을 조회한다.
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		try {
 			result.msg = "success";
-			result.result = boardService.listinfo(type);
+//			result.result = boardService.listinfo(type);
+			result.result = boardService.listinfo(startPage, type, itemsperpage);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

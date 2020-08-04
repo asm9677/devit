@@ -7,8 +7,8 @@ import com.ssafy.devit.model.board.BoardResponse;
 
 public interface BoardService {
 	public void upload(Board board) throws Exception;
-	public BoardResponse info(long bid) throws Exception;
+	public BoardResponse info(long bid, long userId) throws Exception;
 	public void delete(long bid) throws Exception;
 	public void update(BoardResponse boardResponse, long bid) throws Exception;
-	public List<BoardResponse> listinfo(long type) throws Exception;
+	public List<BoardResponse> listinfo(long startPage, long type, long itemsperpage) throws Exception;
 }

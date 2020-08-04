@@ -24,11 +24,11 @@ public class BoardServicelmpl implements BoardService {
 	}
 	
 	@Override
-	public BoardResponse info(long bid) throws Exception {
+	public BoardResponse info(long bid, long userId) throws Exception {
 		if(bid < 1) {
 			throw new Exception("잘못된 boardId가 나왔습니다.");
 		}
-		return boardRepository.info(bid);
+		return boardRepository.info(bid, userId);
 	}
 	
 	@Override
@@ -48,10 +48,13 @@ public class BoardServicelmpl implements BoardService {
 	}
 	
 	@Override
-	public List<BoardResponse> listinfo(long type) throws Exception {
+	public List<BoardResponse> listinfo(long startPage, long type, long itemsperpage) throws Exception {
 		if(type < 1) {
 			throw new Exception("잘못된 type이 나왔습니다.");
 		}
-		return boardRepository.listinfo(type);
+		startPage = (startPage-1) * itemsperpage;
+//		return boardRepository.listinfo(type);
+		return boardRepository.listinfo(startPage, type, itemsperpage);
+		
 	}
 }
