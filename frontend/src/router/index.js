@@ -12,6 +12,8 @@ import LectureList from '@/components/lecture/view/LectureList.vue'
 import LectureManagement from '@/components/lecture/form/LectureManagement.vue'
 import LectureDetail from '@/components/lecture/view/LectureDetail.vue'
 
+import LecturePlayer from '@/components/lecture/view/LecturePlayer.vue'
+
 import SearchList from '@/components/search/SearchList.vue'
 
 Vue.use(VueRouter)
@@ -69,7 +71,13 @@ const routes = [
     path: '/tempboard',
     name: 'TempBoard',
     component: TempBoard
-  }
+  },
+
+  {
+    path: '/lecture/player/:id',
+    name: 'LecturePlayer',
+    component: LecturePlayer
+  },
 ]
 
 const router = new VueRouter({
