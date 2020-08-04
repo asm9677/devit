@@ -6,19 +6,19 @@ public class LectureRoleUsersResponse {
 	private String nickname;
 	private String profile;
 	private String role;
-	private Date create;
+	private Date created;
 	private Date modified;
 
 	public LectureRoleUsersResponse() {
 
 	}
 
-	public LectureRoleUsersResponse(String nickname, String profile, String role, Date create, Date modified) {
+	public LectureRoleUsersResponse(String nickname, String profile, String role, Date created, Date modified) {
 		super();
 		this.nickname = nickname;
 		this.profile = profile;
 		this.role = role;
-		this.create = create;
+		this.created = created;
 		this.modified = modified;
 	}
 
@@ -47,11 +47,11 @@ public class LectureRoleUsersResponse {
 	}
 
 	public Date getCreate() {
-		return create;
+		return created;
 	}
 
 	public void setCreate(Date create) {
-		this.create = create;
+		this.created = create;
 	}
 
 	public Date getModified() {
@@ -65,7 +65,7 @@ public class LectureRoleUsersResponse {
 	@Override
 	public String toString() {
 		return "LectureRoleUsersResponse [nickname=" + nickname + ", profile=" + profile + ", role=" + role
-				+ ", create=" + create + ", modified=" + modified + "]";
+				+ ", create=" + created + ", modified=" + modified + "]";
 	}
 
 }

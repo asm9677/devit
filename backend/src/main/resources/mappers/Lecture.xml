@@ -36,7 +36,7 @@
 	</select>
 	
 	<!-- 대표 프로젝트  -->
-	<select id="selectLectures" resultType="LecturesResponse">		
+	<select id="selectLectures" resultType="LecturesResponse">
 		SELECT 
 		    l.lecture_id lectureId,
 		    l.title,
@@ -58,10 +58,7 @@
 		        LEFT OUTER JOIN
 		    user u ON l.user_id = u.user_id
 		        LEFT OUTER JOIN
-		    lecture_main_index lmi ON l.lecture_id = lmi.lecture_id
-		        LEFT OUTER JOIN
 		    lecture_sub_index lsi ON l.lecture_id = lsi.lecture_id
-		        AND lmi.main_id = lsi.main_id
 		        LEFT OUTER JOIN
 		    (SELECT 
 		        lecture_id, COUNT(1) AS likeCount
@@ -87,8 +84,7 @@
 		    l.type = ${type}
 		GROUP BY l.lecture_id
 		ORDER BY l.lecture_id
-		LIMIT #{startPage} , 20;
-		
+		LIMIT #{startPage}, 20;
 	</select>
 	
 	<!-- Tag 삽입하기 -->
@@ -115,7 +111,7 @@
 		    l.created,
 		    COUNT(lsi.sub_id) lectureCount,
    		    l.view_count viewCount,
-			ifnull(ll.likeCount, 0) likeCount,
+			ifnull(likeCount, 0) likeCount,
 		    lt.tagName,
 		    CASE
 		        WHEN lk.lecture_id IS NULL THEN FALSE
@@ -126,17 +122,16 @@
 		        LEFT OUTER JOIN
 		    user u ON l.user_id = u.user_id
 		        LEFT OUTER JOIN
-		    lecture_main_index lmi ON l.lecture_id = lmi.lecture_id
-		        LEFT OUTER JOIN
 		    lecture_sub_index lsi ON l.lecture_id = lsi.lecture_id
-		        AND lmi.main_id = lsi.main_id
 		        LEFT OUTER JOIN
 		    (SELECT 
 		        lecture_id, count(1) AS likeCount
 		    FROM
 		        lecture_like
 		    WHERE
-		        lecture_id = #{lectureId} AND like_flag = 'Y') ll ON l.lecture_id = ll.lecture_id
+		        lecture_id = #{lectureId} AND like_flag = 'Y'
+            ) ll ON
+            l.lecture_id = ll.lecture_id
 		        LEFT OUTER JOIN
 		    (SELECT 
 		        common_id, GROUP_CONCAT(tag_name) tagName
@@ -149,8 +144,9 @@
 		    FROM
 		        lecture_like
 		    WHERE
-		        user_id = #{userId}
-		            AND like_flag = 'Y') lk ON lk.lecture_id = l.lecture_id
+		        user_id = #{userId} AND like_flag = 'Y'
+			) lk
+            ON lk.lecture_id = l.lecture_id
 		WHERE
 		    l.lecture_id = #{lectureId}
 		GROUP BY l.lecture_id
