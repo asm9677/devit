@@ -143,7 +143,7 @@
                                         </v-avatar>
                                         <span style="margin-left:5px;font-size:16px">{{item.nickname}}</span>
                                         <div style="margin-top:20px;" /> 
-                                        <v-btn depressed dark color="primary" large block><span style="font-size:20px;">수강하기</span></v-btn>
+                                        <v-btn depressed dark color="primary" large block @click="move(`/lecture/player/${$route.params.id}?order=1`)"><span style="font-size:20px;">수강하기</span></v-btn>
                                 </div>
                             </v-layout>
                         </div>
