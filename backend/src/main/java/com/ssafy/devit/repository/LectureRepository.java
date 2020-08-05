@@ -3,7 +3,9 @@ package com.ssafy.devit.repository;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.devit.model.common.Common;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
@@ -12,18 +14,19 @@ import com.ssafy.devit.model.lecture.TagResponse;
 import com.ssafy.devit.model.request.LectureRequest;
 
 public interface LectureRepository {
-	public void insertCommonId() throws Exception;
+	// common id 생성 및 반환 dao
+	@Transactional
+	public void insertCommonId(Common common) throws Exception;
 
-	public int selectCommonId() throws Exception;
+	// lecture 생성 및 id 반환 dao
+	@Transactional
+	public void insertLecture(LectureOneResponse lectureOneResponse) throws Exception;
 	
-//	public void insertLecture(LectrueRequest lecture) throws Exception;
-	
-	public void insertLecture(@Param("userId") long userId, @Param("commonId") long commonId) throws Exception;
-	
-	public LectureOneResponse selectLectureId(@Param("commonId") long commonId) throws Exception;
-	
+	// lecture 기본 정보 수정
+	@Transactional
 	public void updateFoundationLecture(LectureRequest lecture) throws Exception;
 	
+	// lecture wiki 내용 수정
 	public void updateContentLecture(LectureRequest lecture) throws Exception;
 	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;

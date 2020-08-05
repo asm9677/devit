@@ -30,13 +30,10 @@ vue-build:
     script:
         - echo '빌드를 실행할 폴더로 이동'
         - cd frontend
-        - ls
-        - echo '이미 실행 중인 컨테이너 제거'
-        - sudo docker stop devit_frontend
-        - echo '빌드 및 이미지로 생성'
-        - sudo docker build -t devit_frontend .
-        - echo '컨테이너로 빌드 및 실행'
-        - sudo docker run --privileged -d -p 9000:80 --rm --name devit_frontend devit_frontend
+        - echo '추가된 패키지 설치'
+        - yarn install
+        - echo 'dist 파일 생성(빌드) 시작'
+        - yarn build
         - echo '자동 배포 완료'
 # gradle-build:
 #     stage: build

@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.devit.model.common.Common;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
@@ -23,19 +23,23 @@ public class LectureServiceImpl implements LectureService {
 	LectureRepository lectureRepository;
 
 	@Override
-	@Transactional
-	public LectureOneResponse createLecture() throws Exception {
-		// common id 생성
-		lectureRepository.insertCommonId();
-		// 값 가져오기
-		long commonId = lectureRepository.selectCommonId();
+	public LectureOneResponse createDummyLecture() throws Exception { // 더미 프로젝트 생성 및 해당 프로젝트 권한 부여
+		// common id 생성 및 Common id 받아오기
+		Common common = new Common();
+		lectureRepository.insertCommonId(common);
+		
 		// 사용자 id 가져오기
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		// 더미 프로젝트 강의 생성
-		lectureRepository.insertLecture(user.getUserId(), commonId);
+		// DAO에게 넘겨줄 DTO 생성
+		LectureOneResponse lectureOneResponse = new LectureOneResponse();
+		lectureOneResponse.setUserId(user.getUserId());
+		lectureOneResponse.setCommonId(common.getCommonId());
 		
-		return lectureRepository.selectLectureId(commonId);
+		// 더미 프로젝트 강의 생성 및 권한 생성
+		lectureRepository.insertLecture(lectureOneResponse);
+		
+		return lectureOneResponse;
 	}
 	
 	@Override
