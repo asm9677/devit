@@ -7,8 +7,8 @@
 	<!-- 게시글 업로드 -->
 		<!-- <insert id="upload"> -->
 		<insert id="upload" useGeneratedKeys="true" keyProperty="boardId">
-			insert into board(user_id, title, content, type, count) 
-			values(#{userId}, #{boardTitle}, #{boardContent}, #{boardType}, #{boardCount})
+			insert into board(user_id, title, content, type, count, modified) 
+			values(#{userId}, #{boardTitle}, #{boardContent}, #{boardType}, #{boardCount}, now())
 		</insert>
 		
    <!--  게시글 조회 -->
