@@ -52,8 +52,7 @@ public class LectureController {
 		final CommonResponse result = new CommonResponse();
 
 		try {
-			LectureOneResponse lectureOneResponse = lectureService.createLecture();
-			lectureService.insertAuthLecture(lectureOneResponse.getLectureId(), "owner");
+			LectureOneResponse lectureOneResponse = lectureService.createDummyLecture();
 			result.result = lectureOneResponse;
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.CREATED);

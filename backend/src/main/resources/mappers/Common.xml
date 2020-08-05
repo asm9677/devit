@@ -68,4 +68,9 @@
 		ORDER BY l.lecture_id
 		LIMIT #{startPage}, 20;
 	</select>
+	
+		<!-- common 테스트 -->
+	<insert id="test" useGeneratedKeys="true" keyProperty="commonId" parameterType="Common">
+		insert into lecture_common value()
+	</insert>
 </mapper>
