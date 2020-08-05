@@ -1,7 +1,7 @@
 <template>
     <div id="app">
 
-        <!--<div>
+        <!-- <div>
             <video
                 id="livestation-player"
                 class="video-js vjs-big-play-button vjs-big-play-centered"
@@ -22,7 +22,7 @@
             <source src="./example3.mp4" type="video/mp4"></source>
 
             </video>
-        </div>-->
+        </div> -->
 
 
 

@@ -276,7 +276,7 @@ export default {
             }
         },
         clickLike(){
-            http.axios.put(`/api/v1/lectures/like?lectureId=${this.item.lectureId}&likeType=1`).then(({data}) => {
+            http.axios.put(`/api/v1/lectures/like?lectureId=${this.item.lectureId}`).then(({data}) => {
                 if(data.msg == 'success') {
                     this.item.likeCount += this.item.userLikeYn ? -1 : 1;
                     this.item.userLikeYn = !this.item.userLikeYn;    

@@ -5,6 +5,7 @@ import store from './store'
 import vuetify from './plugins/vuetify';
 import vueMoment from 'vue-moment'
 
+
 Vue.use(vueMoment)
 Vue.config.productionTip = false
 
