@@ -9,7 +9,7 @@ import com.ssafy.devit.model.lecture.TagResponse;
 import com.ssafy.devit.model.request.LectureRequest;
 
 public interface LectureService {
-	public LectureOneResponse createLecture() throws Exception;
+	public LectureOneResponse createDummyLecture() throws Exception;
 
 	public List<LecturesResponse> getLectures(long userId, int startPage, int type) throws Exception;
 
@@ -28,4 +28,6 @@ public interface LectureService {
 	public void insertAuthLecture(long lectureId, String role) throws Exception;
 	
 	public List<LectureRoleUsersResponse> selectRoleUsersByLectureId(long lectureId) throws Exception;
+	
+	
 }

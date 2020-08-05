@@ -3,39 +3,24 @@
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.devit.repository.LectureRepository">
-	
-	<!-- common id 생성 -->
-	<insert id="insertCommonId">
+	<!-- 대표 프로젝트 관련 -->
+	<!-- common id 생성 및 key value 반환 -->
+	<insert id="insertCommonId" useGeneratedKeys="true" keyProperty="commonId" parameterType="Common">
 		INSERT INTO lecture_common VALUES()
 	</insert>
 	
-	<!-- common id 조회 -->
-	<select id="selectCommonId" resultType="Integer">
-		SELECT max(common_id) from lecture_common
-	</select>
-	
-	<!-- 대표 프로젝트 생성 -->
-	<!-- <insert id="insertLecture">
-		INSERT INTO lecture(user_id, common_id, title, content, thumbnail_url, type)
-		VALUES(#{userId}, #{commonId}, #{title}, #{content}, #{thumbnailUrl}, #{type})
-	</insert>  -->
-	
-	<!-- 대표 더미 프로젝트 생성 -->
-	<insert id="insertLecture">
+	<!-- 더미 프로젝트 생성 및 반환 -->
+	<insert id="insertLecture" useGeneratedKeys="true" keyProperty="lectureId" parameterType="LectureOneResponse">
 		INSERT INTO lecture(user_id, common_id)
-		VALUES(#{userId}, #{commonId})
+		VALUES(#{userId}, #{commonId});
+		
+		SELECT @lectureId := max(lecture_id) FROM lecture;
+		
+		INSERT INTO lecture_auth(lecture_id, user_id, lecture_role)
+		VALUES(@lectureId, #{userId}, 'owner')
 	</insert>
 	
-	<!-- 대표 프로젝트 id 가져오기 -->
-	<select id="selectLectureId" resultType="LectureOneResponse">
-		SELECT
-			lecture_id lectureId,
-			user_id userId,
-			common_id commonId
-		FROM lecture WHERE common_id = #{commonId}
-	</select>
-	
-	<!-- 대표 프로젝트  -->
+	<!-- 대표 프로젝트 목록 받아오기  -->
 	<select id="selectLectures" resultType="LecturesResponse">
 		SELECT 
 		    l.lecture_id lectureId,
@@ -85,17 +70,6 @@
 		GROUP BY l.lecture_id
 		ORDER BY l.lecture_id
 		LIMIT #{startPage}, 20;
-	</select>
-	
-	<!-- Tag 삽입하기 -->
-	<insert id="insertTags">
-		INSERT INTO lecture_tag(common_id, tag_name)
-		VALUES(#{commonId}, #{tagName})
-	</insert>
-	
-	<!-- 누적 강의 수 -->
-	<select id="getLectureSubCount" resultType="Integer">
-		SELECT count(1) FROM lecture_sub_index
 	</select>
 	
 	<!-- 대표 프로젝트 상세 정보 -->
@@ -153,6 +127,41 @@
 		ORDER BY l.lecture_id;
 	</select>
 	
+	<!-- 프로젝트 기본 정보 수정 -->
+	<update id="updateFoundationLecture">
+		UPDATE lecture
+		SET
+			title = #{title},
+			thumbnail_url = #{thumbnailUrl},
+			type = #{type},
+			modified = now()
+		WHERE lecture_id = #{lectureId}
+	</update>
+	
+	<!-- 프로젝트 기본 정보 수정 -->
+	<update id="updateContentLecture">
+		UPDATE lecture
+		SET
+			content = #{content},
+			modified = now()
+		WHERE lecture_id = #{lectureId}
+	</update>
+	
+	<!-- 대표 프로젝트 관련 쿼리 끝 -->
+	
+	<!-- Tag 삽입하기 -->
+	<insert id="insertTags">
+		INSERT INTO lecture_tag(common_id, tag_name)
+		VALUES(#{commonId}, #{tagName})
+	</insert>
+	
+	<!-- 누적 강의 수 -->
+	<select id="getLectureSubCount" resultType="Integer">
+		SELECT count(1) FROM lecture_sub_index
+	</select>
+	
+	
+	
 	<!-- tags  -->
 	<select id="selectTags" resultType="TagResponse">
 		SELECT 
@@ -195,26 +204,6 @@
 		WHERE lecture_id = #{lectureId};
 	</update>
 	
-	<!-- 프로젝트 기본 정보 수정 -->
-	<update id="updateFoundationLecture">
-		UPDATE lecture
-		SET
-			title = #{title},
-			thumbnail_url = #{thumbnailUrl},
-			type = #{type},
-			modified = now()
-		WHERE lecture_id = #{lectureId}
-	</update>
-	
-	<!-- 프로젝트 기본 정보 수정 -->
-	<update id="updateContentLecture">
-		UPDATE lecture
-		SET
-			content = #{content},
-			modified = now()
-		WHERE lecture_id = #{lectureId}
-	</update>
-	
 	<!-- 프로젝트 권한 생성 -->
 	<insert id="insertAuthLecture">
 		INSERT INTO lecture_auth(lecture_id, user_id, lecture_role)
@@ -230,4 +219,6 @@
 		u.user_id = la.user_id AND
 		lecture_id = #{lectureId}
 	</select>
+	
+
 </mapper>

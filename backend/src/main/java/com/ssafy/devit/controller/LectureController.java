@@ -23,7 +23,10 @@ import com.ssafy.devit.service.LectureService;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -49,8 +52,7 @@ public class LectureController {
 		final CommonResponse result = new CommonResponse();
 
 		try {
-			LectureOneResponse lectureOneResponse = lectureService.createLecture();
-			lectureService.insertAuthLecture(lectureOneResponse.getLectureId(), "owner");
+			LectureOneResponse lectureOneResponse = lectureService.createDummyLecture();
 			result.result = lectureOneResponse;
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.CREATED);
