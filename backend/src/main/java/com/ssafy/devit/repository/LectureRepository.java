@@ -12,6 +12,7 @@ import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
 import com.ssafy.devit.model.lecture.TagResponse;
 import com.ssafy.devit.model.request.LectureRequest;
+import com.ssafy.devit.model.request.LectureSubsRequest;
 
 public interface LectureRepository {
 	// common id 생성 및 반환 dao
@@ -33,6 +34,14 @@ public interface LectureRepository {
 	// lecture content 내용 수정
 	@Transactional
 	public void updateContentLecture(LectureRequest lecture) throws Exception;
+	
+	// sub lecture 생성 dao
+	@Transactional
+	public void insertSubLecture(LectureSubsRequest lecture) throws Exception;
+	
+	// sub lecture 업데이트 dao
+	@Transactional
+	public void updateSubLecture(LectureSubsRequest lecture) throws Exception;
 	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
 	

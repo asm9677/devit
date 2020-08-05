@@ -135,7 +135,7 @@ CREATE TABLE `lecture_sub_index` (
   `order` int(11) DEFAULT '1' COMMENT '소분류 순서',
   `video_id` int(11) DEFAULT NULL COMMENT 'lecture_sub_history로 부터 반영되어 보여질 동영상을 포함하고 있는 lectrue_sub_history.sub_his_id',
   `wiki_id` int(11) DEFAULT NULL COMMENT 'lecture_sub_history로 부터 반영되어 보여질 wiki를 포함하고 있는 lectrue_sub_history.sub_his_id',
-  `view_count` int(11) DEFAULT NULL COMMENT '조회수',
+  `view_count` int(11) DEFAULT '0' COMMENT '조회수',
   `created` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
   `modified` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '수정일',
   PRIMARY KEY (`sub_id`),

@@ -160,6 +160,27 @@
 	
 	<!-- 대표 프로젝트 관련 쿼리 끝 -->
 
+
+	<!-- 소강의 관련 쿼리 -->
+	<!-- 소강의 입력 -->
+	<insert id="insertSubLecture">
+		INSERT INTO lecture_sub_index(lecture_id, user_id, modifier, common_id, title, lecture_sub_index.order)
+		VALUES(#{lectureId}, #{userId}, #{userId}, #{commonId}, #{title}, #{order})
+	</insert>
+	
+	<!-- 소강의 업데이트 -->
+	<update id="updateSubLecture">
+		UPDATE lecture_sub_index
+		SET
+			modifier = #{userId},
+			title = #{title},
+			lecture_sub_index.order = #{order},
+			modified = now()
+		WHERE sub_id = #{subId}
+	</update>
+	
+	<!-- 소강의 관련 쿼리 끝 -->
+	
 	
 	<!-- 누적 강의 수 -->
 	<select id="getLectureSubCount" resultType="Integer">

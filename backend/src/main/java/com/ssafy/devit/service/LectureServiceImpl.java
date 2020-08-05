@@ -14,6 +14,7 @@ import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
 import com.ssafy.devit.model.lecture.TagResponse;
 import com.ssafy.devit.model.request.LectureRequest;
+import com.ssafy.devit.model.request.LectureSubsRequest;
 import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.repository.LectureRepository;
 
@@ -101,5 +102,31 @@ public class LectureServiceImpl implements LectureService {
 	@Override
 	public List<LectureRoleUsersResponse> selectRoleUsersByLectureId(long lectureId) throws Exception {
 		return lectureRepository.selectRoleUsersByLectureId(lectureId);
+	}
+
+	// 소강의 생성 및 변경된 개수 반환
+	@Override
+	public int createSubLectures(List<LectureSubsRequest> lectures) throws Exception {
+		int count = 0;
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		for(LectureSubsRequest lecture : lectures) {
+			lecture.setUserId(user.getUserId());
+			if(lecture.getSubId() == 0) {
+				// 아직 db에 있지 않은 테이블이라 간주 하며 INSERT dao를 호출
+
+				// common id 생성 및 Common id 받아오기
+				Common common = new Common();
+				lectureRepository.insertCommonId(common);
+				
+				lecture.setCommonId(common.getCommonId());
+				lectureRepository.insertSubLecture(lecture);
+			}else {
+				// db에는 존재하지만 order를 변경 해야해 UPDATE dao를 호출
+				lectureRepository.updateSubLecture(lecture);
+			}
+			lectureRepository.insertTags(lecture.getCommonId(), lecture.getTags());
+			count++;
+		}
+		return count;
 	}
 }
