@@ -96,13 +96,15 @@
                                     <span class="chips_number">
                                         {{tag.tagCount}}
                                     </span>
-                                </div>
-                                
+                                </div>                                
                             </v-container>
                         </div>
                     </v-flex>
                 </v-layout>
         </v-card>
+        <v-overlay :value="loading" opacity=0>
+            <v-progress-circular indeterminate color="primary lighten-4" size="64"></v-progress-circular>
+        </v-overlay>
       </v-container>
   </div>
 </template>
@@ -143,6 +145,7 @@ export default {
             loading: false,
             page: 1,
             tags: [],
+            scrollPos:0,
         }
     },
     mounted() {
@@ -165,17 +168,27 @@ export default {
         document.removeEventListener('resize', this.handleResize);
     },
     methods: {
-        handleScroll(){
+        handleScroll(e){
+            if($(document).scrollTop() < this.scrollPos){                
+                this.scrollPos = $(document).scrollTop();
+                return;
+            }
+            this.scrollPos = $(document).scrollTop();
+
             if($(document).scrollTop() + $(document)[0].scrollingElement.clientHeight + 100 >= $(document).height()){
                 if(!this.loading){
                     this.loading = true;
                     http.axios.get(`/api/v1/commons/${this.keyword}/${this.page}`)
                         .then(({data}) => {
-                            this.page++;                            
-                            for(let i in data.result)
-                                this.items.push(data.result[i]);
+                            if(data.result.length){
+                                this.page++;                            
+                                for(let i in data.result)
+                                    this.items.push(data.result[i]);
+                            }
                         }).finally(() => {
-                            this.loading = false;
+                            setTimeout(() => {
+                                this.loading = false;
+                            }, 600)                            
                         })
                 }
             }          
@@ -205,10 +218,16 @@ export default {
             http.axios.get('/api/v1/lectures/tags').then(({data}) => {
                 this.tags = data.result
             })        
-            http.axios.get(`/api/v1/commons/${keyword}/1`).then(({data}) => {
-                this.items = data.result                
-                this.page++;
-            })
+            
+            if(!this.loading){
+                this.loading = true;
+                http.axios.get(`/api/v1/commons/${keyword}/1`).then(({data}) => {
+                    this.items = data.result                
+                    this.page++;
+                }).finally(() => {
+                    this.loading = false;
+                })
+            }
         },
         move(url){
             this.$router.push(url).catch(()=>{location.reload(true);});            
