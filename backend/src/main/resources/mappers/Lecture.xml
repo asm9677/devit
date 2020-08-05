@@ -135,8 +135,19 @@
 			thumbnail_url = #{thumbnailUrl},
 			type = #{type},
 			modified = now()
-		WHERE lecture_id = #{lectureId}
+		WHERE lecture_id = #{lectureId};
 	</update>
+	
+	<!-- Tag 삽입하기 -->
+	<insert id="insertTags">
+		DELETE FROM lecture_tag WHERE common_id = #{commonId};
+		
+		INSERT INTO lecture_tag(common_id, tag_name)
+		VALUES
+		<foreach collection="tags" item="tag" separator=", ">
+			(#{commonId}, #{tag})
+		</foreach>
+	</insert>
 	
 	<!-- 프로젝트 기본 정보 수정 -->
 	<update id="updateContentLecture">
@@ -148,12 +159,6 @@
 	</update>
 	
 	<!-- 대표 프로젝트 관련 쿼리 끝 -->
-	
-	<!-- Tag 삽입하기 -->
-	<insert id="insertTags">
-		INSERT INTO lecture_tag(common_id, tag_name)
-		VALUES(#{commonId}, #{tagName})
-	</insert>
 	
 	<!-- 누적 강의 수 -->
 	<select id="getLectureSubCount" resultType="Integer">

@@ -21,7 +21,7 @@ public interface LectureService {
 	
 	public void updateLikeLectureByUserId(long lectureId) throws Exception;
 	
-	public void updateFoundationLecture(LectureRequest lectureRequest) throws Exception;
+	public void updateFoundationLecture(LectureRequest lecture) throws Exception;
 	
 	public void updateContentLecture(LectureRequest lecture) throws Exception;
 	

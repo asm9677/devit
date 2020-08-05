@@ -1,5 +1,6 @@
 package com.ssafy.devit.service;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,14 +46,12 @@ public class LectureServiceImpl implements LectureService {
 	@Override
 	public void updateFoundationLecture(LectureRequest lecture) throws Exception {
 		lectureRepository.updateFoundationLecture(lecture);
-		// 태그 삽입
-		for (String tagName : lecture.getTags()) {
-			lectureRepository.insertTags(lecture.getCommonId(), tagName);
-		}
+		lectureRepository.insertTags(lecture.getCommonId(), lecture.getTags());
 	}
 	
 	@Override
 	public void updateContentLecture(LectureRequest lecture) throws Exception {
+		System.out.println(lecture.toString());
 		lectureRepository.updateContentLecture(lecture);
 	}
 

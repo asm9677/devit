@@ -26,12 +26,15 @@ public interface LectureRepository {
 	@Transactional
 	public void updateFoundationLecture(LectureRequest lecture) throws Exception;
 	
-	// lecture wiki 내용 수정
+	// tag 수정
+	@Transactional
+	public void insertTags(@Param("commonId") long commonId, @Param("tags") String[] tags) throws Exception;
+	
+	// lecture content 내용 수정
+	@Transactional
 	public void updateContentLecture(LectureRequest lecture) throws Exception;
 	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
-	
-	public void insertTags(@Param("commonId") long commonId, @Param("tagName") String tagName) throws Exception;
 	
 	public int getLectureSubCount() throws Exception;
 	
