@@ -155,6 +155,9 @@
         },
         methods: {
             searchByPage() {
+                if(this.searchTxt != null && this.searchTxt != ""){
+                    this.page = 1;
+                }
                 http
                     .axios
                     .get(
