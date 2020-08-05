@@ -226,10 +226,10 @@
             }
         },
         mounted() {
-            if(this.$route.query.showMsg == true){
+            if(this.$route.params.showMsg == true){
                 
                 //this.text = "작성이 완료되었습니다.";
-                this.text = this.$route.query.msgText;
+                this.text = this.$route.params.msgText;
                 this.snackbar = true;
             }
             http
@@ -237,6 +237,7 @@
                 .get("/api/v1/board/" + this.$route.query.boardId, {
                 })
                 .then(({data}) => {
+                    console.log("여기!!!!!!!!!!!!!11", data);
                     this.item = data.result;
 
                     if(this.item.isMine == 'Y'){ //수정/삭제 버튼

@@ -179,23 +179,21 @@
                             boardCount: "",
                             boardModified: ""
                         })
-                        .then(({data}) => {alert(data.result);
+                        .then(({data}) => {
                             this
                                 .$router
                                 .push({
                                     name: 'BoardDetail',
-                                    query: { 
-                                        'boardId': data.result, //data.boardId
+                                    params:{
                                         "showMsg": true,
                                         "msgText": "작성이 완료되었습니다."
+                                        },
+                                    query: { 
+                                        'boardtype':this.boardType.type,
+                                        'boardId': data.result, //data.boardId
                                     }
                                 });
-                            /*this.$router.push({
-                                path: '/board',
-                                query: {
-                                    'type': this.boardType.type
-                                }
-                            })*/
+                            
                             
 
                         })
@@ -219,10 +217,14 @@
                         .then(({data}) => {                          
                             this
                                 .$router
-                                .push({path:'/board/detail', query:{
+                                .push({path:'/board/detail', 
+                                    params:{
+                                        "showMsg": true,
+                                        "msgText": "수정이 완료되었습니다."
+                                        },
+                                        query:{
+                                    "boardtype": this.boardType.type,
                                     "boardId": data.result,/*data.boardId*/
-                                    "showMsg": true,
-                                    "msgText": "수정이 완료되었습니다."
                                 }});
 
                         })
