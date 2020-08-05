@@ -1,4 +1,4 @@
-package com.ssafy.devit.model.board;
+package com.ssafy.devit.model.lecture;
 
 import java.util.Date;
 
