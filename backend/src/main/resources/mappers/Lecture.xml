@@ -159,6 +159,7 @@
 	</update>
 	
 	<!-- 대표 프로젝트 관련 쿼리 끝 -->
+
 	
 	<!-- 누적 강의 수 -->
 	<select id="getLectureSubCount" resultType="Integer">

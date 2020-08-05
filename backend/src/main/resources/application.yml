@@ -1,4 +1,8 @@
-spring:  profiles:   active: deploy---
+spring:
+  profiles:
+   active: local
+
+---
 
 spring:
   profiles: deploy
