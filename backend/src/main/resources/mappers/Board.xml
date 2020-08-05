@@ -5,14 +5,19 @@
 <mapper namespace="com.ssafy.devit.repository.BoardRepository">
 
 	<!-- 게시글 업로드 -->
-		<insert id="upload">
-<!-- 		<insert id="upload" useGeneratedKeys="true" keyProperty="boardId"> -->
+		<!-- <insert id="upload"> -->
+		<insert id="upload" useGeneratedKeys="true" keyProperty="boardId">
 			insert into board(user_id, title, content, type, count) 
 			values(#{userId}, #{boardTitle}, #{boardContent}, #{boardType}, #{boardCount})
 		</insert>
 		
    <!--  게시글 조회 -->
       <select id="info" resultType="BoardResponse">
+      
+      	 update board
+      	    set count = count + 1
+      	  where board_id = #{bid};
+      	  
          select a.board_id as boardId, 
          		a.user_id as userId, 
          		b.nickname as userName, 
@@ -25,7 +30,7 @@
          		if(a.user_id = #{userId}, 'Y', 'N') as isMine
          from board a
 		 left outer join user b on a.user_id = b.user_id
-         where a.board_id = #{bid} and a.flag = 'Y'
+         where a.board_id = #{bid} and a.flag = 'Y';
       </select>
 		
 	<!--  게시글 삭제 -->
@@ -66,9 +71,13 @@
                 left outer join
                 (
          		 select count(1) as cnt
-         		   from board
-         		  where type = #{type}
-            		and flag = 'Y'
+         		   from board a
+         		        left outer join
+         		        user b
+         		        on
+         		        a.user_id = b.user_id
+         		  where a.type = #{type}
+            		and a.flag = 'Y'
             		<if test="searchtxt != null and searchtxt != ''">
 						<if test="searchselect == '전체'">
 						and (upper(a.title) like concat('%', upper(#{searchtxt}), '%') or

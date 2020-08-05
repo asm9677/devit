@@ -63,7 +63,7 @@ public class BoardController {
 			boardService.upload(board);
 			 // bid에 해당하는 게시글을 조회한다.
 			result.msg = "success";
-//			result.result = board.getBoardId();
+			result.result = board.getBoardId();
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -81,7 +81,6 @@ public class BoardController {
 		// PathVariable로 bid를 받아서 해당 게시글을 조회한다.
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
-		BoardRequest board = null;
 		BoardResponse boardResponse = null;
 		try {
 			
@@ -93,7 +92,6 @@ public class BoardController {
 				user.setUserId(0);
 			}
 
-			//board = boardService.info(bid);
 			boardResponse = boardService.info(bid, user.getUserId());
 			
 			if(boardResponse != null) {
