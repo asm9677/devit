@@ -247,5 +247,84 @@
 		lecture_id = #{lectureId}
 	</select>
 	
-
+	<!-- 목차 상세 정보 가져오기 -->
+	<select id="selectOneSubLecture">
+		SELECT 
+		    lsi.lecture_id lectureId,
+		    lsi.sub_id subId,
+		    lsi.order,
+		    lsi.title,
+		    lsi.view_count viewCount,
+		    lshv.view_count viewCount,
+		    lg.video_like_count likeCount,
+		    u.nickname,
+		    lshv.play_time playTime,
+		    lshv.player_url playerUrl,
+		    lshw.wiki_content wikiContent,
+		    lshw.wiki_content_html wikiContentHtml,
+		    lt.tagName,
+		    CASE
+		        WHEN
+		            EXISTS( SELECT 
+		                    1
+		                FROM
+		                    lecture_sub_his_like
+		                WHERE
+		                    like_flag = 'Y' AND user_id = 8
+		                        AND sub_his_id = lshv.sub_his_id)
+		        THEN
+		            'Y'
+		        ELSE 'N'
+		    END AS userLikeYn
+		FROM
+		    lecture_sub_index lsi
+		        LEFT OUTER JOIN
+		    user u ON lsi.modifier = u.user_id
+		        LEFT OUTER JOIN
+		    (SELECT 
+		        lecture_id,
+		            sub_id,
+		            sub_his_id,
+		            player_url,
+		            play_time,
+		            view_count
+		    FROM
+		        lecture_sub_history lshv
+		    WHERE
+		        lshv.lecture_id = 110) lshv ON lsi.lecture_id = lshv.lecture_id
+		        AND lsi.sub_id = lshv.sub_id
+		        AND lsi.video_id = lshv.sub_his_id
+		        LEFT OUTER JOIN
+		    (SELECT 
+		        lecture_id,
+		            sub_id,
+		            sub_his_id,
+		            wiki_content,
+		            wiki_content_html
+		    FROM
+		        lecture_sub_history lshw
+		    WHERE
+		        lshw.lecture_id = 110) lshw ON lsi.lecture_id = lshw.lecture_id
+		        AND lsi.sub_id = lshw.sub_id
+		        AND lsi.wiki_id = lshw.sub_his_id
+		        LEFT OUTER JOIN
+		    (SELECT 
+		        COUNT(1) AS video_like_count, sub_his_id, sub_id, lecture_id
+		    FROM
+		        lecture_sub_his_like lshl
+		    WHERE
+		        lshl.lecture_id = 110
+		            AND like_flag = 'Y'
+		    GROUP BY sub_his_id , sub_id , lecture_id) lg ON lg.sub_his_id = lshv.sub_his_id
+		        AND lg.sub_id = lshv.sub_id
+		        AND lsi.lecture_id = lg.lecture_id
+		        LEFT OUTER JOIN
+		    (SELECT 
+		        common_id, GROUP_CONCAT(tag_name) tagName
+		    FROM
+		        lecture_tag
+		    GROUP BY common_id) lt ON lt.common_id = lsi.common_id
+		WHERE
+		    lsi.lecture_id = 110 AND lsi.order = 1;
+	</select>
 </mapper>

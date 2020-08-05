@@ -1,6 +1,6 @@
 spring:
   profiles:
-   active: deploy
+   active: local
 
 ---
 
@@ -42,7 +42,7 @@ spring:
   profiles: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/devit?allowMultiQueries=true    url: jdbc:mysql://i3a101.p.ssafy.io:3306/devit?allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/devit?allowMultiQueries=true#    url: jdbc:mysql://i3a101.p.ssafy.io:3306/devit?allowMultiQueries=true
     username: root
     password: devit
   devtools:
