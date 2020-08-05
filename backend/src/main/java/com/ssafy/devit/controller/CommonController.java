@@ -8,21 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
-import com.ssafy.devit.model.request.LectureRequest;
+import com.ssafy.devit.model.common.Common;
 import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.service.CommonService;
-import com.ssafy.devit.service.LectureService;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -38,7 +31,6 @@ public class CommonController {
 
 	@Autowired
 	CommonService commonService;
-
 
 	@ApiOperation(value = "검색어로 모든 정보 가져오기")
 	@GetMapping("/{searchText}/{startPage}")
@@ -65,6 +57,13 @@ public class CommonController {
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 		}
 		return response;
+	}
+	
+	@GetMapping
+	public Common test() {
+		Common common = new Common();
+		commonService.test(common);
+		return common;
 	}
 
 }
