@@ -74,8 +74,8 @@
                                     <v-list-item class="board_writer">{{ item.userName }}</v-list-item>
                                     <v-list-item class="board_info">
                                         {{item.boardModified ? item.boardModified : item.boardCreated | moment('YYYY-MM-DD HH:mm')}}
-                                        <v-icon color="red" size="20" style="margin:5px 3px 0 5px;">mdi-heart-outline</v-icon>
-                                        {{item.likes}}
+                                        <!-- <v-icon color="red" size="20" style="margin:5px 3px 0 5px;">mdi-heart-outline</v-icon>
+                                        {{item.likes}} -->
                                         <v-icon size="20" style="margin:5px 3px 0 5px;">mdi-eye</v-icon>
                                         {{item.boardCount}}
                                         <!--<v-icon size="15">mdi-comment-processing-outline</v-icon>-->
@@ -226,21 +226,17 @@
             }
         },
         mounted() {
+            if(this.$route.query.showMsg == true){
+                
+                //this.text = "작성이 완료되었습니다.";
+                this.text = this.$route.query.msgText;
+                this.snackbar = true;
+            }
             http
                 .axios
                 .get("/api/v1/board/" + this.$route.query.boardId, {
                 })
                 .then(({data}) => {
-                    //alert("게시글 상세내용 조회 완료");
-                    /*this.user_id = data.result.user_id;
-                    this.board_id = data.result.boardId;
-                    this.name = data.result.userName;
-                    this.title = data.result.boardTitle;
-                    this.content = data.result.boardContent;
-                    this.date = data.result.date;
-                    this.views = data.result.views;
-                    this.likes = data.result.likes;
-                    this.comment_count = data.result.comment_count;*/
                     this.item = data.result;
 
                     if(this.item.isMine == 'Y'){ //수정/삭제 버튼
@@ -285,7 +281,7 @@
                             })
                             .then(({data}) => {
                                 //alert("삭제가 완료되었습니다.");
-                                data;
+                                //data;
                                 this.text = "삭제가 완료되었습니다.";
                                 this.snackbar = true;
                                 /*this
