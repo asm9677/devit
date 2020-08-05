@@ -1,4 +1,4 @@
-package com.ssafy.devit.model.board;
+package com.ssafy.devit.model.request;
 
 import java.util.Collection;
 import java.util.Date;
@@ -6,8 +6,9 @@ import java.util.Date;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-public class Board {
+public class BoardRequest {
 
+	private long boardId;
 	private long userId;
 	private String boardTitle;
 	private String boardContent;
@@ -16,11 +17,11 @@ public class Board {
 	private long boardCount;
 	private Date boardModified;
 	
-	public Board() {
+	public BoardRequest() {
 
 	}
 
-	public Board(long userId, String boardTitle, String boardContent, long boardType, long boardCount) {
+	public BoardRequest(long userId, String boardTitle, String boardContent, long boardType, long boardCount) {
 		this.userId = userId;
 		this.boardTitle = boardTitle;
 		this.boardContent = boardContent;
@@ -28,6 +29,14 @@ public class Board {
 		this.boardCount = boardCount;
 	}
 	
+	public long getBoardId() {
+		return boardId;
+	}
+
+	public void setBoardId(long boardId) {
+		this.boardId = boardId;
+	}
+
 	public String getBoardTitle() {
 		return boardTitle;
 	}

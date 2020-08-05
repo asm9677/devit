@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
-import com.ssafy.devit.model.board.Board;
-import com.ssafy.devit.model.board.BoardResponse;
+import com.ssafy.devit.model.lecture.BoardResponse;
+import com.ssafy.devit.model.request.BoardRequest;
 import com.ssafy.devit.model.request.BoardUpdateRequest;
 import com.ssafy.devit.model.request.BoardUploadRequest;
 import com.ssafy.devit.model.user.User;
@@ -57,12 +57,13 @@ public class BoardController {
 		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		final CommonResponse result = new CommonResponse();
 		ResponseEntity<CommonResponse> response = null;
-		Board board = null;
-		board = new Board(user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardType(), request.getBoardCount());
+		BoardRequest board = null;
+		board = new BoardRequest(user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardType(), request.getBoardCount());
 		try {
 			boardService.upload(board);
 			 // bid에 해당하는 게시글을 조회한다.
 			result.msg = "success";
+//			result.result = board.getBoardId();
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -80,7 +81,7 @@ public class BoardController {
 		// PathVariable로 bid를 받아서 해당 게시글을 조회한다.
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
-		Board board = null;
+		BoardRequest board = null;
 		BoardResponse boardResponse = null;
 		try {
 			

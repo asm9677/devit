@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.devit.model.board.Board;
-import com.ssafy.devit.model.board.BoardResponse;
+import com.ssafy.devit.model.lecture.BoardResponse;
+import com.ssafy.devit.model.request.BoardRequest;
 import com.ssafy.devit.repository.BoardRepository;
 
 @Service
@@ -16,7 +16,7 @@ public class BoardServicelmpl implements BoardService {
 	BoardRepository boardRepository;
 	
 	@Override
-	public void upload(Board board) throws Exception {
+	public void upload(BoardRequest board) throws Exception {
 		if(board == null) {
 			throw new Exception("잘못된 board가 나왔습니다.");
 		}
