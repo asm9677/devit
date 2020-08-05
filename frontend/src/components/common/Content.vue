@@ -7,11 +7,12 @@
                 color="primary"
                 small
                 dark
+                fab
                 bottom
                 right
-                fab
                 fixed
                 @click="goto(0)"
+                style="z-index:10002"                
             >
                 <v-icon>mdi-chevron-up</v-icon>
             </v-btn>
@@ -23,6 +24,9 @@
 import eventBus from "@/lib/EventBus.js"
 
 export default {
+    watch:{
+        
+    },
     data(){
         return {
             button: false,
