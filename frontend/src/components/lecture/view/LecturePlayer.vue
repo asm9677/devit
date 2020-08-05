@@ -155,7 +155,7 @@
                             <v-list-item>
                                 <v-list-item-content>
                                     <v-list-item-title>
-                                        목차2
+                                        관련 영상
                                     </v-list-item-title>                        
                                 </v-list-item-content>
                                 <v-list-item-action @click="closeList">
@@ -164,7 +164,7 @@
                                     </v-icon>
                                 </v-list-item-action>
                             </v-list-item>
-                            1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />1<p />
+                            
                         </v-list>
                     </v-tab-item>
                     <v-tab-item>
@@ -172,7 +172,7 @@
                             <v-list-item>
                                 <v-list-item-content>
                                     <v-list-item-title>
-                                        목차3
+                                        질문 게시판
                                     </v-list-item-title>                        
                                 </v-list-item-content>
                                 <v-list-item-action @click="closeList">
@@ -185,7 +185,7 @@
                         </v-list>
                     </v-tab-item>
                     <v-tab-item>
-                        <v-list>
+                        <v-list :dark="darkOption" style="height:1500px;">
                             <v-list-item>
                                 <v-list-item-content>
                                     <v-list-item-title>
@@ -203,14 +203,51 @@
                                     <v-list-item-subtitle>
                                         테마
                                     </v-list-item-subtitle>
-                                    <v-list-item-subtitle>
-                                        <v-img 
-                                                    :src="'https://picsum.photos/500/300?image=15'"
-                                                ></v-img>
-                                                <v-img src="@/assets/images/logo.png" max-width="60px"></v-img>
+                                    <v-list-item-subtitle>     
+                                        <v-radio-group v-model="darkOption">
+                                            <v-layout>
+                                            <v-flex xs6 sm6 md6 lg6 xl6 style="padding:7px;">
+                                                <v-card style="cursor:pointer" :style="{'border': (!darkOption ? '2px solid #00D27A' : 'none')}" link @click="darkOption=false">
+                                                    <v-img src="@/assets/images/light.png" ></v-img>                                                
+                                                </v-card>                                                
+                                                <v-row justify="space-around" style="margin-top:10px;">                                                    
+                                                    <v-radio
+                                                        label="Light"
+                                                        color="#00D27A"
+                                                        :value="false"
+                                                    ></v-radio>                                                    
+                                                </v-row>
+                                            </v-flex>
+
+                                            <v-flex xs6 sm6 md6 lg6 xl6 style="padding:7px;">
+                                                <v-card style="cursor:pointer" :style="{'border': (darkOption ? '2px solid #00D27A' : 'none')}" link @click="darkOption=true">
+                                                    <v-img src="@/assets/images/dark.png" ></v-img>
+                                                </v-card>
+                                                <v-row justify="space-around" style="margin-top:10px;">                                                    
+                                                    <v-radio
+                                                        label="Dark"
+                                                        color="#00D27A"
+                                                        :value="true"
+                                                    ></v-radio>                                                    
+                                                </v-row>
+
+                                            </v-flex>
+                                            </v-layout>
+                                        </v-radio-group>
 
                                     </v-list-item-subtitle>
                                 </v-list-item-content>
+                            </v-list-item>
+                            <v-divider />
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-subtitle>
+                                        자동 재생
+                                    </v-list-item-subtitle>
+                                </v-list-item-content>
+                                <v-list-item-action>
+                                    <v-switch v-model="autoPlay" color="#00D27A"></v-switch>
+                                </v-list-item-action>
                             </v-list-item>
                                                         
                         </v-list>
@@ -222,7 +259,7 @@
         
 
             <div style="position:absolute; top:0px; left:0px; width:100%; height:100%; z-index:10; ">            
-                    <div :style="{'width' : videoWidth+'px'}">
+                    <div style="border-right:1px solid #d2d2d2" :style="{'width' : videoWidth+'px', 'border-right': (darkOption ? '1px solid #1e1e1e' : '1px solid #d2d2d2')}">
                         <video
                             ref="video"
                             id="livestation-player"
@@ -251,7 +288,7 @@
                             </v-btn>
                         </v-layout>
 
-                        <v-list :dark="darkOption">
+                        <v-list :dark="darkOption"  >
                             <v-list-item>
                                 <v-list-item-content>
                                     <v-list-item-title>
@@ -322,6 +359,8 @@ export default {
     data(){
         return {
             darkOption: false,
+            theme:'',
+            autoPlay: true,
 
             height:500,
             contentHeight: 768,
@@ -391,29 +430,47 @@ export default {
     },
     watch: {
         darkOption(){
-            if(darkOption){
-                $('').css('color', '#D4D4D4')
-                $('.fas').css('color', '#FFFFFF')
+            if(this.darkOption){
+                $('.v-list-item__content').css('color', '#d4d4d4')
+                $('.wiki-paragraph').css('color', '#d4d4d4')
             }else{
-                $('*').css('color', '#000001')
-                $('.fas').css('color', '#FFFFFF')
-                $('.v-navigation-drawer__content.v-icon').css('color', '#FFFFFF')
+                $('.wiki-paragraph').css('color', '#000000DE')
+                $('.v-list-item__content').css('color', '#000000DE')
             }
+            localStorage.setItem('darkOption', this.darkOption ? 'dark' : 'light');
+        },
+        autoPlay() {
+            localStorage.setItem('autoPlay', this.autoPlay ? 'true' : 'false');
         }
+    },
+    created(){
+        this.darkOption = localStorage.getItem('darkOption')        
+        if(this.darkOption == null)
+            this.darkOption = false;
+        else
+            this.darkOption= this.darkOption == 'dark';
+        
+        this.autoPlay = localStorage.getItem('autoPlay')
+        if(this.autoPlay == null)
+            this.autoPlay = true;
+        else
+            this.autoPlay= this.autoPlay == 'true';
+
+        
     },
     mounted() {
         if(this.darkOption){
-            $('.v-list-item__content').css('color', '#000000DE')
-            $('.wiki-paragraph').css('color', '#000000DE')
+            $('.v-list-item__content').css('color', '#d4d4d4')
+            $('.wiki-paragraph').css('color', '#d4d4d4')
         }else{
-            
+            $('.wiki-paragraph').css('color', '#000000DE')
+            $('.v-list-item__content').css('color', '#000000DE')
         }
         this.navWidth = this.$refs.nav.miniVariantWidth;
         this.videoWidth = document.body.scrollWidth - this.listWidth - this.navWidth;
         this.height = this.$refs.video.clientHeight;
 
         this.contentHeight = $('body').prop("clientHeight")-this.$refs.contents.$el.offsetTop
-        console.dir(this.contentHeight)
         
         
         window.addEventListener('resize', this.handleResize)     
