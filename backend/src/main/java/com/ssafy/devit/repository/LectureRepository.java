@@ -8,10 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.devit.model.common.Common;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
+import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
+import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
 import com.ssafy.devit.model.lecture.TagResponse;
 import com.ssafy.devit.model.request.LectureRequest;
+import com.ssafy.devit.model.request.LectureSubsRequest;
 
 public interface LectureRepository {
 	// common id 생성 및 반환 dao
@@ -26,12 +29,29 @@ public interface LectureRepository {
 	@Transactional
 	public void updateFoundationLecture(LectureRequest lecture) throws Exception;
 	
-	// lecture wiki 내용 수정
+	// tag 수정
+	@Transactional
+	public void insertTags(@Param("commonId") long commonId, @Param("tags") String[] tags) throws Exception;
+	
+	// lecture content 내용 수정
+	@Transactional
 	public void updateContentLecture(LectureRequest lecture) throws Exception;
 	
-	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
+	// sub lecture 생성 dao
+	@Transactional
+	public void insertSubLecture(LectureSubsRequest lecture) throws Exception;
 	
-	public void insertTags(@Param("commonId") long commonId, @Param("tagName") String tagName) throws Exception;
+	// sub lecture 업데이트 dao
+	@Transactional
+	public void updateSubLecture(LectureSubsRequest lecture) throws Exception;
+	
+	// 목차 상세 정보 가져오기
+	public LectureSubOneResponse selectOneSubLecture(LectureSubsRequest request) throws Exception;
+	
+	// 목차 가져오기
+	public List<LectureSubIndexResponse> selectSubLectureIndex(@Param("lectureId") long lectureId) throws Exception;
+	
+	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
 	
 	public int getLectureSubCount() throws Exception;
 	

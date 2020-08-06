@@ -75,12 +75,14 @@ CREATE TABLE `board_reply` (
   `reply_created` datetime DEFAULT CURRENT_TIMESTAMP,
   `reply_content` text,
   `parent_reply_id` int(11) DEFAULT NULL,
+  `reply_modified` datetime DEFAULT CURRENT_TIMESTAMP,
+  `delete_yn` varchar(1) DEFAULT 'N',
   PRIMARY KEY (`board_reply_id`),
   KEY `board_reply_bid_fk_idx` (`board_id`),
   KEY `board_reply_uid_fk_idx` (`user_id`),
   CONSTRAINT `board_reply_bid_fk` FOREIGN KEY (`board_id`) REFERENCES `board` (`board_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `board_reply_uid_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 
 
@@ -135,7 +137,7 @@ CREATE TABLE `lecture_sub_index` (
   `order` int(11) DEFAULT '1' COMMENT '소분류 순서',
   `video_id` int(11) DEFAULT NULL COMMENT 'lecture_sub_history로 부터 반영되어 보여질 동영상을 포함하고 있는 lectrue_sub_history.sub_his_id',
   `wiki_id` int(11) DEFAULT NULL COMMENT 'lecture_sub_history로 부터 반영되어 보여질 wiki를 포함하고 있는 lectrue_sub_history.sub_his_id',
-  `view_count` int(11) DEFAULT NULL COMMENT '조회수',
+  `view_count` int(11) DEFAULT '0' COMMENT '조회수',
   `created` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
   `modified` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '수정일',
   PRIMARY KEY (`sub_id`),

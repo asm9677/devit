@@ -9,10 +9,13 @@ import org.springframework.stereotype.Service;
 import com.ssafy.devit.model.common.Common;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
+import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
+import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
 import com.ssafy.devit.model.lecture.TagResponse;
 import com.ssafy.devit.model.request.LectureRequest;
+import com.ssafy.devit.model.request.LectureSubsRequest;
 import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.repository.LectureRepository;
 
@@ -45,14 +48,12 @@ public class LectureServiceImpl implements LectureService {
 	@Override
 	public void updateFoundationLecture(LectureRequest lecture) throws Exception {
 		lectureRepository.updateFoundationLecture(lecture);
-		// 태그 삽입
-		for (String tagName : lecture.getTags()) {
-			lectureRepository.insertTags(lecture.getCommonId(), tagName);
-		}
+		lectureRepository.insertTags(lecture.getCommonId(), lecture.getTags());
 	}
 	
 	@Override
 	public void updateContentLecture(LectureRequest lecture) throws Exception {
+		System.out.println(lecture.toString());
 		lectureRepository.updateContentLecture(lecture);
 	}
 
@@ -102,5 +103,46 @@ public class LectureServiceImpl implements LectureService {
 	@Override
 	public List<LectureRoleUsersResponse> selectRoleUsersByLectureId(long lectureId) throws Exception {
 		return lectureRepository.selectRoleUsersByLectureId(lectureId);
+	}
+
+	// 소강의 생성 및 변경된 개수 반환
+	@Override
+	public int createSubLectures(List<LectureSubsRequest> lectures) throws Exception {
+		int count = 0;
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		for(LectureSubsRequest lecture : lectures) {
+			lecture.setUserId(user.getUserId());
+			if(lecture.getSubId() == 0) {
+				// 아직 db에 있지 않은 테이블이라 간주 하며 INSERT dao를 호출
+
+				// common id 생성 및 Common id 받아오기
+				Common common = new Common();
+				lectureRepository.insertCommonId(common);
+				
+				lecture.setCommonId(common.getCommonId());
+				lectureRepository.insertSubLecture(lecture);
+			}else {
+				// db에는 존재하지만 order를 변경 해야해 UPDATE dao를 호출
+				lectureRepository.updateSubLecture(lecture);
+			}
+			lectureRepository.insertTags(lecture.getCommonId(), lecture.getTags());
+			count++;
+		}
+		return count;
+	}
+
+	@Override
+	public LectureSubOneResponse getOneSubLecture(long lectureId, int order) throws Exception {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		LectureSubsRequest request = new LectureSubsRequest();
+		request.setLectureId(lectureId);
+		request.setOrder(order);
+		request.setUserId(user.getUserId());
+		return lectureRepository.selectOneSubLecture(request);
+	}
+
+	@Override
+	public List<LectureSubIndexResponse> getSubLectureIndex(long lectureId) throws Exception {
+		return lectureRepository.selectSubLectureIndex(lectureId);
 	}
 }
