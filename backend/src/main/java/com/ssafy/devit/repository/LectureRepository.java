@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.devit.model.common.Common;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
+import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
 import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
@@ -46,6 +47,9 @@ public interface LectureRepository {
 	
 	// 목차 상세 정보 가져오기
 	public LectureSubOneResponse selectOneSubLecture(LectureSubsRequest request) throws Exception;
+	
+	// 목차 가져오기
+	public List<LectureSubIndexResponse> selectSubLectureIndex(@Param("lectureId") long lectureId) throws Exception;
 	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
 	

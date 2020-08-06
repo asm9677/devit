@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ssafy.devit.model.common.Common;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
+import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
 import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
@@ -138,5 +139,10 @@ public class LectureServiceImpl implements LectureService {
 		request.setOrder(order);
 		request.setUserId(user.getUserId());
 		return lectureRepository.selectOneSubLecture(request);
+	}
+
+	@Override
+	public List<LectureSubIndexResponse> getSubLectureIndex(long lectureId) throws Exception {
+		return lectureRepository.selectSubLectureIndex(lectureId);
 	}
 }

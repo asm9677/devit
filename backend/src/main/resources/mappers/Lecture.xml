@@ -318,4 +318,28 @@
 		WHERE
 		    lsi.lecture_id = #{lectureId} AND lsi.order = #{order};
 	</select>
+	
+	<!-- 목차 불러오기 -->
+	<select id="selectSubLectureIndex" resultType="LectureSubIndexResponse">
+		SELECT 
+		    lsi.lecture_id lectureId,
+		    lsi.sub_id subId,
+		    lsi.title,
+		    lshv.play_time playTime,
+		    lsi.order
+		FROM
+		    lecture_sub_index lsi
+		        LEFT OUTER JOIN
+		    (SELECT 
+		        lecture_id, sub_id, sub_his_id, player_url, play_time
+		    FROM
+		        lecture_sub_history lshv
+		    WHERE
+		        lshv.lecture_id = #{lectureId}) lshv ON lsi.lecture_id = lshv.lecture_id
+		        AND lsi.sub_id = lshv.sub_id
+		        AND lsi.video_id = lshv.sub_his_id
+		WHERE
+		    lsi.lecture_id = #{lectureId}
+		ORDER BY lsi.order;
+	</select>
 </mapper>
