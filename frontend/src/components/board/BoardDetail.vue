@@ -130,7 +130,7 @@
                             </v-list-item>
 
                             <v-data-iterator
-                                class="board_list"
+                                class=""
                                 :items="items"
                                 hide-default-footer="hide-default-footer"
                                 no-data-text=""
@@ -153,8 +153,9 @@
                                                     depressed="depressed"
                                                     text="text"
                                                     small="small"
-                                                    @click="move('/lecture/create')">
-                                                    <font :color="hover ? '' : 'gray'" size="2">답글</font>
+                                                    @click="showRereply()"
+                                                    >
+                                                    <font :color="hover ? '' : 'gray'" size="2">{{item.type == 'reply' && item.showLayer ? '답글 접기' : '답글'}}</font>
                                                 </v-btn>
                                             </v-hover>
                                             <v-hover v-slot:default="{ hover }">
@@ -179,15 +180,25 @@
                                             </v-hover>
                                         </v-list-item>
                                         <v-list-item class="comment_content">{{ item.replyContent }}</v-list-item>
-                                        <v-list-item>
+                                        <v-list-item
+                                        v-show="false">
                                             <div>
                                                 <v-textarea
-                                                    v-model="replyText"
+                                                    v-model="item.replyText"
                                                     no-resize="no-resize"
                                                     outlined="outlined"
                                                     rows="3"
                                                     placeholder="댓글을 입력하세요"></v-textarea>
                                             </div>
+                                            <v-hover v-slot:default="{ hover }">
+                                            <v-btn
+                                                depressed="depressed"
+                                                text="text"
+                                                small="small"
+                                                @click="createRereply()">
+                                                <font :color="hover ? '' : 'gray'" size="2">등록</font>
+                                            </v-btn>
+                                        </v-hover>
                                         </v-list-item>
                                         <v-divider></v-divider>
                                     </v-col>
@@ -253,36 +264,13 @@
             }
 
             this.showBoardDetail();
-            /*http
-                .axios
-                .get("/api/v1/board/" + this.$route.query.boardId, {
-                })
-                .then(({data}) => {
-                    this.item = data.result;
-
-                    if(this.item.isMine == 'Y'){ //수정/삭제 버튼
-                        this.isBtnShow = true;
-                    }else{
-                        this.isBtnShow = false;
-                    }
-
-                    http
-                    .axios
-                    .get("/api/v1/reply/" + this.$route.query.boardId, {
-                    })
-                    .then(({data}) => {
-                        this.items = data.result;
-                    })
-                    .catch((error) => {
-                        console.dir(error)
-                    })
-                })
-                .catch((error) => {
-                    console.dir(error)
-                })*/
             },
         methods: {
+            showRereply(){
+
+            },
             createReply(){
+                
                 if(this.replyText == ""){
                     alert("댓글을 입력하세요");
                     return;
@@ -290,13 +278,14 @@
                 http
                 .axios
                 .post("/api/v1/reply", {
-                    boardId: this.boardId,
+                    boardId: this.$route.query.boardId,
                     parentReplyId: 0,
                     replyContent: this.replyText,
                 })
                 .then(({data}) => {
                     this.text = "댓글이 등록되었습니다.";
                     this.snackbar = true;
+                    this.replyText = "";
                     this.showBoardDetail();
                 
                 })
@@ -425,7 +414,7 @@
         min-height: 250px;
     }
     .board_detail .v-list-item {
-        min-height: 10px;
+        min-height: 20px;
     }
 
     .board_detail .board_title {
@@ -450,9 +439,15 @@
         padding: 20px;
         margin-top: 20px;
     }
+    
+    .comment_list .v-list-item {
+        min-height: 20px;
+    }
+
     .comment_list .comment_title {
         font-size: 18px;
         font-weight: bold;
+        min-height:50px;
     }
     .comment_list .comment_writer {
         font-size: 16px;
