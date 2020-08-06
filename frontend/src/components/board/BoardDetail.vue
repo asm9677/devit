@@ -81,7 +81,7 @@
                                         <!--<v-icon size="15">mdi-comment-processing-outline</v-icon>-->
                                         <v-spacer></v-spacer>
                                         <v-icon size="20" style="margin:5px 3px 0 5px;">mdi-comment-processing</v-icon>
-                                        {{item.comment_count}}
+                                        {{item.replyCount}}
                                     </v-list-item>
                                 </v-list-item-content>
                             </v-list-item>
@@ -102,7 +102,7 @@
                             <v-list-item class="comment_title">
                                 댓글
                                 <v-icon size="20" style="margin:5px 3px 0 20px;">mdi-comment-processing</v-icon>
-                                <span style="font-size:15px; font-weight:normal;">{{item.comment_count}}</span>
+                                <span style="font-size:15px; font-weight:normal;">{{item.replyCount}}</span>
                                 <v-spacer></v-spacer>
                                 <v-hover v-slot:default="{ hover }">
                                     <v-btn
@@ -189,17 +189,6 @@
                 isBtnShow: false,
                 itemsPerPage: 10,
                 item:{},
-                /*boardType: '',
-                boardId: '',
-                userId:'',
-                userName: '',
-                boardTitle: '',
-                boardContent: '',
-                boardCreated: '',
-                boardModified: '',
-                boardCount: '',
-                likes: '',
-                comment_count: '',*/
                 items: [
                     /*{
                         comment_id: 1,

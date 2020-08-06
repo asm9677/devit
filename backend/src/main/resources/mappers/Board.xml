@@ -26,6 +26,7 @@
          		a.type as boardType, 
          		a.created as boardCreated, 
          		a.count as boardCount, 
+         		(select count(1) from board_reply where delete_yn = 'N' and board_id = a.board_id) as replyCount,
          		a.modified as boardModified,
          		if(a.user_id = #{userId}, 'Y', 'N') as isMine
          from board a
@@ -58,6 +59,7 @@
          		a.type as boardType, 
          		a.created as boardCreated, 
          		a.count as boardCount, 
+         		(select count(1) from board_reply where delete_yn = 'N' and board_id = a.board_id) as replyCount,
          		a.modified as boardModified,
          		case when c.cnt is null then 0
                      when c.cnt = 0 then 0
@@ -78,6 +80,7 @@
          		        a.user_id = b.user_id
          		  where a.type = #{type}
             		and a.flag = 'Y'
+            		and a.lecture_id is null
             		<if test="searchtxt != null and searchtxt != ''">
 						<if test="searchselect == '전체'">
 						and (upper(a.title) like concat('%', upper(#{searchtxt}), '%') or
@@ -117,6 +120,7 @@
 				</if>
 			</if>
             and a.flag = 'Y'
+            and a.lecture_id is null
        order by a.board_id desc
 		  limit #{startPage} , #{itemsperpage};
 		  

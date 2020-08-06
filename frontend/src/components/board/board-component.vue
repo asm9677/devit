@@ -30,6 +30,8 @@
                                     {{item.likes ? item.likes : 0}} -->
                                     <v-icon size="15" style="margin:0 5px;">mdi-eye</v-icon>
                                     {{item.boardCount}}
+                                    <v-icon size="15" style="margin:0 5px;">mdi-comment-processing</v-icon>
+                                    {{item.replyCount}}
                                 </v-list-item>
                             </v-list-item-content>
                         </v-list-item>
