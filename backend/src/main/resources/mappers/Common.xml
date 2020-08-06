@@ -68,4 +68,46 @@
 		ORDER BY l.lecture_id
 		LIMIT #{startPage}, 20;
 	</select>
+	
+		<!-- common 테스트 -->
+	<insert id="test" useGeneratedKeys="true" keyProperty="commonId" parameterType="Common">
+		insert into lecture_common value()
+	</insert>
+	
+	
+   <!-- 메인화면 데빗 현황 조회 -->
+      <select id="getMainStatus" resultType="MainResponse">
+      
+		select concat(format(ifnull(u.totalUsers, 0), 0), '명') as totalUsers, 
+			   concat(format(ifnull(d.totalDeviters, 0), 0), '명') as totalDeviters, 
+	           concat(format(ifnull(l.totalLectures, 0), 0), '강의') as totalLectures
+	      from (
+				select 1
+	              from dual
+			   ) a
+			   left outer join
+	           (
+				select count(1) as totalUsers
+				  from user
+			   ) u
+	           on
+	           1=1
+			   left outer join
+	           (
+	            select count(1) as totalDeviters
+	              from lecture_sub_history 
+				 where accept_yn = 'Y'
+			  group by user_id
+	           ) d
+	           on
+	           1=1
+	           left outer join
+	           (
+	            select count(1) as totalLectures
+	              from lecture
+				 where deleted_flag = 'N'
+	           ) l
+	           on
+	           1=1;
+      </select>
 </mapper>

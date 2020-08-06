@@ -1,5 +1,7 @@
 package com.ssafy.devit.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
+import com.ssafy.devit.model.request.LectureAuthRequest;
 import com.ssafy.devit.model.request.LectureRequest;
+import com.ssafy.devit.model.request.LectureSubHistoryRequest;
+import com.ssafy.devit.model.request.LectureSubsRequest;
 import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.service.LectureService;
 
@@ -49,8 +54,7 @@ public class LectureController {
 		final CommonResponse result = new CommonResponse();
 
 		try {
-			LectureOneResponse lectureOneResponse = lectureService.createLecture();
-			lectureService.insertAuthLecture(lectureOneResponse.getLectureId(), "owner");
+			LectureOneResponse lectureOneResponse = lectureService.createDummyLecture();
 			result.result = lectureOneResponse;
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.CREATED);
@@ -158,13 +162,12 @@ public class LectureController {
 			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
 	@ApiOperation(value = "사용자 좋아요 처리")
 	@PutMapping("/like")
-	public ResponseEntity<CommonResponse> updateLectureLike(@RequestParam("lectureId") long lectureId,
-			@RequestParam("likeType") int likeType) {
+	public ResponseEntity<CommonResponse> updateLectureLike(@RequestParam("lectureId") long lectureId) {
 		log.info(">> Load : updateLectureLike <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		try {
-			lectureService.updateLikeLectureByUserId(lectureId, likeType);
+			lectureService.updateLikeLectureByUserId(lectureId);
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
@@ -235,6 +238,139 @@ public class LectureController {
 			log.info(e.getMessage().toString());
 			result.msg = "fail";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "공동 작업자 수정")
+	@PutMapping("/role/{lectureid}")
+	public ResponseEntity<CommonResponse> updateLectureAuth(@PathVariable("lectureid") long lectureId,
+			@RequestBody List<LectureAuthRequest> request) {
+		log.info(">> Load : updateLectureAuth <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			lectureService.updateLectureAuth(lectureId, request);
+			result.msg = "success";
+			result.result = "성공적으로 등록 되었습니다.";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			log.info(">> Error : updateLectureAuth <<");
+			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "소강의 생성")
+	@PostMapping("/sub")
+	public ResponseEntity<CommonResponse> createSubLectures(@RequestBody List<LectureSubsRequest> requests) {
+		log.info(">> Load : createSubLectures <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			result.result = lectureService.createSubLectures(requests) + "개 생성 및 수정 완료";
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			log.info(">> Error : createSubLectures <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "목차 상세정보 가져오기")
+	@GetMapping("/sub/{lectureid}")
+	public ResponseEntity<CommonResponse> getSubLecture(@PathVariable("lectureid") long lectureId,
+			@RequestParam("order") int order) {
+		log.info(">> Load : getSubLecture <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			result.result = lectureService.getOneSubLecture(lectureId, order);
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			log.info(">> Error : getSubLecture <<");
+			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
+
+	@ApiOperation(value = "목차 리스트 가져오기")
+	@GetMapping("/subs/{lectureid}")
+	public ResponseEntity<CommonResponse> getSubsLectureIndex(@PathVariable("lectureid") long lectureId) {
+		log.info(">> Load : getSubsLectureIndex <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			result.result = lectureService.getSubLectureIndex(lectureId);
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			log.info(">> Error : getSubsLectureIndex <<");
+			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "강의, 위키 요청 리퀘스트")
+	@PostMapping("/sub/history")
+	public ResponseEntity<CommonResponse> registrySubHistory(@RequestBody LectureSubHistoryRequest request) {
+		log.info(">> Load : registrySubHistory <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			lectureService.registrySubHistory(request);
+			result.msg = "success";
+			result.result = "성공적으로 등록 되었습니다.";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			log.info(">> Error : registrySubHistory <<");
+			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "같은종류 다른 강의 들고오기")
+	@PostMapping("/sub/history/{subid}")
+	public ResponseEntity<CommonResponse> getTheOtherSubLectures(@PathVariable("subid") long subId) {
+		log.info(">> Load : getTheOtherSubLectures <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {			
+			result.result = lectureService.getTheOtherSubLectures(subId);
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			log.info(">> Error : getTheOtherSubLectures <<");
+			log.info(e.getMessage().toString());
 		}
 		return response;
 	}

@@ -180,23 +180,21 @@
                             boardModified: ""
                         })
                         .then(({data}) => {
-                            data;
-                            this.text = "작성이 완료되었습니다.";
-                            this.snackbar = true;
-                            // this
-                            //     .$router
-                            //     .push({
-                            //         name: 'BoardDetail',
-                            //         query: {
-                            //             'boardId': data.result //data.boardId
-                            //         }
-                            //     });
-                            this.$router.push({
-                                path: '/board',
-                                query: {
-                                    'type': this.boardType.type
-                                }
-                            })
+                            this
+                                .$router
+                                .push({
+                                    name: 'BoardDetail',
+                                    params:{
+                                        "showMsg": true,
+                                        "msgText": "작성이 완료되었습니다."
+                                        },
+                                    query: { 
+                                        'boardtype':this.boardType.type,
+                                        'boardId': data.result, //data.boardId
+                                    }
+                                });
+                            
+                            
 
                         })
                         .catch((error) => {
@@ -216,14 +214,17 @@
                             boardCount: "",
                             boardModified: ""
                         })
-                        .then(({data}) => {
-                            //alert("작성이 완료되었습니다.");
-                            this.text = "수정이 완료되었습니다.";
-                            this.snackbar = true;                            
+                        .then(({data}) => {                          
                             this
                                 .$router
-                                .push({path:'/board/detail', query:{
-                                    "boardId": data.result/*data.boardId*/
+                                .push({path:'/board/detail', 
+                                    params:{
+                                        "showMsg": true,
+                                        "msgText": "수정이 완료되었습니다."
+                                        },
+                                        query:{
+                                    "boardtype": this.boardType.type,
+                                    "boardId": data.result,/*data.boardId*/
                                 }});
 
                         })

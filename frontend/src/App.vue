@@ -36,4 +36,42 @@ export default {
     * {
         font-family: "Noto Sans KR", sans-serif;
     }
+
+    @media only screen and (-webkit-min-device-pixel-ratio: 0) and (min-device-width: 1025px) {
+         ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-button:start:decrement,
+        ::-webkit-scrollbar-button:end:increment {
+            display: block;
+            height: 0px;
+        }
+
+
+        ::-webkit-scrollbar-button:vertical:increment {
+            /* background-color: #fff;
+             */
+             height:0px;
+        } 
+
+        ::-webkit-scrollbar-track-piece {
+            background-color: transparent;
+            -webkit-border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:vertical {
+            height: 50px;
+            background-color:rgb(167, 164, 164);
+            opacity: 0.5;
+            
+             /* background-image: linear-gradient(-45deg, rgba(0, 160, 255, 0.86), rgb(0, 72, 162)); */
+        }
+
+        ::-webkit-scrollbar-thumb:horizontal {
+            width: 50px;
+            background-color:transparent;
+            -webkit-border-radius: 3px;
+        } 
+    }
 </style>

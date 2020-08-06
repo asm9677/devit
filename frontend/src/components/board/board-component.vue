@@ -13,8 +13,7 @@
             :items="items"
             :items-per-page.sync="itemsPerPage"
             hide-default-footer="hide-default-footer"
-            no-data-text="게시글이 존재하지 않습니다."            
-        >
+            no-data-text="게시글이 존재하지 않습니다.">
             <template v-slot:default="props">
                 <v-col v-for="item in props.items" :key="item.boardId">
                     <v-card @click="goToDetail(item.boardId)" style="cursor:pointer">
@@ -27,10 +26,12 @@
                                 <v-list-item class="board_writer">{{ item.userName }}</v-list-item>
                                 <v-list-item class="board_info">
                                     {{item.boardModified ? item.boardModified : item.boardCreated | moment('YYYY-MM-DD HH:mm')}}
-                                    <v-icon color="red" size="15" style="margin:0 5px;">mdi-heart-outline</v-icon>
-                                    {{item.likes ? item.likes : 0}}
+                                    <!-- <v-icon color="red" size="15" style="margin:0 5px;">mdi-heart-outline</v-icon>
+                                    {{item.likes ? item.likes : 0}} -->
                                     <v-icon size="15" style="margin:0 5px;">mdi-eye</v-icon>
                                     {{item.boardCount}}
+                                    <v-icon size="15" style="margin:0 5px;">mdi-comment-processing</v-icon>
+                                    {{item.replyCount}}
                                 </v-list-item>
                             </v-list-item-content>
                         </v-list-item>
@@ -59,33 +60,37 @@
         <v-container>
             <v-row justify="center">
                 <v-col cols="8">
-                    <v-pagination v-model="page" class="my-4" :length="10"></v-pagination>
+                    <v-pagination v-model="page" class="my-4" :length="pageCnt"></v-pagination>
                 </v-col>
             </v-row>
         </v-container>
 
         <v-container>
             <v-row justify="center">
-            
-                    
-                    <v-select dense outlined style="max-width:100px; margin-right:10px;" v-model="searchselect" :items="searchitems"></v-select>
 
-                    <v-card flat="flat" rounded="rounded">
-                        <v-text-field
-                            placeholder="미구현 기능입니다"
-                            v-model="searchTxt"
-                            solo="solo"
-                            dense
-                            flat="flat"
-                            outlined="outlined"
-                            @keydown.enter="keywordSearch"></v-text-field>
-                    </v-card>
+                <v-select
+                    dense="dense"
+                    outlined="outlined"
+                    style="max-width:100px; margin-right:10px;"
+                    v-model="searchselect"
+                    :items="searchitems"></v-select>
 
-                    <v-btn dense icon="icon" @click="keywordSearch" ref="searchBtn">
-                        <v-icon ref="searchIcon">
-                            mdi-magnify
-                        </v-icon>
-                    </v-btn>
+                <v-card flat="flat" rounded="rounded">
+                    <v-text-field
+                        placeholder="검색어를 입력하세요"
+                        v-model="searchTxt"
+                        solo="solo"
+                        dense="dense"
+                        flat="flat"
+                        outlined="outlined"
+                        @keydown.enter="searchByPage"></v-text-field>
+                </v-card>
+
+                <v-btn dense="dense" icon="icon" @click="searchByPage" ref="searchBtn">
+                    <v-icon ref="searchIcon">
+                        mdi-magnify
+                    </v-icon>
+                </v-btn>
             </v-row>
         </v-container>
     </v-container>
@@ -97,18 +102,17 @@
 
     export default {
         name: 'local-component',
-        props:[
-            'boardtype'
-        ],
-        watch:{
+        props: ['boardtype'],
+        watch: {
             page() {
                 this.searchByPage()
             }
         },
         data() {
             return {
-                searchTxt:"",
+                searchTxt: "",
                 page: 1,
+                pageCnt: 0,
                 searchselect: '전체',
                 searchitems: [
                     '전체', '제목', '내용', '작성자'
@@ -119,19 +123,14 @@
                 itemsPerPage: 4,
                 items: [
                     {
-                        // boardId: 2,
-                        // userName: '홍길동',
-                        // boardTitle: '글제목2',
-                        // boardContent: '글내용2',
-                        // boardCreated: '2020/07/06',
-                        // boardModified: '2020/07/06',
-                        // boardCount: '3,743',
-                        // //likes: '152'
-                    }, 
+                        // boardId: 2, userName: '홍길동', boardTitle: '글제목2', boardContent: '글내용2',
+                        // boardCreated: '2020/07/06', boardModified: '2020/07/06', boardCount: '3,743',
+                        // likes: '152'
+                    }
                 ]
             }
         },
-        mounted(){
+        mounted() {
             //boardtype별 조회
             this.searchByPage();
             /*http
@@ -148,7 +147,7 @@
                     // boardCount: "",
                     // boardModified: ""
                 })
-                .then(({data}) => {                    
+                .then(({data}) => {
                     //alert("게시글 상세내용 조회 완료");
                     this.items = data.result;
                 })
@@ -157,43 +156,54 @@
                 })*/
         },
         methods: {
-            searchByPage(){
+            searchByPage() {
+                if(this.searchTxt != null && this.searchTxt != ""){
+                    this.page = 1;
+                }
                 http
-                .axios
-                .get("/api/v1/board/list?page=${this.page}&type=${this.boardtype}&itemsperpage=${this.itemsPerPage}", {
-                })
-                .then(({data}) => {                    
-                    this.items = data.result;
-                })
-                .catch((error) => {
-                    console.dir(error)
-                })
-            },
+                    .axios
+                    .get(
+                        `/api/v1/board/list?page=${this.page}&type=${this.boardtype}&itemsperpage=${this.itemsPerPage}&searchselect=${this.searchselect}&searchtxt=${this.searchTxt}`,
+                        {}
+                    )
+                    .then(({data}) => {
+                        this.items = data.result;
+                        this.pageCnt = data.result[0].pageCnt;
+                        console.log("data.result", data.result)
+                    })
+                    .catch((error) => {
+                        console.dir(error)
+                    })
+                },
             goToDetail(boardId) {
-                //alert("board-component boardId = " + boardId);
-                //alert("board-component goToDetail "+boardId);
-                //eventBus.$emit('showDetail', boardId);
+                // alert("board-component boardId = " + boardId); alert("board-component
+                // goToDetail "+boardId); eventBus.$emit('showDetail', boardId);
                 this
                     .$router
-                        .push({path: '/board/detail', query:{"boardtype": this.boardtype,"boardId": boardId}});
+                    .push({
+                        path: '/board/detail',
+                        query: {
+                            "boardtype": this.boardtype,
+                            "boardId": boardId
+                        }
+                    });
 
             },
             newBoard() {
                 // eventBus.$emit('newBoard');
-                if(this.$router.app.$store.state.token){
+                if (this.$router.app.$store.state.token) {
                     this
                         .$router
-                            .push({path: '/board/edit', 
-                                query: {
-                                    "boardtype": this.boardtype,
-                                    "edittype": "new"
-                            }});
-                }else{
+                        .push({
+                            path: '/board/edit',
+                            query: {
+                                "boardtype": this.boardtype,
+                                "edittype": "new"
+                            }
+                        });
+                } else {
                     eventBus.$emit('doLogin');
                 }
-            },
-            keywordSearch(){
-
             }
         }
     }

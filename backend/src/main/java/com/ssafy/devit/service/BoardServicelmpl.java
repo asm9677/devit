@@ -5,8 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.devit.model.board.Board;
-import com.ssafy.devit.model.board.BoardResponse;
+import com.ssafy.devit.model.lecture.BoardResponse;
+import com.ssafy.devit.model.request.BoardRequest;
+import com.ssafy.devit.model.request.BoardWithLectureRequest;
 import com.ssafy.devit.repository.BoardRepository;
 
 @Service
@@ -16,7 +17,7 @@ public class BoardServicelmpl implements BoardService {
 	BoardRepository boardRepository;
 	
 	@Override
-	public void upload(Board board) throws Exception {
+	public void upload(BoardRequest board) throws Exception {
 		if(board == null) {
 			throw new Exception("잘못된 board가 나왔습니다.");
 		}
@@ -48,13 +49,23 @@ public class BoardServicelmpl implements BoardService {
 	}
 	
 	@Override
-	public List<BoardResponse> listinfo(long startPage, long type, long itemsperpage) throws Exception {
+	public List<BoardResponse> listinfo(long startPage, long type, long itemsperpage, String searchselect, String searchtxt) throws Exception {
 		if(type < 1) {
 			throw new Exception("잘못된 type이 나왔습니다.");
 		}
 		startPage = (startPage-1) * itemsperpage;
 //		return boardRepository.listinfo(type);
-		return boardRepository.listinfo(startPage, type, itemsperpage);
+		return boardRepository.listinfo(startPage, type, itemsperpage, searchselect, searchtxt);
 		
 	}
+	
+	@Override
+	public void createBoardWithLecture(BoardWithLectureRequest boardWithLectureRequest) throws Exception{
+		
+
+		if(boardWithLectureRequest == null) {
+			throw new Exception("잘못된 board가 나왔습니다.");
+		}
+		boardRepository.createBoardWithLecture(boardWithLectureRequest);
+	};
 }

@@ -1,4 +1,4 @@
-package com.ssafy.devit.model.board;
+package com.ssafy.devit.model.lecture;
 
 import java.util.Date;
 
@@ -12,12 +12,14 @@ public class BoardResponse {
 	private Date boardCreated;
 	private Date boardModified;
 	private long boardCount;
+	private long replyCount;
 	private String isMine;
+	private long pageCnt;
 	
 	public BoardResponse() {}
 	
 	public BoardResponse(long boardId, long userId, String nickName, String boardTitle, String boardContent, 
-			long boardType, Date boardCreated, Date boardModified, long boardCount, String isMine){
+			long boardType, Date boardCreated, Date boardModified, long boardCount, long replyCount, String isMine, long pageCnt){
 		this.boardId = boardId;
 		this.userId = userId;
 		this.userName = nickName;
@@ -28,6 +30,7 @@ public class BoardResponse {
 		this.boardModified = boardModified;
 		this.boardCount = boardCount;
 		this.isMine = isMine;
+		this.pageCnt = pageCnt;
 	}
 
 	public String getUserName() {
@@ -110,11 +113,29 @@ public class BoardResponse {
 		this.boardCount = boardCount;
 	}
 	
+	
+	
+	public long getReplyCount() {
+		return replyCount;
+	}
+
+	public void setReplyCount(long replyCount) {
+		this.replyCount = replyCount;
+	}
+
 	public String getIsMine() {
 		return isMine;
 	}
 	
 	public void setIsMine(String isMine) {
 		this.isMine = isMine;
+	}
+	
+	public long getPageCnt() {
+		return pageCnt;
+	}
+	
+	public void setPageCnt(long pageCnt) {
+		this.pageCnt = pageCnt;
 	}
 }

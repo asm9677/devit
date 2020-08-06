@@ -1,13 +1,12 @@
-package com.ssafy.devit.model.board;
+package com.ssafy.devit.model.request;
 
-import java.util.Collection;
 import java.util.Date;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+public class BoardWithLectureRequest {
 
-public class Board {
-
+	private long boardId;
+	private long lectureId;
+	private long subId;
 	private long userId;
 	private String boardTitle;
 	private String boardContent;
@@ -16,11 +15,10 @@ public class Board {
 	private long boardCount;
 	private Date boardModified;
 	
-	public Board() {
 
-	}
-
-	public Board(long userId, String boardTitle, String boardContent, long boardType, long boardCount) {
+	public BoardWithLectureRequest(long lectureId, long subId, long userId, String boardTitle, String boardContent, long boardType, long boardCount) {
+		this.lectureId = lectureId;
+		this.subId = subId;
 		this.userId = userId;
 		this.boardTitle = boardTitle;
 		this.boardContent = boardContent;
@@ -28,6 +26,30 @@ public class Board {
 		this.boardCount = boardCount;
 	}
 	
+	public long getBoardId() {
+		return boardId;
+	}
+
+	public void setBoardId(long boardId) {
+		this.boardId = boardId;
+	}
+
+	public long getLectureId() {
+		return lectureId;
+	}
+
+	public void setLectureId(long lectureId) {
+		this.lectureId = lectureId;
+	}
+
+	public long getSubId() {
+		return subId;
+	}
+
+	public void setSubId(long subId) {
+		this.subId = subId;
+	}
+
 	public String getBoardTitle() {
 		return boardTitle;
 	}

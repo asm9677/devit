@@ -2,13 +2,16 @@ package com.ssafy.devit.service;
 
 import java.util.List;
 
-import com.ssafy.devit.model.board.Board;
-import com.ssafy.devit.model.board.BoardResponse;
+import com.ssafy.devit.model.lecture.BoardResponse;
+import com.ssafy.devit.model.request.BoardRequest;
+import com.ssafy.devit.model.request.BoardWithLectureRequest;
 
 public interface BoardService {
-	public void upload(Board board) throws Exception;
+	public void upload(BoardRequest board) throws Exception;
 	public BoardResponse info(long bid, long userId) throws Exception;
 	public void delete(long bid) throws Exception;
 	public void update(BoardResponse boardResponse, long bid) throws Exception;
-	public List<BoardResponse> listinfo(long startPage, long type, long itemsperpage) throws Exception;
+	public List<BoardResponse> listinfo(long startPage, long type, long itemsperpage, String searchselect, String searchtxt) throws Exception;
+
+	public void createBoardWithLecture(BoardWithLectureRequest boardWithLectureRequest) throws Exception;
 }

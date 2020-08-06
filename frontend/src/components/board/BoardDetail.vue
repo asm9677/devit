@@ -74,14 +74,14 @@
                                     <v-list-item class="board_writer">{{ item.userName }}</v-list-item>
                                     <v-list-item class="board_info">
                                         {{item.boardModified ? item.boardModified : item.boardCreated | moment('YYYY-MM-DD HH:mm')}}
-                                        <v-icon color="red" size="20" style="margin:5px 3px 0 5px;">mdi-heart-outline</v-icon>
-                                        {{item.likes}}
+                                        <!-- <v-icon color="red" size="20" style="margin:5px 3px 0 5px;">mdi-heart-outline</v-icon>
+                                        {{item.likes}} -->
                                         <v-icon size="20" style="margin:5px 3px 0 5px;">mdi-eye</v-icon>
                                         {{item.boardCount}}
                                         <!--<v-icon size="15">mdi-comment-processing-outline</v-icon>-->
                                         <v-spacer></v-spacer>
                                         <v-icon size="20" style="margin:5px 3px 0 5px;">mdi-comment-processing</v-icon>
-                                        {{item.comment_count}}
+                                        {{item.replyCount}}
                                     </v-list-item>
                                 </v-list-item-content>
                             </v-list-item>
@@ -102,7 +102,7 @@
                             <v-list-item class="comment_title">
                                 댓글
                                 <v-icon size="20" style="margin:5px 3px 0 20px;">mdi-comment-processing</v-icon>
-                                <span style="font-size:15px; font-weight:normal;">{{item.comment_count}}</span>
+                                <span style="font-size:15px; font-weight:normal;">{{item.replyCount}}</span>
                                 <v-spacer></v-spacer>
                                 <v-hover v-slot:default="{ hover }">
                                     <v-btn
@@ -189,17 +189,6 @@
                 isBtnShow: false,
                 itemsPerPage: 10,
                 item:{},
-                /*boardType: '',
-                boardId: '',
-                userId:'',
-                userName: '',
-                boardTitle: '',
-                boardContent: '',
-                boardCreated: '',
-                boardModified: '',
-                boardCount: '',
-                likes: '',
-                comment_count: '',*/
                 items: [
                     /*{
                         comment_id: 1,
@@ -226,21 +215,18 @@
             }
         },
         mounted() {
+            if(this.$route.params.showMsg == true){
+                
+                //this.text = "작성이 완료되었습니다.";
+                this.text = this.$route.params.msgText;
+                this.snackbar = true;
+            }
             http
                 .axios
                 .get("/api/v1/board/" + this.$route.query.boardId, {
                 })
                 .then(({data}) => {
-                    //alert("게시글 상세내용 조회 완료");
-                    /*this.user_id = data.result.user_id;
-                    this.board_id = data.result.boardId;
-                    this.name = data.result.userName;
-                    this.title = data.result.boardTitle;
-                    this.content = data.result.boardContent;
-                    this.date = data.result.date;
-                    this.views = data.result.views;
-                    this.likes = data.result.likes;
-                    this.comment_count = data.result.comment_count;*/
+                    console.log("여기!!!!!!!!!!!!!11", data);
                     this.item = data.result;
 
                     if(this.item.isMine == 'Y'){ //수정/삭제 버튼
@@ -285,7 +271,7 @@
                             })
                             .then(({data}) => {
                                 //alert("삭제가 완료되었습니다.");
-                                data;
+                                //data;
                                 this.text = "삭제가 완료되었습니다.";
                                 this.snackbar = true;
                                 /*this

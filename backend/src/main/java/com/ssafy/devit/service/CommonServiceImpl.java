@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.devit.model.common.Common;
 import com.ssafy.devit.model.common.SearchInfoResponse;
+import com.ssafy.devit.model.lecture.MainResponse;
 import com.ssafy.devit.repository.CommonRepository;
 
 @Service
@@ -22,5 +24,16 @@ public class CommonServiceImpl implements CommonService{
 		startPage = (startPage-1) * 20;
 		return commonRepository.selectInfomationBySearch(userId, searchText, startPage);
 	}
+
+	@Override
+	public void test(Common common) {
+		commonRepository.test(common);
+	}
+	
+	@Override
+	public MainResponse getMainStatus() throws Exception{
+		
+		return commonRepository.getMainStatus();
+	};
 	
 }
