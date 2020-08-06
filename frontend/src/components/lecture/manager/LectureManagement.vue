@@ -27,7 +27,7 @@
                             <MemberManagement :option='option'> </MemberManagement>
                         </v-tab-item>
                         <v-tab-item>
-                            <Default :option='option'> </Default>
+                            미구현 기능입니다.
                         </v-tab-item>
                         <v-tab-item>
                             <ChapterManagement :option='option'> </ChapterManagement>
@@ -44,11 +44,10 @@
 
 <script>
 import store from "@/store/index.js"
-import Default from "@/components/lecture/form/Default.vue"
-import Intro from "@/components/lecture/form/Intro.vue"
-import MemberManagement from "@/components/lecture/form/MemberManagement.vue"
-
-import ChapterManagement from "@/components/lecture/form/ChapterManagement.vue"
+import Default from "@/components/lecture/manager/Default.vue"
+import Intro from "@/components/lecture/manager/Intro.vue"
+import MemberManagement from "@/components/lecture/manager/MemberManagement.vue"
+import ChapterManagement from "@/components/lecture/manager/ChapterManagement.vue"
 export default {
     components: {
         Default,
