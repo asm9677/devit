@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class BoardUploadRequest {
 
-	//private long userId;
+	private long userId;
 	private String boardTitle;
 	private String boardContent;
 	private long boardType;
@@ -13,7 +13,7 @@ public class BoardUploadRequest {
 	public BoardUploadRequest(long userId, String boardTitle, String boardContent, long boardType, Date boardCreated,
 			long boardCount, Date boardModified) {
 		super();
-		//this.userId = userId;
+		this.userId = userId;
 		this.boardTitle = boardTitle;
 		this.boardContent = boardContent;
 		this.boardType = boardType;
@@ -24,13 +24,13 @@ public class BoardUploadRequest {
 		super();
 	}
 
-//	public long getUserId() {
-//		return userId;
-//	}
-//
-//	public void setUserId(long userId) {
-//		this.userId = userId;
-//	}
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
 
 	public String getBoardTitle() {
 		return boardTitle;

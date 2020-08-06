@@ -6,8 +6,38 @@
 	
 	<!-- 댓글 등록 -->
 	<insert id="upload">
-		insert into board_reply(board_id, user_id, reply_created, reply_content, parent_reply_id)
-		values
+		insert into board_reply(user_id, board_id, reply_content, parent_reply_id)
+		values(#{userId}, #{boardId}, #{replyContent}, #{parentReplyId})
 	</insert>
 	
+	<!--  댓글 삭제 -->
+		<update id="delete">
+			update board_reply
+			set delete_yn = 'Y', reply_modified = now()
+			where board_reply_id = #{reply_id}
+		</update>
+	
+	<!--  댓글 수정 -->
+		<update id="update">
+			update board_reply
+			set reply_content = #{replyContent}, reply_modified = now()
+			where board_reply_id = #{boardReplyId} and user_id = #{userId}
+		</update>
+		
+	<!--  댓글 조회 -->
+	<select id="info" resultType="ReplyResponse">
+		select br.board_reply_id as replyId,
+				br.board_id as boardId,
+				br.user_id as userId,
+				br.reply_content as replyContent,
+				br.reply_created as replyCreated,
+				br.reply_modified as replyModified,
+				br.parent_reply_id as parentReplyId,
+				br.delete_yn as deleteYn,
+				if(br.user_id = #{userId}, 'Y', 'N') as isMine
+		from board_reply br
+		left outer join user u on br.user_id = u.user_id
+		where br.board_id = #{bid} and br.delete_yn = 'N'
+        order by if(parent_reply_id = 0, board_reply_id, parent_reply_id), board_reply_id;
+	</select>
 </mapper>
