@@ -14,6 +14,7 @@ import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
 import com.ssafy.devit.model.lecture.TagResponse;
+import com.ssafy.devit.model.request.LectureAuthRequest;
 import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.request.LectureSubHistoryRequest;
 import com.ssafy.devit.model.request.LectureSubsRequest;
@@ -152,5 +153,10 @@ public class LectureServiceImpl implements LectureService {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		lecture.setUserId(user.getUserId());
 		lectureRepository.insertSubHistory(lecture);
+	}
+
+	@Override
+	public void updateLectureAuth(long lectureId, List<LectureAuthRequest> auth) throws Exception {
+		lectureRepository.updateLectureAuth(lectureId, auth);
 	}
 }

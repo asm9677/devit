@@ -3,6 +3,7 @@ package com.ssafy.devit.service;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
@@ -10,6 +11,7 @@ import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
 import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.TagResponse;
+import com.ssafy.devit.model.request.LectureAuthRequest;
 import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.request.LectureSubHistoryRequest;
 import com.ssafy.devit.model.request.LectureSubsRequest;
@@ -42,8 +44,11 @@ public interface LectureService {
 	public LectureSubOneResponse getOneSubLecture(long lectureId, int order) throws Exception;
 	
 	// 목차 리스트 가져오기
-	public List<LectureSubIndexResponse> getSubLectureIndex(@Param("lectureId") long lectureId) throws Exception;
+	public List<LectureSubIndexResponse> getSubLectureIndex(long lectureId) throws Exception;
 	
 	// 강의 위키 요청 리퀘스트
 	public void registrySubHistory(LectureSubHistoryRequest lecture) throws Exception;
+	
+	// 강의 권한 병경
+	public void updateLectureAuth(long lectureId, List<LectureAuthRequest> auth) throws Exception;
 }

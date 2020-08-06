@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
+import com.ssafy.devit.model.request.LectureAuthRequest;
 import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.request.LectureSubHistoryRequest;
 import com.ssafy.devit.model.request.LectureSubsRequest;
@@ -243,6 +244,29 @@ public class LectureController {
 
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "공동 작업자 수정")
+	@PutMapping("/role/{lectureid}")
+	public ResponseEntity<CommonResponse> updateLectureAuth(@PathVariable("lectureid") long lectureId, @RequestBody List<LectureAuthRequest> request) {
+		log.info(">> Load : updateLectureAuth <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			lectureService.updateLectureAuth(lectureId, request);
+			result.msg = "success";
+			result.result = "성공적으로 등록 되었습니다.";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			log.info(">> Error : updateLectureAuth <<");
+			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
 	@ApiOperation(value = "소강의 생성")
 	@PostMapping("/sub")
 	public ResponseEntity<CommonResponse> createSubLectures(@RequestBody List<LectureSubsRequest> requests) {
@@ -327,4 +351,5 @@ public class LectureController {
 		}
 		return response;
 	}
+
 }
