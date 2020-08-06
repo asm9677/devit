@@ -9,13 +9,15 @@ public class LectureSubHistoryRequest {
 	private String wikiContent;
 	private String wikiContentHtml;
 	private String reqType;
+	private String title;
+	private String thumbnailUrl;
 
 	public LectureSubHistoryRequest() {
 
 	}
 
 	public LectureSubHistoryRequest(long lectureId, long subId, long userId, String playTime, String playerUrl,
-			String wikiContent, String wikiContentHtml, String reqType) {
+			String wikiContent, String wikiContentHtml, String reqType, String title, String thumbnailUrl) {
 		super();
 		this.lectureId = lectureId;
 		this.subId = subId;
@@ -25,6 +27,8 @@ public class LectureSubHistoryRequest {
 		this.wikiContent = wikiContent;
 		this.wikiContentHtml = wikiContentHtml;
 		this.reqType = reqType;
+		this.title = title;
+		this.thumbnailUrl = thumbnailUrl;
 	}
 
 	public long getLectureId() {
@@ -91,11 +95,28 @@ public class LectureSubHistoryRequest {
 		this.reqType = reqType;
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getThumbnailUrl() {
+		return thumbnailUrl;
+	}
+
+	public void setThumbnailUrl(String thumbnailUrl) {
+		this.thumbnailUrl = thumbnailUrl;
+	}
+
 	@Override
 	public String toString() {
 		return "LectureSubHistoryRequest [lectureId=" + lectureId + ", subId=" + subId + ", userId=" + userId
 				+ ", playTime=" + playTime + ", playerUrl=" + playerUrl + ", wikiContent=" + wikiContent
-				+ ", wikiContentHtml=" + wikiContentHtml + ", reqType=" + reqType + "]";
+				+ ", wikiContentHtml=" + wikiContentHtml + ", reqType=" + reqType + ", title=" + title
+				+ ", thumbnailUrl=" + thumbnailUrl + "]";
 	}
 
 }

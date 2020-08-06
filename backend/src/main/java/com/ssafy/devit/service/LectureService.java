@@ -11,6 +11,7 @@ import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
 import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.TagResponse;
+import com.ssafy.devit.model.lecture.TheOhterSubLectureResponse;
 import com.ssafy.devit.model.request.LectureAuthRequest;
 import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.request.LectureSubHistoryRequest;
@@ -51,4 +52,7 @@ public interface LectureService {
 	
 	// 강의 권한 병경
 	public void updateLectureAuth(long lectureId, List<LectureAuthRequest> auth) throws Exception;
+	
+	// 같은 종류 다른 강의들 들고오기
+	public List<TheOhterSubLectureResponse> getTheOtherSubLectures(long subId) throws Exception;
 }

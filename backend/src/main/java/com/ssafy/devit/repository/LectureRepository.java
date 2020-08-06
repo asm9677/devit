@@ -14,6 +14,7 @@ import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
 import com.ssafy.devit.model.lecture.TagResponse;
+import com.ssafy.devit.model.lecture.TheOhterSubLectureResponse;
 import com.ssafy.devit.model.request.LectureAuthRequest;
 import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.request.LectureSubHistoryRequest;
@@ -61,6 +62,11 @@ public interface LectureRepository {
 	// 강의 권한 병경
 	@Transactional
 	public void updateLectureAuth(@Param("lectureId") long lectureId, @Param("auths") List<LectureAuthRequest> auths) throws Exception;
+	
+	// 같은 종류의 다른 강의들 가져오기
+	public List<TheOhterSubLectureResponse> selectTheOtherSubLectures(@Param("subId") long subId, @Param("userId") long userId) throws Exception;
+	
+	
 	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
 	

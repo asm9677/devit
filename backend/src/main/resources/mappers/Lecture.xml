@@ -356,7 +356,51 @@
 	
 	<!-- 강의, 위키 리퀘스트 날리기 -->
 	<insert id="insertSubHistory">
-		INSERT INTO lecture_sub_history(lecture_id, sub_id, user_id, modifier, play_time, player_url, wiki_content, wiki_content_html, req_type)
-		VALUES(#{lectureId}, #{subId}, #{userId}, #{userId}, #{playTime}, #{playerUrl}, #{wikiContent}, #{wikiContentHtml}, #{reqType})
+		INSERT INTO lecture_sub_history(lecture_id, sub_id, user_id, modifier, play_time, player_url, wiki_content, wiki_content_html, req_type, title, thumbnail_url)
+		VALUES(#{lectureId}, #{subId}, #{userId}, #{userId}, #{playTime}, #{playerUrl}, #{wikiContent}, #{wikiContentHtml}, #{reqType}, #{title}, #{thumbnailUrl})
 	</insert>
+	
+	<!-- 같은 종류의 다른 동영상 -->
+	<select id="selectTheOtherSubLectures" resultType="TheOhterSubLectureResponse">
+		SELECT 
+		    lsi.lecture_id lectureId,
+		    lsi.sub_id subId,
+		    lsh.title,
+		    lsh.player_url playerUrl,
+		    lsh.play_time playTime,
+		    lsh.view_count viewCount,
+		    IFNULL(lg.like_count, 0) likeCount,
+		    lsh.thumbnail_url thumbnailUrl,
+		    CASE
+		        WHEN
+		            EXISTS( SELECT 
+		                    1
+		                FROM
+		                    lecture_sub_his_like
+		                WHERE
+		                    like_flag = 'Y' AND user_id = #{userId}
+		                        AND lecture_id = lsh.lecture_id
+		                        AND sub_id = lsh.sub_id
+		                        AND sub_his_id = lsh.sub_his_id)
+		        THEN
+		            TRUE
+		        ELSE FALSE
+		    END userLikeYn
+		FROM
+		    lecture_sub_index lsi
+		        LEFT OUTER JOIN
+		    lecture_sub_history lsh ON lsi.lecture_id = lsh.lecture_id
+		        AND lsi.sub_id = lsh.sub_id
+		        AND lsh.req_type = 'video'
+		        LEFT OUTER JOIN
+		    (SELECT 
+		        COUNT(1) like_count, lecture_id, sub_id, sub_his_id
+		    FROM
+		        lecture_sub_his_like lshl
+		    GROUP BY sub_id , sub_his_id) lg ON lsh.lecture_id = lg.lecture_id
+		        AND lsh.sub_id = lg.sub_id
+		        AND lsh.sub_his_id = lg.sub_his_id
+		WHERE
+		    lsi.sub_id = #{subId};
+	</select>
 </mapper>
