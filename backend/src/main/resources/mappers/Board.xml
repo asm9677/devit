@@ -125,4 +125,12 @@
 		  limit #{startPage} , #{itemsperpage};
 		  
       </select>
+      
+      
+      	<!-- 강의 관련 질문 게시글 업로드 -->
+		<insert id="createBoardWithLecture" useGeneratedKeys="true" keyProperty="boardId">
+			insert into board(user_id, title, content, type, count, modified, lecture_id, sub_id) 
+			values(#{userId}, #{boardTitle}, #{boardContent}, #{boardType}, #{boardCount}, now(), #{lectureId}, #{subId})
+		</insert>
+      
 </mapper>

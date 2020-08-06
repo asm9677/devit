@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import com.ssafy.devit.model.lecture.BoardResponse;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.request.BoardRequest;
+import com.ssafy.devit.model.request.BoardWithLectureRequest;
 
 public interface BoardRepository {
 	public void upload(BoardRequest board) throws Exception;
@@ -16,4 +17,5 @@ public interface BoardRepository {
 	public List<BoardResponse> listinfo(@Param("startPage") long startPage, @Param("type") long type, @Param("itemsperpage") long itemsperpage, @Param("searchselect") String searchselect, @Param("searchtxt") String searchtxt) throws Exception;
 	//public LectureOneResponse selectLectureByLectureId(@Param("lectureId") long lectureId, @Param("userId") long userId) throws Exception;
 	
+	public void createBoardWithLecture(BoardWithLectureRequest boardWithLectureRequest) throws Exception;
 }
