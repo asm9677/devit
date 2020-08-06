@@ -21,6 +21,7 @@ import com.ssafy.devit.model.lecture.BoardResponse;
 import com.ssafy.devit.model.request.BoardRequest;
 import com.ssafy.devit.model.request.BoardUpdateRequest;
 import com.ssafy.devit.model.request.BoardUploadRequest;
+import com.ssafy.devit.model.request.BoardWithLectureRequest;
 import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.service.BoardService;
 import com.ssafy.devit.service.UserService;
@@ -72,8 +73,6 @@ public class BoardController {
 		return response;
 	}
 	
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
 	@GetMapping("board/{bid}")
 	@ApiOperation(value = "게시글 상세 조회")
 	public ResponseEntity<CommonResponse> info(@PathVariable final long bid) throws Exception {
@@ -172,12 +171,8 @@ public class BoardController {
 		return response;
 	}
 	
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
-//	@GetMapping("board/list/{type}")
 	@GetMapping("board/list")
 	@ApiOperation(value = "게시글 목록 조회")
-//	public ResponseEntity<CommonResponse> listinfo(@PathVariable final long type) throws Exception {
 	public ResponseEntity<CommonResponse> listinfo(@RequestParam("page") int startPage,
 			@RequestParam("type") int type, @RequestParam("itemsperpage") int itemsperpage,
 			@ApiParam(value = "검색조건", required = false)@RequestParam("searchselect") String searchselect, 
@@ -188,8 +183,35 @@ public class BoardController {
 		final CommonResponse result = new CommonResponse();
 		try {
 			result.msg = "success";
-//			result.result = boardService.listinfo(type);
 			result.result = boardService.listinfo(startPage, type, itemsperpage, searchselect, searchtxt);
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return response;
+	}
+	
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@PostMapping("/board/lecture")
+	@ApiOperation(value = "강의 관련 질문 게시물 등록")
+	public ResponseEntity<CommonResponse> createBoardWithLecture(@RequestBody BoardWithLectureRequest request) throws Exception{
+		log.info(">> createBoardWithLecture <<");
+		
+		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		final CommonResponse result = new CommonResponse();
+		
+		ResponseEntity<CommonResponse> response = null;
+		BoardWithLectureRequest boardWithLectureRequest = null;
+		
+		boardWithLectureRequest = new BoardWithLectureRequest(request.getLectureId(), request.getSubId(), user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardType(), request.getBoardCount());
+		
+		try {
+			boardService.createBoardWithLecture(boardWithLectureRequest);
+			 // bid에 해당하는 게시글을 조회한다.
+			result.msg = "success";
+			result.result = boardWithLectureRequest.getBoardId();
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

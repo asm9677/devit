@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.ssafy.devit.model.lecture.BoardResponse;
 import com.ssafy.devit.model.request.BoardRequest;
+import com.ssafy.devit.model.request.BoardWithLectureRequest;
 import com.ssafy.devit.repository.BoardRepository;
 
 @Service
@@ -57,4 +58,14 @@ public class BoardServicelmpl implements BoardService {
 		return boardRepository.listinfo(startPage, type, itemsperpage, searchselect, searchtxt);
 		
 	}
+	
+	@Override
+	public void createBoardWithLecture(BoardWithLectureRequest boardWithLectureRequest) throws Exception{
+		
+
+		if(boardWithLectureRequest == null) {
+			throw new Exception("잘못된 board가 나왔습니다.");
+		}
+		boardRepository.createBoardWithLecture(boardWithLectureRequest);
+	};
 }
