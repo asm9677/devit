@@ -50,10 +50,13 @@ CREATE TABLE `board` (
   `created` datetime DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime DEFAULT NULL,
   `flag` varchar(45) DEFAULT 'Y',
+  `lecture_id` int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
+  `sub_id` int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
+  `sub_his_id` int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
   PRIMARY KEY (`board_id`),
   KEY `uidd_idx` (`user_id`),
   CONSTRAINT `board_uid_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `board_like` (
   `board_like_id` int(11) NOT NULL,

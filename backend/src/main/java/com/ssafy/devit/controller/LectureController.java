@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.devit.model.CommonResponse;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.request.LectureRequest;
+import com.ssafy.devit.model.request.LectureSubHistoryRequest;
 import com.ssafy.devit.model.request.LectureSubsRequest;
 import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.service.LectureService;
@@ -284,8 +285,6 @@ public class LectureController {
 		return response;
 	}
 
-	@ApiImplicitParams({
-			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
 	@ApiOperation(value = "목차 리스트 가져오기")
 	@GetMapping("/subs/{lectureid}")
 	public ResponseEntity<CommonResponse> getSubsLectureIndex(@PathVariable("lectureid") long lectureId) {
@@ -301,6 +300,29 @@ public class LectureController {
 			result.msg = "fail";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 			log.info(">> Error : getSubsLectureIndex <<");
+			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "강의, 위키 요청 리퀘스트")
+	@PostMapping("/sub/history")
+	public ResponseEntity<CommonResponse> registrySubHistory(@RequestBody LectureSubHistoryRequest request) {
+		log.info(">> Load : registrySubHistory <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			lectureService.registrySubHistory(request);
+			result.msg = "success";
+			result.result = "성공적으로 등록 되었습니다.";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			log.info(">> Error : registrySubHistory <<");
 			log.info(e.getMessage().toString());
 		}
 		return response;

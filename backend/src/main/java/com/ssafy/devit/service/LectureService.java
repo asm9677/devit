@@ -11,6 +11,7 @@ import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.TagResponse;
 import com.ssafy.devit.model.request.LectureRequest;
+import com.ssafy.devit.model.request.LectureSubHistoryRequest;
 import com.ssafy.devit.model.request.LectureSubsRequest;
 
 public interface LectureService {
@@ -42,4 +43,7 @@ public interface LectureService {
 	
 	// 목차 리스트 가져오기
 	public List<LectureSubIndexResponse> getSubLectureIndex(@Param("lectureId") long lectureId) throws Exception;
+	
+	// 강의 위키 요청 리퀘스트
+	public void registrySubHistory(LectureSubHistoryRequest lecture) throws Exception;
 }
