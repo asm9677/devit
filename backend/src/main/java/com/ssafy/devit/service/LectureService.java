@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
+import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.TagResponse;
 import com.ssafy.devit.model.request.LectureRequest;
@@ -33,5 +34,6 @@ public interface LectureService {
 	// 소강의 생성 및 변경된 개수 반환할 인터페이스 
 	public int createSubLectures(List<LectureSubsRequest> lectures) throws Exception;
 	
-	
+	// 소강의 목차 상세 정보 가져오기
+	public LectureSubOneResponse getOneSubLecture(long lectureId, int order) throws Exception;
 }

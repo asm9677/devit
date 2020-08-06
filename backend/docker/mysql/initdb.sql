@@ -75,12 +75,14 @@ CREATE TABLE `board_reply` (
   `reply_created` datetime DEFAULT CURRENT_TIMESTAMP,
   `reply_content` text,
   `parent_reply_id` int(11) DEFAULT NULL,
+  `reply_modified` datetime DEFAULT CURRENT_TIMESTAMP,
+  `delete_yn` varchar(1) DEFAULT 'N',
   PRIMARY KEY (`board_reply_id`),
   KEY `board_reply_bid_fk_idx` (`board_id`),
   KEY `board_reply_uid_fk_idx` (`user_id`),
   CONSTRAINT `board_reply_bid_fk` FOREIGN KEY (`board_id`) REFERENCES `board` (`board_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `board_reply_uid_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 
 

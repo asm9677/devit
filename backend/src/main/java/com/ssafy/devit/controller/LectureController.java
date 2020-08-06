@@ -260,4 +260,26 @@ public class LectureController {
 		}
 		return response;
 	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "목차 상세정보 가져오기")
+	@GetMapping("/sub/{lectureid}")
+	public ResponseEntity<CommonResponse> getSubLecture(@PathVariable("lectureid") long lectureId, @RequestParam("order") int order) {
+		log.info(">> Load : getSubLecture <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			result.result = lectureService.getOneSubLecture(lectureId, order);
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			log.info(">> Error : getSubLecture <<");
+			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
 }

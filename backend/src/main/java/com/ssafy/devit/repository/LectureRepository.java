@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ssafy.devit.model.common.Common;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
+import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
 import com.ssafy.devit.model.lecture.TagResponse;
@@ -42,6 +43,9 @@ public interface LectureRepository {
 	// sub lecture 업데이트 dao
 	@Transactional
 	public void updateSubLecture(LectureSubsRequest lecture) throws Exception;
+	
+	// 목차 상세 정보 가져오기
+	public LectureSubOneResponse selectOneSubLecture(LectureSubsRequest request) throws Exception;
 	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
 	

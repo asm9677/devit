@@ -1,6 +1,5 @@
 package com.ssafy.devit.service;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.ssafy.devit.model.common.Common;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
+import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
 import com.ssafy.devit.model.lecture.TagResponse;
@@ -128,5 +128,15 @@ public class LectureServiceImpl implements LectureService {
 			count++;
 		}
 		return count;
+	}
+
+	@Override
+	public LectureSubOneResponse getOneSubLecture(long lectureId, int order) throws Exception {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		LectureSubsRequest request = new LectureSubsRequest();
+		request.setLectureId(lectureId);
+		request.setOrder(order);
+		request.setUserId(user.getUserId());
+		return lectureRepository.selectOneSubLecture(request);
 	}
 }
