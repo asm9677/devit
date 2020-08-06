@@ -69,8 +69,6 @@ public class ReplyController {
 		return response;
 	}
 
-	@ApiImplicitParams({
-			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
 	@GetMapping("reply/{boardid}")
 	@ApiOperation(value = "댓글 조회")
 	public ResponseEntity<CommonResponse> info(@PathVariable("boardid") final long boardId) throws Exception {
