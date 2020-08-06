@@ -4,15 +4,18 @@ public class UserResponse {
 	private long userId;
 	private String nickname;
 	private String email;
-	
+	private String profile;
+
 	public UserResponse() {
-		
+
 	}
 
-	public UserResponse(long userId, String nickname, String email) {
+	public UserResponse(long userId, String nickname, String email, String profile) {
+		super();
 		this.userId = userId;
 		this.nickname = nickname;
 		this.email = email;
+		this.profile = profile;
 	}
 
 	public long getUserId() {
@@ -39,10 +42,18 @@ public class UserResponse {
 		this.email = email;
 	}
 
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProflie(String profile) {
+		this.profile = profile;
+	}
+
 	@Override
 	public String toString() {
-		return "UserResponse [userId=" + userId + ", nickname=" + nickname + ", email=" + email + "]";
+		return "UserResponse [userId=" + userId + ", nickname=" + nickname + ", email=" + email + ", proflie=" + profile
+				+ "]";
 	}
-	
-	
+
 }

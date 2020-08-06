@@ -52,14 +52,14 @@
 	<!-- like 닉네임 으로 사용자 검색 -->
 	<select id="findUsersByLikeSearchText" resultType="UserResponse">
 		SELECT 
-		    a.user_id userId, a.nickname, a.email
+		    a.user_id userId, a.nickname, a.email, a.profile
 		FROM
-		    (SELECT user_id, nickname, email, nickname AS val
+		    (SELECT user_id, nickname, email, nickname AS val, profile
 		    FROM user
 		    WHERE
 		        UPPER(nickname) LIKE CONCAT(UPPER(#{search}), '%')
 		    UNION ALL
-		    SELECT user_id, nickname, email, email AS val
+		    SELECT user_id, nickname, email, email AS val, profile
 		    FROM user
 		    WHERE
 		        UPPER(email) LIKE CONCAT(UPPER(#{search}), '%')
