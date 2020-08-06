@@ -42,10 +42,10 @@
                                 </template>
                             </v-list>    
                     </v-flex>                    
-                    <v-flex v-show="option" style="border-left:1px solid #e2e2e2" md4 lg4 xl4> 
+                    <v-flex v-show="option"  md4 lg4 xl4> 
                         <v-list style="position: sticky; top:60px;" dense>
                             <v-list-item >                                                                  
-                                    미리보기                                
+                                    <!-- 미리보기                                 -->
                             </v-list-item>
                             <div style="
                                     width:100%; 
@@ -185,10 +185,10 @@ export default {
     }
 
     b{
-        font-size:14px;
+        font-size:13px;
         
     }
     span{
-        font-size:12px;
+        font-size:11px;
     }
 </style>
