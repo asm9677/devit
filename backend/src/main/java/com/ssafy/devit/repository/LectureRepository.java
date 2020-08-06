@@ -14,6 +14,7 @@ import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
 import com.ssafy.devit.model.lecture.TagResponse;
 import com.ssafy.devit.model.request.LectureRequest;
+import com.ssafy.devit.model.request.LectureSubHistoryRequest;
 import com.ssafy.devit.model.request.LectureSubsRequest;
 
 public interface LectureRepository {
@@ -50,6 +51,10 @@ public interface LectureRepository {
 	
 	// 목차 가져오기
 	public List<LectureSubIndexResponse> selectSubLectureIndex(@Param("lectureId") long lectureId) throws Exception;
+	
+	// 강의, 위키 리퀘스트 요청
+	@Transactional
+	public void insertSubHistory(LectureSubHistoryRequest lecture) throws Exception;
 	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
 	

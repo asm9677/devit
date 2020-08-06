@@ -342,4 +342,10 @@
 		    lsi.lecture_id = #{lectureId}
 		ORDER BY lsi.order;
 	</select>
+	
+	<!-- 강의, 위키 리퀘스트 날리기 -->
+	<insert id="insertSubHistory">
+		INSERT INTO lecture_sub_history(lecture_id, sub_id, user_id, modifier, play_time, player_url, wiki_content, wiki_content_html, req_type)
+		VALUES(#{lectureId}, #{subId}, #{userId}, #{userId}, #{playTime}, #{playerUrl}, #{wikiContent}, #{wikiContentHtml}, #{reqType})
+	</insert>
 </mapper>
