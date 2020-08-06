@@ -133,27 +133,6 @@
         mounted() {
             //boardtype별 조회
             this.searchByPage();
-            /*http
-                .axios
-                //.get("/api/v1/board/list/" + this.boardtype, {
-                .get("/api/v1/board/list?page=${this.page}&type=${this.boardtype}&itemsperpage=${this.itemsPerPage}", {
-                    //http.axios.get(`/api/v1/lectures?page=${this.page}&type=${this.level}`).then(({data}) => {
-                    //itemsPerPage
-                    // page 0:공지사항, 1:자유, 2:질문, 3:신고
-                    // boardTitle: this.boardTitle,
-                    // boardContent: this.boardContent,
-                    // boardType: this.boardtypeselect,
-                    // boardCreated: "",
-                    // boardCount: "",
-                    // boardModified: ""
-                })
-                .then(({data}) => {
-                    //alert("게시글 상세내용 조회 완료");
-                    this.items = data.result;
-                })
-                .catch((error) => {
-                    console.dir(error)
-                })*/
         },
         methods: {
             searchByPage() {
@@ -176,8 +155,6 @@
                     })
                 },
             goToDetail(boardId) {
-                // alert("board-component boardId = " + boardId); alert("board-component
-                // goToDetail "+boardId); eventBus.$emit('showDetail', boardId);
                 this
                     .$router
                     .push({

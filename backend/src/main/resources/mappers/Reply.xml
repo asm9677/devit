@@ -26,9 +26,10 @@
 		
 	<!--  댓글 조회 -->
 	<select id="info" resultType="ReplyResponse">
-		select br.board_reply_id as replyId,
+		select br.board_reply_id as boardReplyId,
 				br.board_id as boardId,
 				br.user_id as userId,
+				u.nickname as userName,
 				br.reply_content as replyContent,
 				br.reply_created as replyCreated,
 				br.reply_modified as replyModified,

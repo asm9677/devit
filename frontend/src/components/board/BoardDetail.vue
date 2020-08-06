@@ -109,7 +109,7 @@
                                         depressed="depressed"
                                         text="text"
                                         small="small"
-                                        @click="move('/lecture/create')">
+                                        @click="createReply()">
                                         <font :color="hover ? '' : 'gray'" size="2">등록</font>
                                     </v-btn>
                                 </v-hover>
@@ -119,11 +119,12 @@
                                 <v-list-item-title>
                                     <div>
                                         <v-textarea
+                                            v-model="replyText"
                                             no-resize="no-resize"
                                             outlined="outlined"
                                             auto-grow="auto-grow"
                                             rows="3"
-                                            placeholder="미구현 기능입니다"></v-textarea>
+                                            placeholder="댓글을 입력하세요"></v-textarea>
                                     </div>
                                 </v-list-item-title>
                             </v-list-item>
@@ -131,20 +132,19 @@
                             <v-data-iterator
                                 class="board_list"
                                 :items="items"
-                                :items-per-page.sync="itemsPerPage"
                                 hide-default-footer="hide-default-footer"
                                 no-data-text=""
                             >
                                 <template v-slot:default="props">
-                                    <v-col v-for="item in props.items" :key="item.board_id">
+                                    <v-col v-for="item in props.items" :key="item.boardReplyId">
                                         <v-list-item>
                                             <v-icon size="40">mdi-account-circle</v-icon>
                                             <!--<v-list-item-avatar color="grey"><img src=""
                                             alt="John"></v-list-item-avatar>-->
                                             <v-list-item-content>
-                                                <v-list-item class="comment_writer">{{ item.name }}</v-list-item>
+                                                <v-list-item class="comment_writer">{{ item.userName }}</v-list-item>
                                                 <v-list-item class="comment_info">
-                                                    {{item.date}}
+                                                    {{item.replyModified | moment('YYYY-MM-DD HH:mm')}}
                                                 </v-list-item>
                                             </v-list-item-content>
                                             <v-spacer></v-spacer>
@@ -157,9 +157,38 @@
                                                     <font :color="hover ? '' : 'gray'" size="2">답글</font>
                                                 </v-btn>
                                             </v-hover>
+                                            <v-hover v-slot:default="{ hover }">
+                                                <v-btn
+                                                    v-show="item.isMine == 'Y'"
+                                                    depressed="depressed"
+                                                    text="text"
+                                                    small="small"
+                                                    @click="move('/lecture/create')">
+                                                    <font :color="hover ? '' : 'gray'" size="2">수정</font>
+                                                </v-btn>
+                                            </v-hover>
+                                            <v-hover v-slot:default="{ hover }">
+                                                <v-btn
+                                                    v-show="item.isMine == 'Y'"
+                                                    depressed="depressed"
+                                                    text="text"
+                                                    small="small"
+                                                    @click="deleteReply(item.boardReplyId)">
+                                                    <font :color="hover ? '' : 'gray'" size="2">삭제</font>
+                                                </v-btn>
+                                            </v-hover>
                                         </v-list-item>
-                                        <v-list-item class="comment_content">{{ item.content }}</v-list-item>
-
+                                        <v-list-item class="comment_content">{{ item.replyContent }}</v-list-item>
+                                        <v-list-item>
+                                            <div>
+                                                <v-textarea
+                                                    v-model="replyText"
+                                                    no-resize="no-resize"
+                                                    outlined="outlined"
+                                                    rows="3"
+                                                    placeholder="댓글을 입력하세요"></v-textarea>
+                                            </div>
+                                        </v-list-item>
                                         <v-divider></v-divider>
                                     </v-col>
                                 </template>
@@ -186,6 +215,7 @@
         name: 'app',
         data() {
             return {
+                replyText:"",
                 isBtnShow: false,
                 itemsPerPage: 10,
                 item:{},
@@ -221,12 +251,13 @@
                 this.text = this.$route.params.msgText;
                 this.snackbar = true;
             }
-            http
+
+            this.showBoardDetail();
+            /*http
                 .axios
                 .get("/api/v1/board/" + this.$route.query.boardId, {
                 })
                 .then(({data}) => {
-                    console.log("여기!!!!!!!!!!!!!11", data);
                     this.item = data.result;
 
                     if(this.item.isMine == 'Y'){ //수정/삭제 버튼
@@ -234,12 +265,76 @@
                     }else{
                         this.isBtnShow = false;
                     }
+
+                    http
+                    .axios
+                    .get("/api/v1/reply/" + this.$route.query.boardId, {
+                    })
+                    .then(({data}) => {
+                        this.items = data.result;
+                    })
+                    .catch((error) => {
+                        console.dir(error)
+                    })
+                })
+                .catch((error) => {
+                    console.dir(error)
+                })*/
+            },
+        methods: {
+            createReply(){
+                if(this.replyText == ""){
+                    alert("댓글을 입력하세요");
+                    return;
+                }
+                http
+                .axios
+                .post("/api/v1/reply", {
+                    boardId: this.boardId,
+                    parentReplyId: 0,
+                    replyContent: this.replyText,
+                })
+                .then(({data}) => {
+                    this.text = "댓글이 등록되었습니다.";
+                    this.snackbar = true;
+                    this.showBoardDetail();
+                
                 })
                 .catch((error) => {
                     console.dir(error)
                 })
             },
-        methods: {
+            showBoardDetail(){
+                
+            http
+                .axios
+                .get("/api/v1/board/" + this.$route.query.boardId, {
+                })
+                .then(({data}) => {
+                    this.item = data.result;
+
+                    if(this.item.isMine == 'Y'){ //수정/삭제 버튼
+                        this.isBtnShow = true;
+                    }else{
+                        this.isBtnShow = false;
+                    }
+
+                    http
+                    .axios
+                    .get("/api/v1/reply/" + this.$route.query.boardId, {
+                    })
+                    .then(({data}) => {
+                        this.items = data.result;
+                    })
+                    .catch((error) => {
+                        console.dir(error)
+                    })
+                })
+                .catch((error) => {
+                    console.dir(error)
+                })
+            },
+            
             modifyBoard() {
                 if(this.$router.app.$store.state.token){
                     var boardId = this.$route.query.boardId;
@@ -292,6 +387,33 @@
                 this
                     .$router
                     .push("/board?type=" + this.$route.query.boardtype);
+            },
+            deleteReply(replyId){
+                
+                if(this.$router.app.$store.state.token){
+                    //var boardId = this.$route.query.boardId;
+                    if (confirm("댓글을 삭제하시겠습니까?")) {
+                        http
+                            .axios
+                            .delete("/api/v1/reply/" + replyId, {
+                                
+                            })
+                            .then(({data}) => {
+                                this.text = "삭제가 완료되었습니다.";
+                                this.snackbar = true;
+                                /*this
+                                    .$router
+                                    .push("/board?type="+boardType);*/
+                                this.showBoardDetail();
+
+                            })
+                            .catch((error) => {
+                                console.dir(error)
+                            })
+                        }
+                }else{
+                    eventBus.$emit('doLogin');
+                }
             }
         }
     }
