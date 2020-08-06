@@ -1,6 +1,6 @@
 <template>
   <div style="; margin-top:20px;">
-        <v-card tile flat >
+        <v-card tile flat outlined >
                 <v-layout wrap>
                     <v-flex xs12 sm12 md9 lg9 xl9 style="margin-left:0px;">                         
                             <v-list style="padding:20px 100px;">
@@ -16,7 +16,7 @@
                                     <v-list-item>
                                         <v-list-item-content>
                                             <v-list-item-subtitle>
-                                            초대할 멤버를 선택하세요.
+                                                초대할 멤버를 선택하세요.
                                             </v-list-item-subtitle>
                                             <v-list-item-subtitle>
                                             <v-combobox
@@ -277,10 +277,6 @@ export default {
             if (diff < 365)
                 return parseInt(diff/30) + '달 전'
             return parseInt(diff/365) + '년 전'
-            
-
-            console.dir(diff )
-
             return val
         }
     },
@@ -353,5 +349,14 @@ export default {
         font-weight: 500;
         margin-bottom:30px;
     }
-    
+    th {
+        font-size: 14px;
+        font-weight: 400
+    }
+    .v-list-item__title{
+        font-size:14px;
+    }
+    .v-list-item__subtitle{
+        font-size:12px;
+    }
 </style>

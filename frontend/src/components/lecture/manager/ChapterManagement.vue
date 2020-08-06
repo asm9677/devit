@@ -122,13 +122,10 @@
                                 </v-list-item-title>                                
                             </v-list-item>
                             <v-list-item>                                       
-                                <v-list-item-content style="font-size:14px">                                
+                                <v-list-item-content style="font-size:14px;">                                
                                     <div>
-                                        소개는 
-                                        <span class="primary--text"> 
-                                            지식 공유자와 수강자에게 프로젝트의 방향성에 대해 소개
-                                        </span>하는 공간입니다. 
-                                        누구를 위해 무엇을 만들어나갈지 설명해주세요!
+                                        한 번 만들어진 <span class="primary--text">목차</span>는 <span class="error--text">삭제</span>할 수 없습니다.
+                                        불필요한 목차는 <span class="primary--text">백로그</span>를 통해 감춰보세요!
                                     </div>                                
                                 </v-list-item-content>                                    
                             </v-list-item>                            
@@ -300,6 +297,6 @@ export default {
         background-color:#f2f2f2;
 
         padding:5px 5px; 
-        border-color:skyblue
+        border-color:skyblue;
     }
 </style>

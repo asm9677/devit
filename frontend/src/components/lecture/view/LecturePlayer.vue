@@ -121,7 +121,7 @@
                             </v-list-item>
                             <v-list-item>
                                 <v-list-item-content>
-                                        프로그래밍 시작하기 : 파이썬 입문 {{contentHeight}}
+                                        프로그래밍 시작하기 : 파이썬 입문
                                         <v-list-item-subtitle>
                                             1강 / 20강 &middot; 총 836분
                                         </v-list-item-subtitle>  

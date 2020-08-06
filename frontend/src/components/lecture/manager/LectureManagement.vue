@@ -27,7 +27,7 @@
                             <MemberManagement :option='option'> </MemberManagement>
                         </v-tab-item>
                         <v-tab-item>
-                            미구현 기능입니다.
+                            <RequestList :option='option'> </RequestList>
                         </v-tab-item>
                         <v-tab-item>
                             <ChapterManagement :option='option'> </ChapterManagement>
@@ -48,12 +48,13 @@ import Default from "@/components/lecture/manager/Default.vue"
 import Intro from "@/components/lecture/manager/Intro.vue"
 import MemberManagement from "@/components/lecture/manager/MemberManagement.vue"
 import ChapterManagement from "@/components/lecture/manager/ChapterManagement.vue"
+import RequestList from "@/components/lecture/manager/RequestList.vue"
 export default {
     components: {
         Default,
         Intro,
         MemberManagement,
-
+        RequestList,
         ChapterManagement,
     },
     data() {
