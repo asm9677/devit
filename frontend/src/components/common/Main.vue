@@ -36,7 +36,7 @@
                     <v-flex>
                         <v-layout column wrap>
                         <div class="status_title">총 회원</div>
-                        <div class="status_content">1,592명</div>
+                        <div class="status_content">{{this.totalUsers}}</div>
                         </v-layout>
                     </v-flex>
                 </v-layout>
@@ -50,7 +50,7 @@
                     <v-flex>
                         <v-layout column wrap>
                             <div class="status_title">강의에 기여한 회원</div>
-                            <div class="status_content">242명</div>
+                            <div class="status_content">{{this.totalDeviters}}</div>
                         </v-layout>
                     </v-flex>
                 </v-layout>
@@ -64,7 +64,7 @@
                     <v-flex>
                         <v-layout column wrap>
                             <div class="status_title">누적 강의 수</div>
-                            <div class="status_content">33강의</div>
+                            <div class="status_content">{{this.totalLectures}}</div>
                         </v-layout>
                     </v-flex>
                 </v-layout>
@@ -196,8 +196,28 @@
 </template>
 <script>
 export default {
+    data() {
+            return {
+                totalUsers: "",
+                totalDeviters: "",
+                totalLectures: "",
+            }
+        },
     created(){
-        
+        http
+                    .axios
+                    .get(
+                        `/api/v1/commons/main/status`,
+                        {}
+                    )
+                    .then(({data}) => {
+                        this.totalUsers = data.result.totalUsers;
+                        this.totalDeviters = data.result.totalDeviters;
+                        this.totalLectures = data.result.totalLectures;
+                    })
+                    .catch((error) => {
+                        console.dir(error)
+                    })
     }
 }
 </script>

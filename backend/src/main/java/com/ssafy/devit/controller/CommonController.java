@@ -65,5 +65,25 @@ public class CommonController {
 		commonService.test(common);
 		return common;
 	}
+	
+	@ApiOperation(value = "메인화면 devit 현황 가져오기")
+	@GetMapping("/main/status")
+	public ResponseEntity<CommonResponse> getMainStatus(){
+		
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			result.result = commonService.getMainStatus();
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			log.info(">> Error : getMainInfo <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
 
 }
