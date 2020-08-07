@@ -45,7 +45,7 @@
                                                 <div style="font-size:14px;">클릭해서 대표 이미지를 선택하세요.</div>
                                             </div>
                                         </div>
-                                        <v-img v-show="thumbnailUrl" :src="`http://i3a101.p.ssafy.io/images/${thumbnailUrl}`" min-height="100%" min-width="100%"/>                                        
+                                        <v-img v-if="thumbnailUrl" :src="`http://i3a101.p.ssafy.io/images/${thumbnailUrl}`" min-height="100%" min-width="100%" aspect-ratio="1.7"/>                                        
                                     </div>
                                     </v-list-item-title> 
                                 </v-list-item>
@@ -121,7 +121,7 @@
                                 <v-layout>
                                     <v-spacer></v-spacer>
                                     <v-btn depressed color="primary" @click="ValidationForm">
-                                        생성하기
+                                        저장하기
                                     </v-btn>    
                                     <div style="margin-right:5px"></div>
                                     <v-btn depressed>
@@ -172,9 +172,9 @@
         </v-card>
         <v-snackbar
             v-model="snackbar"
+            right
             timeout="1500"
             color="primary"        
-            
         >
             {{msg}}
         </v-snackbar>
@@ -187,23 +187,34 @@ import http from "@/util/http_common.js"
 import axios from "axios"
 import store from "@/store/index.js"
 export default {
-    props: ['option'],
+    props: ['option','tab','curTab'],
     watch: {
         tags(val,prev){
             if(val.length > 10)
                 val.pop()            
+        },
+        curTab(){
+            if(this.tab == this.curTab){
+                this.getDefaultPage();
+            }
         }
     },
     data() {
-        return {         
+        return {  
+            commonId: 0,
+            lectureId: 0,
             title: '',
             thumbnailUrl:'',
-            type: 0,
+            type: 1,
             tags: [],
 
             snackbar: false,
             msg: '',            
         }
+    },
+    created(){
+        this.lectureId = this.$route.params.id;
+        this.getDefaultPage();
     },
     methods: {
         clickImg(){
@@ -252,18 +263,34 @@ export default {
                 this.goto('#tags', '검색 키워드를 입력해주세요.')          
                 this.$refs.tags.focus();      
             }else{
-                this.createProject();
+                this.saveDefaultPage();
             }
         },
-        createProject(){
-            http.axios.post('/api/v1/lectures', {   
-                "tags": this.tags,
-                "thumbnailUrl": this.thumbnailUrl,
+        getDefaultPage(){
+            http.axios.get(`/api/v1/lectures/${this.lectureId}`).then(({data}) => {
+                if(data.msg == 'success') {
+                    console.dir(data)
+                    this.title = data.result.title;
+                    this.thumbnailUrl = data.result.thumbnailUrl;                    
+                    this.type = data.result.type;
+                    if(data.result.tagName != null) {
+                        this.tags = data.result.tagName.split(',')
+                    }
+                    this.commonId = data.result.commonId;
+                }
+            })
+        },
+        saveDefaultPage(){
+            http.axios.put('/api/v1/lectures/foundation', {  
+                "commonId": this.commonId,
+                "lectureId": this.lectureId,
                 "title": this.title,
+                "tags": this.tags,
+                "thumbnailUrl": this.thumbnailUrl,                
                 "type": this.type
             }).then(({data}) => {
-                alert("프로젝트가 생성되었습니다.");
-                this.$router.push("/");
+                this.snackbar = true;
+                this.msg = '저장되었습니다.';
             })
         }
         

@@ -18,19 +18,19 @@
                         </v-tab>
                         
                         <v-tab-item>
-                            <Default :option='option'> </Default>
+                            <Default :option='option' :tab='0' :curTab="tab"> </Default>
                         </v-tab-item>
                         <v-tab-item>
-                            <Intro :option='option'> </Intro>
+                            <Intro :option='option' :tab='1' :curTab="tab"> </Intro>
                         </v-tab-item>
                         <v-tab-item>
-                            <MemberManagement :option='option'> </MemberManagement>
+                            <MemberManagement :option='option' :tab='2' :curTab="tab"> </MemberManagement>
                         </v-tab-item>
                         <v-tab-item>
-                            <RequestList :option='option'> </RequestList>
+                            <RequestList :option='option' :tab='3' :curTab="tab"> </RequestList>
                         </v-tab-item>
                         <v-tab-item>
-                            <ChapterManagement :option='option'> </ChapterManagement>
+                            <ChapterManagement :option='option' :tab='4' :curTab="tab"> </ChapterManagement>
                         </v-tab-item>
                     </v-tabs>           
                 </v-flex>       
@@ -59,6 +59,7 @@ export default {
     },
     data() {
         return {          
+            tabName: ['default','intro','member','request','index'],
             tab: 0,  
             option: false,
 
@@ -86,10 +87,20 @@ export default {
             ]
         }
     },
+    watch:{
+        tab() {
+            history.pushState('', '', `/lecture/management/${this.tabName[this.tab]}/${this.$route.params.id}`);
+        }
+    },
     created(){
         if(!store.state.token) {
             this.$router.push('/')
         }
+        
+        this.tab = this.tabName.indexOf(this.$route.params.tabName);
+        if(this.tab == -1){
+            alert('잘못된 접근입니다.')
+        }        
     },
     mounted() {
         window.addEventListener('resize', this.handleResize)

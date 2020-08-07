@@ -28,7 +28,7 @@
                                 <v-layout>
                                     <v-spacer></v-spacer>
                                     <v-btn depressed color="primary" @click="ValidationForm">
-                                        생성하기
+                                        저장하기
                                     </v-btn>    
                                     <div style="margin-right:5px"></div>
                                     <v-btn depressed>
@@ -63,7 +63,7 @@
             v-model="snackbar"
             timeout="1500"
             color="primary"        
-            
+            right            
         >
             {{msg}}
         </v-snackbar>
@@ -76,19 +76,26 @@ import http from "@/util/http_common.js"
 import axios from "axios"
 import store from "@/store/index.js"
 export default {
-    props: ['option'],
+    props: ['option','tab','curTab'],
     watch: {
-        tags(val,prev){
-            if(val.length > 10)
-                val.pop()            
+        curTab(){
+            if(this.tab == this.curTab){
+                this.getIntroPage();
+            }
         }
     },
     data() {
         return {         
+            commonId: 0,
+            lectureId: 0,
             content: '',
             snackbar: false,
             msg: '',            
         }
+    },
+    created(){
+        this.lectureId = this.$route.params.id;
+        this.getIntroPage();
     },
     methods: {
         goto(target, msg){
@@ -105,19 +112,27 @@ export default {
                 this.goto('#content', '설명을 입력해주세요.')
                 this.$refs.content.focus();                                
             }else{
-                this.createProject();
+                this.saveIntroPage();
             }
         },
-        createProject(){
-            // http.axios.post('/api/v1/lectures', {   
-            //     "tags": this.tags,
-            //     "thumbnailUrl": this.thumbnailUrl,
-            //     "title": this.title,
-            //     "type": this.type
-            // }).then(({data}) => {
-            //     alert("프로젝트가 생성되었습니다.");
-            //     this.$router.push("/");
-            // })
+        getIntroPage(){
+            http.axios.get(`/api/v1/lectures/${this.lectureId}`).then(({data}) => {
+                if(data.msg == 'success') {
+                    console.dir(data)
+                    this.content = data.result.content;
+                    this.commonId = data.result.commonId;
+                }
+            })
+        },
+        saveIntroPage(){
+            http.axios.put('/api/v1/lectures/content', {  
+                "commonId": this.commonId,
+                "lectureId": this.lectureId,
+                "content": this.content,
+            }).then(({data}) => {
+                this.snackbar = true;
+                this.msg = '저장되었습니다.';
+            })
         }
         
     }
