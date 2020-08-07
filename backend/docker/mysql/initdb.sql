@@ -49,7 +49,7 @@ CREATE TABLE `board` (
   `count` int(11) NOT NULL DEFAULT '0',
   `created` datetime DEFAULT CURRENT_TIMESTAMP,
   `modified` datetime DEFAULT NULL,
-  `flag` varchar(45) DEFAULT 'Y',
+  `delete_yn` varchar(45) DEFAULT 'N',
   `lecture_id` int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
   `sub_id` int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
   `sub_his_id` int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
