@@ -11,6 +11,7 @@ public class LectureOneResponse {
 	private String thumbnailUrl;
 	private String nickname;
 	private Date created;
+	private int type;
 	private int lectureCount;
 	private int viewCount;
 	private int likeCount;
@@ -22,8 +23,8 @@ public class LectureOneResponse {
 	}
 
 	public LectureOneResponse(long lectureId, long userId, long commonId, String title, String content,
-			String thumbnailUrl, String nickname, Date created, int lectureCount, int viewCount, int likeCount,
-			String tagName, boolean userLikeYn) {
+			String thumbnailUrl, String nickname, Date created, int type, int lectureCount, int viewCount,
+			int likeCount, String tagName, boolean userLikeYn) {
 		super();
 		this.lectureId = lectureId;
 		this.userId = userId;
@@ -33,6 +34,7 @@ public class LectureOneResponse {
 		this.thumbnailUrl = thumbnailUrl;
 		this.nickname = nickname;
 		this.created = created;
+		this.type = type;
 		this.lectureCount = lectureCount;
 		this.viewCount = viewCount;
 		this.likeCount = likeCount;
@@ -144,12 +146,21 @@ public class LectureOneResponse {
 		this.userLikeYn = userLikeYn;
 	}
 
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
 	@Override
 	public String toString() {
 		return "LectureOneResponse [lectureId=" + lectureId + ", userId=" + userId + ", commonId=" + commonId
 				+ ", title=" + title + ", content=" + content + ", thumbnailUrl=" + thumbnailUrl + ", nickname="
-				+ nickname + ", created=" + created + ", lectureCount=" + lectureCount + ", viewCount=" + viewCount
-				+ ", likeCount=" + likeCount + ", tagName=" + tagName + ", userLikeYn=" + userLikeYn + "]";
+				+ nickname + ", created=" + created + ", type=" + type + ", lectureCount=" + lectureCount
+				+ ", viewCount=" + viewCount + ", likeCount=" + likeCount + ", tagName=" + tagName + ", userLikeYn="
+				+ userLikeYn + "]";
 	}
 
 }
