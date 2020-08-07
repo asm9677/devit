@@ -6,7 +6,7 @@
 	
 	<!-- 회원상세 -->
 	<select id="findUsers" resultType="UserResponse">
-		select user_id as userId, nickname, email from user
+		select user_id as userId, nickname, email, active, created, deleted, email_confirm emailConfirm, profile from user
 	</select>
 	
 	<!-- 사용자 Email로 검색 -->
@@ -18,12 +18,12 @@
 	
 	<!-- 사용자 user_id로 검색 -->
 	<select id="findUserByUserId" resultType="User">
-		select user_id as userId, nickname, email, password, active, created, deleted
+		select user_id as userId, nickname, email, active, created, deleted, email_confirm emailConfirm, profile
 		from user
 		where user_id = #{userId}
 	</select>
 	
-	<!-- 사용자 user_id로 검색 -->
+	<!-- 사용자 nickname로 검색 -->
 	<select id="findUserByNickname" resultType="User">
 		select user_id as userId, nickname, email, password, active, created, deleted
 		from user
@@ -73,8 +73,13 @@
 		LIMIT 0 , 10;
 	</select>
 	
-	<!-- 서비스를 이용하는 사용자 누적수 -->
-	<select id="getUsersCount" resultType="Integer">
-		select count(1) from user
-	</select>
+	<!-- 회원정보 수정 -->
+	<update id="updateUserInfo">
+		UPDATE user 
+		SET 
+		    nickname = #{nickname},
+		    profile = #{profile}
+		WHERE
+		    user_id = #{userId};
+	</update>
 </mapper>

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.ssafy.devit.model.request.UserProfileUpdateReqeust;
 import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.model.user.UserResponse;
 
@@ -29,5 +30,6 @@ public interface UserRepository {
 	
 	public List<UserResponse> findUsersByLikeSearchText(@Param("search") String search, @Param("lectureId") long lectureId) throws Exception;
 	
-	public int getUsersCount() throws Exception;
+	// 사용자 프로필 변경
+	public void updateUserInfo(UserProfileUpdateReqeust request) throws Exception; 
 }
