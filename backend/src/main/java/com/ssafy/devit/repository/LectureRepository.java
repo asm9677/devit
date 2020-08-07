@@ -1,6 +1,5 @@
 package com.ssafy.devit.repository;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -58,19 +57,19 @@ public interface LectureRepository {
 	// 강의, 위키 리퀘스트 요청
 	@Transactional
 	public void insertSubHistory(LectureSubHistoryRequest lecture) throws Exception;
-	
-	// 강의 권한 병경
-	@Transactional
-	public void updateLectureAuth(@Param("lectureId") long lectureId, @Param("auths") List<LectureAuthRequest> auths) throws Exception;
-	
+		
 	// 같은 종류의 다른 강의들 가져오기
 	public List<TheOhterSubLectureResponse> selectTheOtherSubLectures(@Param("subId") long subId, @Param("userId") long userId) throws Exception;
 	
+	// 공동작업자 권한 입력
+	@Transactional
+	public void insertLectureAuth(LectureAuthRequest request) throws Exception;
 	
+	// 공동작업자 권한 변경
+	@Transactional
+	public void updateLectureAuth(LectureAuthRequest request) throws Exception;
 	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
-	
-	public int getLectureSubCount() throws Exception;
 	
 	public LectureOneResponse selectLectureByLectureId(@Param("lectureId") long lectureId, @Param("userId") long userId) throws Exception;
 	

@@ -67,11 +67,6 @@ public class LectureServiceImpl implements LectureService {
 	}
 
 	@Override
-	public int getLectureSubCount() throws Exception {
-		return lectureRepository.getLectureSubCount();
-	}
-
-	@Override
 	public List<TagResponse> getTags() throws Exception {
 		return lectureRepository.selectTags();
 	}
@@ -157,14 +152,19 @@ public class LectureServiceImpl implements LectureService {
 	}
 
 	@Override
-	public void updateLectureAuth(long lectureId, List<LectureAuthRequest> auth) throws Exception {
-		lectureRepository.updateLectureAuth(lectureId, auth);
+	public void updateLectureAuth(List<LectureAuthRequest> auths) throws Exception {
+		for(LectureAuthRequest auth : auths) {
+			if(auth.getAuthId() == 0) { // 서버에 등록되어있지 않은 사람
+				lectureRepository.insertLectureAuth(auth);
+			}else { // 서버에 등록되어있는 사람
+				lectureRepository.updateLectureAuth(auth);
+			}
+		}
 	}
 
 	@Override
 	public List<TheOhterSubLectureResponse> getTheOtherSubLectures(long subId) throws Exception {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		System.out.println(subId + "  " + user.getUserId());
 		return lectureRepository.selectTheOtherSubLectures(subId, user.getUserId());
 	}
 }

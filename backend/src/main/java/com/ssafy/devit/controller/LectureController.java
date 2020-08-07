@@ -94,25 +94,6 @@ public class LectureController {
 		return response;
 	}
 
-	@ApiOperation(value = "메인페이지에 누적 강의수 가져오기")
-	@GetMapping("/count")
-	public ResponseEntity<CommonResponse> getLectureSubCount() {
-		log.info(">> Load : getLectureSubCount <<");
-		ResponseEntity<CommonResponse> response = null;
-		final CommonResponse result = new CommonResponse();
-		try {
-			result.result = lectureService.getLectureSubCount();
-			result.msg = "success";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
-		} catch (Exception e) {
-			log.info(">> Error : getLectureSubCount <<");
-			log.info(e.getMessage().toString());
-			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
-		}
-		return response;
-	}
-
 	@ApiOperation(value = "서비스에 등록된 Tag들을 상위 20개 가져오기")
 	@GetMapping("/tags")
 	public ResponseEntity<CommonResponse> getTags() {
@@ -223,8 +204,8 @@ public class LectureController {
 
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
-	@ApiOperation(value = "대표 프로젝트 관리 맴버 가져오기")
-	@GetMapping("/role/{lectureid}")
+	@ApiOperation(value = "프로젝트 공동 관리자 리스트 가져오기")
+	@GetMapping("/auth/{lectureid}")
 	public ResponseEntity<CommonResponse> selectRoleUsersByLectureId(@PathVariable("lectureid") long lectureId) {
 		log.info(">> Load : selectRoleUsersByLectureId <<");
 		ResponseEntity<CommonResponse> response = null;
@@ -244,16 +225,15 @@ public class LectureController {
 
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
-	@ApiOperation(value = "공동 작업자 수정")
-	@PutMapping("/role/{lectureid}")
-	public ResponseEntity<CommonResponse> updateLectureAuth(@PathVariable("lectureid") long lectureId,
-			@RequestBody List<LectureAuthRequest> request) {
+	@ApiOperation(value = "프로젝트 공동 관리자 수정")
+	@PutMapping("/auth")
+	public ResponseEntity<CommonResponse> updateLectureAuth(@RequestBody List<LectureAuthRequest> request) {
 		log.info(">> Load : updateLectureAuth <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 
 		try {
-			lectureService.updateLectureAuth(lectureId, request);
+			lectureService.updateLectureAuth(request);
 			result.msg = "success";
 			result.result = "성공적으로 등록 되었습니다.";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);

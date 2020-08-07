@@ -3,6 +3,9 @@ package com.ssafy.devit.model.lecture;
 import java.util.Date;
 
 public class LectureRoleUsersResponse {
+	private long authId;
+	private long lectureId;
+	private long userId;
 	private String nickname;
 	private String profile;
 	private String email;
@@ -14,9 +17,12 @@ public class LectureRoleUsersResponse {
 
 	}
 
-	public LectureRoleUsersResponse(String nickname, String profile, String email, String role, Date created,
-			Date modified) {
+	public LectureRoleUsersResponse(long authId, long lectureId, long userId, String nickname, String profile,
+			String email, String role, Date created, Date modified) {
 		super();
+		this.authId = authId;
+		this.lectureId = lectureId;
+		this.userId = userId;
 		this.nickname = nickname;
 		this.profile = profile;
 		this.email = email;
@@ -25,20 +31,28 @@ public class LectureRoleUsersResponse {
 		this.modified = modified;
 	}
 
-	public String getEmail() {
-		return email;
+	public long getAuthId() {
+		return authId;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setAuthId(long authId) {
+		this.authId = authId;
 	}
 
-	public Date getCreated() {
-		return created;
+	public long getLectureId() {
+		return lectureId;
 	}
 
-	public void setCreated(Date created) {
-		this.created = created;
+	public void setLectureId(long lectureId) {
+		this.lectureId = lectureId;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 	public String getNickname() {
@@ -57,6 +71,14 @@ public class LectureRoleUsersResponse {
 		this.profile = profile;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public String getRole() {
 		return role;
 	}
@@ -65,12 +87,12 @@ public class LectureRoleUsersResponse {
 		this.role = role;
 	}
 
-	public Date getCreate() {
+	public Date getCreated() {
 		return created;
 	}
 
-	public void setCreate(Date create) {
-		this.created = create;
+	public void setCreated(Date created) {
+		this.created = created;
 	}
 
 	public Date getModified() {
@@ -83,8 +105,9 @@ public class LectureRoleUsersResponse {
 
 	@Override
 	public String toString() {
-		return "LectureRoleUsersResponse [nickname=" + nickname + ", profile=" + profile + ", email=" + email
-				+ ", role=" + role + ", created=" + created + ", modified=" + modified + "]";
+		return "LectureRoleUsersResponse [authId=" + authId + ", lectureId=" + lectureId + ", userId=" + userId
+				+ ", nickname=" + nickname + ", profile=" + profile + ", email=" + email + ", role=" + role
+				+ ", created=" + created + ", modified=" + modified + "]";
 	}
 
 }

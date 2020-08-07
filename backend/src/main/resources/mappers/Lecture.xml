@@ -183,13 +183,6 @@
 	<!-- 소강의 관련 쿼리 끝 -->
 	
 	
-	<!-- 누적 강의 수 -->
-	<select id="getLectureSubCount" resultType="Integer">
-		SELECT count(1) FROM lecture_sub_index
-	</select>
-	
-	
-	
 	<!-- tags  -->
 	<select id="selectTags" resultType="TagResponse">
 		SELECT 
@@ -238,25 +231,27 @@
 		VALUES(#{lectureId}, #{userId}, #{role})
 	</insert>
 	
-	<!-- 프로젝트 권한 변경 -->
-	<update id="updateLectureAuth">
-		DELETE FROM lecture_auth WHERE lecture_id = #{lectureId};
-		
+	<!-- 프로젝트 권한 등록 -->
+	<insert id="insertLectureAuth">
 		INSERT INTO lecture_auth(lecture_id, user_id, lecture_role)
-		VALUES
-		<foreach collection="auths" item="auth" separator=", ">
-			(#{lectureId}, #{auth.userId}, #{auth.lectureRole})
-		</foreach>
+		VALUES(#{lectureId}, #{userId}, #{lectureRole})
+	</insert>
+	
+	<!-- 프로젝트 권한 수정 -->
+	<update id="updateLectureAuth">
+		UPDATE lecture_auth
+		SET lecture_role = #{lectureRole}, modified = now()
+		WHERE auth_id = #{authId}
 	</update>
 	
 	<!-- 프로젝트에 포함된 공동 작업자 가져오기 -->
 	<select id="selectRoleUsersByLectureId" resultType="LectureRoleUsersResponse">
-		SELECT u.nickname, u.email, u.profile, la.lecture_role role, la.created, la.modified
+		SELECT la.auth_id authId, la.lecture_id lectureId, la.user_id userId, u.nickname, u.email, u.profile, la.lecture_role role, la.created, la.modified
 		FROM user u
 		INNER JOIN lecture_auth la
 		ON
 		u.user_id = la.user_id AND
-		lecture_id = #{lectureId}
+		lecture_id = #{lectureId} and la.delete_yn = 'N'
 	</select>
 	
 	<!-- 목차 상세 정보 가져오기 -->
