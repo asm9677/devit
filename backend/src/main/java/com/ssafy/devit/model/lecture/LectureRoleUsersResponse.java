@@ -3,6 +3,7 @@ package com.ssafy.devit.model.lecture;
 import java.util.Date;
 
 public class LectureRoleUsersResponse {
+	private long userId;
 	private String nickname;
 	private String profile;
 	private String email;
@@ -14,15 +15,24 @@ public class LectureRoleUsersResponse {
 
 	}
 
-	public LectureRoleUsersResponse(String nickname, String profile, String email, String role, Date created,
-			Date modified) {
+	public LectureRoleUsersResponse(long userId, String nickname, String profile, String email, String role,
+			Date created, Date modified) {
 		super();
+		this.userId = userId;
 		this.nickname = nickname;
 		this.profile = profile;
 		this.email = email;
 		this.role = role;
 		this.created = created;
 		this.modified = modified;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
 	public String getEmail() {
