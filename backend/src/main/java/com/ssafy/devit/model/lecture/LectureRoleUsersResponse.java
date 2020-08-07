@@ -3,8 +3,10 @@ package com.ssafy.devit.model.lecture;
 import java.util.Date;
 
 public class LectureRoleUsersResponse {
+	private long userId;
 	private String nickname;
 	private String profile;
+	private String email;
 	private String role;
 	private Date created;
 	private Date modified;
@@ -13,13 +15,40 @@ public class LectureRoleUsersResponse {
 
 	}
 
-	public LectureRoleUsersResponse(String nickname, String profile, String role, Date created, Date modified) {
+	public LectureRoleUsersResponse(long userId, String nickname, String profile, String email, String role,
+			Date created, Date modified) {
 		super();
+		this.userId = userId;
 		this.nickname = nickname;
 		this.profile = profile;
+		this.email = email;
 		this.role = role;
 		this.created = created;
 		this.modified = modified;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Date getCreated() {
+		return created;
+	}
+
+	public void setCreated(Date created) {
+		this.created = created;
 	}
 
 	public String getNickname() {
@@ -64,8 +93,8 @@ public class LectureRoleUsersResponse {
 
 	@Override
 	public String toString() {
-		return "LectureRoleUsersResponse [nickname=" + nickname + ", profile=" + profile + ", role=" + role
-				+ ", create=" + created + ", modified=" + modified + "]";
+		return "LectureRoleUsersResponse [nickname=" + nickname + ", profile=" + profile + ", email=" + email
+				+ ", role=" + role + ", created=" + created + ", modified=" + modified + "]";
 	}
 
 }

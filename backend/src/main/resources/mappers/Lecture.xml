@@ -251,7 +251,7 @@
 	
 	<!-- 프로젝트에 포함된 공동 작업자 가져오기 -->
 	<select id="selectRoleUsersByLectureId" resultType="LectureRoleUsersResponse">
-		SELECT u.nickname, u.email, u.profile, la.lecture_role role, la.created, la.modified
+		SELECT u.user_id userId, u.nickname, u.email, u.profile, la.lecture_role role, la.created, la.modified
 		FROM user u
 		INNER JOIN lecture_auth la
 		ON
