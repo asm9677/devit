@@ -1,3 +1,5 @@
+
+
 <template>
   <div style="; margin-top:20px;">
         <v-card tile flat outlined >
@@ -305,4 +307,8 @@ export default {
         font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         /* font-size:12px; */
     } 
+
+    .v-card::selection {
+        color:red
+    }
 </style>

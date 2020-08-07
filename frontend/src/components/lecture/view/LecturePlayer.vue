@@ -215,7 +215,7 @@
                             </v-list-item>
                             <v-list>
                                 <v-list-item>                                
-                                    <Contribute></Contribute>
+                                    <Contribute :darkOption="darkOption"></Contribute>
                                 </v-list-item>
                             </v-list>
                         </v-list>                        
