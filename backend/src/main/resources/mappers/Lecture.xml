@@ -240,7 +240,14 @@
 	<!-- 프로젝트 권한 수정 -->
 	<update id="updateLectureAuth">
 		UPDATE lecture_auth
-		SET lecture_role = #{lectureRole}, modified = now()
+		SET lecture_role = #{lectureRole}, modified = now(), delete
+		WHERE auth_id = #{authId}
+	</update>
+	
+	<!-- 프로젝트 권한 제거 -->
+	<update id="deleteLectureAuth">
+		UPDATE lecture_auth
+		SET delete_yn = 'Y'
 		WHERE auth_id = #{authId}
 	</update>
 	

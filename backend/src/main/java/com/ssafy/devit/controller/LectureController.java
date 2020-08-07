@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -248,6 +249,30 @@ public class LectureController {
 
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "프로젝트 공동 관리자 제거")
+	@DeleteMapping("/auth/{authid}")
+	public ResponseEntity<CommonResponse> removeLectureAuth(@PathVariable("authid") long authId) {
+		log.info(">> Load : removeLectureAuth <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			lectureService.deleteLectureAuth(authId);
+			result.msg = "success";
+			result.result = "성공적으로 등록 되었습니다.";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			result.result = "공동 관리자를 삭제할 권한이 없습니다";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			log.info(">> Error : removeLectureAuth <<");
+			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
 	@ApiOperation(value = "소강의 생성")
 	@PostMapping("/sub")
 	public ResponseEntity<CommonResponse> createSubLectures(@RequestBody List<LectureSubsRequest> requests) {
@@ -342,7 +367,7 @@ public class LectureController {
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 
-		try {			
+		try {
 			result.result = lectureService.getTheOtherSubLectures(subId);
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);

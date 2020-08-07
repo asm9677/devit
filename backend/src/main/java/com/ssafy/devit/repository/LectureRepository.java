@@ -61,13 +61,16 @@ public interface LectureRepository {
 	// 같은 종류의 다른 강의들 가져오기
 	public List<TheOhterSubLectureResponse> selectTheOtherSubLectures(@Param("subId") long subId, @Param("userId") long userId) throws Exception;
 	
-	// 공동작업자 권한 입력
+	// 공동 관리자 권한 입력
 	@Transactional
 	public void insertLectureAuth(LectureAuthRequest request) throws Exception;
 	
-	// 공동작업자 권한 변경
+	// 공동 관리자 권한 변경
 	@Transactional
 	public void updateLectureAuth(LectureAuthRequest request) throws Exception;
+	
+	// 공동 관리자 제거
+	public void deleteLectureAuth(@Param("authId") long authId) throws Exception;
 	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
 	

@@ -167,4 +167,10 @@ public class LectureServiceImpl implements LectureService {
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return lectureRepository.selectTheOtherSubLectures(subId, user.getUserId());
 	}
+
+	@Override
+	public void deleteLectureAuth(long authId) throws Exception {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		lectureRepository.deleteLectureAuth(authId);
+	}
 }
