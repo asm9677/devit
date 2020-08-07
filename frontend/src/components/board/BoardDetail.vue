@@ -1,13 +1,13 @@
 <template>
-    <div id="app">
+    <div>
         <v-container>
-            <v-container fluid="fluid">
+            <v-container>
                 <template>
                     <v-col :key="item.boardId">
                         <div class="board_detail">
                             <v-list-item style="margin-bottom:5px;">
                                 <v-hover v-slot:default="{ hover }">
-                                    <v-btn 
+                                    <v-btn
                                         v-show="isBtnShow"
                                         outlined="outlined"
                                         depressed="depressed"
@@ -30,28 +30,13 @@
                                     </v-btn>
                                 </v-hover>
                                 <v-spacer></v-spacer>
-                                <!-- <v-hover v-slot:default="{ hover }">
-                                    <v-btn
-                                        outlined="outlined"
-                                        depressed="depressed"
-                                        text="text"
-                                        small="small"
-                                        style="margin-right:5px"
-                                        @click="move('/lecture/create')">
-                                        <font :color="hover ? '' : 'gray'" size="2">이전글</font>
-                                    </v-btn>
-                                </v-hover>
-                                <v-hover v-slot:default="{ hover }">
-                                    <v-btn
-                                        outlined="outlined"
-                                        depressed="depressed"
-                                        text="text"
-                                        small="small"
-                                        style="margin-right:5px"
-                                        @click="move('/lecture/create')">
-                                        <font :color="hover ? '' : 'gray'" size="2">다음글</font>
-                                    </v-btn>
-                                </v-hover> -->
+                                <!-- <v-hover v-slot:default="{ hover }"> <v-btn outlined="outlined"
+                                depressed="depressed" text="text" small="small" style="margin-right:5px"
+                                @click="move('/lecture/create')"> <font :color="hover ? '' : 'gray'"
+                                size="2">이전글</font> </v-btn> </v-hover> <v-hover v-slot:default="{ hover }">
+                                <v-btn outlined="outlined" depressed="depressed" text="text" small="small"
+                                style="margin-right:5px" @click="move('/lecture/create')"> <font :color="hover ?
+                                '' : 'gray'" size="2">다음글</font> </v-btn> </v-hover> -->
                                 <v-hover v-slot:default="{ hover }">
                                     <v-btn
                                         outlined="outlined"
@@ -74,8 +59,8 @@
                                     <v-list-item class="board_writer">{{ item.userName }}</v-list-item>
                                     <v-list-item class="board_info">
                                         {{item.boardModified ? item.boardModified : item.boardCreated | moment('YYYY-MM-DD HH:mm')}}
-                                        <!-- <v-icon color="red" size="20" style="margin:5px 3px 0 5px;">mdi-heart-outline</v-icon>
-                                        {{item.likes}} -->
+                                        <!-- <v-icon color="red" size="20" style="margin:5px 3px 0
+                                        5px;">mdi-heart-outline</v-icon> {{item.likes}} -->
                                         <v-icon size="20" style="margin:5px 3px 0 5px;">mdi-eye</v-icon>
                                         {{item.boardCount}}
                                         <!--<v-icon size="15">mdi-comment-processing-outline</v-icon>-->
@@ -105,11 +90,7 @@
                                 <span style="font-size:15px; font-weight:normal;">{{item.replyCount}}</span>
                                 <v-spacer></v-spacer>
                                 <v-hover v-slot:default="{ hover }">
-                                    <v-btn
-                                        depressed="depressed"
-                                        text="text"
-                                        small="small"
-                                        @click="createReply()">
+                                    <v-btn depressed="depressed" text="text" small="small" @click="createReply()">
                                         <font :color="hover ? '' : 'gray'" size="2">등록</font>
                                     </v-btn>
                                 </v-hover>
@@ -129,81 +110,77 @@
                                 </v-list-item-title>
                             </v-list-item>
 
-                            <v-data-iterator
-                                class=""
-                                :items="items"
-                                hide-default-footer="hide-default-footer"
-                                no-data-text=""
-                            >
-                                <template v-slot:default="props">
-                                    <v-col v-for="item in props.items" :key="item.boardReplyId">
-                                        <v-list-item>
-                                            <v-icon size="40">mdi-account-circle</v-icon>
-                                            <!--<v-list-item-avatar color="grey"><img src=""
-                                            alt="John"></v-list-item-avatar>-->
-                                            <v-list-item-content>
-                                                <v-list-item class="comment_writer">{{ item.userName }}</v-list-item>
-                                                <v-list-item class="comment_info">
-                                                    {{item.replyModified | moment('YYYY-MM-DD HH:mm')}}
-                                                </v-list-item>
-                                            </v-list-item-content>
-                                            <v-spacer></v-spacer>
-                                            <v-hover v-slot:default="{ hover }">
-                                                <v-btn
-                                                    depressed="depressed"
-                                                    text="text"
-                                                    small="small"
-                                                    @click="showRereply()"
-                                                    >
-                                                    <font :color="hover ? '' : 'gray'" size="2">{{item.type == 'reply' && item.showLayer ? '답글 접기' : '답글'}}</font>
-                                                </v-btn>
-                                            </v-hover>
-                                            <v-hover v-slot:default="{ hover }">
-                                                <v-btn
-                                                    v-show="item.isMine == 'Y'"
-                                                    depressed="depressed"
-                                                    text="text"
-                                                    small="small"
-                                                    @click="move('/lecture/create')">
-                                                    <font :color="hover ? '' : 'gray'" size="2">수정</font>
-                                                </v-btn>
-                                            </v-hover>
-                                            <v-hover v-slot:default="{ hover }">
-                                                <v-btn
-                                                    v-show="item.isMine == 'Y'"
-                                                    depressed="depressed"
-                                                    text="text"
-                                                    small="small"
-                                                    @click="deleteReply(item.boardReplyId)">
-                                                    <font :color="hover ? '' : 'gray'" size="2">삭제</font>
-                                                </v-btn>
-                                            </v-hover>
-                                        </v-list-item>
-                                        <v-list-item class="comment_content">{{ item.replyContent }}</v-list-item>
-                                        <v-list-item
-                                        v-show="false">
-                                            <div>
-                                                <v-textarea
-                                                    v-model="item.replyText"
-                                                    no-resize="no-resize"
-                                                    outlined="outlined"
-                                                    rows="3"
-                                                    placeholder="댓글을 입력하세요"></v-textarea>
-                                            </div>
-                                            <v-hover v-slot:default="{ hover }">
+                            <!--<v-data-iterator class="" :items="items"
+                            hide-default-footer="hide-default-footer" no-data-text="" > <template
+                            v-slot:default="props"> -->
+                            <template v-for="(replyItem, index) in items">
+                                <v-col :key="`${index}_vcol`" style="float:right;" :style="{'width': (replyItem.parentReplyId == 0) ? '100%' : '90%'}">
+
+                                    <v-list-item>
+                                        <v-icon size="40">mdi-account-circle</v-icon>
+                                        <!--<v-list-item-avatar color="grey"><img src=""
+                                        alt="John"></v-list-item-avatar>-->
+                                        <v-list-item-content>
+                                            <v-list-item class="comment_writer">{{ replyItem.userName }}</v-list-item>
+                                            <v-list-item class="comment_info">
+                                                {{replyItem.replyModified | moment('YYYY-MM-DD HH:mm')}}
+                                            </v-list-item>
+                                        </v-list-item-content>
+                                        <v-spacer></v-spacer>
+                                        <v-hover v-slot:default="{ hover }">
                                             <v-btn
                                                 depressed="depressed"
                                                 text="text"
                                                 small="small"
-                                                @click="createRereply()">
+                                                @click="showRereply('rereply', replyItem)">
+                                                <font :color="hover ? '' : 'gray'" size="2">{{replyItem.showType == 'rereply' && replyItem.isShow ? '답글 접기' : '답글'}}</font>
+                                            </v-btn>
+                                        </v-hover>
+                                        <v-hover v-slot:default="{ hover }">
+                                            <v-btn
+                                                v-show="replyItem.isMine == 'Y'"
+                                                depressed="depressed"
+                                                text="text"
+                                                small="small"
+                                                @click="showRereply('modify', replyItem)">
+                                                <font :color="hover ? '' : 'gray'" size="2">수정</font>
+                                            </v-btn>
+                                        </v-hover>
+                                        <v-hover v-slot:default="{ hover }">
+                                            <v-btn
+                                                v-show="replyItem.isMine == 'Y'"
+                                                depressed="depressed"
+                                                text="text"
+                                                small="small"
+                                                @click="deleteReply(replyItem.boardReplyId)">
+                                                <font :color="hover ? '' : 'gray'" size="2">삭제</font>
+                                            </v-btn>
+                                        </v-hover>
+                                    </v-list-item>
+                                    <v-list-item class="comment_content">{{ replyItem.replyContent }}</v-list-item>
+                                    <v-list-item v-if="replyItem.isShow">
+                                        <div style="width:100%">
+                                            <v-textarea
+                                                v-model="replyItem.replyText"
+                                                no-resize="no-resize"
+                                                outlined="outlined"
+                                                rows="3"
+                                                placeholder="댓글을 입력하세요"></v-textarea>
+                                        </div>
+                                        <v-hover v-slot:default="{ hover }">
+                                            <v-btn
+                                                depressed="depressed"
+                                                text="text"
+                                                small="small"
+                                                @click="createRereply(replyItem)">
                                                 <font :color="hover ? '' : 'gray'" size="2">등록</font>
                                             </v-btn>
                                         </v-hover>
-                                        </v-list-item>
-                                        <v-divider></v-divider>
-                                    </v-col>
-                                </template>
-                            </v-data-iterator>
+                                    </v-list-item>
+                                    <v-divider></v-divider>
+                                </v-col>
+                            </template>
+                            <!-- </v-data-iterator> -->
                         </div>
                     </v-col>
                 </template>
@@ -226,12 +203,11 @@
         name: 'app',
         data() {
             return {
-                replyText:"",
+                replyText: "",
                 isBtnShow: false,
                 itemsPerPage: 10,
-                item:{},
-                items: [
-                    /*{
+                item: {},
+                items: [/*{
                         comment_id: 1,
                         name: '홍길동',
                         content: '글내용2',
@@ -249,83 +225,179 @@
                         content: '글내용2',
                         date: '2020.07.06. 15:00',
                         is_reply: 'N'
-                    }*/
-                ],
+                    }*/],
+                isShow: [],
                 snackbar: false,
                 text: ""
             }
         },
         mounted() {
-            if(this.$route.params.showMsg == true){
-                
+            if (this.$route.params.showMsg == true) {
+
                 //this.text = "작성이 완료되었습니다.";
                 this.text = this.$route.params.msgText;
                 this.snackbar = true;
             }
 
             this.showBoardDetail();
-            },
+        },
         methods: {
-            showRereply(){
+            showRereply(type, item) {
+
+                if (type == "rereply") {
+
+                    item.showType = type;
+                    item.isShow = !item.isShow;
+
+                } else if (type == "modify") {
+
+                    item.showType = type;
+                    item.isShow = true;
+                    item.replyText = item.replyContent;
+                }
 
             },
-            createReply(){
-                
-                if(this.replyText == ""){
+            createRereply(item) {
+
+                if (item.replyText == "") {
+                    alert("댓글을 입력하세요");
+                    return;
+                }
+
+                if (item.showType == "modify") {
+                    http
+                        .axios
+                        .put("/api/v1/reply", {
+                            boardId: this.$route.query.boardId,
+                            boardReplyId: item.boardReplyId,
+                            parentReplyId: 0,
+                            replyContent: item.replyText
+                        })
+                        .then(({data}) => {
+                            this.text = "댓글이 등록되었습니다.";
+                            this.snackbar = true;
+                            item.replyText = "";
+                            this.showBoardDetail();
+
+                        })
+                        .catch((error) => {
+                            console.dir(error)
+                        })
+
+                } else if (item.showType == "rereply") {
+                    http
+                        .axios
+                        .post("/api/v1/reply", {
+                            boardId: this.$route.query.boardId,
+                            parentReplyId: item.boardReplyId,
+                            replyContent: item.replyText
+                        })
+                        .then(({data}) => {
+                            this.text = "댓글이 등록되었습니다.";
+                            this.snackbar = true;
+                            item.replyText = "";
+                            this.showBoardDetail();
+
+                        })
+                        .catch((error) => {
+                            console.dir(error)
+                        })
+                }
+
+            },
+            createReply() {
+
+                if (this.replyText == "") {
                     alert("댓글을 입력하세요");
                     return;
                 }
                 http
-                .axios
-                .post("/api/v1/reply", {
-                    boardId: this.$route.query.boardId,
-                    parentReplyId: 0,
-                    replyContent: this.replyText,
-                })
-                .then(({data}) => {
-                    this.text = "댓글이 등록되었습니다.";
-                    this.snackbar = true;
-                    this.replyText = "";
-                    this.showBoardDetail();
-                
-                })
-                .catch((error) => {
-                    console.dir(error)
-                })
-            },
-            showBoardDetail(){
-                
-            http
-                .axios
-                .get("/api/v1/board/" + this.$route.query.boardId, {
-                })
-                .then(({data}) => {
-                    this.item = data.result;
-
-                    if(this.item.isMine == 'Y'){ //수정/삭제 버튼
-                        this.isBtnShow = true;
-                    }else{
-                        this.isBtnShow = false;
-                    }
-
-                    http
                     .axios
-                    .get("/api/v1/reply/" + this.$route.query.boardId, {
+                    .post("/api/v1/reply", {
+                        boardId: this.$route.query.boardId,
+                        parentReplyId: 0,
+                        replyContent: this.replyText
                     })
                     .then(({data}) => {
-                        this.items = data.result;
+                        this.text = "댓글이 등록되었습니다.";
+                        this.snackbar = true;
+                        this.replyText = "";
+                        this.showBoardDetail();
+
                     })
                     .catch((error) => {
                         console.dir(error)
                     })
-                })
-                .catch((error) => {
-                    console.dir(error)
-                })
-            },
-            
+                },
+            showBoardDetail() {
+
+                http
+                    .axios
+                    .get("/api/v1/board/" + this.$route.query.boardId, {})
+                    .then(({data}) => {
+                        this.item = data.result;
+
+                        if (this.item.isMine == 'Y') { //수정/삭제 버튼
+                            this.isBtnShow = true;
+                        } else {
+                            this.isBtnShow = false;
+                        }
+
+                        http
+                            .axios
+                            .get("/api/v1/reply/" + this.$route.query.boardId, {})
+                            .then(({data}) => {
+                                this.items = [];
+                                for (let i = 0; i < data.result.length; i++) {
+                                    this
+                                        .items
+                                        .push({
+                                            boardId: data
+                                                .result[i]
+                                                .boardId,
+                                            boardReplyId: data
+                                                .result[i]
+                                                .boardReplyId,
+                                            deleteYn: data
+                                                .result[i]
+                                                .deleteYn,
+                                            isMine: data
+                                                .result[i]
+                                                .isMine,
+                                            parentReplyId: data
+                                                .result[i]
+                                                .parentReplyId,
+                                            replyContent: data
+                                                .result[i]
+                                                .replyContent,
+                                            replyCreated: data
+                                                .result[i]
+                                                .replyCreated,
+                                            replyModified: data
+                                                .result[i]
+                                                .replyModified,
+                                            userId: data
+                                                .result[i]
+                                                .userId,
+                                            userName: data
+                                                .result[i]
+                                                .userName,
+                                            isShow: false,
+                                            showType: ""
+                                        })
+                                }
+                            })
+                            .catch((error) => {
+                                console.dir(error)
+                            })
+                        })
+                    .catch((error) => {
+                        console.dir(error)
+                    })
+                },
+
             modifyBoard() {
-                if(this.$router.app.$store.state.token){
+                if (this.$router.app.$store.state.token) {
                     var boardId = this.$route.query.boardId;
                     this
                         .$router
@@ -337,13 +409,13 @@
                                 'edittype': 'modify'
                             }
                         });
-                }else{
+                } else {
                     eventBus.$emit('doLogin');
                 }
-                
+
             },
             deleteBoard() {
-                if(this.$router.app.$store.state.token){
+                if (this.$router.app.$store.state.token) {
                     var boardId = this.$route.query.boardId;
                     if (confirm("삭제하시겠습니까?")) {
                         http
@@ -354,8 +426,7 @@
                                 password: this.password*/
                             })
                             .then(({data}) => {
-                                //alert("삭제가 완료되었습니다.");
-                                //data;
+                                //alert("삭제가 완료되었습니다."); data;
                                 this.text = "삭제가 완료되었습니다.";
                                 this.snackbar = true;
                                 /*this
@@ -367,26 +438,24 @@
                                 console.dir(error)
                             })
                         }
-                }else{
+                } else {
                     eventBus.$emit('doLogin');
                 }
-                
+
             },
             goToList() {
                 this
                     .$router
                     .push("/board?type=" + this.$route.query.boardtype);
             },
-            deleteReply(replyId){
-                
-                if(this.$router.app.$store.state.token){
+            deleteReply(replyId) {
+
+                if (this.$router.app.$store.state.token) {
                     //var boardId = this.$route.query.boardId;
                     if (confirm("댓글을 삭제하시겠습니까?")) {
                         http
                             .axios
-                            .delete("/api/v1/reply/" + replyId, {
-                                
-                            })
+                            .delete("/api/v1/reply/" + replyId, {})
                             .then(({data}) => {
                                 this.text = "삭제가 완료되었습니다.";
                                 this.snackbar = true;
@@ -400,7 +469,7 @@
                                 console.dir(error)
                             })
                         }
-                }else{
+                } else {
                     eventBus.$emit('doLogin');
                 }
             }
@@ -439,7 +508,7 @@
         padding: 20px;
         margin-top: 20px;
     }
-    
+
     .comment_list .v-list-item {
         min-height: 20px;
     }
@@ -447,7 +516,7 @@
     .comment_list .comment_title {
         font-size: 18px;
         font-weight: bold;
-        min-height:50px;
+        min-height: 50px;
     }
     .comment_list .comment_writer {
         font-size: 16px;
