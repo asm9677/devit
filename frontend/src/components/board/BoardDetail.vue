@@ -114,7 +114,8 @@
                             hide-default-footer="hide-default-footer" no-data-text="" > <template
                             v-slot:default="props"> -->
                             <template v-for="(replyItem, index) in items">
-                                <v-col :key="`${index}_vcol`">
+                                <v-col :key="`${index}_vcol`" style="float:right;" :style="{'width': (replyItem.parentReplyId == 0) ? '100%' : '90%'}">
+
                                     <v-list-item>
                                         <v-icon size="40">mdi-account-circle</v-icon>
                                         <!--<v-list-item-avatar color="grey"><img src=""
