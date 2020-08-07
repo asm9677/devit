@@ -11,10 +11,13 @@ public class User implements UserDetails {
 	private long userId;
 	private String nickname;
 	private String email;
+	private String emailConfirm;
 	private String password;
 	private String active;
+	private String profile;
 	private Date created;
 	private Date deleted;
+
 	private Collection<? extends GrantedAuthority> authorities;
 
 	@Override
@@ -56,11 +59,26 @@ public class User implements UserDetails {
 	}
 
 	public User(String email, String nickname, String password) {
-		this.email = email;
+		super();
 		this.nickname = nickname;
+		this.email = email;
 		this.password = password;
 	}
 
+	public User(long userId, String nickname, String email, String emailConfirm, String password, String active,
+			String profile, Date created, Date deleted, Collection<? extends GrantedAuthority> authorities) {
+		super();
+		this.userId = userId;
+		this.nickname = nickname;
+		this.email = email;
+		this.emailConfirm = emailConfirm;
+		this.password = password;
+		this.active = active;
+		this.profile = profile;
+		this.created = created;
+		this.deleted = deleted;
+		this.authorities = authorities;
+	}
 
 	public long getUserId() {
 		return userId;
@@ -118,12 +136,27 @@ public class User implements UserDetails {
 		this.deleted = deleted;
 	}
 
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", nickname=" + nickname + ", email=" + email + ", password=" + password
-				+ ", active=" + active + ", created=" + created + ", deleted=" + deleted + ", authorities="
-				+ authorities + "]";
+	public String getProfile() {
+		return profile;
 	}
 
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+
+	public String getEmailConfirm() {
+		return emailConfirm;
+	}
+
+	public void setEmailConfirm(String emailConfirm) {
+		this.emailConfirm = emailConfirm;
+	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", nickname=" + nickname + ", email=" + email + ", emailConfirm="
+				+ emailConfirm + ", password=" + password + ", active=" + active + ", profile=" + profile + ", created="
+				+ created + ", deleted=" + deleted + ", authorities=" + authorities + "]";
+	}
 
 }

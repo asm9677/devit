@@ -9,11 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.devit.model.request.UserProfileUpdateReqeust;
 import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.model.user.UserResponse;
 import com.ssafy.devit.repository.UserRepository;
@@ -47,7 +49,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public User getUserByUserEmail(String email) throws Exception {
-		if(email.equals("")) {
+		if (email.equals("")) {
 			throw new Exception("Eamil의 값이 비어있습니다.");
 		}
 		return userRepository.findUserByUserEmail(email);
@@ -55,7 +57,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public void registry(User user, String role) throws Exception {
-		if(user.getEmail().equals("") || user.getNickname().equals("")) {
+		if (user.getEmail().equals("") || user.getNickname().equals("")) {
 			throw new Exception("이메일 또는 닉네임이 비어있습니다.");
 		}
 		userRepository.insertUser(user);
@@ -83,13 +85,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public User getUserByUserId(long userId) throws Exception {
-		return userRepository.findUserByUserId(userId);
+	public UserResponse getUserByUserId() throws Exception {
+		// 사용자 id 가져오기
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserResponse result = new UserResponse();
+		result.refact(user);
+		return result;
 	}
 
 	@Override
 	public void signUp(User user) throws Exception {
-		if(user.getEmail() == null && user.getNickname() == null) {
+		if (user.getEmail() == null && user.getNickname() == null) {
 			throw new Exception("이메일 또는 닉네임이 비어있습니다.");
 		}
 		userRepository.signUp(user);
@@ -97,7 +103,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
 	@Override
 	public User getUserByNickname(String nickname) throws Exception {
-		if(nickname.equals("")) {
+		if (nickname.equals("")) {
 			throw new Exception("Nickname의 값이 비어있습니다.");
 		}
 		return userRepository.findUserByNickname(nickname);
@@ -109,7 +115,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	}
 
 	@Override
-	public int getUsersCount() throws Exception {
-		return userRepository.getUsersCount();
+	public void modifyUserInfo(UserProfileUpdateReqeust request) throws Exception {
+		// 사용자 id 가져오기
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		request.setUserId(user.getUserId());
+		userRepository.updateUserInfo(request);
 	}
+
 }
