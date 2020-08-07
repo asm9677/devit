@@ -1,13 +1,13 @@
 <template>
   <div style="; margin-top:20px;">
-        <v-card tile flat outlined >
+        <v-card tile flat >
                 <v-layout wrap>
                     <v-flex xs12 sm12 md9 lg9 xl9 style="margin-left:0px;">                         
-                            <v-list style="padding:20px 100px;">
+                            <v-list style="padding:20px 20px;">
                                 <v-list outlined style="padding-top:0px;">                                        
-                                    <v-list-item style="background-color:#f2f2f2;">
+                                    <v-list-item >
                                         <v-list-item-title>
-                                            <v-list-item-title  color="normal">멤버 초대</v-list-item-title> 
+                                            <v-list-item-title>멤버 초대</v-list-item-title> 
                                         </v-list-item-title>    
                                     </v-list-item>
                                     <v-divider />
@@ -24,6 +24,7 @@
                                                 :items="items"
                                                 :search-input.sync="search"
                                                 multiple
+                                                outlined
                                                 small-chips                                            
                                                 no-filter
                                                 auto-select-first
@@ -31,7 +32,7 @@
                                                 @keydown.enter.stop.capture="selectMember"
                                                 counter=5 
                                                 hint="초대할 멤버를 선택하세요."
-                                                outlined
+                                                
                                                 dense
                                             >                                            
                                                 <template v-slot:selection="{ attrs, item, parent, selected }">
@@ -94,7 +95,7 @@
 
                                 <div style="margin-top:30px" />
                                 <v-list outlined style="padding-top:0px;">                                        
-                                    <v-list-item  style="background-color:#f2f2f2;">
+                                    <v-list-item >
                                         <v-list-item-title>멤버 목록</v-list-item-title> 
                                     </v-list-item>
                                     <template v-for="(item,index) in memberList">
@@ -116,29 +117,23 @@
                                             <v-list-item-action style="margin-right:5px">
                                                 <table width="100%">
                                                     <tr width="100%">
-                                                        <th width="100px;">
+                                                        <th width="100px">
                                                             {{item.permissions}}
                                                         </th>
-                                                        <th width="70px;">
-                                                            <v-btn dark small outlined color="red" v-show="$router.app.$store.state.email != item.email">
-                                                                <v-icon>
+                                                        <th width="40px;">
+                                                                <v-icon color="red" v-show="$router.app.$store.state.email != item.email" @click="1">
                                                                     mdi-crown
                                                                 </v-icon>
-                                                            </v-btn>
                                                         </th>
-                                                        <th width="70px;">
-                                                            <v-btn dark small outlined color="red" v-show="$router.app.$store.state.email != item.email">
-                                                                <v-icon>
+                                                        <td width="30px;">
+                                                                <v-icon color="red" v-show="$router.app.$store.state.email != item.email">
                                                                     mdi-trash-can-outline
                                                                 </v-icon>
-                                                            </v-btn>
                                                             
-                                                            <v-btn dark small outlined color="red" v-show="$router.app.$store.state.email == item.email">
-                                                                <v-icon>
+                                                                <v-icon color="red" v-show="$router.app.$store.state.email == item.email">
                                                                     mdi-exit-to-app
                                                                 </v-icon>
-                                                            </v-btn>
-                                                        </th>
+                                                        </td>
                                                     </tr>
                                                 </table>
                                                 
@@ -341,7 +336,7 @@ export default {
 </script>
 
 <style scoped>
-    * {
+    * {        
         font-weight: 400;
     }
     h1 {
@@ -350,6 +345,7 @@ export default {
         margin-bottom:30px;
     }
     th {
+        font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         font-size: 14px;
         font-weight: 400
     }
@@ -359,4 +355,13 @@ export default {
     .v-list-item__subtitle{
         font-size:12px;
     }
+    .v-text-field{
+        margin-top:5px;
+        font-size:12px;
+        font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+
+     .v-input__control{
+        min-height: 30px !important;
+        }
 </style>

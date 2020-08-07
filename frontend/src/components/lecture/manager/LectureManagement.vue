@@ -5,7 +5,7 @@
             <v-layout wrap ref="main">
                 <v-flex xs12 sm12 md11 lg11 xl11 ref="left"></v-flex>
                 <v-flex xs12 sm12 md4 lg4 xl4 v-show="!option">                       
-                    <h1 class="primary--text">{{items[tab].title}}</h1>                     
+                    <h1 class="primary--text">{{items[tab].title}}</h1>
                 </v-flex>                  
                 
                 

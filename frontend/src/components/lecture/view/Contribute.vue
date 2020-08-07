@@ -10,7 +10,7 @@
                 <v-icon>mdi-wikipedia</v-icon>
             </v-tab>
             <v-tab-item> 
-                <v-list>               
+                <v-list :dark="darkOption" style="height:2000px">               
                     <v-list-item>
                         <v-list-item-content>
                             <v-list-item-title>
@@ -60,11 +60,12 @@
                     </v-list-item>
                 </v-list>
             </v-tab-item>       
-            <v-tab-item>
-                
+            <v-tab-item>                
+                    <v-list :dark="darkOption" style="height:2000px">
+                    </v-list>
                     <v-dialog v-model="dialog" persistent max-width="960" overlay-opacity="0">
                         <v-card tile>
-                            <v-list>
+                            <v-list :dark="darkOption" >
                                 <v-list-item>
                                     <v-list-item-content>
                                         <v-list-item-title>
@@ -109,6 +110,7 @@
 
 <script>
 export default {
+    props:['darkOption'],
     data(){
         return {
             tabs: 0,
