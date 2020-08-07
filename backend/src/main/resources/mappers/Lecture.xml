@@ -77,6 +77,7 @@
 		SELECT 
 		    l.lecture_id lectureId,
 		    l.title,
+		    l.type,
 		    l.user_id userId,
 		    l.common_id commonId,
 		    l.content,

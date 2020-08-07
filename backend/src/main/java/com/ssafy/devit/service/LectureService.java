@@ -2,9 +2,6 @@ package com.ssafy.devit.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
 import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
