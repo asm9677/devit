@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +19,8 @@ import com.ssafy.devit.model.CommonResponse;
 import com.ssafy.devit.model.request.LoginRequest;
 import com.ssafy.devit.model.request.SignUpRequest;
 import com.ssafy.devit.model.user.User;
-import com.ssafy.devit.service.UserService;
+import com.ssafy.devit.model.user.UserAuthDetails;
+import com.ssafy.devit.service.UserAuthDetailService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -34,9 +35,9 @@ import io.swagger.annotations.ApiResponses;
 public class AccountController {
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
-	@Autowired
-	UserService userService;
-
+	@Autowired // 회원 관리
+	UserAuthDetailService userAuthDetailService;
+	
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
@@ -46,33 +47,38 @@ public class AccountController {
 	@PostMapping("/login")
 	@ApiOperation(value = "로그인")
 	public ResponseEntity<CommonResponse> login(@RequestBody LoginRequest request) {
-		log.info(">> loadLogin <<");
+		log.info(">> Load : login <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 
 		// 사용자가 입력한 이메일로 DB검색
-		User user;
 		try {
-			user = userService.getUserByUserEmail(request.getEmail());
+			UserAuthDetails user = userAuthDetailService.getUserByEmail(request.getEmail());
 			// user 정보가 조회 됐다면
 			if (user != null) {
 				// 비밀번호 매칭
 				if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 					result.msg = "fail";
+					result.result = "비밀번호가 일치 하지 않습니다";
 					response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 				} else {
 					result.msg = "success";
-					result.result = jwtTokenProvider.createToken(user.getUserId() + "",
-							userService.getRoles(user.getUserId()));
+					result.result = jwtTokenProvider.createToken(
+							String.valueOf(user.getUserId()),
+							userAuthDetailService.getRoles(user.getUserId()));
 					response = new ResponseEntity<>(result, HttpStatus.OK);
 				}
 			} else {
 				result.msg = "fail";
+				result.result = "이메일 또는 비밀번호가 틀렸습니다";
 				response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			log.debug(">> Error : login <<");
-			e.printStackTrace();
+			log.info(">> Error : login <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
 		return response;
 	}
@@ -80,59 +86,37 @@ public class AccountController {
 	@PostMapping("/signup")
 	@ApiOperation(value = "가입하기")
 	public ResponseEntity<CommonResponse> signUp(@RequestBody SignUpRequest request) {
-		log.info(">> loadSignup <<");
+		log.info(">> Load : signUp <<");
 		final CommonResponse result = new CommonResponse();
 		ResponseEntity<CommonResponse> response = null;
+		
 		// DB에 user Email이 있다면 그에 해당하는 user 정보를 / 그렇지 않을 경우 null 반환
-		User user = null;
 		try {
 			// email, nickname 중복 체크
 			if (checkUser(request.getEmail(), request.getNickname())) {
-				user = new User(request.getEmail(), request.getNickname(),
+				UserAuthDetails user = new UserAuthDetails(request.getEmail(), request.getNickname(),
 						passwordEncoder.encode(request.getPassword()));
-				userService.registry(user, "ROLE_USER");
+				userAuthDetailService.signUp(user);
 				result.msg = "success";
+				result.result = "가입이 완료 되었습니다";
 				response = new ResponseEntity<CommonResponse>(result, HttpStatus.CREATED);
 			} else {
 				// if 중복되는 계정이 있다면 중복
 				result.msg = "duplicate";
+				result.result = "중복 계정입니다";
 				response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			log.debug(">> Error : signUp <<");
-			log.debug(e.getMessage().toString());
+			log.info(">> Error : signUp <<");
+			log.info(e.getMessage().toString());
 			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
-		}
-		return response;
-	}
-
-	@GetMapping("/valid/{nickname}")
-	@ApiOperation(value = "닉네임 중복 체크")
-	public ResponseEntity<CommonResponse> checkForNickName(@PathVariable String nickname) {
-		log.info(">> loadCheckForNickName <<");
-		final CommonResponse result = new CommonResponse();
-		ResponseEntity<CommonResponse> response = null;
-
-		User user = null;
-		try {
-			if (userService.getUserByNickname(nickname) == null) {
-				result.msg = "success";
-				response = new ResponseEntity<CommonResponse>(result, HttpStatus.CREATED);
-			} else {
-				result.msg = "duplicate";
-				response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
-			}
-		} catch (Exception e) {
-			log.debug(">> Error : checkForNickName <<");
-			log.debug(e.getMessage().toString());
-			result.msg = "fail";
+			result.result = e.getMessage().toString();
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 		}
 		return response;
 	}
 
 	public boolean checkUser(String email, String nickname) throws Exception {
-		return userService.getUserByUserEmail(email) == null && userService.getUserByNickname(nickname) == null;
+		return userAuthDetailService.checkValidEmailOrNickname(email, nickname) == 0;
 	}
 }
