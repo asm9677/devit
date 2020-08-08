@@ -17,7 +17,7 @@
 		SELECT @lectureId := max(lecture_id) FROM lecture;
 		
 		INSERT INTO lecture_auth(lecture_id, user_id, lecture_role)
-		VALUES(@lectureId, #{userId}, 'owner')
+		VALUES(@lectureId, #{userId}, 'Owner')
 	</insert>
 	
 	<!-- 대표 프로젝트 목록 받아오기  -->
