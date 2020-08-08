@@ -29,6 +29,13 @@
 		WHERE email = #{email};
 	</select>
 	
+	<!-- 사용자 userId로 검색 -->
+	<select id="findUserByUserId" resultType="UserAuthDetails">
+		select user_id AS userId, nickname, email, password
+		from user
+		where user_id = #{userId}
+	</select>
+	
 	<!-- 사용자 권한 검색 -->
 	<select id="findRoles" resultType="String">
 		select user_role
@@ -44,12 +51,7 @@
 	
 
 	
-	<!-- 사용자 user_id로 검색 -->
-	<select id="findUserByUserId" resultType="User">
-		select user_id as userId, nickname, email, active, created, deleted, email_confirm emailConfirm, profile
-		from user
-		where user_id = #{userId}
-	</select>
+
 	
 	<!-- 사용자 nickname로 검색 -->
 	<select id="findUserByNickname" resultType="User">

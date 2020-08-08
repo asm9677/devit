@@ -20,14 +20,15 @@ public interface UserRepository {
 	// 등록된 이메일로 유저 검색
 	public UserAuthDetails findUserByEmail(String email) throws Exception;
 	
+	// 등록된 유저 id로 검색
+	public UserAuthDetails findUserByUserId(long userId) throws Exception;
+	
 	// 권한 검색
 	public List<String> findRoles(long userId) throws Exception;
 	
 	public List<UserResponse> findUsers() throws Exception;
 	
 	public int fundUserByEmailAndPassword(String eamil, String password) throws Exception;
-
-	public User findUserByUserId(long userId) throws Exception;
 
 	public User findUserByNickname(String nickname) throws Exception;
 

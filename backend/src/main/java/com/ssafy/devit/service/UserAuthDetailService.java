@@ -18,11 +18,12 @@ public class UserAuthDetailService implements UserDetailsService{
 
 	// UserDetailsService Eamil로 유저 검색(Security 관련)
 	@Override
-	public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
 		UserAuthDetails userDetails = null;
 		try {
-			userDetails =  userRepository.findUserByEmail(userEmail);
+			userDetails =  userRepository.findUserByUserId(Long.parseLong(userId));
 		} catch (Exception e) {
+			System.out.println(e.getMessage().toString());
 			throw new UsernameNotFoundException("사용자를 찾을 수 없습니다");
 		}
 		return userDetails;
