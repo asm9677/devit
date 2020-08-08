@@ -43,6 +43,12 @@
 		where user_id = #{userId}
 	</select>
 	
+	<!-- 회원 아이디로 상세 정보 반환 -->
+	<select id="selectOneUserInfo" resultType="User">
+		select user_id as userId, nickname, email, active, created, deleted, email_confirm emailConfirm, profile
+		from user
+		where user_id = #{userId}
+	</select>
 	
 	<!-- 회원상세 -->
 	<select id="findUsers" resultType="UserResponse">

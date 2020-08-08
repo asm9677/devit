@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
 import com.ssafy.devit.model.request.UserProfileUpdateReqeust;
-import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.service.UserService;
 
 import io.swagger.annotations.ApiImplicitParam;

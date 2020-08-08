@@ -26,6 +26,9 @@ public interface UserRepository {
 	// 권한 검색
 	public List<String> findRoles(long userId) throws Exception;
 	
+	// 사용자 상세 정보
+	public User selectOneUserInfo(long userId) throws Exception;
+	
 	public List<UserResponse> findUsers() throws Exception;
 	
 	public int fundUserByEmailAndPassword(String eamil, String password) throws Exception;

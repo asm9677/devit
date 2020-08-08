@@ -19,7 +19,7 @@ import com.ssafy.devit.model.CommonResponse;
 import com.ssafy.devit.model.reply.Reply;
 import com.ssafy.devit.model.request.ReplyUpdateRequest;
 import com.ssafy.devit.model.request.ReplyUploadRequest;
-import com.ssafy.devit.model.user.User;
+import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.service.ReplyService;
 import com.ssafy.devit.service.UserService;
 
@@ -51,7 +51,7 @@ public class ReplyController {
 	@ApiOperation(value = "댓글 등록")
 	public ResponseEntity<CommonResponse> upload(@RequestBody ReplyUploadRequest request) throws Exception {
 		log.info(">> Reply UpLoad <<");
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		final CommonResponse result = new CommonResponse();
 		ResponseEntity<CommonResponse> response = null;
 		Reply reply = null;

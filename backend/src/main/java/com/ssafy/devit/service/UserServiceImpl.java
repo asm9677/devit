@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.devit.model.request.UserProfileUpdateReqeust;
@@ -60,9 +57,9 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserResponse getUserByUserId() throws Exception {
 		// 사용자 id 가져오기
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		UserResponse result = new UserResponse();
-		result.refact(user);
+		result.refact(userRepository.selectOneUserInfo(user.getUserId()));
 		return result;
 	}
 
@@ -82,9 +79,8 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void modifyUserInfo(UserProfileUpdateReqeust request) throws Exception {
 		// 사용자 id 가져오기
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		request.setUserId(user.getUserId());
 		userRepository.updateUserInfo(request);
 	}
-
 }

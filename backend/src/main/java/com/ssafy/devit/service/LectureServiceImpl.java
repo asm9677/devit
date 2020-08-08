@@ -20,6 +20,7 @@ import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.request.LectureSubHistoryRequest;
 import com.ssafy.devit.model.request.LectureSubsRequest;
 import com.ssafy.devit.model.user.User;
+import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.repository.LectureRepository;
 
 @Service
@@ -35,7 +36,7 @@ public class LectureServiceImpl implements LectureService {
 		lectureRepository.insertCommonId(common);
 		
 		// 사용자 id 가져오기
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 		// DAO에게 넘겨줄 DTO 생성
 		LectureOneResponse lectureOneResponse = new LectureOneResponse();
@@ -80,7 +81,7 @@ public class LectureServiceImpl implements LectureService {
 	@Override
 	public void updateLikeLectureByUserId(long lectureId) throws Exception {
 		// 사용자 id 가져오기
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		LikeDTO dto = lectureRepository.checkLikeLectureByUserId(user.getUserId(), lectureId);
 		if(dto.getLikeCount() > 0) {
 			// 좋아요를 누른 적이 있다면
@@ -94,7 +95,7 @@ public class LectureServiceImpl implements LectureService {
 
 	@Override
 	public void insertAuthLecture(long lectureId, String role) throws Exception {
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		lectureRepository.insertAuthLecture(lectureId, user.getUserId(), role);
 	}
 
@@ -107,7 +108,7 @@ public class LectureServiceImpl implements LectureService {
 	@Override
 	public int createSubLectures(List<LectureSubsRequest> lectures) throws Exception {
 		int count = 0;
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		for(LectureSubsRequest lecture : lectures) {
 			lecture.setUserId(user.getUserId());
 			if(lecture.getSubId() == 0) {
@@ -131,7 +132,7 @@ public class LectureServiceImpl implements LectureService {
 
 	@Override
 	public LectureSubOneResponse getOneSubLecture(long lectureId, int order) throws Exception {
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		LectureSubsRequest request = new LectureSubsRequest();
 		request.setLectureId(lectureId);
 		request.setOrder(order);
@@ -146,7 +147,7 @@ public class LectureServiceImpl implements LectureService {
 
 	@Override
 	public void registrySubHistory(LectureSubHistoryRequest lecture) throws Exception {
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		lecture.setUserId(user.getUserId());
 		lectureRepository.insertSubHistory(lecture);
 	}
@@ -164,13 +165,14 @@ public class LectureServiceImpl implements LectureService {
 
 	@Override
 	public List<TheOhterSubLectureResponse> getTheOtherSubLectures(long subId) throws Exception {
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return lectureRepository.selectTheOtherSubLectures(subId, user.getUserId());
 	}
 
 	@Override
 	public void deleteLectureAuth(long authId) throws Exception {
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		System.out.println(user);
 		lectureRepository.deleteLectureAuth(authId);
 	}
 }
