@@ -15,13 +15,8 @@ public interface UserService {
 
 	public User getUserByNickname(String nickname) throws Exception;
 
-	public void registry(User user, String role) throws Exception;
-
-	public List<String> getRoles(long userId) throws Exception;
 
 	public void registRole(long userId, String role) throws Exception;
-
-	public void signUp(User user) throws Exception;
 
 	public List<UserResponse> getUsersByLikeSearchText(String search, long lectureId) throws Exception;
 

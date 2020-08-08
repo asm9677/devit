@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
 import com.ssafy.devit.model.request.UserProfileUpdateReqeust;
+import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.service.UserService;
 
 import io.swagger.annotations.ApiImplicitParam;
@@ -115,6 +116,33 @@ public class UserController {
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 			log.info(">> Error : getUsersByLikeNickname <<");
 			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
+	
+	@GetMapping("/user/{nickname}")
+	@ApiOperation(value = "닉네임 중복 체크")
+	public ResponseEntity<CommonResponse> checkForNickName(@PathVariable String nickname) {
+		log.info(">> Load : checkForNickName <<");
+		final CommonResponse result = new CommonResponse();
+		ResponseEntity<CommonResponse> response = null;
+
+		try {
+			if (userService.getUserByNickname(nickname) == null) {
+				result.msg = "success";
+				result.result = "사용 가능한 닉네임 입니다";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.CREATED);
+			} else {
+				result.msg = "duplicate";
+				result.result = "사용 불가능한 닉네임 입니다";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			log.debug(">> Error : checkForNickName <<");
+			log.debug(e.getMessage().toString());
+			result.msg = "fail";
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 		}
 		return response;
 	}
