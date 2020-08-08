@@ -182,6 +182,7 @@ export default {
         return {         
             lectureId: 0,
             userId:0,   
+            authId:0,
 
             items: [],
             inviteMember: [
@@ -273,7 +274,7 @@ export default {
                 })
         },
         memberSearch(){
-            http.axios.get(`/api/v1/lectures/role/${this.lectureId}`)
+            http.axios.get(`/api/v1/lectures/auth/${this.lectureId}`)
                 .then(({data}) => {
                     this.memberList = data.result;
                     for(let i in this.memberList){
@@ -281,6 +282,8 @@ export default {
                         if(this.memberList[i].email == this.$router.app.$store.state.email){
                             this.memberList[i].isMe = true;
                             this.isOwner = this.memberList[i].role == 'owner' || this.memberList[i].role == 'Owner'
+                            this.userId = this.memberList[i].userId
+                            this.authId = this.memberList[i].authId
                         }
                     }
                 })
@@ -290,38 +293,53 @@ export default {
             var request = []
             for(let i in this.inviteMember){
                 request.push({
+                    "authId":0,
+                    "lectureId":this.lectureId,
                     "lectureRole": this.selectPermission,
-                    "userId": this.inviteMember[i].userId                    
+                    "userId": this.inviteMember[i].userId,                      
                 })
             }
-            http.axios.put(`/api/v1/lectures/role/${this.lectureId}`, request).then(({data}) => {
+            http.axios.put(`/api/v1/lectures/auth`, request).then(({data}) => {
                 console.dir(data);
             })
 
             this.inviteMember = []
             this.memberSearch()
         },
-        exitProejct(item){
-            http.axios.delete(`/api/v1/lectures/role/${this.lectureId}`, {
+        exitProject(item){
+            console.dir(item)
+            http.axios.delete(`/api/v1/lectures/auth/${item.authId}`, {
                 "userId": item.userId,
             }).then(({data}) => {
                 console.dir(data);
+            }).finally(() => {
+                this.memberSearch()
             })
 
         },
         changeOwner(item){
-            http.axios.put(`/api/v1/lectures/role/${this.lectureId}`, [
+            http.axios.put(`/api/v1/lectures/auth`, [
                 {
+                    "authId":item.authId,
+                    "lectureId":this.lectureId,
                     "lectureRole": "Owner",
-                    "userId": item.userId   
+                    "userId": item.userId,     
                 },
                 {
+                    "authId":this.authId,
+                    "lectureId":this.lectureId,
                     "lectureRole": "Maintainer",
                     "userId": this.userId   
                 }
             ]).then(({data}) => {
                 console.dir(data);
+            }).catch((error) => {
+                console.dir(error)
+            }).finally(() => {
+                this.memberSearch()
             })
+
+
         }
 
     }

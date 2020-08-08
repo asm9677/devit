@@ -192,7 +192,7 @@
                             <v-list-item>
                                 <v-list-item-content>
                                     <v-list-item-title>
-                                        미구현 기능입니다.
+                                        <QuestionBoard :darkOption="darkOption"> </QuestionBoard>
                                     </v-list-item-title>                        
                                 </v-list-item-content>
                             </v-list-item>
@@ -398,11 +398,13 @@
 <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
 <script>
 import AnotherVideo from "@/components/lecture/view/AnotherVideo.vue"
+import QuestionBoard from "@/components/lecture/view/QuestionBoard.vue"
 import Contribute from "@/components/lecture/view/Contribute.vue"
 export default {
     components: {
         AnotherVideo,
-        Contribute,
+        QuestionBoard,
+        Contribute,        
     },
     data(){
         return {

@@ -56,23 +56,31 @@
                                                     <template v-for="(item, index) in chapter">
                                                         <v-hover v-slot:default="{ hover }" :key="index">
                                                             <v-card :key="`${index}_list`" style="margin: 5px 0px; " link @click="openDialog(chapter, item)" outlined @dragenter="logData">
-                                                                <v-list-item style="">
-                                                                        <v-icon color="primary lighten-2" v-if="false"> mdi-video </v-icon>
-                                                                        <v-icon color="error" v-else> mdi-video-off</v-icon>
-                                                                        
-                                                                        <div style="margin-left:10px;" />
-                                                                        <v-list-item-content>
-                                                                            
-                                                                            <v-list-item-title>{{item.title}} <span class="v-list-item__subtitle">({{item.tags}})</span></v-list-item-title>                                 
-                                                                            
-                                                                        </v-list-item-content>
-                                                                    <v-list-item-action v-if="hover">                                                            
+                                                                <v-list-item style="padding-left:5px;">
+                                                                    <v-list-item-content style="padding-bottom:5px;">
+                                                                        <span style="padding-left:5px;" class="v-list-item__subtitle chapterContent"> chapter {{index+1}} </span>
+                                                                        <span style="padding-left:5px;" class="chapterContent">{{item.title}} </span>
+                                                                        <div style="margin-top:5px" />
+                                                                            <span>
+                                                                            <v-chip                                            
+                                                                                :color="`primary lighten-4`"                                            
+                                                                                class="ma-1"
+                                                                                v-for="(tag,index) in item.tags"   
+                                                                                :key="index"
+                                                                                label
+                                                                                style="margin:0px;"
+                                                                                small
+                                                                            >
+                                                                                <span style="color:black">
+                                                                                    {{tag}}
+                                                                                </span>
+                                                                            </v-chip>
+                                                                            </span>
+                                                                    </v-list-item-content>
+                                                                    <v-list-item-action v-show="hover">                                                            
                                                                         <v-icon>
                                                                             mdi-pencil
                                                                         </v-icon>
-                                                                    </v-list-item-action>
-                                                                    <v-list-item-action v-else>                                                            
-                                                                        <span style="font-size:14px"> 12:34</span>
                                                                     </v-list-item-action>
                                                                 </v-list-item>
                                                             </v-card>
@@ -206,20 +214,65 @@ export default {
             chapter: [
                 {
                     title:'Stack',
-                    tags:'#자료구조 #알고리즘 #스택',
+                    tags:['자료구조', '알고리즘', '스택'],
                 },
                 {
                     title:'Queue',
-                    tags:'#자료구조 #알고리즘 #스택',
+                    tags:['자료구조', '알고리즘', '큐'],
                 }
                 ,{
                     title:'PriorityQueue',
-                    tags:'#자료구조 #알고리즘 #스택',
+                    tags:['자료구조', '알고리즘', '우선순위 큐'],
                 }
                 ,{
                     title:'Tree',
-                    tags:'#자료구조 #알고리즘 #스택',
+                    tags:['자료구조', '알고리즘', '트리'],
+                },{
+                    title:'Stack',
+                    tags:['자료구조', '알고리즘', '스택'],
+                },
+                {
+                    title:'Queue',
+                    tags:['자료구조', '알고리즘', '큐'],
                 }
+                ,{
+                    title:'PriorityQueue',
+                    tags:['자료구조', '알고리즘', '우선순위 큐'],
+                }
+                ,{
+                    title:'Tree',
+                    tags:['자료구조', '알고리즘', '트리'],
+                },{
+                    title:'Stack',
+                    tags:['자료구조', '알고리즘', '스택'],
+                },
+                {
+                    title:'Queue',
+                    tags:['자료구조', '알고리즘', '큐'],
+                }
+                ,{
+                    title:'PriorityQueue',
+                    tags:['자료구조', '알고리즘', '우선순위 큐'],
+                }
+                ,{
+                    title:'Tree',
+                    tags:['자료구조', '알고리즘', '트리'],
+                },{
+                    title:'Stack',
+                    tags:['자료구조', '알고리즘', '스택'],
+                },
+                {
+                    title:'Queue',
+                    tags:['자료구조', '알고리즘', '큐'],
+                }
+                ,{
+                    title:'PriorityQueue',
+                    tags:['자료구조', '알고리즘', '우선순위 큐'],
+                }
+                ,{
+                    title:'Tree',
+                    tags:['자료구조', '알고리즘', '트리'],
+                },
             ],
             backlog: [
             
@@ -292,19 +345,9 @@ export default {
         padding:5px 5px; 
         border-color:f2f2f2;
     }
-    .v-list-item__title{
-        font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-        font-size:14px;
-        font-weight: 500;
-    }
-    .v-list-item__subtitle{
-        font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-        font-size:12px;
-        font-weight: 500;
-    }
    
     .chapterContent{
-        /* font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; */
+        font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         /* font-size:12px; */
     } 
 </style>
