@@ -71,7 +71,7 @@
                     </template>
             
                     <v-list flat tile>
-                        <v-list-item>
+                        <v-list-item @click="userModify">
                             <v-list-item-icon>
                                 <v-icon>mdi-account</v-icon>
                             </v-list-item-icon>
@@ -197,6 +197,13 @@ export default {
         logout(){
             store.commit('logout')
             location.reload(true);
+        },
+        userModify(){
+            if (this.$router.app.$store.state.token) {
+                this.$router.push('/user/modify').catch(()=>{location.reload(true);});   
+            } else {
+                eventBus.$emit('doLogin');
+            }
         }
 
     }
