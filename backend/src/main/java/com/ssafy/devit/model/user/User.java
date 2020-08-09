@@ -1,83 +1,33 @@
 package com.ssafy.devit.model.user;
 
-import java.util.Collection;
 import java.util.Date;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-public class User implements UserDetails {
+public class User {
 
 	private long userId;
 	private String nickname;
 	private String email;
 	private String emailConfirm;
-	private String password;
 	private String active;
 	private String profile;
 	private Date created;
 	private Date deleted;
 
-	private Collection<? extends GrantedAuthority> authorities;
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
-	}
-
-	public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
-		this.authorities = authorities;
-	}
-
-	@Override
-	public String getUsername() {
-		return this.email;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
-
 	public User() {
 
 	}
 
-	public User(String email, String nickname, String password) {
-		super();
-		this.nickname = nickname;
-		this.email = email;
-		this.password = password;
-	}
-
-	public User(long userId, String nickname, String email, String emailConfirm, String password, String active,
-			String profile, Date created, Date deleted, Collection<? extends GrantedAuthority> authorities) {
+	public User(long userId, String nickname, String email, String emailConfirm, String active, String profile,
+			Date created, Date deleted) {
 		super();
 		this.userId = userId;
 		this.nickname = nickname;
 		this.email = email;
 		this.emailConfirm = emailConfirm;
-		this.password = password;
 		this.active = active;
 		this.profile = profile;
 		this.created = created;
 		this.deleted = deleted;
-		this.authorities = authorities;
 	}
 
 	public long getUserId() {
@@ -104,12 +54,12 @@ public class User implements UserDetails {
 		this.email = email;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getEmailConfirm() {
+		return emailConfirm;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setEmailConfirm(String emailConfirm) {
+		this.emailConfirm = emailConfirm;
 	}
 
 	public String getActive() {
@@ -118,6 +68,14 @@ public class User implements UserDetails {
 
 	public void setActive(String active) {
 		this.active = active;
+	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
 	}
 
 	public Date getCreated() {
@@ -136,27 +94,11 @@ public class User implements UserDetails {
 		this.deleted = deleted;
 	}
 
-	public String getProfile() {
-		return profile;
-	}
-
-	public void setProfile(String profile) {
-		this.profile = profile;
-	}
-
-	public String getEmailConfirm() {
-		return emailConfirm;
-	}
-
-	public void setEmailConfirm(String emailConfirm) {
-		this.emailConfirm = emailConfirm;
-	}
-
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", nickname=" + nickname + ", email=" + email + ", emailConfirm="
-				+ emailConfirm + ", password=" + password + ", active=" + active + ", profile=" + profile + ", created="
-				+ created + ", deleted=" + deleted + ", authorities=" + authorities + "]";
+				+ emailConfirm + ", active=" + active + ", profile=" + profile + ", created=" + created + ", deleted="
+				+ deleted + "]";
 	}
 
 }

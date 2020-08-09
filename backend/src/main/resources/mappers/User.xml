@@ -4,24 +4,60 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.devit.repository.UserRepository">
 	
+	<!-- 사용자 등록  -->
+	<insert id="insertUser">
+		INSERT INTO user(email, nickname, password)
+		VALUES(#{email}, #{nickname}, #{password});
+		
+		SELECT @userId := max(user_id) FROM user;
+		
+		INSERT INTO user_role
+		VALUES(@userId, 'ROLE_USER')
+	</insert>
+	
+	<!-- 이메일 닉네임 체크  -->
+	<select id="checkValidEmailOrNickname" resultType="Integer">
+		SELECT COUNT(*) FROM user
+		WHERE email = #{email} OR nickname = #{nickname};
+	</select>
+	
+	<!-- 사용자 Email로 검색 -->
+	<select id="findUserByEmail" resultType="UserAuthDetails">
+		SELECT 
+		    u.user_id AS userId, nickname, email, password
+		FROM user u
+		WHERE email = #{email};
+	</select>
+	
+	<!-- 사용자 userId로 검색 -->
+	<select id="findUserByUserId" resultType="UserAuthDetails">
+		select user_id AS userId, nickname, email, password
+		from user
+		where user_id = #{userId}
+	</select>
+	
+	<!-- 사용자 권한 검색 -->
+	<select id="findRoles" resultType="String">
+		select user_role
+		from user_role
+		where user_id = #{userId}
+	</select>
+	
+	<!-- 회원 아이디로 상세 정보 반환 -->
+	<select id="selectOneUserInfo" resultType="User">
+		select user_id as userId, nickname, email, active, created, deleted, email_confirm emailConfirm, profile
+		from user
+		where user_id = #{userId}
+	</select>
+	
 	<!-- 회원상세 -->
 	<select id="findUsers" resultType="UserResponse">
 		select user_id as userId, nickname, email, active, created, deleted, email_confirm emailConfirm, profile from user
 	</select>
 	
-	<!-- 사용자 Email로 검색 -->
-	<select id="findUserByUserEmail" resultType="User">
-		select user_id as userId, nickname, email, password, active, created, deleted
-		from user
-		where email = #{email}
-	</select>
+
 	
-	<!-- 사용자 user_id로 검색 -->
-	<select id="findUserByUserId" resultType="User">
-		select user_id as userId, nickname, email, active, created, deleted, email_confirm emailConfirm, profile
-		from user
-		where user_id = #{userId}
-	</select>
+
 	
 	<!-- 사용자 nickname로 검색 -->
 	<select id="findUserByNickname" resultType="User">
@@ -30,18 +66,7 @@
 		where nickname = #{nickname}
 	</select>
 	
-	<!-- 사용자 등록  -->
-	<insert id="insertUser">
-		insert into user(email, nickname, password)
-		values(#{email}, #{nickname}, #{password})
-	</insert>
-	
-	<!-- 사용자 권한 검색 -->
-	<select id="findRoles" resultType="String">
-		select user_role
-		from user_role
-		where user_id = #{userId}
-	</select>
+
 	
 	<!-- 사용자 권한 입력 -->
 	<insert id="insertRole" parameterType="map">

@@ -10,6 +10,7 @@ import com.ssafy.devit.model.reply.Reply;
 import com.ssafy.devit.model.reply.ReplyResponse;
 import com.ssafy.devit.model.request.ReplyUpdateRequest;
 import com.ssafy.devit.model.user.User;
+import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.repository.ReplyRepository;
 
 @Service
@@ -54,7 +55,7 @@ public class ReplyServicelmpl implements ReplyService {
 		if(request.getBoardId() < 1 || request.getBoardReplyId() < 1) {
 			throw new Exception("잘못된 replyId가 나왔습니다.");
 		}
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		request.setUserId(user.getUserId());
 		replyRepository.update(request);
 	}
