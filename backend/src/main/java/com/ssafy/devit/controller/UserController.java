@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -25,6 +26,9 @@ import io.swagger.annotations.ApiOperation;
 @RequestMapping("/api/v1/users")
 public class UserController {
 	Logger log = LoggerFactory.getLogger(this.getClass());
+
+	@Autowired
+	PasswordEncoder passwordEncoder;
 
 	@Autowired
 	UserService userService;
@@ -106,6 +110,16 @@ public class UserController {
 		final CommonResponse result = new CommonResponse();
 
 		try {
+			if("nickname".equals(request.getModifyType())) {
+				//닉네임 중복검사
+				
+			}else if("profile".equals(request.getModifyType())) {
+				
+			}else if("password".equals(request.getModifyType())) {
+				//기존 비밀번호 일치여부 확인
+				
+				request.setNewPassword(passwordEncoder.encode(request.getNewPassword()));
+			}
 			userService.modifyUserInfo(request);
 			result.msg = "success";
 			result.result = "성공적으로 변경 되었습니다";
