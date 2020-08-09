@@ -5,13 +5,25 @@ public class UserProfileUpdateReqeust {
 	private String nickname;
 	private String profile;
 	private String password;
+	private String newPassword;
+	private String modifyType;
 
-	public UserProfileUpdateReqeust(long userId, String nickname, String profile, String password) {
+	public UserProfileUpdateReqeust(long userId, String nickname, String profile, String password, String newPassword, String modifyType) {
 		super();
 		this.userId = userId;
 		this.nickname = nickname;
 		this.profile = profile;
 		this.password = password;
+		this.newPassword = newPassword;
+		this.modifyType = modifyType;
+	}
+
+	public String getModifyType() {
+		return modifyType;
+	}
+
+	public void setModifyType(String modifyType) {
+		this.modifyType = modifyType;
 	}
 
 	public UserProfileUpdateReqeust() {
@@ -48,6 +60,14 @@ public class UserProfileUpdateReqeust {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
 	}
 
 	@Override

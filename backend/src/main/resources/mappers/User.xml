@@ -77,8 +77,9 @@
 	<update id="updateUserInfo">
 		UPDATE user 
 		SET 
-		    nickname = #{nickname},
-		    profile = #{profile}
+		    nickname = if(#{modifyType}='nickname', #{nickname}, nickname),
+		    profile = if(#{modifyType}='profile', #{profile}, profile),
+		    password = if(#{modifyType}='password', #{newPassword}, password)
 		WHERE
 		    user_id = #{userId};
 	</update>

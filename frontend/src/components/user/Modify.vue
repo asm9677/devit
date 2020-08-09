@@ -30,20 +30,7 @@
                                         min-height="100%"
                                         min-width="100%"/>
                                 </div>
-                                <!-- <div style="width:100%; height:25em; border:2px dashed gray;
-                                cursor:pointer; margin-top:15px;" @click="clickImg($event)" id="image"> <input
-                                type="file" v-show="false" accept="image/png, image/jpeg, image/bmp"
-                                @change="changeImg" ref="file" id="file"/> <div v-show="thumbnailUrl" style="
-                                width:100%;height:100%; display: -webkit-box; display: flex; -webkit-box-pack:
-                                center; justify-content: center; -webkit-box-align: center; align-items: center;
-                                "> <v-icon style="font-size:40px;" color='primary'> mdi-account-circle</v-icon>
-                                <div> <div class="primary--text" sytle="display:block;font-size:14px;">이미지
-                                업로드</div> <div style="font-size:14px;">클릭해서 대표 이미지를 선택하세요.</div> </div> </div>
-                                <v-img v-show="!thumbnailUrl"
-                                :src="`http://i3a101.p.ssafy.io/images/${profile}`" min-height="100%"
-                                min-width="100%"/> </div> -->
                             </v-list-item-title>
-                            <!-- </v-list-item> <v-list-item> -->
                             <div style="margin-right:5px"></div>
                             <v-btn depressed="depressed" color="primary" @click="clickImg($event)">
                                 사진 변경
@@ -64,8 +51,11 @@
                                 <v-text-field v-model="item.nickname" counter="20" ref="nickname" id="nickname"></v-text-field>
                             </v-list-item-title>
                             <v-list-item>
-                                <v-btn depressed="depressed" color="primary" @click="checkDupl()">
+                                <!-- <v-btn depressed="depressed" color="primary" @click="checkDupl()">
                                     중복 검사
+                                </v-btn> -->
+                                <v-btn depressed="depressed" color="primary" @click="saveNickname()">
+                                    닉네임 변경
                                 </v-btn>
                             </v-list-item>
                         </v-list-item>
@@ -76,15 +66,19 @@
                         </v-list-item>
                         <v-list-item>
                             <v-list-item-title>
-                                <v-text-field v-model="nowPassword" placeholder="현재 비밀번호"></v-text-field>
-                                <v-text-field v-model="newPassword" placeholder="새 비밀번호"></v-text-field>
-                                <v-text-field v-model="newPasswordCfm" placeholder="새 비밀번호 확인"></v-text-field>
+                                <v-text-field v-model="nowPassword" type="password" placeholder="현재 비밀번호" ref="nowPassword" id="nowPassword"></v-text-field>
+                                <v-text-field v-model="newPassword" type="password" placeholder="새 비밀번호" @keyup="validatePW" ref="newPassword" id="newPassword"></v-text-field>
+                                <v-text-field v-model="newPasswordCfm" type="password" placeholder="새 비밀번호 확인" @keyup="validatePW" ref="newPassword" id="newPasswordCfm"></v-text-field>
+                                <span style="color:red; font-size:12px;" v-show="!isSamePW">비밀번호가 일치하지 않습니다.</span>
                             </v-list-item-title>
                         </v-list-item>
                     </v-list>
                     <v-list style="padding:20px 100px;">
-                        <v-btn depressed="depressed" color="primary" @click="ValidationForm()">
+                        <!-- <v-btn depressed="depressed" color="primary" @click="ValidationForm()">
                             확인
+                        </v-btn> -->
+                        <v-btn depressed="depressed" color="primary" @click="savePassword()">
+                            비밀번호 변경
                         </v-btn>
                     </v-list>
                 </v-flex>
@@ -115,7 +109,9 @@
                 newPasswordCfm: "",
                 duplCheckComplete: true,
                 isDupl: false,
-                originNickname: ""
+                doneDuplChk: false,
+                originNickname: "",
+                isSamePW: true
             }
         },
         created() {
@@ -134,7 +130,8 @@
 
                     this.item = data.result;
                     this.originNickname = this.item.nickname;
-                    this.item.profile = "selenaTestImg.jpg";
+                    //this.item.profile = "selenaTestImg.jpg";
+                    if(this.item.profile == "") this.item.profile = "defaultUser.png";
                 })
                 .catch((error) => {
                     console.dir(error)
@@ -148,7 +145,7 @@
             changeImg(e) {
                 var frm = new FormData();
                 frm.append("file", document.getElementById("file").files[0]);
-
+                
                 axios
                     .post('http://i3a101.p.ssafy.io:8080/api/v1/file/upload', frm, {
                         headers: {
@@ -160,12 +157,36 @@
                     .then(({data}) => {
                         this.item.profile = data.result;
                         console.log(data.result);
+
+                        http
+                        .axios
+                        .put('/api/v1/users', {
+                            "profile": this.item.profile,
+                            "modifyType" : "profile"
+                        })
+                        .then(({data}) => {
+                            alert("수정되었습니다.");
+                            this.$router.push('/user/modify');
+                        })
                     })
                     .catch((error) => {
                         console.dir(error)
                     })
                     . finally(() => {})
                 this.$refs.file.value = ''
+            },
+            deleteImg(){
+                this.item.profile = "defaultUser.png";
+                http
+                .axios
+                .put('/api/v1/users', {
+                    "profile": this.item.profile,
+                    "modifyType" : "profile"
+                })
+                .then(({data}) => {
+                    alert("수정되었습니다.");
+                    this.$router.push('/user/modify');
+                })
             },
             checkDupl() {
 
@@ -201,6 +222,17 @@
                         .$refs
                         .nickname
                         .focus();
+                }else if(this.item.nickname != this.originNickname && !this.doneDuplChk){
+                    alert("닉네임 중복검사를 해주세요.");
+                }else if(this.item.nickname != this.originNickname && !this.isDupl){
+                    alert("중복된 닉네임입니다.");
+                }else if(this.newPassword != this.newPasswordCfm){
+                    
+                    this.goto('#newPasswordCfm', '새 비밀번호를 확인해주세요.')
+                    this
+                        .$refs
+                        .newPasswordCfm
+                        .focus();
                 } else {
                     this.saveModify();
                 }
@@ -211,7 +243,8 @@
                     .put('/api/v1/users', {
                         "nickname": this.item.nickname,
                         "profile": this.item.profile,
-                        "password": this.item.newPassword
+                        "password": this.nowPassword,
+                        "newPassword": this.newPassword
                     })
                     .then(({data}) => {
                         alert("수정되었습니다.");
@@ -219,6 +252,64 @@
                             .$router
                             .push("/");
                     })
+            },
+            validatePW(){
+                if(this.newPasswordCfm == ""){
+                    this.isSamePW = true;
+                }else if(this.newPassword == this.newPasswordCfm){
+                    this.isSamePW = true;
+                }else if(this.newPassword != this.newPasswordCfm){
+                    this.isSamePW = false;
+                }
+            },
+            saveNickname(){
+                if(this.originNickname == this.item.nickname){
+                    this.goto('#nickname', '기존 닉네임과 동일합니다.')
+                    this
+                        .$refs
+                        .nickname
+                        .focus();
+                }else if (!this.item.nickname) {
+                    this.goto('#nickname', '닉네임을 입력해주세요.')
+                    this
+                        .$refs
+                        .nickname
+                        .focus();
+                }else{
+                    http
+                    .axios
+                    .put('/api/v1/users', {
+                        "nickname": this.item.nickname,
+                        "modifyType" : "nickname"
+                    })
+                    .then(({data}) => {
+                        alert("수정되었습니다.");
+                        this.$router.push('/user/modify');
+                    })
+                }
+                
+            },
+            savePassword(){
+                if(!this.isSamePW){
+                    
+                    this.goto('#newPasswordCfm', '비밀번호가 일치하지 않습니다.')
+                    this
+                        .$refs
+                        .newPasswordCfm
+                        .focus();
+                } else {
+                    http
+                    .axios
+                    .put('/api/v1/users', {
+                        "password": this.nowPassword,
+                        "newPassword": this.newPassword,
+                        "modifyType" : "password"
+                    })
+                    .then(({data}) => {
+                        alert("수정되었습니다.");
+                        this.$router.push('/user/modify');
+                    })
+                }
             }
         }
     }
