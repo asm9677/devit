@@ -78,9 +78,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void modifyUserInfo(UserProfileUpdateReqeust request) throws Exception {
-		// 사용자 id 가져오기
-		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		request.setUserId(user.getUserId());
+		
 		userRepository.updateUserInfo(request);
+	}
+	
+	@Override
+	public String getUserPasswordByUserId(long userId) throws Exception {
+		return userRepository.getUserPasswordByUserId(userId);
 	}
 }
