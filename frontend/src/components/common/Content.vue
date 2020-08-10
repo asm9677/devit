@@ -25,7 +25,9 @@ import eventBus from "@/lib/EventBus.js"
 
 export default {
     watch:{
-        
+        $route(){
+            this.goto(0)
+        }
     },
     data(){
         return {
@@ -48,7 +50,7 @@ export default {
         handleScroll(){
             this.button = window.scrollY > 40
         },
-        goto(target){
+        goto(target,speed){
             this.$vuetify.goTo(target, {
                 duration: 300,
                 offset: 0,

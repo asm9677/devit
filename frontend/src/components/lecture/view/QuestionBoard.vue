@@ -6,10 +6,10 @@
         </v-btn>
         <v-list v-else style="width:100%;">
             <v-list-item>
-                <v-text-field dense outlined placeholder="제목을 입력하세요." color="success" hide-details style="margin-bottom:10px"></v-text-field>                
+                <v-text-field dense outlined placeholder="제목을 입력하세요." color="success" hide-details style="margin-bottom:10px" v-model="title"></v-text-field>                
             </v-list-item>
             <v-list-item>                
-                <v-textarea dense outlined auto-grow placeholder="" color="success" hide-details style="margin-bottom:4px"></v-textarea>                                
+                <v-textarea dense outlined auto-grow placeholder="" color="success" hide-details style="margin-bottom:4px" v-model="content"></v-textarea>                                
             </v-list-item>
             <v-list-item>
                 <v-list-item-content>
@@ -28,11 +28,11 @@
         </v-list>
         <div ref="question" :style="{'height': questionHeight+'px'}" style="width:100%; overflow-y:auto; margin-top:20px;">
             <v-list v-if="true" link>
-                <div class="boardContent" style="width:100%; border:1px solid #4CAF50; border-radius:5px; margin:10px 0px;" v-for="i in 10" :key="i+'_div'" @click="$emit('showDetail', 1)">
+                <div class="boardContent" style="width:100%; border:1px solid #4CAF50; border-radius:5px; margin:10px 0px;" v-for="(item,i) in items" :key="i+'_div'" @click="$emit('show-detail', item.boardId)">
                     <v-list-item style="width:100%;">
                         <v-list-item-content style="padding-bottom:0px;">                            
-                            <div class="v-list-item__title">파이썬에서 실수 계산을 오차없이 할 수 있는 방법이 있나요?</div>
-                            <div class="v-list-item__subtitle">파이썬에서 실수 계산을 오차없이 할 수 있는 방법이 있나요?</div>
+                            <div class="v-list-item__title">{{item.boardTitle}}</div>
+                            <div class="v-list-item__subtitle">{{item.boardContent}}</div>
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item>
@@ -43,12 +43,12 @@
                                     size=15
                                 >
                                     <v-img 
-                                        :src="'https://picsum.photos/500/300?image=15'"
+                                        :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
                                     ></v-img>
                                 </v-avatar>
-                                <span style="margin-left:3px; font-size:12px;">미용쓰기</span> &nbsp;&nbsp;
-                                <span style="font-size:12px;"><v-icon small>mdi-comment-text</v-icon> 0</span>&nbsp;
-                                <span style="font-size:12px;">조회 0</span>
+                                <span style="margin-left:3px; font-size:12px;">{{item.nickName}}</span> &nbsp;&nbsp;
+                                <span style="font-size:12px;"><v-icon small>mdi-comment-text</v-icon> {{item.replyCount}}</span>&nbsp;
+                                <span style="font-size:12px;">조회 {{item.boardCount}}</span>
                                  
                             </v-list-item-subtitle>
                         </v-list-item-content>
@@ -80,21 +80,31 @@ import http from "@/util/http_common.js"
 export default {
     props: ['lectureId', 'subId'],
     data(){
-        return {
+        return {            
             questionHeight: 768,
             dialog:true,
             isWrite:false,
 
             title: '',
             content: '',
+
+            items: []
         }
     },
+    created() {
+        this.initBoard();
+    },
     mounted(){
+        console.dir(this.lectureId);
+        console.dir(this.subId);
         this.questionHeight = $('body').prop("clientHeight") - this.$refs.question.offsetTop - 120;
     },
     methods:{
         initBoard() {
-            
+            http.axios.get(`/api/v1/board/lecture?lectureId=${this.lectureId}&subId=${this.subId}`).then(({data}) => {
+                console.dir(data)
+                this.items = data.result;
+            })
         },
         writeBoard(){
             http.axios.post("/api/v1/board/lecture", {

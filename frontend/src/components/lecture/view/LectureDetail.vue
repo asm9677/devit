@@ -36,7 +36,7 @@
                             #<v-chip                                            
                                 :color="`primary lighten-4`"                                            
                                 class="ma-1"
-                                v-for="(tag,index) in item.tagName.split(',')"   
+                                v-for="(tag,index) in item.tagName ? item.tagName.split(',') : ''"   
                                 :key="index"
                                 label
                                 @click="move(`/search?keyword=${tag}`)"
@@ -80,9 +80,27 @@
                         </div>
                         <div id="curriculum" style="margin-top:40px;">
                             <h3>교육 과정</h3>      
-                            <div class="content">
-                                미구현 기능입니다.
-                                <div style="height:250px"/>
+                                <div class="content">
+                                    <v-list style="font-size:14px">
+                                        <v-list-item 
+                                            v-for="(item,index) in chapter" :key="`${index}_contents`"
+                                            link
+                                            @click="move(`/lecture/player/${lectureId}?order=${index+1}`)"
+                                        >
+                                            <v-list-item-avatar>
+                                                <v-icon color="primary lighten-2">
+                                                    mdi-play-circle-outline
+                                                </v-icon>
+                                            </v-list-item-avatar>
+                                            <v-list-item-content>    
+                                                {{item.title}}
+                                            </v-list-item-content>
+                                            <v-list-item-action v-if="item.videoYn">
+                                                {{item.playTime}}
+                                            </v-list-item-action>
+                                        </v-list-item>
+                                    </v-list>
+                                <div style="height:30px"/>
                             </div>                            
                         </div>
                         <div id="changes" style="margin-top:40px;">
@@ -123,7 +141,7 @@
                                         #<v-chip                                            
                                             :color="`primary lighten-4`"                                            
                                             class="ma-1"
-                                            v-for="(tag,index) in item.tagName.split(',')"   
+                                            v-for="(tag,index) in item.tagName ? item.tagName.split(',') : ''"   
                                             :key="index"
                                             label
                                             @click="move(`/search?keyword=${tag}`)"
@@ -144,6 +162,7 @@
                                         <span style="margin-left:5px;font-size:16px">{{item.nickname}}</span>
                                         <div style="margin-top:20px;" /> 
                                         <v-btn depressed dark color="primary" large block @click="move(`/lecture/player/${$route.params.id}?order=1`)"><span style="font-size:20px;">수강하기</span></v-btn>
+                                        <v-btn depressed dark color="primary" large block @click="move(`/lecture/management/default/${$route.params.id}`)" style="margin-top:10px;"><span style="font-size:20px;">관리하기</span></v-btn>
                                 </div>
                             </v-layout>
                         </div>
@@ -209,6 +228,8 @@ export default {
     },
     data() {
         return {            
+            lectureId: 0,
+
             item:{
                 "title": '',
                 "thumbnailUrl": '',
@@ -226,9 +247,12 @@ export default {
 
             mainLoading: true,
             btnLoading: false,
+
+            chapter: [],
         }
     },
-    created(){        
+    created(){                
+        this.lectureId = this.$route.params.id;
         http.axios.get(`/api/v1/lectures/${this.$route.params.id}`).then(({data}) => {
             this.item = data.result;
         }).catch((error) => {
@@ -236,6 +260,7 @@ export default {
         }).finally(() => {
             this.mainLoading = false;
         })
+        this.getIndexList();
     },
     mounted() {        
         this.menuHeight = this.$refs.menu.$el.offsetTop;        
@@ -294,6 +319,24 @@ export default {
         },
         move(url){
             this.$router.push(url)
+        },
+        getIndexList() {
+            http.axios.get(`/api/v1/lectures/subs/${this.lectureId}`).then(({data}) => {
+                this.chapter = [];
+                console.dir(data)
+                for(let i in data.result){                    
+                    this.chapter.push({
+                        "commonId": data.result[i].commonId,
+                        "order": parseInt(data.result[i].order),
+                        "subId": data.result[i].subId,
+                        "tags": data.result[i].tags ? data.result[i].tags.split(',') : [],
+                        "title": data.result[i].title,
+                        "videoYn": data.result[i].videoYn,
+                        "wikiYn": data.result[i].wikiYn,
+                        "playTime": data.result[i].playTime,                        
+                    })
+                }
+            })
         }
         
     }
