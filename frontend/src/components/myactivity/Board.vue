@@ -5,11 +5,11 @@
                 <div
                     ref="question"
                     :style="{'height': questionHeight+'px'}"
-                    style="width:100%; overflow-y:auto; margin-top:20px;">
+                    style="width:100%; overflow-y:auto; margin-top:0px;">
                     <v-list v-if="true" link="link">
                         <div
                             class="boardContent"
-                            style="width:100%; border:1px solid #1976d2; border-radius:5px; margin:10px 0px;"
+                            style="width:100%; border-bottom:1px solid #c8c8c8; "
                             v-for="i in 10"
                             :key="i+'_div'"
                             @click="$emit('showDetail', 1)">
@@ -20,7 +20,7 @@
                                 </v-list-item-content>
                             </v-list-item>
                             <v-list-item>
-                                <v-list-item-content style="padding-top:8px;">
+                                <v-list-item-content style="padding-top:0px;">
                                     <v-list-item-subtitle>
                                         <v-avatar class="profile" size="15">
                                             <v-img :src="'https://picsum.photos/500/300?image=15'"></v-img>
@@ -37,6 +37,14 @@
                             </v-list-item>
                         </div>
                     </v-list>
+                    
+        <v-container>
+            <v-row justify="center">
+                <v-col cols="8">
+                    <v-pagination v-model="page" class="my-4" :length="pageCnt"></v-pagination>
+                </v-col>
+            </v-row>
+        </v-container>
                 </div>
             </v-layout>
         </v-card>
@@ -54,7 +62,12 @@
     export default {
         props: [],
         data() {
-            return {}
+            return {
+                
+                page: 1,
+                pageCnt: 0,
+                itemsPerPage: 4,
+            }
         },
         watch: {},
         created() {},
@@ -67,6 +80,7 @@
         font-size: 14px;
     }
     .v-list-item__subtitle {
+        margin-top:10px;
         font-size: 12px;
     }
 </style>
