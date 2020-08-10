@@ -5,38 +5,47 @@
                 <div
                     ref="question"
                     :style="{'height': questionHeight+'px'}"
-                    style="width:100%; overflow-y:auto; margin-top:20px;">
+                    style="width:100%; overflow-y:auto; margin-top:0px;">
                     <v-list v-if="true" link="link">
                         <div
                             class="boardContent"
-                            style="width:100%; border:1px solid #1976d2; border-radius:5px; margin:10px 0px;"
-                            v-for="i in 10"
-                            :key="i+'_div'"
+                            style="width:100%; border-bottom:1px solid #c8c8c8; "
+                            v-for="item in items"
+                            :key="item.boardId"
                             @click="$emit('showDetail', 1)">
                             <v-list-item style="width:100%;">
                                 <v-list-item-content style="padding-bottom:0px;">
-                                    <div class="v-list-item__title">파이썬에서 실수 계산을 오차없이 할 수 있는 방법이 있나요?</div>
-                                    <div class="v-list-item__subtitle">파이썬에서 실수 계산을 오차없이 할 수 있는 방법이 있나요?</div>
+                                    <div class="v-list-item__title">{{ item.boardTitle }}</div>
+                                    <div class="v-list-item__subtitle">원문제목 : {{ item.boardContent }}</div>
                                 </v-list-item-content>
                             </v-list-item>
                             <v-list-item>
-                                <v-list-item-content style="padding-top:8px;">
+                                <v-list-item-content style="padding-top:0px;">
                                     <v-list-item-subtitle>
                                         <v-avatar class="profile" size="15">
                                             <v-img :src="'https://picsum.photos/500/300?image=15'"></v-img>
                                         </v-avatar>
-                                        <span style="margin-left:3px; font-size:12px;">미용쓰기</span>
+                                        <span style="margin-left:3px; font-size:12px;">{{ item.userName }}</span>
                                         &nbsp;&nbsp;
                                         <span style="font-size:12px;">
                                             <v-icon small="small">mdi-comment-text</v-icon>
-                                            0</span>&nbsp;
-                                        <span style="font-size:12px;">조회 0</span>
+                                            {{item.replyCount}}</span>&nbsp;
+                                        <span style="font-size:12px;">조회
+                                            {{item.boardCount}}</span>
 
                                     </v-list-item-subtitle>
                                 </v-list-item-content>
                             </v-list-item>
                         </div>
                     </v-list>
+
+                    <v-container>
+                        <v-row justify="center">
+                            <v-col cols="8">
+                                <v-pagination v-model="page" class="my-4" :length="pageCnt"></v-pagination>
+                            </v-col>
+                        </v-row>
+                    </v-container>
                 </div>
             </v-layout>
         </v-card>
@@ -53,12 +62,37 @@
     import store from "@/store/index.js"
     export default {
         props: [],
+        watch: {
+            page() {
+                this.searchByPage()
+            }
+        },
         data() {
-            return {}
+            return {page: 1, pageCnt: 0, itemsPerPage: 4, items: [{}]}
         },
         watch: {},
         created() {},
-        methods: {}
+        mounted() {
+            this.searchByPage();
+        },
+        methods: {
+            searchByPage() {
+
+                http
+                    .axios
+                    .get(`/api/v1/myreply?page=${this.page}&itemsperpage=${this.itemsPerPage}`, {})
+                    .then(({data}) => {
+                        this.items = data.result;
+                        this.pageCnt = data
+                            .result[0]
+                            .pageCnt;
+                        console.log("data.result", data.result)
+                    })
+                    .catch((error) => {
+                        console.dir(error)
+                    })
+                }
+        }
     }
 </script>
 
@@ -67,6 +101,7 @@
         font-size: 14px;
     }
     .v-list-item__subtitle {
+        margin-top: 10px;
         font-size: 12px;
     }
 </style>
