@@ -17,6 +17,8 @@ import LecturePlayer from '@/components/lecture/view/LecturePlayer.vue'
 
 import SearchList from '@/components/lecture/view/SearchList.vue'
 
+import MyBoard from '@/components/myactivity/MyBoard.vue'
+
 Vue.use(VueRouter)
 
 
@@ -83,6 +85,12 @@ const routes = [
     path: '/lecture/player/:id',
     name: 'LecturePlayer',
     component: LecturePlayer
+  },
+
+  {
+    path: '/myboard',
+    name: 'MyBoard',
+    component: MyBoard
   },
 ]
 

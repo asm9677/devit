@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <v-container>
-            <v-tabs v-model="tab" background-color="rgba(42, 85, 140, 0.95)" dark="dark" >                
+            <v-tabs v-model="tab" background-color="#1976d2" dark="dark" >                
                 <v-tab
                     v-for="i in tabs"
                     :key="i"
