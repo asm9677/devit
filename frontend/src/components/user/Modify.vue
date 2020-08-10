@@ -37,6 +37,7 @@
                                                 min-width="100%"/>
                                         </div>
                                     </v-list-item-title>
+                                    <v-list-item>
                                     <div style="margin-right:5px"></div>
                                     <v-btn depressed="depressed" color="primary" @click="clickImg($event)">
                                         사진 변경
@@ -45,6 +46,7 @@
                                     <v-btn depressed="depressed" @click="deleteImg()">
                                         삭제
                                     </v-btn>
+                                    </v-list-item>
                                 </v-list-item>
 
                             </v-list>
@@ -149,25 +151,31 @@
             }
         },
         mounted() {
+            this.initMyInfo();
 
-            http
-                .axios
-                .get("/api/v1/users/user")
-                .then(({data}) => {
-
-                    this.item = data.result;
-                    this.originNickname = this.item.nickname;
-                    //this.item.profile = "selenaTestImg.jpg";
-                    if (this.item.profile == "") 
-                        this.item.profile = "defaultUser.png";
-                    }
-                )
-                .catch((error) => {
-                    console.dir(error)
-                })
-
-            },
+        },
         methods: {
+            initMyInfo() {
+                http
+                    .axios
+                    .get("/api/v1/users/user")
+                    .then(({data}) => {
+
+                        this.item = data.result;
+                        this.nowPassword = "";
+                        this.newPassword = "";
+                        this.newPasswordCfm = "";
+                        this.isSamePW = true;
+                        this.originNickname = this.item.nickname;
+                        //this.item.profile = "selenaTestImg.jpg";
+                        if (this.item.profile == "") 
+                            this.item.profile = "defaultUser.png";
+                        }
+                    )
+                    .catch((error) => {
+                        console.dir(error)
+                    })
+                },
             clickImg() {
                 $("#file").click();
             },
@@ -194,10 +202,10 @@
                                 "modifyType": "profile"
                             })
                             .then(({data}) => {
-                                alert("수정되었습니다.");
-                                this
-                                    .$router
-                                    .push('/user/modify');
+                                //alert("수정되었습니다.");
+                                this.msg = "수정되었습니다.";
+                                this.snackbar = true;
+                                this.initMyInfo();
                             })
                     })
                     .catch((error) => {
@@ -215,10 +223,10 @@
                         "modifyType": "profile"
                     })
                     .then(({data}) => {
-                        alert("수정되었습니다.");
-                        this
-                            .$router
-                            .push('/user/modify');
+                        //alert("수정되었습니다.");
+                        this.msg = "수정되었습니다.";
+                        this.snackbar = true;
+                        this.initMyInfo();
                     })
             },
             goto(target, msg) {
@@ -243,11 +251,17 @@
             },
             saveNickname() {
                 if (this.originNickname == this.item.nickname) {
-                    this.goto('#nickname', '기존 닉네임과 동일합니다.')
+
                     this
-                        .$refs
-                        .nickname
-                        .focus();
+                        .$vuetify
+                        .goTo('#nickname', {
+                            duration: 300,
+                            offset: 150,
+                            easing: 'easeInOutCubic'
+                        })
+                    this.errorMsg = '기존 닉네임과 동일합니다.';
+                    this.errorSnackbar = true;
+
                 } else if (!this.item.nickname) {
                     this.goto('#nickname', '닉네임을 입력해주세요.')
                     this
@@ -274,10 +288,10 @@
                                 this.errorSnackbar = true;
                             } else {
 
-                                alert("수정되었습니다.");
-                                this
-                                    .$router
-                                    .push('/user/modify');
+                                //alert("수정되었습니다.");
+                                this.msg = "수정되었습니다.";
+                                this.snackbar = true;
+                                this.initMyInfo();
                             }
                         })
                         .catch((error) => {
@@ -289,11 +303,8 @@
             savePassword() {
                 if (!this.isSamePW) {
 
-                    this.goto('#newPasswordCfm', '비밀번호가 일치하지 않습니다.')
-                    this
-                        .$refs
-                        .newPasswordCfm
-                        .focus();
+                    this.errorMsg = '비밀번호가 일치하지 않습니다.';
+                    this.errorSnackbar = true;
                 } else {
                     http
                         .axios
@@ -325,10 +336,10 @@
                                 this.errorSnackbar = true;
                             } else {
 
-                                alert("수정되었습니다.");
-                                this
-                                    .$router
-                                    .push('/user/modify');
+                                //alert("수정되었습니다.");
+                                this.msg = "수정되었습니다.";
+                                this.snackbar = true;
+                                this.initMyInfo();
                             }
                         })
                 }
