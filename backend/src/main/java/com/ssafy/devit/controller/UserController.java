@@ -123,7 +123,8 @@ public class UserController {
 				if(userService.getUserByNickname(request.getNickname()) != null) { //사용 불가능
 					
 					result.msg = "duplicate";
-					response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+					result.result = "이미 존재하는 닉네임입니다.";
+					response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 				}else {
 					userService.modifyUserInfo(request);
 					result.msg = "success";
@@ -143,10 +144,12 @@ public class UserController {
 				if(!passwordEncoder.matches(request.getPassword(), userService.getUserPasswordByUserId(user.getUserId())) ) { //기존 비밀번호 불일치
 
 					result.msg = "different";
-					response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+					result.result = "기존 비밀번호가 일치하지 않습니다.";
+					response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 				}else if(passwordEncoder.matches(request.getNewPassword(), userService.getUserPasswordByUserId(user.getUserId()) )){ //기존 비밀번호와 새 비밀번호가 일치함.
 					result.msg = "same";
-					response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+					result.result = "기존 비밀번호와 다른 새 비밀번호를 입력해주세요.";
+					response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 				}else {
 
 					request.setNewPassword(passwordEncoder.encode(request.getNewPassword()));
