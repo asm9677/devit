@@ -17,7 +17,7 @@ spring:
   jwt:
     secret: testJWT
   file:
-    location: /
+    location: /var/lib/ubuntu/uploads
   servlet:
     multipart:
       max-file-size: 1024MB
