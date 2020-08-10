@@ -20,11 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
+import com.ssafy.devit.model.request.HistoryLikeRequest;
 import com.ssafy.devit.model.request.LectureAuthRequest;
 import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.request.LectureSubHistoryRequest;
 import com.ssafy.devit.model.request.LectureSubsRequest;
 import com.ssafy.devit.model.user.User;
+import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.service.LectureService;
 
 import io.swagger.annotations.ApiImplicitParam;
@@ -76,11 +78,11 @@ public class LectureController {
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		try {
-			User user = null;
+			UserAuthDetails user = null;
 			try {
-				user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			} catch (Exception e) {
-				user = new User();
+				user = new UserAuthDetails();
 				user.setUserId(0);
 			}
 			result.result = lectureService.getLectures(user.getUserId(), startPage, type);
@@ -121,11 +123,11 @@ public class LectureController {
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		try {
-			User user = null;
+			UserAuthDetails user = null;
 			try {
-				user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			} catch (Exception e) {
-				user = new User();
+				user = new UserAuthDetails();
 				user.setUserId(0);
 			}
 			result.result = lectureService.getLectureBylectureId(lectureId, user.getUserId());
@@ -142,7 +144,7 @@ public class LectureController {
 
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
-	@ApiOperation(value = "사용자 좋아요 처리")
+	@ApiOperation(value = "대표 프로젝트 사용자 좋아요 처리")
 	@PutMapping("/like")
 	public ResponseEntity<CommonResponse> updateLectureLike(@RequestParam("lectureId") long lectureId) {
 		log.info(">> Load : updateLectureLike <<");
@@ -154,6 +156,27 @@ public class LectureController {
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			log.info(">> Error : updateLectureLike <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "히스토리 사용자 좋아요 처리")
+	@PutMapping("/like/history")
+	public ResponseEntity<CommonResponse> updateHistoryLike(HistoryLikeRequest request) {
+		log.info(">> Load : updateHistoryLike <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			lectureService.updateLikeHistoryByUserId(request);
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			log.info(">> Error : updateHistoryLike <<");
 			log.info(e.getMessage().toString());
 			result.msg = "fail";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);

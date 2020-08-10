@@ -3,6 +3,7 @@ package com.ssafy.devit.model.lecture;
 public class TheOhterSubLectureResponse {
 	private long lectureId;
 	private long subId;
+	private long subHisId;
 	private String title;
 	private String playerUrl;
 	private String playTime;
@@ -11,11 +12,14 @@ public class TheOhterSubLectureResponse {
 	private String thumbnailUrl;
 	private boolean userLikeYn;
 
-	public TheOhterSubLectureResponse(long lectureId, long subId, String title, String playerUrl, String playTime,
-			int viewCount, int likeCount, String thumbnailUrl, boolean userLikeYn) {
+	
+
+	public TheOhterSubLectureResponse(long lectureId, long subId, long subHisId, String title, String playerUrl,
+			String playTime, int viewCount, int likeCount, String thumbnailUrl, boolean userLikeYn) {
 		super();
 		this.lectureId = lectureId;
 		this.subId = subId;
+		this.subHisId = subHisId;
 		this.title = title;
 		this.playerUrl = playerUrl;
 		this.playTime = playTime;
@@ -100,12 +104,25 @@ public class TheOhterSubLectureResponse {
 	public void setUserLikeYn(boolean userLikeYn) {
 		this.userLikeYn = userLikeYn;
 	}
+	
+	
+
+	public long getSubHisId() {
+		return subHisId;
+	}
+
+	public void setSubHisId(long subHisId) {
+		this.subHisId = subHisId;
+	}
 
 	@Override
 	public String toString() {
-		return "TheOhterSubLectureResponse [lectureId=" + lectureId + ", subId=" + subId + ", title=" + title
-				+ ", playerUrl=" + playerUrl + ", playTime=" + playTime + ", viewCount=" + viewCount + ", likeCount="
-				+ likeCount + ", thumbnailUrl=" + thumbnailUrl + ", userLikeYn=" + userLikeYn + "]";
+		return "TheOhterSubLectureResponse [lectureId=" + lectureId + ", subId=" + subId + ", subHisId=" + subHisId
+				+ ", title=" + title + ", playerUrl=" + playerUrl + ", playTime=" + playTime + ", viewCount="
+				+ viewCount + ", likeCount=" + likeCount + ", thumbnailUrl=" + thumbnailUrl + ", userLikeYn="
+				+ userLikeYn + "]";
 	}
+
+	
 
 }

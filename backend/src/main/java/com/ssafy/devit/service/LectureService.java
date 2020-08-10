@@ -11,6 +11,7 @@ import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.TagResponse;
 import com.ssafy.devit.model.lecture.TheOhterSubLectureResponse;
+import com.ssafy.devit.model.request.HistoryLikeRequest;
 import com.ssafy.devit.model.request.LectureAuthRequest;
 import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.request.LectureSubHistoryRequest;
@@ -24,8 +25,6 @@ public interface LectureService {
 	public List<TagResponse> getTags() throws Exception;
 	
 	public LectureOneResponse getLectureBylectureId(long lectureId, long userId) throws Exception;
-	
-	public void updateLikeLectureByUserId(long lectureId) throws Exception;
 	
 	public void updateFoundationLecture(LectureRequest lecture) throws Exception;
 	
@@ -55,4 +54,10 @@ public interface LectureService {
 	
 	// 같은 종류 다른 강의들 들고오기
 	public List<TheOhterSubLectureResponse> getTheOtherSubLectures(long subId) throws Exception;
+	
+	// 프로젝트 좋아요 업데이트
+	public void updateLikeLectureByUserId(long lectureId) throws Exception;
+	
+	// 히스토리 좋아요 업데이트
+	public void updateLikeHistoryByUserId(HistoryLikeRequest request) throws Exception;
 }

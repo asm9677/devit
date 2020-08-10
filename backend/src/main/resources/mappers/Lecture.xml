@@ -227,6 +227,12 @@
 		    user_id = #{userId} AND lecture_id = #{lectureId};
 	</select>
 	
+	<!-- 프로젝트 좋아요 등록하기 -->
+	<insert id="insertLikeLectureByUserId">
+		INSERT INTO lecture_like(user_id, lecture_id)
+		VALUES(#{userId}, #{lectureId});
+	</insert>
+	
 	<!-- 사용자가 좋아요를 누른 경험이 있다면 -->
 	<update id="updateLikeLectureByUserId">
 		UPDATE lecture_like 
@@ -236,11 +242,36 @@
 		    user_id = #{userId} AND lecture_id = #{lectureId}
 	</update>
 	
-	<!-- 좋아요 등록하기 -->
-	<insert id="insertLikeLectureByUserId">
-		INSERT INTO lecture_like(user_id, lecture_id)
-		VALUES(#{userId}, #{lectureId});
+	<!-- 사용자가 history를 좋아요를 눌렀는지 확인 -->
+	<select id="checkLikeHistoryByUserId" resultType="LikeDTO">
+		SELECT 
+			COUNT(1) likeCount, like_flag likeFlag
+		FROM
+			lecture_sub_his_like
+		WHERE
+			user_id = #{userId} AND
+			lecture_id = #{lectureId} AND
+			sub_id = #{subId} AND
+			sub_his_id = #{subHisId};
+	</select>
+	
+	<!-- 히스토리 좋아요 등록하기 -->
+	<insert id="insertLikeHistoryByUserId">
+		INSERT INTO lecture_sub_his_like(lecture_id, sub_id, sub_his_id, user_id)
+		VALUES(#{lectureId}, #{subId}, #{subHisId}, #{userId});
 	</insert>
+	
+	<!-- 사용자가 히스토리 좋아요를 누른 경험이 있다면 -->
+	<update id="updateLikeHistoryByUserId">
+		UPDATE lecture_sub_his_like 
+		SET 
+		    like_flag = #{likeFlag}, modified = now()
+		WHERE
+		    user_id = #{userId}
+		    AND lecture_id = #{lectureId}
+		    AND sub_id = #{subId}
+		    AND sub_his_id = #{subHisId}
+	</update>
 	
 	<!-- 프로젝트 조회수 1증가 -->
 	<update id="updateLectureViewCount">
@@ -367,6 +398,7 @@
 		SELECT 
 		    lsi.lecture_id lectureId,
 		    lsi.sub_id subId,
+            lsh.sub_his_id subHisId,
 		    lsh.title,
 		    lsh.player_url playerUrl,
 		    lsh.play_time playTime,
