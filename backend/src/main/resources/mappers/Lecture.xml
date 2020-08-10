@@ -326,6 +326,7 @@
 		    lsi.sub_id subId,
 		    lsi.order,
 		    lsi.title,
+		    lshv.sub_his_id subHisId,
 		    lshv.view_count viewCount,
 		    lg.video_like_count likeCount,
 		    u.nickname,
@@ -335,6 +336,7 @@
 		    lshw.wiki_content_html wikiContentHtml,
 		    lt.tagName,
 		    lshv.thumbnail_url thumbnailUrl,
+		                (SELECT COUNT(1) FROM lecture_sub_index WHERE lecture_id = 110) AS lectureCount,
 		    CASE
 		        WHEN EXISTS(SELECT 1
 		                	FROM lecture_sub_his_like
@@ -448,6 +450,7 @@
 	<select id="selectOneOtherSubLecture" resultType="LectureSubOneResponse">
 			select lsi.lecture_id as lectureId,
 			   lsi.sub_id as subId,
+			   lsh.sub_his_id subHisId,
 			   lsi.order,
                lsh.title as title,
                lsh.view_count as viewCount,
