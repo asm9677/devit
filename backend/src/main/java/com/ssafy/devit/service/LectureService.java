@@ -2,8 +2,6 @@ package com.ssafy.devit.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
 import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
@@ -15,6 +13,7 @@ import com.ssafy.devit.model.request.HistoryLikeRequest;
 import com.ssafy.devit.model.request.LectureAuthRequest;
 import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.request.LectureSubHistoryRequest;
+import com.ssafy.devit.model.request.LectureSubOtherRequest;
 import com.ssafy.devit.model.request.LectureSubsRequest;
 
 public interface LectureService {
@@ -60,4 +59,7 @@ public interface LectureService {
 	
 	// 히스토리 좋아요 업데이트
 	public void updateLikeHistoryByUserId(HistoryLikeRequest request) throws Exception;
+	
+	// 같은종류 다른영상 상세정보
+	public LectureSubOneResponse getOneOtherSubLecture(LectureSubOtherRequest request) throws Exception;
 }

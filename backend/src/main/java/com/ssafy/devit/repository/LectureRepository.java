@@ -84,6 +84,9 @@ public interface LectureRepository {
 	public void insertLikeHistoryByUserId(@Param("userId") long userId, @Param("lectureId") long lectureId, @Param("subId") long subId, @Param("subHisId") long subHisId) throws Exception;
 	public void updateLikeHistoryByUserId(@Param("userId") long userId, @Param("lectureId") long lectureId, @Param("subId") long subId, @Param("subHisId") long subHisId, @Param("likeFlag") String likeFlag) throws Exception;
 	
+	// 같은종류 다른영상 상세정보
+	public LectureSubOneResponse selectOneOtherSubLecture(@Param("userId") long userId, @Param("lectureId") long lectureId, @Param("subId") long subId, @Param("subHisId") long subHisId) throws Exception;
+	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
 	
 	public LectureOneResponse selectLectureByLectureId(@Param("lectureId") long lectureId, @Param("userId") long userId) throws Exception;

@@ -174,7 +174,7 @@ CREATE TABLE `lecture_sub_history` (
   `accept_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT '요청을 받아들일지 거절할지 여부',
   `delete_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT 'accept_yn 여부와 상관 없이 부적절한 동영상일 경우 목록에서 보이지 않도록...',
   PRIMARY KEY (`sub_his_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='강의 참여 요청 이력 테이블';
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='강의 참여 요청 이력 테이블';
 
 CREATE TABLE `lecture_sub_his_like` (
   `sub_his_like_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'lecture_sub_his_like의 PK',

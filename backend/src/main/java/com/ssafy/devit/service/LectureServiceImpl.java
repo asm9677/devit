@@ -19,6 +19,7 @@ import com.ssafy.devit.model.request.HistoryLikeRequest;
 import com.ssafy.devit.model.request.LectureAuthRequest;
 import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.request.LectureSubHistoryRequest;
+import com.ssafy.devit.model.request.LectureSubOtherRequest;
 import com.ssafy.devit.model.request.LectureSubsRequest;
 import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.repository.LectureRepository;
@@ -57,7 +58,6 @@ public class LectureServiceImpl implements LectureService {
 
 	@Override
 	public void updateContentLecture(LectureRequest lecture) throws Exception {
-		System.out.println(lecture.toString());
 		lectureRepository.updateContentLecture(lecture);
 	}
 
@@ -97,15 +97,18 @@ public class LectureServiceImpl implements LectureService {
 	public void updateLikeHistoryByUserId(HistoryLikeRequest request) throws Exception {
 		// 사용자 id 가져오기
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		LikeDTO dto = lectureRepository.checkLikeHistoryByUserId(user.getUserId(), request.getLectureId(), request.getSubId(), request.getSubHisId());
+		LikeDTO dto = lectureRepository.checkLikeHistoryByUserId(user.getUserId(), request.getLectureId(),
+				request.getSubId(), request.getSubHisId());
 		if (dto.getLikeCount() > 0) {
 			// 좋아요를 누른 적이 있다면
 			String likeFlag = dto.getLikeFlag().equals("Y") ? "N" : "Y";
 			System.out.println(1);
-			lectureRepository.updateLikeHistoryByUserId(user.getUserId(), request.getLectureId(), request.getSubId(), request.getSubHisId(), likeFlag);
+			lectureRepository.updateLikeHistoryByUserId(user.getUserId(), request.getLectureId(), request.getSubId(),
+					request.getSubHisId(), likeFlag);
 		} else {
 			// 좋아요를 누른 적이 한번도 없다면
-			lectureRepository.insertLikeHistoryByUserId(user.getUserId(), request.getLectureId(), request.getSubId(), request.getSubHisId());
+			lectureRepository.insertLikeHistoryByUserId(user.getUserId(), request.getLectureId(), request.getSubId(),
+					request.getSubHisId());
 			System.out.println(2);
 		}
 	}
@@ -190,6 +193,12 @@ public class LectureServiceImpl implements LectureService {
 	public void deleteLectureAuth(long authId) throws Exception {
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		lectureRepository.deleteLectureAuth(authId);
+	}
+
+	@Override
+	public LectureSubOneResponse getOneOtherSubLecture(LectureSubOtherRequest request) throws Exception {
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return lectureRepository.selectOneOtherSubLecture(user.getUserId(), request.getLectureId(), request.getSubId(), request.getSubHisId());
 	}
 
 }

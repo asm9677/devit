@@ -187,7 +187,11 @@
 		    lsi.sub_id subId,
 		    lsi.title,
 		    lshv.play_time playTime,
-		    lsi.order
+		    lsi.order,
+            lsi.common_id commonId,
+            (select group_concat(tag_name) from lecture_tag where common_id = lsi.common_id) as tags,
+            if( exists (select 1 from lecture_sub_history where lecture_id = lsi.lecture_id and sub_id = lsi.sub_id and sub_his_id = lsi.wiki_id and delete_yn = 'N'), true, false) as wikiYn,
+            if( exists (select 1 from lecture_sub_history where lecture_id = lsi.lecture_id and sub_id = lsi.sub_id and sub_his_id = lsi.video_id and delete_yn = 'N'), true, false) as videoYn
 		FROM
 		    lecture_sub_index lsi
 		        LEFT OUTER JOIN
@@ -330,6 +334,7 @@
 		    lshw.wiki_content wikiContent,
 		    lshw.wiki_content_html wikiContentHtml,
 		    lt.tagName,
+		    lshv.thumbnail_url thumbnailUrl,
 		    CASE
 		        WHEN EXISTS(SELECT 1
 		                	FROM lecture_sub_his_like
@@ -348,7 +353,8 @@
 		             sub_his_id,
 		             player_url,
 		             play_time,
-		             view_count
+		             view_count,
+		             thumbnail_url
 		      FROM lecture_sub_history lshv
 		      WHERE lshv.lecture_id = #{lectureId}
 		      ) lshv
@@ -436,5 +442,44 @@
 		        AND lsh.sub_his_id = lg.sub_his_id
 		WHERE
 		    lsi.sub_id = #{subId};
+	</select>
+	
+	<!-- 같은 종류 다른 영상 눌렀을 경우 상세 정보 -->
+	<select id="selectOneOtherSubLecture" resultType="LectureSubOneResponse">
+			select lsi.lecture_id as lectureId,
+			   lsi.sub_id as subId,
+			   lsi.order,
+               lsh.title as title,
+               lsh.view_count as viewCount,
+               (select count(1) from lecture_sub_his_like where lecture_id = #{lectureId} and sub_id = #{subId} and sub_his_id = #{subHisId} and like_flag = 'Y') as likeCount,
+               u.nickname as nickname,
+               u.profile as profile,
+               lsh.play_time as playTime,
+               lsh.player_url as playerUrl,
+               lsh.thumbnail_url as thumbnailUrl,
+               lshw.wiki_content as wikiContent,
+               lshw.wiki_content_html as wikiContentHtml,
+               (select group_concat(tag_name) from lecture_tag where common_id = lsi.common_id) as tagName,
+               if(exists (select 1 from lecture_sub_his_like where lecture_id = #{lectureId} and sub_id = #{subId} and sub_his_id = #{subHisId} and user_id = #{userId} and like_flag = 'Y'), true, false) as userLikeYn
+          from lecture_sub_index lsi
+               left outer join
+               lecture_sub_history lsh
+               on
+               lsi.lecture_id = lsh.lecture_id and
+               lsi.sub_id = lsh.sub_id and
+               lsh.sub_his_id = #{subHisId}
+               left outer join
+               (
+				select user_id, nickname, profile
+                  from user
+			   ) u
+               on
+               lsh.user_id = u.user_id
+               left outer join
+               lecture_sub_history lshw
+               on
+               lsi.wiki_id = lshw.sub_his_id
+		 where lsi.lecture_id = #{lectureId}
+           and lsi.sub_id = #{subId};
 	</select>
 </mapper>

@@ -24,8 +24,8 @@ import com.ssafy.devit.model.request.HistoryLikeRequest;
 import com.ssafy.devit.model.request.LectureAuthRequest;
 import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.request.LectureSubHistoryRequest;
+import com.ssafy.devit.model.request.LectureSubOtherRequest;
 import com.ssafy.devit.model.request.LectureSubsRequest;
-import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.service.LectureService;
 
@@ -383,8 +383,8 @@ public class LectureController {
 
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
-	@ApiOperation(value = "같은종류 다른 강의 들고오기")
-	@PostMapping("/sub/history/{subid}")
+	@ApiOperation(value = "같은종류 다른 강의 리스트 들고오기")
+	@GetMapping("/sub/history/{subid}")
 	public ResponseEntity<CommonResponse> getTheOtherSubLectures(@PathVariable("subid") long subId) {
 		log.info(">> Load : getTheOtherSubLectures <<");
 		ResponseEntity<CommonResponse> response = null;
@@ -398,6 +398,30 @@ public class LectureController {
 			result.msg = "fail";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 			log.info(">> Error : getTheOtherSubLectures <<");
+			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "같은종류 다른 강의  상세정보 들고오기")
+	@GetMapping("/sub/history")
+	public ResponseEntity<CommonResponse> getTheOtherSubLecture(LectureSubOtherRequest request) {
+		log.info(">> Load : getTheOtherSubLecture <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			System.out.println(1);
+			result.result = lectureService.getOneOtherSubLecture(request);
+			System.out.println(2);
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			log.info(">> Error : getTheOtherSubLecture <<");
 			log.info(e.getMessage().toString());
 		}
 		return response;
