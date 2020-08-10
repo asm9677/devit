@@ -7,17 +7,19 @@ public class LectureSubOneResponse {
 	private String title;
 	private int viewCount;
 	private int likeCount;
+	private String profile;
 	private String nickname;
 	private String playTime;
 	private String playerUrl;
 	private String wikiContent;
 	private String wikiContentHtml;
 	private String tagName;
+	private String thumbnailUrl;
 	private boolean userLikeYn;
 
 	public LectureSubOneResponse(long lectureId, long subId, int order, String title, int viewCount, int likeCount,
-			String nickname, String playTime, String playerUrl, String wikiContent, String wikiContentHtml,
-			String tagName, boolean userLikeYn) {
+			String profile, String nickname, String playTime, String playerUrl, String wikiContent,
+			String wikiContentHtml, String tagName, String thumbnailUrl, boolean userLikeYn) {
 		super();
 		this.lectureId = lectureId;
 		this.subId = subId;
@@ -25,12 +27,14 @@ public class LectureSubOneResponse {
 		this.title = title;
 		this.viewCount = viewCount;
 		this.likeCount = likeCount;
+		this.profile = profile;
 		this.nickname = nickname;
 		this.playTime = playTime;
 		this.playerUrl = playerUrl;
 		this.wikiContent = wikiContent;
 		this.wikiContentHtml = wikiContentHtml;
 		this.tagName = tagName;
+		this.thumbnailUrl = thumbnailUrl;
 		this.userLikeYn = userLikeYn;
 	}
 
@@ -140,6 +144,22 @@ public class LectureSubOneResponse {
 
 	public void setUserLikeYn(boolean userLikeYn) {
 		this.userLikeYn = userLikeYn;
+	}
+
+	public String getThumbnailUrl() {
+		return thumbnailUrl;
+	}
+
+	public void setThumbnailUrl(String thumbnailUrl) {
+		this.thumbnailUrl = thumbnailUrl;
+	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
 	}
 
 	@Override
