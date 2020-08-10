@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
 import com.ssafy.devit.model.request.UserProfileUpdateReqeust;
+import com.ssafy.devit.model.user.UserAuthDetails;
+import com.ssafy.devit.service.UserAuthDetailService;
 import com.ssafy.devit.service.UserService;
 
 import io.swagger.annotations.ApiImplicitParam;
@@ -110,20 +113,51 @@ public class UserController {
 		final CommonResponse result = new CommonResponse();
 
 		try {
+			
+			// 사용자 id 가져오기
+			UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			request.setUserId(user.getUserId());
+			
 			if("nickname".equals(request.getModifyType())) {
 				//닉네임 중복검사
+				if(userService.getUserByNickname(request.getNickname()) != null) { //사용 불가능
+					
+					result.msg = "duplicate";
+					response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+				}else {
+					userService.modifyUserInfo(request);
+					result.msg = "success";
+					result.result = "성공적으로 변경 되었습니다";
+					response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+				}
 				
 			}else if("profile".equals(request.getModifyType())) {
 				
-			}else if("password".equals(request.getModifyType())) {
-				//기존 비밀번호 일치여부 확인
+				userService.modifyUserInfo(request);
+				result.msg = "success";
+				result.result = "성공적으로 변경 되었습니다";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 				
-				request.setNewPassword(passwordEncoder.encode(request.getNewPassword()));
+			}else if("password".equals(request.getModifyType())) {
+				
+				if(!passwordEncoder.matches(request.getPassword(), userService.getUserPasswordByUserId(user.getUserId())) ) { //기존 비밀번호 불일치
+
+					result.msg = "different";
+					response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+				}else if(passwordEncoder.matches(request.getNewPassword(), userService.getUserPasswordByUserId(user.getUserId()) )){ //기존 비밀번호와 새 비밀번호가 일치함.
+					result.msg = "same";
+					response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+				}else {
+
+					request.setNewPassword(passwordEncoder.encode(request.getNewPassword()));
+					userService.modifyUserInfo(request);
+					result.msg = "success";
+					result.result = "성공적으로 변경 되었습니다";
+					response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+				}
+				
 			}
-			userService.modifyUserInfo(request);
-			result.msg = "success";
-			result.result = "성공적으로 변경 되었습니다";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			
 		} catch (Exception e) {
 			result.msg = "fail";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);

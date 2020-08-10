@@ -108,4 +108,12 @@
 		WHERE
 		    user_id = #{userId};
 	</update>
+	
+	<!-- 회원비밀번호 -->
+	<select id="getUserPasswordByUserId" resultType="String">
+		select password
+		  from user
+		 where user_id = #{userId};
+	</select>
+	
 </mapper>

@@ -41,4 +41,6 @@ public interface UserRepository {
 	
 	// 사용자 프로필 변경
 	public void updateUserInfo(UserProfileUpdateReqeust request) throws Exception; 
+	
+	public String getUserPasswordByUserId(long userId) throws Exception;
 }

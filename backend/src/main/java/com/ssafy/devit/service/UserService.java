@@ -22,4 +22,6 @@ public interface UserService {
 
 	// 사용자 프로필 변경
 	public void modifyUserInfo(UserProfileUpdateReqeust request) throws Exception;
+	
+	public String getUserPasswordByUserId(long userId) throws Exception;
 }
