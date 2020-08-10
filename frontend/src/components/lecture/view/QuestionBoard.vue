@@ -1,7 +1,7 @@
 <template>
     <v-layout wrap ref="main">
         <v-spacer></v-spacer>
-        <v-btn v-if="true" light color="success" outlined>
+        <v-btn v-if="!isWrite" light color="success" outlined @click="isWrite=true">
             질문하기
         </v-btn>
         <v-list v-else style="width:100%;">
@@ -15,12 +15,12 @@
                 <v-list-item-content>
                 </v-list-item-content>
                 <v-list-item-action style="margin-top:0px;margin-bottom:0px;">
-                    <v-btn light color="success" outlined>
+                    <v-btn light color="success" outlined @click="writeBoard">
                         질문
                     </v-btn>                    
                 </v-list-item-action>
                 <v-list-item-action style="margin-top:0px;margin-bottom:0px;">
-                    <v-btn light color="success" outlined>
+                    <v-btn light color="success" outlined @click="isWrite=false ">
                         취소
                     </v-btn>                    
                 </v-list-item-action>
@@ -75,17 +75,42 @@
 </template>
 
 <script>
+import http from "@/util/http_common.js"
+
 export default {
+    props: ['lectureId', 'subId'],
     data(){
         return {
             questionHeight: 768,
             dialog:true,
+            isWrite:false,
+
+            title: '',
+            content: '',
         }
     },
     mounted(){
         this.questionHeight = $('body').prop("clientHeight") - this.$refs.question.offsetTop - 120;
     },
     methods:{
+        initBoard() {
+            
+        },
+        writeBoard(){
+            http.axios.post("/api/v1/board/lecture", {
+                "boardTitle": this.title,
+                "boardContent": this.content,
+                "lectureId": this.lectureId,
+                "subId": this.subId
+            }).then(({data}) => {
+
+            }).finally(() => {
+                this.initBoard();
+                this.title = '',
+                this.content = '',
+                this.isWrite = false
+            })
+        }        
     }
 }
 </script>

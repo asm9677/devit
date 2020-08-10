@@ -1,6 +1,6 @@
 <template>
 <div class="LecturePlayer">
-    <layout wrap ref="main">
+    <v-layout wrap ref="main">
         <v-navigation-drawer
             fixed
             right
@@ -192,7 +192,7 @@
                             <v-list-item>
                                 <v-list-item-content>
                                     <v-list-item-title>
-                                        <QuestionBoard :darkOption="darkOption" @showDetail="showDetail"> </QuestionBoard>             
+                                        <QuestionBoard :darkOption="darkOption" :lectureId="lectureId" :subId="subId" @showDetail="showDetail"> </QuestionBoard>             
                                     </v-list-item-title>                        
                                 </v-list-item-content>
                             </v-list-item>                            
@@ -420,7 +420,7 @@
             <div style="position:fixed; top:0px; left:0px;width:100%; height:100%; z-index:9;" :style="{'background-color': (darkOption ? '#1e1e1e' : '#FFFFFF')}">
                 
             </div>
-        </layout>
+        </v-layout>
     </div>
 </template>
 
@@ -439,6 +439,9 @@ export default {
     },
     data(){
         return {
+            lectureId: 0,
+            subId: 0,
+
             darkOption: false,
             theme:'',
             autoPlay: true,
@@ -524,6 +527,7 @@ export default {
         }
     },
     created(){
+        this.lectureId = this.$route.params.id;
         this.darkOption = localStorage.getItem('darkOption')        
         if(this.darkOption == null)
             this.darkOption = false;
