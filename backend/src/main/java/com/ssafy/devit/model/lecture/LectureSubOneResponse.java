@@ -3,6 +3,7 @@ package com.ssafy.devit.model.lecture;
 public class LectureSubOneResponse {
 	private long lectureId;
 	private long subId;
+	private long subHisId;
 	private int order;
 	private String title;
 	private int viewCount;
@@ -16,13 +17,15 @@ public class LectureSubOneResponse {
 	private String tagName;
 	private String thumbnailUrl;
 	private boolean userLikeYn;
+	private int lectureCount;
 
-	public LectureSubOneResponse(long lectureId, long subId, int order, String title, int viewCount, int likeCount,
-			String profile, String nickname, String playTime, String playerUrl, String wikiContent,
-			String wikiContentHtml, String tagName, String thumbnailUrl, boolean userLikeYn) {
+	public LectureSubOneResponse(long lectureId, long subId, long subHisId, int order, String title, int viewCount,
+			int likeCount, String profile, String nickname, String playTime, String playerUrl, String wikiContent,
+			String wikiContentHtml, String tagName, String thumbnailUrl, boolean userLikeYn, int lectureCount) {
 		super();
 		this.lectureId = lectureId;
 		this.subId = subId;
+		this.subHisId = subHisId;
 		this.order = order;
 		this.title = title;
 		this.viewCount = viewCount;
@@ -36,10 +39,27 @@ public class LectureSubOneResponse {
 		this.tagName = tagName;
 		this.thumbnailUrl = thumbnailUrl;
 		this.userLikeYn = userLikeYn;
+		this.lectureCount = lectureCount;
 	}
 
 	public LectureSubOneResponse() {
 		super();
+	}
+
+	public int getLectureCount() {
+		return lectureCount;
+	}
+
+	public void setLectureCount(int lectureCount) {
+		this.lectureCount = lectureCount;
+	}
+
+	public long getSubHisId() {
+		return subHisId;
+	}
+
+	public void setSubHisId(long subHisId) {
+		this.subHisId = subHisId;
 	}
 
 	public long getLectureId() {
