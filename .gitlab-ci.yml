@@ -20,12 +20,11 @@ gradle-build:
         - echo '이미지로 생성'
         - sudo docker build -t devit_backend .
         - echo '컨테이너로 빌드 및 실행'
-        - sudo docker run --privileged -v /home:/var/lib -d --name devit_backend -p 8080:8080 devit_backend
+        - sudo docker run --privileged -v /home/ubuntu/uploads:/var/lib/ubuntu/uploads -d --name devit_backend -p 8080:8080 devit_backend
 vue-build:
     only:
         - develop
         - frontend
-        - cicd
     stage: build
     script:
         - echo '빌드를 실행할 폴더로 이동'
