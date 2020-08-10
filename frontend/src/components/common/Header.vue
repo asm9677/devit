@@ -120,6 +120,7 @@
 </template>
 
 <script>
+import http from "@/util/http_common.js"
 import eventBus from "@/lib/EventBus.js"
 import store from "@/store/index.js"
 import Login from "@/components/user/Login.vue"
@@ -177,13 +178,14 @@ export default {
                 this.keyword = ''
             }
         },
-        createProject(){            
-            /*
-                http.axios.get('/api/v1/lectures/create').get(({data}) => {
-                    this.move(`/lecture/management/${data.result}/default`);
-                })
-            */
-            this.move('/lecture/management/0/default');
+        createProject(){                        
+            http.axios.post('/api/v1/lectures').then(({data}) => {
+                if(data.result.lectureId)
+                    this.move(`/lecture/management/default/${data.result.lectureId}`);
+            }).catch(({data}) => {
+                alert("프로젝트 생성에 실패하였습니다.");
+            })
+            
         },
         moveJoin(){
             this.$router.push('/join').catch(()=>{location.reload(true);});    

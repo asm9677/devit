@@ -46,9 +46,7 @@
                                                             <v-avatar
                                                                 class="profile"                                                    
                                                             >
-                                                                <v-img 
-                                                                    :src="item.avatar"
-                                                                ></v-img>
+                                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile | imgFilter"></v-img>
                                                             </v-avatar>
                                                             {{item.text }}
                                                             <v-icon small right @click="parent.selectItem(item)">mdi-close</v-icon>
@@ -57,7 +55,7 @@
                                                 </template>
                                                 <template v-slot:item="{ index, item }">                                                
                                                     <v-list-item-avatar>
-                                                        <v-img :src="item.avatar" :lazy-src="item.avatar"></v-img>
+                                                        <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile | imgFilter"></v-img>
                                                     </v-list-item-avatar>
                                                     <v-list-item-content>
                                                         <v-list-item-title v-html="item.text"></v-list-item-title>
@@ -77,7 +75,7 @@
                                             <v-combobox      
                                                 outlined
                                                 dense
-                                                v-model="selectPermissions"
+                                                v-model="selectPermission"
                                                 :items="permissions"
                                                 readonly
                                             >                 
@@ -87,14 +85,14 @@
                                     </v-list-item>
                                     <v-list-item>
                                         <v-spacer />
-                                        <v-btn depressed color="primary" @click="ValidationForm">
+                                        <v-btn depressed color="primary" @click="invite()">
                                             초대하기
                                         </v-btn>    
                                     </v-list-item>   
                                 </v-list>
 
                                 <div style="margin-top:30px" />
-                                <v-list outlined style="padding-top:0px;">                                        
+                                <v-list outlined style="padding:0px;">                                        
                                     <v-list-item >
                                         <v-list-item-title>멤버 목록</v-list-item-title> 
                                     </v-list-item>
@@ -102,63 +100,38 @@
                                         <v-divider :key="`${index}_divider`"/>
                                         <v-list-item :key="`${index}_memberList`">
                                             <v-list-item-avatar>
-                                                <v-img :src="item.avatar" :lazy-src="item.avatar"></v-img>
+                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile | imgFilter"></v-img>
                                             </v-list-item-avatar>
                                             <v-list-item-content>
                                                 <v-list-item-title>
                                                     <b>{{item.nickname}}</b>&nbsp;
                                                      <span class="v-list-item__subtitle">{{item.email | idOfEmail}}</span></v-list-item-title>
-                                                <v-list-item-subtitle > {{item.joinDate | diffDate}}</v-list-item-subtitle>
-                                                
+                                                <v-list-item-subtitle > {{item.created | diffDate}}</v-list-item-subtitle>
                                             </v-list-item-content>
-
-                                                
 
                                             <v-list-item-action style="margin-right:5px">
                                                 <table width="100%">
                                                     <tr width="100%">
                                                         <th width="100px">
-                                                            {{item.permissions}}
+                                                            {{item.role}}
                                                         </th>
                                                         <th width="40px;">
-                                                                <v-icon color="red" v-show="$router.app.$store.state.email != item.email" @click="1">
+                                                                <v-icon color="red" v-show="!item.isMe && isOwner" @click="changeOwner(item)">
                                                                     mdi-crown
                                                                 </v-icon>
                                                         </th>
                                                         <td width="30px;">
-                                                                <v-icon color="red" v-show="$router.app.$store.state.email != item.email">
+                                                                <v-icon color="red" v-show="!item.isMe && isOwner" @click="exitProject(item)">
                                                                     mdi-trash-can-outline
                                                                 </v-icon>
                                                             
-                                                                <v-icon color="red" v-show="$router.app.$store.state.email == item.email">
+                                                                <v-icon color="red" v-show="item.isMe" @click="exitProject(item)">
                                                                     mdi-exit-to-app
                                                                 </v-icon>
                                                         </td>
                                                     </tr>
                                                 </table>
-                                                
-                                            </v-list-item-action>
-                                            <!-- <v-list-item-action v-show="$router.app.$store.state.email != item.email"  style="margin-right:5px">
-                                                <v-btn dark small outlined color="red">
-                                                    <v-icon>
-                                                        mdi-crown
-                                                    </v-icon>
-                                                </v-btn>
-                                            </v-list-item-action> 
-                                            <v-list-item-action v-show="$router.app.$store.state.email != item.email">
-                                                <v-btn dark small outlined color="red">
-                                                    <v-icon>
-                                                        mdi-trash-can-outline
-                                                    </v-icon>
-                                                </v-btn>
-                                            </v-list-item-action>
-                                            <v-list-item-action v-show="$router.app.$store.state.email == item.email" style="margin-left:0px;">
-                                                <v-btn dark small outlined color="red">
-                                                Exit
-                                                </v-btn>
-                                            </v-list-item-action> -->
-                                            
-                                            
+                                            </v-list-item-action>  
                                         </v-list-item>
                                         
                                     </template>
@@ -205,25 +178,24 @@ import axios from "axios"
 import store from "@/store/index.js"
 export default {
     props: ['option'],
-    created(){
-        // console.dir(`/api/v1/users/${this.search?this.search:""}?lectureid=${this.$route.params.id}`)
-        http.axios.get(`/api/v1/users/${this.search?this.search:""}?lectureid=${this.$route.params.id}`)
-            .then(({data}) => {
-                console.dir(data)
-                for(let i in data.result){
-                    this.items.push({
-                        text: data.result[i].nickname,
-                        email: data.result[i].email,
-                        avatar: `https://picsum.photos/500/300?image=${data.result[i].userId}`,
-                    })
-                }
-            })
+    data() {
+        return {         
+            lectureId: 0,
+            userId:0,   
+            authId:0,
 
-        // http.axios.get(`/api/v1/users/${this.search?this.search:""}?lectureid=${this.$route.params.id}`)
-        //     .then(({data}) => {
-        //         console.dir(data)
-        //         this.memberList = data.result;
-        //     })
+            items: [],
+            inviteMember: [
+            ],
+            selectPermission: 'Maintainer',
+            permissions: ['Maintainer'],
+            search: null,
+            isOwner: false,
+
+            memberList: [],
+            snackbar: false,
+            msg: '',      
+        }
     },
     watch: {
         inviteMember () {
@@ -233,19 +205,13 @@ export default {
             }
         },        
         search(){
-            http.axios.get(`/api/v1/users/${this.search?this.search:""}?lectureid=${this.$route.params.id}`)
-            .then(({data}) => {
-                console.dir(data)
-                this.items = []
-                for(let i in data.result){                    
-                    this.items.push({
-                        text: data.result[i].nickname,
-                        email: data.result[i].email,
-                        avatar: `https://picsum.photos/500/300?image=${data.result[i].userId}`, 
-                    })
-                }
-            })
+            this.keywordSearch();
         },
+    },
+    created(){
+        this.lectureId = this.$route.params.id;
+        this.keywordSearch();        
+        this.memberSearch();
     },
     filters: {
         idOfEmail(val) {
@@ -273,44 +239,14 @@ export default {
                 return parseInt(diff/30) + '달 전'
             return parseInt(diff/365) + '년 전'
             return val
-        }
-    },
-    data() {
-        return {         
-            snackbar: false,
-            msg: '',         
-            items: [],
-            inviteMember: [
-            ],
-            selectPermissions: ['Maintainer'],
-            permissions: ['Maintainer'],
-            search: null,
+        },
+        imgFilter(val){
+            if(val == 'http://i3a101.p.ssafy.io/images/null')
+                return `https://picsum.photos/500/300?image=${parseInt(Math.random()*50+1)}`
+            return val
 
-            memberList: [
-                {
-                    avatar: `https://picsum.photos/500/300?image=1`,
-                    nickname: '미용쓰기',
-                    email: 'msnodeve@naver.com',
-                    joinDate: '2019-08-03T10:00:00',
-                    permissions: 'Maintainer' 
-                },
-                {
-                    avatar: `https://picsum.photos/500/300?image=2`,
-                    nickname: '안성민',
-                    email: 'asm9677@naver.com',
-                    joinDate: '2020-07-02',
-                    permissions: 'Owner' 
-                },
-                {
-                    avatar: `https://picsum.photos/500/300?image=3`,
-                    nickname: '강슬기',
-                    email: 'tmfrl8510@naver.com',
-                    joinDate: '2020-07-10',
-                    permissions: 'Maintainer' 
-                }
-            ]
         }
-    },
+    },    
     methods: {
         goto(target, msg){
             this.$vuetify.goTo(target, {
@@ -320,17 +256,92 @@ export default {
             })
             this.msg = msg;
             this.snackbar = true;
-        },
-        ValidationForm(){
-        },       
+        }, 
         selectMember(){
             this.search = ''
             if(this.items[0]){
                 this.inviteMember.push(this.items[0])          
                 this.inviteMember.pop()      
             }            
+        },
+        keywordSearch(){     
+            http.axios.get(`/api/v1/users/${this.lectureId}?search=${this.search?this.search:""}`)
+                .then(({data}) => {
+                    this.items = data.result
+                    for(let i in data.result){
+                        this.items[i].text = this.items[i].nickname
+                    }
+                })
+        },
+        memberSearch(){
+            http.axios.get(`/api/v1/lectures/auth/${this.lectureId}`)
+                .then(({data}) => {
+                    this.memberList = data.result;
+                    for(let i in this.memberList){
+                        this.memberList[i].isMe = false;
+                        if(this.memberList[i].email == this.$router.app.$store.state.email){
+                            this.memberList[i].isMe = true;
+                            this.isOwner = this.memberList[i].role == 'owner' || this.memberList[i].role == 'Owner'
+                            this.userId = this.memberList[i].userId
+                            this.authId = this.memberList[i].authId
+                        }
+                    }
+                })
+        },        
+        invite(){
+            console.dir(this.selectPermission)
+            var request = []
+            for(let i in this.inviteMember){
+                request.push({
+                    "authId":0,
+                    "lectureId":this.lectureId,
+                    "lectureRole": this.selectPermission,
+                    "userId": this.inviteMember[i].userId,                      
+                })
+            }
+            http.axios.put(`/api/v1/lectures/auth`, request).then(({data}) => {
+                console.dir(data);
+            })
+
+            this.inviteMember = []
+            this.memberSearch()
+        },
+        exitProject(item){
+            console.dir(item)
+            http.axios.delete(`/api/v1/lectures/auth/${item.authId}`, {
+                "userId": item.userId,
+            }).then(({data}) => {
+                console.dir(data);
+            }).finally(() => {
+                this.memberSearch()
+            })
+
+        },
+        changeOwner(item){
+            http.axios.put(`/api/v1/lectures/auth`, [
+                {
+                    "authId":item.authId,
+                    "lectureId":this.lectureId,
+                    "lectureRole": "Owner",
+                    "userId": item.userId,     
+                },
+                {
+                    "authId":this.authId,
+                    "lectureId":this.lectureId,
+                    "lectureRole": "Maintainer",
+                    "userId": this.userId   
+                }
+            ]).then(({data}) => {
+                console.dir(data);
+            }).catch((error) => {
+                console.dir(error)
+            }).finally(() => {
+                this.memberSearch()
+            })
+
+
         }
-        
+
     }
 }
 </script>
@@ -347,7 +358,7 @@ export default {
     th {
         font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         font-size: 14px;
-        font-weight: 400
+        font-weight: 500
     }
     .v-list-item__title{
         font-size:14px;

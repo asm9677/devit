@@ -192,11 +192,10 @@
                             <v-list-item>
                                 <v-list-item-content>
                                     <v-list-item-title>
-                                        미구현 기능입니다.
+                                        <QuestionBoard :darkOption="darkOption" @showDetail="showDetail"> </QuestionBoard>             
                                     </v-list-item-title>                        
                                 </v-list-item-content>
-                            </v-list-item>
-                            
+                            </v-list-item>                            
                         </v-list>
                     </v-tab-item>
                     <v-tab-item>
@@ -285,6 +284,36 @@
                                     <v-switch v-model="autoPlay" color="#00D27A"></v-switch>
                                 </v-list-item-action>
                             </v-list-item>   
+                        </v-list>
+                    </v-tab-item>
+                    <v-tab-item>
+                        <v-list>
+                            <v-list-item>
+                                <v-list-item-avatar @click="tabs=2">
+                                    <v-icon>
+                                        mdi-arrow-left
+                                    </v-icon>
+                                </v-list-item-avatar>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        질문 게시판
+                                    </v-list-item-title>                        
+                                </v-list-item-content>
+                                <v-list-item-action @click="closeList">
+                                    <v-icon>
+                                        mdi-close
+                                    </v-icon>
+                                </v-list-item-action>
+                            </v-list-item>
+                        </v-list>
+                        <v-list>
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>                                       
+                                        <QuestionBoardDetail :darkOption="darkOption"></QuestionBoardDetail> 
+                                    </v-list-item-title>                        
+                                </v-list-item-content>
+                            </v-list-item>                            
                         </v-list>
                     </v-tab-item>
                     
@@ -398,11 +427,15 @@
 <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
 <script>
 import AnotherVideo from "@/components/lecture/view/AnotherVideo.vue"
+import QuestionBoard from "@/components/lecture/view/QuestionBoard.vue"
+import QuestionBoardDetail from "@/components/lecture/view/QuestionBoardDetail.vue"
 import Contribute from "@/components/lecture/view/Contribute.vue"
 export default {
     components: {
         AnotherVideo,
-        Contribute,
+        QuestionBoard,
+        QuestionBoardDetail,
+        Contribute,        
     },
     data(){
         return {
@@ -561,6 +594,9 @@ export default {
 
         move(url){
             this.$router.push(url)
+        },
+        showDetail(item){
+            this.tabs=5;
         }
     }
 }

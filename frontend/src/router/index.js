@@ -57,7 +57,7 @@ const routes = [
     component: LectureList
   },
   {
-    path: '/lecture/management/:id/default',
+    path: '/lecture/management/:tabName/:id',
     name: 'LectureManagement',
     component: LectureManagement
   },

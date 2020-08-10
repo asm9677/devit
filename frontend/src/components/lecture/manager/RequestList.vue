@@ -9,7 +9,7 @@
                                 </v-list-item>  
                                 <template v-for="(item,index) in items">
                                     <v-divider :key="`${index}_divider`"/>
-                                    <v-list-item :key="`${index}_memberList`" link @mouseover="curItem=item">
+                                    <v-list-item :key="`${index}_memberList`" link @click="curItem=item">
                                         <v-list-item-avatar size="30">
                                             <v-img :src="item.thumbnailUrl" :lazy-src="item.thumbnailUrl"></v-img>
                                         </v-list-item-avatar>

@@ -1,5 +1,3 @@
-
-
 <template>
   <div style="; margin-top:20px;">
         <v-card tile flat outlined >
@@ -11,11 +9,11 @@
                                         <v-list-item>
                                             <v-list-item-title>백로그</v-list-item-title> 
                                         </v-list-item> 
-                                        <v-list rounded style="" class="chapterList">
-                                            <draggable v-model="backlog" @start="drag=true" @end="drag=false" :options="{group:'people'}" @change="log">
+                                        <v-list rounded style="" class="chapterList" outlined>
+                                            <draggable v-model="backlog" @start="drag=true" @end="drag=false" :options="{group:'people'}">
                                                     <template v-for="(item, index) in backlog">
                                                         <v-hover v-slot:default="{ hover }" :key="index">
-                                                            <v-card :key="`${index}_list`" style="margin: 5px 0px; " link @click="openDialog(backlog, item)" outlined>
+                                                            <v-card :key="`${index}_list`" style="margin: 5px 0px; " link @click="openDialog(backlog, item)" outlined >
                                                                 <v-list-item style="padding-left:5px;">
                                                                     <v-list-item-content style="padding-bottom:5px;">   
                                                                         <span style="padding-left:5px;" class="chapterContent">{{item.title}} </span>
@@ -52,12 +50,12 @@
                                         <v-list-item>
                                             <v-list-item-title>목차</v-list-item-title> 
                                         </v-list-item> 
-                                        <v-list flat style="" class="chapterList">
+                                        <v-list flat style="" class="chapterList" outlined rounded>
                                             <draggable v-model="chapter" @start="drag=true" @end="drag=false" :options="{group:'people'}">
                                                 
                                                     <template v-for="(item, index) in chapter">
                                                         <v-hover v-slot:default="{ hover }" :key="index">
-                                                            <v-card :key="`${index}_list`" style="margin: 5px 0px; " link @click="openDialog(chapter, item)" outlined>
+                                                            <v-card :key="`${index}_list`" style="margin: 5px 0px; " link @click="openDialog(chapter, item)" outlined @dragenter="logData">
                                                                 <v-list-item style="padding-left:5px;">
                                                                     <v-list-item-content style="padding-bottom:5px;">
                                                                         <span style="padding-left:5px;" class="v-list-item__subtitle chapterContent"> chapter {{index+1}} </span>
@@ -229,6 +227,51 @@ export default {
                 ,{
                     title:'Tree',
                     tags:['자료구조', '알고리즘', '트리'],
+                },{
+                    title:'Stack',
+                    tags:['자료구조', '알고리즘', '스택'],
+                },
+                {
+                    title:'Queue',
+                    tags:['자료구조', '알고리즘', '큐'],
+                }
+                ,{
+                    title:'PriorityQueue',
+                    tags:['자료구조', '알고리즘', '우선순위 큐'],
+                }
+                ,{
+                    title:'Tree',
+                    tags:['자료구조', '알고리즘', '트리'],
+                },{
+                    title:'Stack',
+                    tags:['자료구조', '알고리즘', '스택'],
+                },
+                {
+                    title:'Queue',
+                    tags:['자료구조', '알고리즘', '큐'],
+                }
+                ,{
+                    title:'PriorityQueue',
+                    tags:['자료구조', '알고리즘', '우선순위 큐'],
+                }
+                ,{
+                    title:'Tree',
+                    tags:['자료구조', '알고리즘', '트리'],
+                },{
+                    title:'Stack',
+                    tags:['자료구조', '알고리즘', '스택'],
+                },
+                {
+                    title:'Queue',
+                    tags:['자료구조', '알고리즘', '큐'],
+                }
+                ,{
+                    title:'PriorityQueue',
+                    tags:['자료구조', '알고리즘', '우선순위 큐'],
+                }
+                ,{
+                    title:'Tree',
+                    tags:['자료구조', '알고리즘', '트리'],
                 },
             ],
             backlog: [
@@ -274,7 +317,7 @@ export default {
             this.tags = item.tags;
             this.dialog = true;
         },
-        log(e){
+        logData(e){
             console.dir(e)
         }
     }
@@ -300,15 +343,11 @@ export default {
         background-color:#f2f2f2;
 
         padding:5px 5px; 
-        border-color:skyblue;
+        border-color:f2f2f2;
     }
    
     .chapterContent{
         font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         /* font-size:12px; */
     } 
-
-    .v-card::selection {
-        color:red
-    }
 </style>
