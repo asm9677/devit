@@ -18,4 +18,6 @@ public interface BoardRepository {
 	//public LectureOneResponse selectLectureByLectureId(@Param("lectureId") long lectureId, @Param("userId") long userId) throws Exception;
 	
 	public void createBoardWithLecture(BoardWithLectureRequest boardWithLectureRequest) throws Exception;
+	
+	public List<BoardResponse> lectureQnaList(@Param("lectureId") long lectureId, @Param("subId") long subId) throws Exception;
 }
