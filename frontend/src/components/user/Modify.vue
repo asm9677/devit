@@ -38,14 +38,14 @@
                                         </div>
                                     </v-list-item-title>
                                     <v-list-item>
-                                    <div style="margin-right:5px"></div>
-                                    <v-btn depressed="depressed" color="primary" @click="clickImg($event)">
-                                        사진 변경
-                                    </v-btn>
-                                    <div style="margin-right:5px"></div>
-                                    <v-btn depressed="depressed" @click="deleteImg()">
-                                        삭제
-                                    </v-btn>
+                                        <div style="margin-right:5px"></div>
+                                        <v-btn depressed="depressed" color="primary" @click="clickImg($event)">
+                                            사진 변경
+                                        </v-btn>
+                                        <div style="margin-right:5px"></div>
+                                        <v-btn depressed="depressed" @click="deleteImg()">
+                                            삭제
+                                        </v-btn>
                                     </v-list-item>
                                 </v-list-item>
 
@@ -94,11 +94,11 @@
                                         <span style="color:red; font-size:12px;" v-show="!isSamePW">비밀번호가 일치하지 않습니다.</span>
                                     </v-list-item-title>
                                 </v-list-item>
-                            </v-list>
-                            <v-list style="padding:20px 100px;">
-                                <v-btn depressed="depressed" color="primary" @click="savePassword()">
-                                    비밀번호 변경
-                                </v-btn>
+                                <v-list-item>
+                                    <v-btn depressed="depressed" color="primary" @click="savePassword()">
+                                        비밀번호 변경
+                                    </v-btn>
+                                </v-list-item>
                             </v-list>
                         </v-card>
                     </div>
