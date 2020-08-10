@@ -1,5 +1,6 @@
 <template>
   <div style="; margin-top:20px;">
+      {{chapter}}
         <v-card tile flat outlined >
                 <v-layout wrap>
                     <v-flex xs12 sm12 md9 lg9 xl9 style="margin-left:0px;">                         
@@ -9,66 +10,69 @@
                                         <v-list-item>
                                             <v-list-item-title>목차</v-list-item-title> 
                                         </v-list-item> 
+                                        <v-list flat style="" class="chapterList" outlined rounded>
                                             <draggable v-model="chapter" @start="drag=true" @end="drag=false" :options="{group:'people'}">                                          
-                                                    <template v-for="(item, index) in chapter">                                
+                                                    <template v-for="(item, index) in chapter">                                                        
                                                         <v-hover v-slot:default="{ hover }" :key="`${index}_hover1`">
-                                                            <v-list class="nomargin nopadding">
-                                                                <v-list-item class="" :key="`${index}_dragItem`"  @dragenter="logData">
-                                                                    <v-list-item-content class="nomargin nopadding" style="margin-right:10px;">
-                                                                        <v-card :key="`${index}_list`" style="margin: 5px 0px; border:1px solid #4CAF50; cursor:pointer"  outlined>
-                                                                            <v-list-item style="">                           
-                                                                                <v-list-item-content>                                                                                    
-                                                                                    <v-list-item-title>
-                                                                                        {{item.title}} 
-                                                                                        <div style="float:right">
-                                                                                            <v-icon>
-                                                                                                mdi-play-circle-outline
-                                                                                            </v-icon>    
-                                                                                            <v-icon style="margin-left:5px;">
-                                                                                                mdi-script-text-outline
-                                                                                            </v-icon>                                                                                     
-                                                                                        </div>
-                                                                                    </v-list-item-title>                                 
-                                                                                    
-                                                                                    <v-list-item-subtitle style="margin-top:3px;">
-                                                                                        <span v-for="(tag,index) in item.tags" :key="`${index}_tag`">
-                                                                                        #{{tag}}
-                                                                                        </span>
-                                                                                    </v-list-item-subtitle>   
-                                                                                </v-list-item-content>
-                                                                            </v-list-item>
-                                                                        </v-card>
-                                                                    </v-list-item-content>
-                                                                    <v-list-item-action v-if="hover">                                                            
-                                                                        <v-btn icon @click="openDialog(item)">
-                                                                            <v-icon>
-                                                                                mdi-pencil
-                                                                            </v-icon>
-                                                                        </v-btn>
-                                                                    </v-list-item-action>
-                                                                    <v-list-item-action v-else> <v-btn icon /> </v-list-item-action>
-                                                                    <v-list-item-action v-if="hover">              
-                                                                        <v-btn class="nomargin nopadding" icon @click="removeItem(index)">                                             
-                                                                            <v-icon>
-                                                                                mdi-trash-can
-                                                                            </v-icon>
-                                                                        </v-btn>
-                                                                    </v-list-item-action>
-                                                                    <v-list-item-action v-else> <v-btn icon /> </v-list-item-action>
-                                                                </v-list-item>                                    
-                                                                                                                     
-                                                                <v-list-item style="min-height:30px;" @mouseenter="item.showAddChapter=true" @mouseleave="item.showAddChapter=false">                                                                    
-                                                                    <template  v-if="item.showAddChapter">
-                                                                        <v-icon small color="black" style="margin-right:5px;" @click="openDialog(null, index+1)">
-                                                                            mdi-plus
+                                                            <!-- <transition-group :key="`${index}_group`"> -->
+                                                            <v-list-item class="" :key="`${index}_dragItem`"  @dragenter="logData">
+                                                                <v-list-item-content class="nomargin nopadding" style="margin-right:10px;">
+                                                                    <v-card :key="`${index}_list`" style="margin: 5px 0px; border:1px solid #4CAF50; cursor:pointer"  outlined>
+                                                                        <v-list-item style="">                           
+                                                                            <v-list-item-content>                                                                                    
+                                                                                <v-list-item-title>
+                                                                                    {{item.title}} 
+                                                                                    <div style="float:right">
+                                                                                        <v-icon>
+                                                                                            mdi-play-circle-outline
+                                                                                        </v-icon>    
+                                                                                        <v-icon style="margin-left:5px;">
+                                                                                            mdi-script-text-outline
+                                                                                        </v-icon>                                                                                     
+                                                                                    </div>
+                                                                                </v-list-item-title>                                 
+                                                                                
+                                                                                <v-list-item-subtitle style="margin-top:3px;">
+                                                                                    <span v-for="(tag,index) in item.tags" :key="`${index}_tag`">
+                                                                                    #{{tag}}
+                                                                                    </span>
+                                                                                </v-list-item-subtitle>   
+                                                                            </v-list-item-content>
+                                                                        </v-list-item>
+                                                                    </v-card>
+                                                                </v-list-item-content>
+                                                                <v-list-item-action v-if="hover">                                                            
+                                                                    <v-btn icon @click="openDialog(item)">
+                                                                        <v-icon>
+                                                                            mdi-pencil
                                                                         </v-icon>
-                                                                        <v-list-item-content  style="border:2px dashed #d4d4d4; margin-right:10px;cursor:pointer" @click="openDialog(null, index+1)" />
-                                                                        <v-list-item-action> <v-btn icon style="height:0px;"></v-btn> </v-list-item-action>
-                                                                        <v-list-item-action> <v-btn icon style="height:0px;"></v-btn> </v-list-item-action>
-                                                                    </template>                                                                                                                                
-                                                                </v-list-item>                                                                                                
-                                                            </v-list>
+                                                                    </v-btn>
+                                                                </v-list-item-action>
+                                                                <v-list-item-action v-else> <v-btn icon /> </v-list-item-action>
+                                                                <v-list-item-action v-if="hover">              
+                                                                    <v-btn class="nomargin nopadding" icon @click="removeItem(index)">                                             
+                                                                        <v-icon>
+                                                                            mdi-trash-can
+                                                                        </v-icon>
+                                                                    </v-btn>
+                                                                </v-list-item-action>
+                                                                <v-list-item-action v-else> <v-btn icon /> </v-list-item-action>
+                                                            </v-list-item>                  
+                                                        <!-- </transition-group>                                           -->
                                                         </v-hover>  
+                                                        <v-hover v-slot:default="{ hover }" :key="`${index}_hover2`">
+                                                            <v-list-item style="min-height:10px;" v-if="false">
+                                                                <template v-if="hover" >
+                                                                    <v-icon small color="black" style="margin-right:5px;" @click="openDialog(null, index+1)">
+                                                                        mdi-plus
+                                                                    </v-icon>
+                                                                    <v-list-item-content  style="border:2px dashed #d4d4d4; margin-right:10px;cursor:pointer" @click="openDialog(null, index+1)" />
+                                                                    <v-list-item-action> <v-btn icon style="height:0px;"></v-btn> </v-list-item-action>
+                                                                    <v-list-item-action> <v-btn icon style="height:0px;"></v-btn> </v-list-item-action>
+                                                                </template>
+                                                                                                                                
+                                                            </v-list-item>
+                                                        </v-hover>
                                                     </template>
                                             </draggable>                                            
                                             <v-list-item style="min-height:10px; margin-top:10px;" >
@@ -88,6 +92,7 @@
                                                 <v-list-item-action> <v-btn icon style="height:0px;"></v-btn> </v-list-item-action>
                                                                                                                                 
                                                             </v-list-item>
+                                        </v-list>
                                     </v-flex>
                                 </v-layout>
                             </v-list> 
@@ -95,7 +100,7 @@
                             <v-list style="padding:20px 30px;">
                                 <v-layout>
                                     <v-spacer></v-spacer><v-spacer></v-spacer>
-                                    <v-btn depressed color="primary" @click="updateChapter">
+                                    <v-btn depressed color="primary" @click="ValidationForm">
                                         저장하기
                                     </v-btn>    
                                 </v-layout>
@@ -111,8 +116,8 @@
                             <v-list-item>                                       
                                 <v-list-item-content style="font-size:14px;">                                
                                     <div>
-                                        <v-icon color="primary" small>mdi-play-circle-outline</v-icon> <v-icon color="error" small>mdi-play-circle-outline</v-icon>는 <span class="primary--text">동영상</span>의 유무를 나타냅니다.<br>
-                                        <v-icon color="primary" small>mdi-script-text</v-icon> <v-icon color="error" small>mdi-script-text</v-icon>는 <span class="primary--text">위키문서</span>의 유무를 나타냅니다.
+                                        한 번 만들어진 <span class="primary--text">목차</span>는 <span class="error--text">삭제</span>할 수 없습니다.
+                                        불필요한 목차는 <span class="primary--text">백로그</span>를 통해 감춰보세요!
                                     </div>                                
                                 </v-list-item-content>                                    
                             </v-list-item>                            
@@ -195,7 +200,6 @@ export default {
     props: ['option'],
     data() {
         return {         
-            lectureId: 0,
             content: '',
             snackbar: false,
             msg: '',            
@@ -204,34 +208,26 @@ export default {
                 {
                     title:'PriorityQueue',
                     tags: ['자료구조', '알고리즘', '우선순위큐'],
-                    showAddChapter: false,
                 }
                 ,{
                     title:'Tree',
                     tags: ['자료구조', '알고리즘', '트리'],
-                    showAddChapter: false,
                 },
                 {
                     title:'Stack',
                     tags: ['자료구조', '알고리즘', '스택'],
-                    showAddChapter: false,
                 },
                 {
                     title:'Queue',
                     tags: ['자료구조', '알고리즘', '큐'],
-                    showAddChapter: false,
                 }
             ],
-            removeChapter: [],
 
             dialog: false,
             curItem: null,
             title: '',
             tags: [],
         }
-    },
-    created(){
-        this.lectureId = this.$route.params.id
     },
     methods: {
         logData(){
@@ -255,52 +251,24 @@ export default {
             }
         },
         openDialog(item, index){
-            if(item == null){
-                item = {
-                    "commondId": 0,
-                    "order": 0,
-                    "subId": 0,
-                    "title": '',
-                    "tags": [],
-                }
-                this.chapter.splice(index, 0, item);
-            }
+            // if(item == null){
+            //     item = {
+            //         title: '',
+            //         tags: [],
+            //         order: -1,
+            //     }
+            //     this.chapter.splice(index, 0, item);
+            //     //this.chapter.push(item)
+            // }
 
-            this.curItem = item;
-            this.title = item.title;
-            this.tags = item.tags;
-            this.dialog = true;
+            // this.curItem = item;
+            // this.title = item.title;
+            // this.tags = item.tags;
+            // this.dialog = true;
         },
         removeItem(index){
-            if(this.chapter[index].order != 0)
-                this.removeChapter.push(this.chapter[index])
             this.chapter.splice(index, 1)
         },
-        updateChapter() {
-            let request = []
-            for(let i in this.chapter) {
-                if(this.chapter[i].order != i+1){
-                    request.push({
-                        "commondId": this.chapter[i].commonId,
-                        "lectureId": this.lectureId,
-                        "order": i+1,
-                        "subId": this.chapter[i].subId,
-                        "tags": this.chapter[i].tags,
-                        "title": this.chapter[i].title,
-                    })
-                }
-            }
-            for(let i in this.removeChapter) {
-                request.push({
-                    "commondId": this.removeChapter[i].commonId,
-                    "lectureId": this.lectureId,
-                    "order": 0,
-                    "subId": this.removeChapter[i].subId,
-                    "tags": this.removeChapter[i].tags,
-                    "title": this.removeChapter[i].title,
-                })
-            }
-        }
     }
 }
 </script>
