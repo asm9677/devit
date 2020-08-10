@@ -32,10 +32,10 @@
                                         </v-list-item-action>
                                         <v-list-item-action>
                                             <v-icon v-if="item.type == 1">
-                                                mdi-movie
+                                                mdi-play-circle-outline
                                             </v-icon>
                                             <v-icon v-else>
-                                                mdi-wikipedia
+                                                mdi-script-text-outline
                                             </v-icon>
                                         </v-list-item-action>
                                     </v-list-item>                                    
@@ -44,14 +44,11 @@
                     </v-flex>                    
                     <v-flex v-show="option"  md4 lg4 xl4> 
                         <v-list style="position: sticky; top:60px;" dense>
-                            <v-list-item >                                                                  
-                                    <!-- 미리보기                                 -->
-                            </v-list-item>
                             <div style="
                                     width:100%; 
-                                    height:20em;    
-                                    margin-left:50px;
-                                    margin-top:30px;
+                                    height:30em;    
+                                    padding:30px 50px;
+                                    padding-right:10px;
                                 " 
                                 v-if="curItem"
                             >           
@@ -62,24 +59,24 @@
                                     </v-avatar> 
                                     <span> {{curItem.nickname}} {{curItem.requestDate | diffDate}} </span>
                                 </div>
-                                <div v-else style="overflow: hidden; height:500px;">                                    
+                                <div v-else style="overflow: hidden; height:85%;">                                    
                                     {{curItem.title}}<br>
                                     <v-avatar size=20>
                                         <v-img :src="curItem.thumbnailUrl" :lazy-src="curItem.thumbnailUrl"></v-img>
                                     </v-avatar> 
                                     <span> {{curItem.nickname}} {{curItem.requestDate | diffDate}} </span><p />
                                     <v-list-item-content>
-                                    <span v-html="curItem.content"> </span>
-                                        
+                                    <span v-html="curItem.content"> </span>                                        
                                     </v-list-item-content>
                                 </div>
                                 <div  style="
-                                    width:100%;height:100%; display: -webkit-box;
+                                    width:100%; display: -webkit-box;
                                     display: flex;
                                     -webkit-box-pack: center;
                                     justify-content: center;
                                     -webkit-box-align: center;
                                     align-items: center;
+                                    margin:30px 0px;
                                 ">                              
                                         <v-img v-if="curItem.type==1" :src="curItem.videothumbnailUrl">
                                             <template v-slot:placeholder>
@@ -92,7 +89,10 @@
                                                 </v-row>
                                             </template>
                                         </v-img>
-                                </div>                                
+                                </div>     
+                                <v-btn color="primary" block depressed style="margin:10px 0px;">적용</v-btn>  
+                                <v-btn color="primary" block depressed style="margin:10px 0px;">취소</v-btn>  
+                                <v-btn color="primary" block depressed style="margin:10px 0px;">상세보기</v-btn>  
                             </div>
                         </v-list>
                     </v-flex>

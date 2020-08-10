@@ -13,7 +13,7 @@
                                                     <template v-for="(item, index) in chapter">                                
                                                         <v-hover v-slot:default="{ hover }" :key="`${index}_hover1`">
                                                             <v-list class="nomargin nopadding">
-                                                                <v-list-item class="" :key="`${index}_dragItem`"  @dragenter="logData">
+                                                                <v-list-item class="" :key="`${index}_dragItem`">
                                                                     <v-list-item-content class="nomargin nopadding" style="margin-right:10px;">
                                                                         <v-card :key="`${index}_list`" style="margin: 5px 0px; border:1px solid #4CAF50; cursor:pointer"  outlined>
                                                                             <v-list-item style="">                           
@@ -21,10 +21,10 @@
                                                                                     <v-list-item-title>
                                                                                         {{item.title}} 
                                                                                         <div style="float:right">
-                                                                                            <v-icon>
+                                                                                            <v-icon color="primary lighten-1" v-show="!item.videoYn">
                                                                                                 mdi-play-circle-outline
                                                                                             </v-icon>    
-                                                                                            <v-icon style="margin-left:5px;">
+                                                                                            <v-icon style="margin-left:5px;" color="primary lighten-1" v-show="!item.wikiYn">
                                                                                                 mdi-script-text-outline
                                                                                             </v-icon>                                                                                     
                                                                                         </div>
@@ -111,8 +111,7 @@
                             <v-list-item>                                       
                                 <v-list-item-content style="font-size:14px;">                                
                                     <div>
-                                        <v-icon color="primary" small>mdi-play-circle-outline</v-icon> <v-icon color="error" small>mdi-play-circle-outline</v-icon>는 <span class="primary--text">동영상</span>의 유무를 나타냅니다.<br>
-                                        <v-icon color="primary" small>mdi-script-text</v-icon> <v-icon color="error" small>mdi-script-text</v-icon>는 <span class="primary--text">위키문서</span>의 유무를 나타냅니다.
+                                        
                                     </div>                                
                                 </v-list-item-content>                                    
                             </v-list-item>                            
@@ -167,7 +166,7 @@
                 <v-card-actions>
                     <v-layout>
                         <v-spacer></v-spacer>
-                        <v-btn depressed color="primary" @click="curItem.title=title; curItem.tags=tags; dialog=false;">
+                        <v-btn depressed color="primary" @click="curItem.title=title; curItem.tags=tags; curItem.order=0; dialog=false;">
                             저장하기
                         </v-btn>    
                         <div style="margin-right:5px"></div>
@@ -200,27 +199,6 @@ export default {
             snackbar: false,
             msg: '',            
             chapter: [
-                
-                {
-                    title:'PriorityQueue',
-                    tags: ['자료구조', '알고리즘', '우선순위큐'],
-                    showAddChapter: false,
-                }
-                ,{
-                    title:'Tree',
-                    tags: ['자료구조', '알고리즘', '트리'],
-                    showAddChapter: false,
-                },
-                {
-                    title:'Stack',
-                    tags: ['자료구조', '알고리즘', '스택'],
-                    showAddChapter: false,
-                },
-                {
-                    title:'Queue',
-                    tags: ['자료구조', '알고리즘', '큐'],
-                    showAddChapter: false,
-                }
             ],
             removeChapter: [],
 
@@ -231,12 +209,10 @@ export default {
         }
     },
     created(){
-        this.lectureId = this.$route.params.id
+        this.lectureId = this.$route.params.id;
+        this.getIndexList();
     },
     methods: {
-        logData(){
-            1;
-        },
         goto(target, msg){
             this.$vuetify.goTo(target, {
                 duration: 300,
@@ -246,22 +222,16 @@ export default {
             this.msg = msg;
             this.snackbar = true;
         },
-        ValidationForm(){
-            if(!this.content){          
-                this.goto('#content', '설명을 입력해주세요.')
-                this.$refs.content.focus();                                
-            }else{
-                
-            }
-        },
         openDialog(item, index){
             if(item == null){
                 item = {
-                    "commondId": 0,
+                    "commonId": 0,
                     "order": 0,
                     "subId": 0,
                     "title": '',
                     "tags": [],
+                    "videoYn": false,
+                    "wikiYn": false,
                 }
                 this.chapter.splice(index, 0, item);
             }
@@ -279,11 +249,11 @@ export default {
         updateChapter() {
             let request = []
             for(let i in this.chapter) {
-                if(this.chapter[i].order != i+1){
+                if(this.chapter[i].order != parseInt(i)+1){
                     request.push({
-                        "commondId": this.chapter[i].commonId,
+                        "commonId": this.chapter[i].commonId,
                         "lectureId": this.lectureId,
-                        "order": i+1,
+                        "order": parseInt(i)+1,
                         "subId": this.chapter[i].subId,
                         "tags": this.chapter[i].tags,
                         "title": this.chapter[i].title,
@@ -292,14 +262,36 @@ export default {
             }
             for(let i in this.removeChapter) {
                 request.push({
-                    "commondId": this.removeChapter[i].commonId,
+                    "commonId": this.removeChapter[i].commonId,
                     "lectureId": this.lectureId,
                     "order": 0,
                     "subId": this.removeChapter[i].subId,
                     "tags": this.removeChapter[i].tags,
                     "title": this.removeChapter[i].title,
                 })
-            }
+            }                        
+            
+            this.removeChapter = []
+            http.axios.post('/api/v1/lectures/sub', request).then(({data}) => {
+            }).finally(() => {
+                this.getIndexList();
+            })
+        },
+        getIndexList() {
+            http.axios.get(`/api/v1/lectures/subs/${this.lectureId}`).then(({data}) => {
+                this.chapter = [];
+                for(let i in data.result){
+                    this.chapter.push({
+                        "commonId": data.result[i].commonId,
+                        "order": parseInt(data.result[i].order),
+                        "subId": data.result[i].subId,
+                        "tags": data.result[i].tags ? data.result[i].tags.split(',') : [],
+                        "title": data.result[i].title,
+                        "videoYn": data.result[i].videoYn,
+                        "wikiYn": data.result[i].wikiYn,
+                    })
+                }
+            })
         }
     }
 }
@@ -335,7 +327,7 @@ export default {
     }
 
     .v-list-item__title{
-        font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-family:-apple-system, "Noto Sans KR",BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
         font-size:16px;
         font-weight: 500;
     }
