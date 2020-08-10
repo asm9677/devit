@@ -23,6 +23,8 @@ import com.ssafy.devit.model.request.BoardUpdateRequest;
 import com.ssafy.devit.model.request.BoardUploadRequest;
 import com.ssafy.devit.model.request.BoardWithLectureRequest;
 import com.ssafy.devit.model.user.User;
+import com.ssafy.devit.model.user.UserAuthDetails;
+import com.ssafy.devit.model.user.UserResponse;
 import com.ssafy.devit.service.BoardService;
 import com.ssafy.devit.service.UserService;
 
@@ -198,20 +200,38 @@ public class BoardController {
 	@ApiOperation(value = "강의 관련 질문 게시물 등록")
 	public ResponseEntity<CommonResponse> createBoardWithLecture(@RequestBody BoardWithLectureRequest request) throws Exception{
 		log.info(">> createBoardWithLecture <<");
-		
-		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		final CommonResponse result = new CommonResponse();
 		
 		ResponseEntity<CommonResponse> response = null;
 		BoardWithLectureRequest boardWithLectureRequest = null;
 		
-		boardWithLectureRequest = new BoardWithLectureRequest(request.getLectureId(), request.getSubId(), user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardType(), request.getBoardCount());
+//		boardWithLectureRequest = new BoardWithLectureRequest(request.getLectureId(), request.getSubId(), user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardType(), request.getBoardCount());
+		boardWithLectureRequest = new BoardWithLectureRequest(request.getLectureId(), request.getSubId(), user.getUserId(), request.getBoardTitle(), request.getBoardContent());
 		
 		try {
 			boardService.createBoardWithLecture(boardWithLectureRequest);
 			 // bid에 해당하는 게시글을 조회한다.
 			result.msg = "success";
 			result.result = boardWithLectureRequest.getBoardId();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return response;
+	}	
+	
+	@GetMapping("board/lecture")
+	@ApiOperation(value = "강의 관련 게시글 목록 조회")
+	public ResponseEntity<CommonResponse> lectureQnaList(@RequestParam("lectureId") long lectureId, @RequestParam("subId") long subId) throws Exception {
+		log.info(">> lecture qna list info <<");
+
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			result.msg = "success";
+			result.result = boardService.lectureQnaList(lectureId, subId);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

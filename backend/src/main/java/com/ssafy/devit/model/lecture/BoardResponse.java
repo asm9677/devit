@@ -6,6 +6,7 @@ public class BoardResponse {
 	private long boardId;
 	private long userId;
 	private String userName;
+	private String profile;
 	private String boardTitle;
 	private String boardContent;
 	private long boardType;
@@ -18,11 +19,12 @@ public class BoardResponse {
 	
 	public BoardResponse() {}
 	
-	public BoardResponse(long boardId, long userId, String nickName, String boardTitle, String boardContent, 
+	public BoardResponse(long boardId, long userId, String nickName, String profile, String boardTitle, String boardContent, 
 			long boardType, Date boardCreated, Date boardModified, long boardCount, long replyCount, String isMine, long pageCnt){
 		this.boardId = boardId;
 		this.userId = userId;
 		this.userName = nickName;
+		this.profile = profile;
 		this.boardTitle = boardTitle;
 		this.boardContent = boardContent;
 		this.boardType = boardType;
@@ -39,6 +41,14 @@ public class BoardResponse {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
 	}
 
 	public long getBoardType() {

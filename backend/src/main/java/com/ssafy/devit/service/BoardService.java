@@ -14,4 +14,5 @@ public interface BoardService {
 	public List<BoardResponse> listinfo(long startPage, long type, long itemsperpage, String searchselect, String searchtxt) throws Exception;
 
 	public void createBoardWithLecture(BoardWithLectureRequest boardWithLectureRequest) throws Exception;
+	public List<BoardResponse> lectureQnaList(long lectureId, long subId) throws Exception;
 }

@@ -68,4 +68,15 @@ public class BoardServicelmpl implements BoardService {
 		}
 		boardRepository.createBoardWithLecture(boardWithLectureRequest);
 	};
+	
+	@Override
+	public List<BoardResponse> lectureQnaList(long lectureId, long subId) throws Exception{
+		if(lectureId < 1) {
+			throw new Exception("잘못된 lectureId가 나왔습니다.");
+		}else if(subId < 1) {
+			throw new Exception("잘못된 subId가 나왔습니다.");
+		}
+		
+		return boardRepository.lectureQnaList(lectureId, subId);
+	}
 }
