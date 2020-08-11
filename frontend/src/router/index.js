@@ -19,6 +19,7 @@ import SearchList from '@/components/lecture/view/SearchList.vue'
 
 import MyBoard from '@/components/myactivity/MyBoard.vue'
 
+
 Vue.use(VueRouter)
 
 

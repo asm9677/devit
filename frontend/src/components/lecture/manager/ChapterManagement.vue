@@ -129,8 +129,7 @@
             v-model="snackbar"
             timeout="1500"
             color="primary"        
-            right
-            
+            right            
         >
             {{msg}}
         </v-snackbar>

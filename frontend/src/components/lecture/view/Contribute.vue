@@ -1,122 +1,209 @@
 <template>
-    <div style="width:100%">
-        <v-tabs v-model="tabs" icons-and-text grow hide-slider color="green">
+    <v-dialog v-model="dialog" max-width="768px" style="" hide-overlay>
+        <v-tabs v-model="tabs" icons-and-text grow hide-slider color="success">
             <v-tab>
-                <span>비디오</span>
+                <span>영상</span>
                 <v-icon>mdi-movie</v-icon>                
             </v-tab>
-            <v-tab @click="dialog=true">
+            <v-tab>
                 <span>위키</span>
                 <v-icon>mdi-wikipedia</v-icon>
             </v-tab>
             <v-tab-item> 
-                <v-list :dark="darkOption" style="height:2000px">               
-                    <v-list-item>
-                        <v-list-item-content>
-                            <v-list-item-title>
-                                <v-text-field dense outlined placeholder="제목">
-                                </v-text-field>
-                            </v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>                    
-                    <v-list-item>
-                        <v-list-item-content>
-                            <v-list-item-title>
-                                <div style="width:100%; height:16em; border:2px dashed gray; cursor:pointer;" @click="clickVideo($event)" id="video">                            
-                                    <input type="file"
-                                        v-show="false"				                                          
-                                        accept="video/mp4,video/x-m4v,video/*"
-                                        @change="changeVideo"
-                                        ref="file" 
-                                        id="file"
-                                    />
-                                    <div v-show="!thumbnailUrl" style="
-                                        width:100%;height:100%; display: -webkit-box;
-                                        display: flex;
-                                        -webkit-box-pack: center;
-                                        justify-content: center;
-                                        -webkit-box-align: center;
-                                        align-items: center;
-                                    ">                                            
-                                        <v-icon style="font-size:40px;" color='success'> mdi-movie-open</v-icon>
-                                        <div>                                        
-                                            <div class="success--text" sytle="display:block;font-size:14px;">비디오 업로드</div>
-                                            <div style="font-size:14px;">클릭해서 비디오를 선택하세요.</div>
-                                        </div>
-                                    </div>
-                                    <v-img v-show="thumbnailUrl" :src="`http://i3a101.p.ssafy.io/images/${thumbnailUrl}`" min-height="100%" min-width="100%"/>                                        
+                <v-stepper v-model="step" vertical non-linear>
+                    <v-stepper-step :complete="playerUrl != ''" step="1">
+                        영상 업로드
+                    </v-stepper-step>
+                
+                    <v-stepper-content step="1">
+                        <div style="width:100%; height:25em; border:2px dashed gray; cursor:pointer;" @click="clickVideo($event)" id="video">                            
+                            <input type="file"
+                                v-show="false"				                                          
+                                accept="video/mp4,video/x-m4v,video/*"
+                                @change="changeVideo"
+                                ref="file" 
+                                id="file"
+                            />
+                            <div v-show="playerUrl == ''" style="
+                                width:100%;height:100%; display: -webkit-box;
+                                display: flex;
+                                -webkit-box-pack: center;
+                                justify-content: center;
+                                -webkit-box-align: center;
+                                align-items: center;
+                            ">                                            
+                                <v-icon style="font-size:40px;" color='success'> mdi-movie-open</v-icon>
+                                <div>                                        
+                                    <div class="success--text" sytle="display:block;font-size:14px;">비디오 업로드</div>
+                                    <div style="font-size:14px;">클릭해서 비디오를 선택하세요.</div>
                                 </div>
-                            </v-list-item-title> 
-                        </v-list-item-content>
-                    </v-list-item>
-                    <v-list-item style="margin-top:15px;">
-                        <v-list-item-content>
-                        </v-list-item-content>
-                        <v-list-item-action>
-                            <v-btn outlined color="success">
-                                요청하기
-                            </v-btn>
-                        </v-list-item-action>
-                    </v-list-item>
-                </v-list>
-            </v-tab-item>       
-            <v-tab-item>                
-                    <v-list :dark="darkOption" style="height:2000px">
-                    </v-list>
-                    <v-dialog v-model="dialog" persistent max-width="960" overlay-opacity="0">
-                        <v-card tile>
-                            <v-list :dark="darkOption" >
-                                <v-list-item>
-                                    <v-list-item-content>
-                                        <v-list-item-title>
-                                            위키
-                                        </v-list-item-title>                                                            
-                                    </v-list-item-content>
-                                    <v-list-item-action style="cursor:pointer" @click="dialog=false">
-                                        <v-icon>
-                                            mdi-close
-                                        </v-icon>
-                                    </v-list-item-action>
-                                </v-list-item>     
-                                <v-list-item>
-                                    <v-list-item-content>
-                                        <v-textarea outlined auto-grow placeholder="텍스트 에디터 적용 예정입니다.">
-
-                                        </v-textarea>
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-list-item style="margin-top:15px;">
-                                    <v-list-item-content>
-                                    </v-list-item-content>
-                                    <v-list-item-action>
-                                        <v-btn outlined color="success">
-                                            요청하기
-                                        </v-btn>
-                                    </v-list-item-action>
-                                    <v-list-item-action>
-                                        <v-btn outlined color="success">
-                                            미리보기
-                                        </v-btn>
-                                    </v-list-item-action>
-                                </v-list-item>
-                            </v-list>
-                        </v-card>
+                            </div>                            
+                            <video
+                                ref="video"
+                                id="livestation-player"
+                                class="video-js vjs-default-skin vjs-big-play-centered"
+                                controls
+                                preload="auto"
+                                data-setup='{}'
+                                style="width:100%;min-height:500px;"   
+                                v-show="playerUrl != ''"
+                            >
+                                <source :src="`http://i3a101.p.ssafy.io/images/${playerUrl}`"></source>
+                            </video>   
+                        </div>
+                    </v-stepper-content>
+                
+                    <v-stepper-step :complete="thumbnailUrl != ''" step="2">썸네일 업로드</v-stepper-step>
                         
-                    </v-dialog>
+                    <v-stepper-content step="2">
+                        <div style="width:100%; height:25em; cursor:pointer;" :style="{'border' : (!thumbnailUrl ? '2px dashed gray': '' )}" @click="clickImage($event)" id="image">                            
+                            <input type="file"
+                                v-show="false"				                                          
+                                accept="image/png, image/jpeg, image/bmp"
+                                @change="changeImage"
+                                ref="file2" 
+                                id="file2"
+                            />
+                            <div v-if="!thumbnailUrl" style="
+                                width:100%;height:100%; display: -webkit-box;
+                                display: flex;
+                                -webkit-box-pack: center;
+                                justify-content: center;
+                                -webkit-box-align: center;
+                                align-items: center;
+                            ">                                            
+                                <v-icon style="font-size:40px;" color='primary'> mdi-image</v-icon>
+                                <div>                                        
+                                    <div class="primary--text" sytle="display:block;font-size:14px;">이미지 업로드</div>
+                                    <div style="font-size:14px;">클릭해서 썸네일을 선택하세요.</div>
+                                </div>
+                            </div>
+                            <v-img v-else="thumbnailUrl" :src="`http://i3a101.p.ssafy.io/images/${thumbnailUrl}`" min-height="100%" min-width="100%" aspect-ratio="1.7"/>
+                        </div>
+                    </v-stepper-content>
+                    <v-stepper-step :complete="title != ''" step="3">제목 정하기</v-stepper-step>
+                        
+                    <v-stepper-content step="3">
+                        <v-text-field outlined dense placeholder="제목을 정해보세요!" v-model="title">
+                        </v-text-field>
+                    </v-stepper-content>
+                    <v-layout>
+                        <v-spacer />
+                        <v-btn color="success" outlined @click="requestVideo">
+                            요청하기
+                        </v-btn>
+                        <v-btn color="normal" outlined style="margin-left:20px; margin-right:28px;" @click="">
+                            미리보기
+                        </v-btn>
+                    </v-layout>
+                </v-stepper>
+            </v-tab-item>       
+            <v-tab-item>            
+                <v-card tile>
+                    <v-list :dark="darkOption" >
+                        <v-list-item>
+                            <v-list-item-content>
+                                <v-list-item-title>
+                                    위키
+                                </v-list-item-title>                                                            
+                            </v-list-item-content>
+                        </v-list-item>     
+                        <v-list-item>
+                            <v-list-item-content>
+                                <v-textarea outlined auto-grow placeholder="텍스트 에디터 적용 예정입니다." :rows="10" v-model="content" />
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item style="margin-top:15px;">
+                            <v-list-item-content>
+                            </v-list-item-content>
+                            <v-list-item-action>
+                                <v-btn outlined color="success" @click="requestWiki">
+                                    요청하기
+                                </v-btn>
+                            </v-list-item-action>
+                            <v-list-item-action>
+                                <v-btn outlined color="success">
+                                    미리보기
+                                </v-btn>
+                            </v-list-item-action>
+                        </v-list-item>
+                    </v-list>
+                </v-card>
             </v-tab-item> 
         </v-tabs>
-    </div>
+        <v-snackbar
+            v-model="isUpload"
+            timeout="-1"
+            right            
+            tile
+            color="white"
+            light
+            height="20"
+            style="border:1px solid #d4d4d4"
+        
+        >
+            <v-list-item>
+                <v-list-item-content>
+                    <v-list-item-title><v-icon color="red">
+                        mdi-movie
+                    </v-icon>{{msg}}
+
+                    </v-list-item-title>
+                </v-list-item-content>
+                <v-list-item-action>
+
+                <v-progress-circular
+                    :value="percentCompleted"
+                    size="20"
+                    width="3"
+                    color="primary"
+                    v-show="step == 1"
+                />
+                <v-icon color="success" v-show="step == 2">
+                    mdi-check-circle
+                </v-icon>
+                </v-list-item-action>
+            </v-list-item>
+        </v-snackbar>
+        <v-snackbar
+            v-model="snackbar"
+            right
+            timeout="1500"
+            color="primary"        
+        >
+            {{msg}}
+        </v-snackbar>
+    </v-dialog>
 </template>
 
 <script>
+import http from "@/util/http_common.js";
+import axios from "axios";
 export default {
-    props:['darkOption'],
+    props:['darkOption', 'dialog', 'lectureId', 'subId'],
+    watch: {
+        dialog() {
+            if(this.dialog == false)
+                this.$emit('closeDialog')
+        }
+    },
     data(){
         return {
             tabs: 0,
+            step: 1,
+
+            playTime: '',
+            playerUrl: '',
             thumbnailUrl: '',
-            videoUrl: '',
-            dialog: false,
+            
+            isUpload: false,
+            percentCompleted: 0,
+
+            title: '',
+            content: '',
+
+            snackbar: false,
+            msg: '',
         }
     },
     methods: {
@@ -124,12 +211,141 @@ export default {
             $("#file").click();
         },
         changeVideo(e){	
-            
+            var frm = new FormData();
+            frm.append("file", document.getElementById("file").files[0]);
+
+            var fileValue = this.$refs.file.value.split("\\");
+            var fileName = fileValue[fileValue.length-1];
+            this.msg = fileName;
+
+            let config = {
+                onUploadProgress: this.updatePercentCompleted
+            };
+
+            this.isUpload = true;
+            axios.post('http://i3a101.p.ssafy.io:8080/api/v1/file/upload', frm, config, {
+                headers: {
+                    'accept': '*/*',
+                    'X-AUTH-TOKEN': this.$router.app.$store.state.token,
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(({data}) => {
+                var setPlayTime = this.setPlayTime;
+                this.playerUrl = data.result;
+                var myPlayer = videojs('livestation-player');  
+                myPlayer.src({src: `http://i3a101.p.ssafy.io/images/${this.playerUrl}`});
+                myPlayer.ready(function() {
+                    var key = setInterval(() => {
+                        if(myPlayer.duration()){
+                            setPlayTime(myPlayer.duration())
+                            console.dir(myPlayer.duration())
+                            clearInterval(key);
+                        }else{
+                            console.dir('zz')
+                        }
+                    }, 100)
+                });
+                
+            })
+            .catch((error) => {
+                console.dir(error)
+            }).finally(()=>{
+                setTimeout(this.exitUpload, 1000)
+            })
+            this.$refs.file.value = ''
         },
+
+        clickImage(){
+            $("#file2").click();
+        },
+        changeImage(e){	
+            var frm = new FormData();
+            frm.append("file", document.getElementById("file2").files[0]);
+
+            axios.post('http://i3a101.p.ssafy.io:8080/api/v1/file/upload', frm, {
+                headers: {
+                    'accept': '*/*',
+                    'X-AUTH-TOKEN': this.$router.app.$store.state.token,
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(({data}) => {
+                this.thumbnailUrl = data.result;
+                this.snackbar = true;
+                this.msg = '이미지가 등록되었습니다.'
+                this.step = 3;
+            })
+            .catch((error) => {
+                console.dir(error)
+            }).finally(()=>{
+            })
+            this.$refs.file2.value = ''
+        },
+
+        requestWiki(){
+            http.axios.post('/api/v1/lectures/sub/history', {
+                "lectureId": this.lectureId,
+                "subId": this.subId,
+                "reqType": "wiki",
+                "wikiContent": this.content,
+                "wikiContentHtml": this.content,
+            }).then(({data}) => {
+                console.dir(data)
+                this.dialog = false;
+                this.snackbar = true;
+                this.msg = '정상적으로 요청되었습니다.';
+            })
+        },
+        updatePercentCompleted(progressEvent){
+            this.percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total )
+        },
+        requestVideo() {
+            if(this.playerUrl == '') {
+                this.snackbar = true;
+                this.msg = '동영상을 올려주세요!'
+                this.step = 1;
+            }else if(this.thumbnailUrl == '') {
+                this.snackbar = true;
+                this.msg = '썸네일을 올려주세요!'
+                this.step = 2;
+            }else if(this.title == ''){
+                this.snackbar = true;
+                this.msg = '제목을 입력해주세요!'
+                this.step = 3;
+            }else{
+                http.axios.post('/api/v1/lectures/sub/history', {
+                    "lectureId": this.lectureId,
+                    "subId": this.subId,
+                    "reqType": "video",
+                    "playTime": this.playTime,
+                    "playerUrl": this.playerUrl,
+                    "thumbnailUrl": this.thumbnailUrl,
+                    "title": this.title,
+                }).then(({data}) => {
+                    this.dialog = false;
+                    this.snackbar = true;
+                    this.msg = '정상적으로 요청되었습니다.';
+                })
+            }
+        },
+        exitUpload(){
+            this.step = 2;
+            setTimeout(this.exitUploadDelay, 2000)
+        },
+        exitUploadDelay() {
+            this.isUpload = false;
+            this.percentCompleted = 0;
+        },
+        setPlayTime(duration){
+            duration = parseInt(duration);
+            this.playTime = parseInt(duration / 60) + ":" + (duration % 60);
+        }
     }
 }
 </script>
 
-<style>
+<style scoped>
+    .nomargin{
+        margin:0px;
+    }
 
 </style>

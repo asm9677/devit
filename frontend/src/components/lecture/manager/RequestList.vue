@@ -11,30 +11,30 @@
                                     <v-divider :key="`${index}_divider`"/>
                                     <v-list-item :key="`${index}_memberList`" link @click="curItem=item">
                                         <v-list-item-avatar size="30">
-                                            <v-img :src="item.thumbnailUrl" :lazy-src="item.thumbnailUrl"></v-img>
+                                            <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                                         </v-list-item-avatar>
                                         <v-list-item-content>
                                             <v-list-item-title>
-                                                <b>{{item.title}}</b>&nbsp;      
+                                                <b>{{item.subTitle}}</b>&nbsp;      
                                             </v-list-item-title>                                               
                                             <v-list-item-subtitle >
-                                                <span> {{item.nickname}} {{item.requestDate | diffDate}}</span>
+                                                <span> {{item.nickname}} {{item.created | diffDate}}</span>
                                             </v-list-item-subtitle>                                                
                                         </v-list-item-content>
                                         
                                         <v-list-item-action>
-                                            <v-icon color="green" v-if="item.state==1">
+                                            <v-icon color="green" v-if="item.acceptYn=='Y'">
                                                 mdi-check-circle-outline
                                             </v-icon>
-                                            <v-icon color="red" v-else-if="item.state==2">
+                                            <v-icon color="red" v-else-if="item.acceptYn=='N'">
                                                 mdi-close-circle-outline
                                             </v-icon>
                                         </v-list-item-action>
                                         <v-list-item-action>
-                                            <v-icon v-if="item.type == 1">
+                                            <v-icon v-if="item.reqType == 'video'">
                                                 mdi-play-circle-outline
                                             </v-icon>
-                                            <v-icon v-else>
+                                            <v-icon v-else-if="item.reqType == 'wiki'">
                                                 mdi-script-text-outline
                                             </v-icon>
                                         </v-list-item-action>
@@ -52,21 +52,21 @@
                                 " 
                                 v-if="curItem"
                             >           
-                                <div v-if="curItem.type==1">
-                                    {{curItem.title}} - {{curItem.videoTitle}}<br>
+                                <div v-if="curItem.reqType == 'video'">
+                                    {{curItem.subTitle}} - {{curItem.hisTitle}}<br>
                                     <v-avatar size=20>
-                                        <v-img :src="curItem.thumbnailUrl" :lazy-src="curItem.thumbnailUrl"></v-img>
+                                        <v-img :src="'http://i3a101.p.ssafy.io/images/' + curItem.profile"></v-img>
                                     </v-avatar> 
-                                    <span> {{curItem.nickname}} {{curItem.requestDate | diffDate}} </span>
+                                    <span> {{curItem.nickname}} {{curItem.created | diffDate}} </span>
                                 </div>
                                 <div v-else style="overflow: hidden; height:85%;">                                    
-                                    {{curItem.title}}<br>
+                                    {{curItem.subtitle}}<br>
                                     <v-avatar size=20>
-                                        <v-img :src="curItem.thumbnailUrl" :lazy-src="curItem.thumbnailUrl"></v-img>
+                                        <v-img :src="'http://i3a101.p.ssafy.io/images/' + curItem.profile"></v-img>
                                     </v-avatar> 
-                                    <span> {{curItem.nickname}} {{curItem.requestDate | diffDate}} </span><p />
+                                    <span> {{curItem.nickname}} {{curItem.created | diffDate}} </span><p />
                                     <v-list-item-content>
-                                    <span v-html="curItem.content"> </span>                                        
+                                    <span v-html="curItem.wikiContentHtml"> </span>                                        
                                     </v-list-item-content>
                                 </div>
                                 <div  style="
@@ -78,7 +78,8 @@
                                     align-items: center;
                                     margin:30px 0px;
                                 ">                              
-                                        <v-img v-if="curItem.type==1" :src="curItem.videothumbnailUrl">
+                                
+                                        <v-img v-if="curItem.reqType == 'video'" :src="'http://i3a101.p.ssafy.io/images/' + curItem.thumbnailUrl">
                                             <template v-slot:placeholder>
                                                 <v-row
                                                 class="fill-height ma-0"
@@ -90,8 +91,8 @@
                                             </template>
                                         </v-img>
                                 </div>     
-                                <v-btn color="primary" block depressed style="margin:10px 0px;">적용</v-btn>  
-                                <v-btn color="primary" block depressed style="margin:10px 0px;">취소</v-btn>  
+                                <v-btn color="primary" block depressed style="margin:10px 0px;" @click="requestProcess(curItem,'Y')">적용</v-btn>  
+                                <v-btn color="primary" block depressed style="margin:10px 0px;" @click="requestProcess(curItem,'N')">취소</v-btn>  
                                 <v-btn color="primary" block depressed style="margin:10px 0px;">상세보기</v-btn>  
                             </div>
                         </v-list>
@@ -111,9 +112,12 @@ export default {
     watch: {
     },
     data() {
-        return {         
+        return {
+            lectureId: 0,
+            page:0,
+
             items: [],
-            curItem: null
+            curItem: null,
         }
     },
     filters: {
@@ -145,25 +149,24 @@ export default {
         }
     },
     created() {
-        for(let i = 1; i <= 20; i++)
-            this.addItem(i);
+        this.lectureId = this.$route.params.id;
+        this.initRequestList();
     },
     methods: {
-        addItem(i){
-            this.items.push({
-                "lectureId": i,
-                "subIndexId": i,
-                "type": i%3 ? 1 : 2 ,
-                "title": '다 같이 배우는 파이썬',
-                "thumbnailUrl": `https://picsum.photos/500/300?image=${i*3}`,
-                "nickname": "미용쓰기",
-                "videoTitle": 'IDE 설치 및 Hello World 출력',
-                "videothumbnailUrl": `https://picsum.photos/500/300?image=${i*3 + 2}`,
-                "content": `<h3 style="box-sizing: inherit; margin: 2rem 0px 0.6666em; padding: 0px; font-size: 1.5rem; color: #333333; line-height: 1.2;">눈앞에 다가온 AI 시대,<br style="box-sizing: inherit;">우리는 어떻게 준비해야 할까요?</h3><p style="font-size: medium; font-weight: 400;">1. 엔지니어링 리터러시: 최소한의 알고리즘(파이썬)은 반드시 알아야 한다.&nbsp;<br>2. 데이터 활용능력: 눈앞에 데이터가 있으면, 어떤 모델을 사용해서 어떤 결과를 낼 수 있는지 끊임없이 생각하는 능력이 중요하다.&nbsp;<br>3. 자동화 도전 습관: 내가 하는 일에서 어떤 작업을 자동화할 수 있는지 시도해보는 습관 기르기.&nbsp;&nbsp;</p><p style="font-size: medium; font-weight: 400;">문과 전공자도 엑셀 배우듯 파이썬 배우길 추천합니다.&nbsp;<br>앞으로 파이썬은 모든 일의 필요조건이 될 거니까요.&nbsp;</p><p style="font-size: medium; font-weight: 400;">“어떤 데이터를 모아서 어떻게 축적하고, AI를 활용할지 생각하는 능력이야말로 사람이 할 일이다.”<br><br><span style="color: #3598db;"><a href="https://news.sbs.co.kr/news/endPage.do?news_id=N1005538602%20출처 : SBS 뉴스  원본 링크 : https://news.sbs.co.kr/news/endPage.do?news_id=N1005538602&amp;plink=COPYPASTE&amp;cooper=SBSNEWSEND" target="_blank" rel="noopener noreferrer"><span style="text-decoration: underline;"><em>(출처 : AI 모른 척하다간 역사상 가장 큰 소외 경험하게 될 것)</em></span></a></span></p><h3 style="box-sizing: inherit; margin: 2rem 0px 0.6666em; padding: 0px; font-size: 1.5rem; color: #333333; line-height: 1.2;">눈앞에 다가온 AI 시대,<br style="box-sizing: inherit;">우리는 어떻게 준비해야 할까요?</h3><p style="font-size: medium; font-weight: 400;">1. 엔지니어링 리터러시: 최소한의 알고리즘(파이썬)은 반드시 알아야 한다.&nbsp;<br>2. 데이터 활용능력: 눈앞에 데이터가 있으면, 어떤 모델을 사용해서 어떤 결과를 낼 수 있는지 끊임없이 생각하는 능력이 중요하다.&nbsp;<br>3. 자동화 도전 습관: 내가 하는 일에서 어떤 작업을 자동화할 수 있는지 시도해보는 습관 기르기.&nbsp;&nbsp;</p><p style="font-size: medium; font-weight: 400;">문과 전공자도 엑셀 배우듯 파이썬 배우길 추천합니다.&nbsp;<br>앞으로 파이썬은 모든 일의 필요조건이 될 거니까요.&nbsp;</p><p style="font-size: medium; font-weight: 400;">“어떤 데이터를 모아서 어떻게 축적하고, AI를 활용할지 생각하는 능력이야말로 사람이 할 일이다.”<br><br><span style="color: #3598db;"><a href="https://news.sbs.co.kr/news/endPage.do?news_id=N1005538602%20출처 : SBS 뉴스  원본 링크 : https://news.sbs.co.kr/news/endPage.do?news_id=N1005538602&amp;plink=COPYPASTE&amp;cooper=SBSNEWSEND" target="_blank" rel="noopener noreferrer"><span style="text-decoration: underline;"><em>(출처 : AI 모른 척하다간 역사상 가장 큰 소외 경험하게 될 것)</em></span></a></span></p><h3 style="box-sizing: inherit; margin: 2rem 0px 0.6666em; padding: 0px; font-size: 1.5rem; color: #333333; line-height: 1.2;">눈앞에 다가온 AI 시대,<br style="box-sizing: inherit;">우리는 어떻게 준비해야 할까요?</h3><p style="font-size: medium; font-weight: 400;">1. 엔지니어링 리터러시: 최소한의 알고리즘(파이썬)은 반드시 알아야 한다.&nbsp;<br>2. 데이터 활용능력: 눈앞에 데이터가 있으면, 어떤 모델을 사용해서 어떤 결과를 낼 수 있는지 끊임없이 생각하는 능력이 중요하다.&nbsp;<br>3. 자동화 도전 습관: 내가 하는 일에서 어떤 작업을 자동화할 수 있는지 시도해보는 습관 기르기.&nbsp;&nbsp;</p><p style="font-size: medium; font-weight: 400;">문과 전공자도 엑셀 배우듯 파이썬 배우길 추천합니다.&nbsp;<br>앞으로 파이썬은 모든 일의 필요조건이 될 거니까요.&nbsp;</p><p style="font-size: medium; font-weight: 400;">“어떤 데이터를 모아서 어떻게 축적하고, AI를 활용할지 생각하는 능력이야말로 사람이 할 일이다.”<br><br><span style="color: #3598db;"><a href="https://news.sbs.co.kr/news/endPage.do?news_id=N1005538602%20출처 : SBS 뉴스  원본 링크 : https://news.sbs.co.kr/news/endPage.do?news_id=N1005538602&amp;plink=COPYPASTE&amp;cooper=SBSNEWSEND" target="_blank" rel="noopener noreferrer"><span style="text-decoration: underline;"><em>(출처 : AI 모른 척하다간 역사상 가장 큰 소외 경험하게 될 것)</em></span></a></span></p>`,
-                "requestDate": '2020-08-06',
-                "state": i%3 + 1
-            })
+        initRequestList() {
+            http.axios.get(`/api/v1/lectures/historys?acceptType=all&lectureId=${this.lectureId}&reqType=video,wiki&startPage=${this.page}`)
+                .then(({data}) => {
+                        this.items = data.result;
+                        console.dir(this.items)
+                    })
         },
+        requestProcess(item, type){
+            http.axios.put(`/api/v1/lectures/historys?subId=${item.subId}&subHisId=${item.subHisId}&type=${type}&reqType=${item.reqType}`).then(({data}) => {
+                console.dir(data)
+            }).finally(() => {
+                this.initRequestList();
+            })
+        }
     }
 }
 </script>
@@ -172,11 +175,13 @@ export default {
     * {
         font-weight: 400;
     }
+
     h1 {
         font-size: 26px;
         font-weight: 500;
         margin-bottom:30px;
     }
+
     .v-text-field{        
       font-size:16px;
       width: 120px;
@@ -186,8 +191,8 @@ export default {
 
     b{
         font-size:13px;
-        
     }
+
     span{
         font-size:11px;
     }

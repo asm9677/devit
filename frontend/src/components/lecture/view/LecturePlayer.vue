@@ -66,22 +66,7 @@
                     <span>질문</span>
                 </v-tooltip>
 
-                <v-tooltip left color="primary" open-on-hover open-on-focus open-on-click>
-                    <template v-slot:activator="{ on, attrs }">
-                        <v-list-item 
-                            v-bind="attrs"
-                            v-on="on" 
-                            link             
-                            @click="menu == 3 ? closeList() : openList(); tabs=3"                
-                        >
-                            <v-list-item-icon>
-                                <v-icon>mdi-upload</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-title></v-list-item-title>
-                        </v-list-item>
-                    </template>
-                    <span>기여하기</span>
-                </v-tooltip>  
+                
 
                 <v-tooltip left color="primary" open-on-hover open-on-focus open-on-click>
                     <template v-slot:activator="{ on, attrs }">
@@ -89,7 +74,7 @@
                             v-bind="attrs"
                             v-on="on" 
                             link         
-                            @click="menu == 4 ? closeList() : openList(); tabs=4"                    
+                            @click="menu == 3 ? closeList() : openList(); tabs=3"                    
                         >
                             <v-list-item-icon>
                                 <i class="fas fa-cog fa-lg" style="margin-left:1px; margin-top:4px"></i>
@@ -100,10 +85,27 @@
                     <span>설정</span>
                 </v-tooltip>  
             </v-list-item-group>
+            <v-tooltip left color="primary" open-on-hover open-on-focus open-on-click>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-list-item 
+                            v-bind="attrs"
+                            v-on="on" 
+                            link             
+                            @click="dialog=true"
+                        >
+                             
+                            <v-list-item-icon>
+                                <v-icon>mdi-upload</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-title></v-list-item-title>
+                        </v-list-item>
+                    </template>
+                    <span>기여하기</span>
+                </v-tooltip>  
           </v-list>
         </v-navigation-drawer>
         <v-expand-x-transition>
-            <v-card :width="listWidth" v-show="list" ref="list" tile flat outlined style="z-index:10010; position:fixed; width:400px; top:0px; height:100%; " :style="{'right':navWidth+'px', 'border-color': (darkOption ? '#393939' : '#d2d2d2')}">
+            <v-card :width="listWidth" v-show="list" ref="list" tile flat outlined style="z-index:101; position:fixed; width:400px; top:0px; height:100%; " :style="{'right':navWidth+'px', 'border-color': (darkOption ? '#393939' : '#d2d2d2')}">
                 <v-tabs v-model="tabs" hide-slider height=0>
                     <v-tab-item>
                         <v-list :dark="darkOption">
@@ -139,7 +141,7 @@
                             </v-list-item>
                             <v-list>
                                 <v-list-item>                                
-                                    <another-video :darkOption="darkOption"></another-video>
+                                    <another-video :darkOption="darkOption" :lectureId="lectureId" :subId="subId"></another-video>
                                 </v-list-item>
                             </v-list>
                             
@@ -169,27 +171,6 @@
                                 </v-list-item-content>
                             </v-list-item>                            
                         </v-list>
-                    </v-tab-item>
-                    <v-tab-item>
-                        <v-list :dark="darkOption">
-                            <v-list-item>
-                                <v-list-item-content>
-                                    <v-list-item-title>
-                                        기여하기
-                                    </v-list-item-title>                        
-                                </v-list-item-content>
-                                <v-list-item-action @click="closeList">
-                                    <v-icon>
-                                        mdi-close
-                                    </v-icon>
-                                </v-list-item-action>
-                            </v-list-item>
-                            <v-list>
-                                <v-list-item>                                
-                                    <Contribute :darkOption="darkOption"></Contribute>
-                                </v-list-item>
-                            </v-list>
-                        </v-list>                        
                     </v-tab-item>
                     <v-tab-item>
                         <v-list :dark="darkOption" style="height:1500px;">
@@ -258,6 +239,28 @@
                             </v-list-item>   
                         </v-list>
                     </v-tab-item>
+                    <v-tab-item>
+                        <v-list :dark="darkOption">
+                            <v-list-item>
+                                <v-list-item-content>
+                                    <v-list-item-title>
+                                        기여하기
+                                    </v-list-item-title>                        
+                                </v-list-item-content>
+                                <v-list-item-action @click="closeList">
+                                    <v-icon>
+                                        mdi-close
+                                    </v-icon>
+                                </v-list-item-action>
+                            </v-list-item>
+                            <v-list>
+                                <v-list-item>                                
+                                    
+                                </v-list-item>
+                            </v-list>
+                        </v-list>                        
+                    </v-tab-item>
+                    
                     <v-tab-item>
                         <v-list>
                             <v-list-item>
@@ -416,6 +419,7 @@
                     </v-btn>
                 </template>
             </v-snackbar>
+            <Contribute :dialog="dialog" :darkOption="darkOption" :lectureId="lectureId" :subId="subId" @closeDialog="dialog=false;" style="z-index:12345;"></Contribute>
         </v-layout>
     </div>
 </template>
@@ -444,6 +448,8 @@ export default {
             subId: 0,
             subHisId: 0,
             boardId: 0,
+
+            dialog:false,
 
             sub: {
                 viewCount:0,
