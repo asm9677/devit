@@ -415,7 +415,7 @@
 		    lsh.view_count viewCount,
 		    IFNULL(lg.like_count, 0) likeCount,
 		    lsh.thumbnail_url thumbnailUrl,
-            (SELECT nickname FROM user WHERE user_id = #{userId}) nickname,
+            (SELECT nickname FROM user WHERE user_id = lsh.user_id) nickname,
 		    CASE
 		        WHEN
 		            EXISTS( SELECT 
