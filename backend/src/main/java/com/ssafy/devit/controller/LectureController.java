@@ -2,6 +2,7 @@ package com.ssafy.devit.controller;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -413,15 +414,35 @@ public class LectureController {
 		final CommonResponse result = new CommonResponse();
 
 		try {
-			System.out.println(1);
 			result.result = lectureService.getOneOtherSubLecture(request);
-			System.out.println(2);
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			result.msg = "fail";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 			log.info(">> Error : getTheOtherSubLecture <<");
+			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "요청 리스트 가져오기")
+	@GetMapping("/historys")
+	public ResponseEntity<CommonResponse> getRequestHistorys(@RequestParam("lectureId") long lectureId, @RequestParam("startPage") int startPage, @RequestParam("reqType") String reqType, @RequestParam("acceptType") String acceptType) {
+		log.info(">> Load : getRequestHistorys <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			result.result = lectureService.getRequestLecturesList(lectureId, startPage, reqType, acceptType);
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			log.info(">> Error : getRequestHistory <<");
 			log.info(e.getMessage().toString());
 		}
 		return response;

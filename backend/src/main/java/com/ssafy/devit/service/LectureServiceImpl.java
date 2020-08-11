@@ -1,5 +1,6 @@
 package com.ssafy.devit.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
 import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
+import com.ssafy.devit.model.lecture.RequestHistoryResponse;
 import com.ssafy.devit.model.lecture.TagResponse;
 import com.ssafy.devit.model.lecture.TheOhterSubLectureResponse;
 import com.ssafy.devit.model.request.HistoryLikeRequest;
@@ -199,6 +201,11 @@ public class LectureServiceImpl implements LectureService {
 	public LectureSubOneResponse getOneOtherSubLecture(LectureSubOtherRequest request) throws Exception {
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return lectureRepository.selectOneOtherSubLecture(user.getUserId(), request.getLectureId(), request.getSubId(), request.getSubHisId());
+	}
+
+	@Override
+	public List<RequestHistoryResponse> getRequestLecturesList(long lectureId, int startPage, String req, String acceptType) throws Exception {
+		return lectureRepository.selectRequestLecturesList(lectureId, startPage, req.split(","), acceptType);
 	}
 
 }
