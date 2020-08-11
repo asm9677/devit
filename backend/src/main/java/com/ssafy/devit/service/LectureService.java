@@ -2,11 +2,14 @@ package com.ssafy.devit.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
 import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
 import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
+import com.ssafy.devit.model.lecture.RequestHistoryResponse;
 import com.ssafy.devit.model.lecture.TagResponse;
 import com.ssafy.devit.model.lecture.TheOhterSubLectureResponse;
 import com.ssafy.devit.model.request.HistoryLikeRequest;
@@ -62,4 +65,7 @@ public interface LectureService {
 	
 	// 같은종류 다른영상 상세정보
 	public LectureSubOneResponse getOneOtherSubLecture(LectureSubOtherRequest request) throws Exception;
+	
+	// 요청 리스트 가져오기
+	public List<RequestHistoryResponse> getRequestLecturesList(@Param("lectureId") long lectureId, @Param("startPage") int startPage, @Param("reqType") String reqType, @Param("acceptType") String acceptType) throws Exception;
 }

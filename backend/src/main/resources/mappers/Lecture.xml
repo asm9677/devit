@@ -67,7 +67,7 @@
 		    WHERE
 		        user_id = #{userId} AND like_flag = 'Y') lk ON lk.lecture_id = l.lecture_id
 		WHERE
-		    l.type = ${type}
+		    l.type = #{type}
 		GROUP BY l.lecture_id
 		ORDER BY l.lecture_id
 		LIMIT #{startPage}, 20;
@@ -487,5 +487,36 @@
                lsi.wiki_id = lshw.sub_his_id
 		 where lsi.lecture_id = #{lectureId}
            and lsi.sub_id = #{subId};
+	</select>
+	
+	<!-- 요청 목록 리스트 가져오기 -->
+	<select id="selectRequestLecturesList" resultType="RequestHistoryResponse">
+	  SELECT u.profile, u.nickname, lsh.created, lsi.title subTitle, lsi.sub_id subId, lsh.accept_yn acceptYn,
+			 lsh.req_type reqType, lsh.thumbnail_url thumbnailUrl, lsh.title hisTitle, lsh.player_url playerUrl,
+             lsh.play_time playTime, lsh.wiki_content wikiContent, lsh.wiki_content_html wikiContentHtml
+		FROM lecture_sub_history lsh
+	         LEFT OUTER JOIN user u
+			   ON u.user_id = lsh.user_id
+			 LEFT OUTER JOIN lecture_sub_index lsi
+	           ON lsi.lecture_id = lsh.lecture_id
+			  AND lsi.sub_id = lsh.sub_id
+	   WHERE 1=1 AND lsh.lecture_id = #{lectureId}
+	   		 <if test="reqType != 0">
+	   		 	AND lsh.req_type IN
+	   		 	<foreach collection="reqType" item="type" index="index" separator="," open="(" close=")">
+	   		 		#{type}
+	   		 	</foreach>
+	   		 </if>
+			 <if test="acceptType == '허용'">
+			 	AND lsh.accept_yn = 'Y'
+			 </if>
+			 <if test="acceptType == '대기'">
+			 	AND lsh.accept_yn IS NULL
+			 </if>
+			 <if test="acceptType == '거절'">
+			 	AND lsh.accept_yn = 'N'
+			 </if>
+	ORDER BY lsh.created DESC
+	   LIMIT #{startPage}, 20;
 	</select>
 </mapper>

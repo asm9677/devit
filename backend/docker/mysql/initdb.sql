@@ -171,7 +171,7 @@ CREATE TABLE `lecture_sub_history` (
   `wiki_content_html` text COMMENT '강의 WIKI 내용 HTML',
   `view_count` int(11) NOT NULL DEFAULT '0' COMMENT '조회수 (요청타입이 동영상일 경우에만 count되는 컬럼)',
   `req_type` varchar(20) NOT NULL COMMENT '요청타입 (동영상인지 강의내용인지)\nex. video/wiki',
-  `accept_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT '요청을 받아들일지 거절할지 여부',
+  `accept_yn` varchar(1) DEFAULT NULL COMMENT '요청을 받아들일지 거절할지 여부',
   `delete_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT 'accept_yn 여부와 상관 없이 부적절한 동영상일 경우 목록에서 보이지 않도록...',
   PRIMARY KEY (`sub_his_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='강의 참여 요청 이력 테이블';
@@ -210,3 +210,19 @@ CREATE TABLE `lecture_like` (
   CONSTRAINT `lecture_like_lecture_id_fk` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`lecture_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lecture_like_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE notice (
+  notice_id int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  noticec_type int(11) NOT NULL COMMENT '1 : 공지사항\\n2 : 내 게시글에 대한 댓글\\n3 : 내 강의에 들어온 요청\\n4 : 내 요청에 대한 응답',
+  user_id int(11) NOT NULL COMMENT '알림을 보낼 user의 id',
+  notice_yn varchar(1) DEFAULT 'N' COMMENT 'N : 알림 해줘야해\\nY : 알림 완료',
+  board_id int(11) DEFAULT NULL COMMENT '댓글이나 공지사항이면, 그 게시글의 id\n아니면 0?',
+  board_reply_id int(11) DEFAULT NULL COMMENT '내 게시글에 달린 댓글의 id',
+  sub_his_id int(11) DEFAULT NULL COMMENT 'lecture_sub_history',
+  lecture_id int(11) DEFAULT NULL COMMENT 'lecture_sub_history',
+  sub_id int(11) DEFAULT NULL COMMENT 'lecture_sub_history',
+  created_date datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (notice_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='about notice';
+

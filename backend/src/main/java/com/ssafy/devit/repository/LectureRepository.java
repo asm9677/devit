@@ -12,6 +12,7 @@ import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
 import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.LecturesResponse;
 import com.ssafy.devit.model.lecture.LikeDTO;
+import com.ssafy.devit.model.lecture.RequestHistoryResponse;
 import com.ssafy.devit.model.lecture.TagResponse;
 import com.ssafy.devit.model.lecture.TheOhterSubLectureResponse;
 import com.ssafy.devit.model.request.HistoryLikeRequest;
@@ -86,6 +87,9 @@ public interface LectureRepository {
 	
 	// 같은종류 다른영상 상세정보
 	public LectureSubOneResponse selectOneOtherSubLecture(@Param("userId") long userId, @Param("lectureId") long lectureId, @Param("subId") long subId, @Param("subHisId") long subHisId) throws Exception;
+	
+	// 요청 리스트 가져오기
+	public List<RequestHistoryResponse> selectRequestLecturesList(@Param("lectureId") long lectureId, @Param("startPage") int startPage, @Param("reqType") String[] reqType, @Param("acceptType") String acceptType) throws Exception;
 	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
 	
