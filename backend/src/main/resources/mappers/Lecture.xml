@@ -67,7 +67,7 @@
 		    WHERE
 		        user_id = #{userId} AND like_flag = 'Y') lk ON lk.lecture_id = l.lecture_id
 		WHERE
-		    l.type = ${type}
+		    l.type = #{type}
 		GROUP BY l.lecture_id
 		ORDER BY l.lecture_id
 		LIMIT #{startPage}, 20;
@@ -415,7 +415,7 @@
 		    lsh.view_count viewCount,
 		    IFNULL(lg.like_count, 0) likeCount,
 		    lsh.thumbnail_url thumbnailUrl,
-            (SELECT nickname FROM user WHERE user_id = #{userId}) nickname,
+            (SELECT nickname FROM user WHERE user_id = lsh.user_id) nickname,
 		    CASE
 		        WHEN
 		            EXISTS( SELECT 

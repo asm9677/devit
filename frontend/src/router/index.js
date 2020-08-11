@@ -18,6 +18,7 @@ import LecturePlayer from '@/components/lecture/view/LecturePlayer.vue'
 import SearchList from '@/components/lecture/view/SearchList.vue'
 
 import MyBoard from '@/components/myactivity/MyBoard.vue'
+import MyLike from '@/components/myactivity/MyLike.vue'
 
 Vue.use(VueRouter)
 
@@ -91,6 +92,12 @@ const routes = [
     path: '/myboard',
     name: 'MyBoard',
     component: MyBoard
+  },
+
+  {
+    path: '/mylike',
+    name: 'MyLike',
+    component: MyLike
   },
 ]
 
