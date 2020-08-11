@@ -429,11 +429,9 @@ public class LectureController {
 			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = false, dataType = "String", paramType = "header") })
 	@ApiOperation(value = "요청 리스트 가져오기")
 	@GetMapping("/historys")
-	public ResponseEntity<CommonResponse> getRequestHistorys(
-			@ApiParam(value = "대표 프로젝트 ID", required = true) @RequestParam("lectureId") long lectureId,
-			@ApiParam(value = "시작 페이지 부터 20개", required = true, defaultValue = "0") @RequestParam("startPage") int startPage,
-			@ApiParam(value = "video or wiki", required = true, example = "video,wiki") @RequestParam("reqType") String reqType,
-			@ApiParam(value = "검색조건", required = true) @RequestParam("acceptType") String acceptType) {
+	public ResponseEntity<CommonResponse> getRequestHistorys(@RequestParam("lectureid") long lectureId,
+			@RequestParam("startpage") int startPage, @RequestParam("reqtype") String reqType,
+			@RequestParam("accepttype") String acceptType) {
 		log.info(">> Load : getRequestHistorys <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
@@ -456,15 +454,15 @@ public class LectureController {
 			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
 	@ApiOperation(value = "요청 리스트 목록 처리")
 	@PutMapping("/historys")
-	public ResponseEntity<CommonResponse> updateRequestHistory(
-			@ApiParam(value = "Y 또는 N", required = true) @RequestParam("type") String type,
-			@ApiParam(value = "subHistory ID", required = true) @RequestParam("subHisId") long subHisId) {
+	public ResponseEntity<CommonResponse> updateRequestHistory(@RequestParam("type") String type,
+			@RequestParam("reqType") String reqType, @RequestParam("subhisid") long subHisId,
+			@RequestParam("subid") long subId) {
 		log.info(">> Load : updateRequestHistory <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 
 		try {
-			lectureService.updateRequestLecture(subHisId, type);
+			lectureService.updateRequestLecture(subId, subHisId, type, reqType);
 			result.msg = "success";
 			result.result = "성공적으로 적용 되었습니다";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);

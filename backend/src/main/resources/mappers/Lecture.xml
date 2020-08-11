@@ -493,7 +493,7 @@
 	<select id="selectRequestLecturesList" resultType="RequestHistoryResponse">
 	  SELECT u.profile, u.nickname, lsh.created, lsi.title subTitle, lsi.sub_id subId, lsh.accept_yn acceptYn,
 			 lsh.req_type reqType, lsh.thumbnail_url thumbnailUrl, lsh.title hisTitle, lsh.player_url playerUrl,
-             lsh.play_time playTime, lsh.wiki_content wikiContent, lsh.wiki_content_html wikiContentHtml
+             lsh.play_time playTime, lsh.wiki_content wikiContent, lsh.wiki_content_html wikiContentHtml, lsh.sub_his_id subHisId
 		FROM lecture_sub_history lsh
 	         LEFT OUTER JOIN user u
 			   ON u.user_id = lsh.user_id
@@ -524,6 +524,18 @@
 	<update id="updateRequestLecture">
 		UPDATE lecture_sub_history
 		   SET accept_yn = #{type}
-		   WHERE sub_his_id = #{subHisId}
+	     WHERE sub_his_id = #{subHisId};
+	     
+	     <if test='type == "Y" and reqType == "video"'>
+	     	UPDATE lecture_sub_index
+			   SET video_id = #{subHisId}
+		  	 WHERE sub_id = #{subId};
+	     </if>
+
+		<if test='type == "Y" and reqType == "wiki"'>
+			UPDATE lecture_sub_index
+			   SET wiki_id = #{subHisId}
+		  	 WHERE sub_id = #{subId};
+		</if>
 	</update>
 </mapper>

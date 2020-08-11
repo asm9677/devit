@@ -12,7 +12,7 @@ public class RequestHistoryResponse {
 	@ApiModelProperty(example = "변수란!")
 	private String subTitle;
 	@ApiModelProperty(example = "1")
-	private String subId;
+	private long subId;
 	@ApiModelProperty(example = "Y 또는 N 또는 null")
 	private String acceptYn;
 	@ApiModelProperty(example = "video 또는 wiki")
@@ -29,28 +29,19 @@ public class RequestHistoryResponse {
 	private String wikiContent;
 	@ApiModelProperty(example = "<h1>text...</h1>")
 	private String wikiContentHtml;
-	
+	@ApiModelProperty(example = "1")
+	private long subHisId;
+
 	public RequestHistoryResponse() {
 
 	}
 
-	public RequestHistoryResponse(String profile, String nickname, String created, String subTitle, String subId,
-			String acceptYn, String reqType, String thumbnailUrl, String hisTitle, String playerUrl, String playTime,
-			String wikiContent, String wikiContentHtml) {
-		super();
-		this.profile = profile;
-		this.nickname = nickname;
-		this.created = created;
-		this.subTitle = subTitle;
-		this.subId = subId;
-		this.acceptYn = acceptYn;
-		this.reqType = reqType;
-		this.thumbnailUrl = thumbnailUrl;
-		this.hisTitle = hisTitle;
-		this.playerUrl = playerUrl;
-		this.playTime = playTime;
-		this.wikiContent = wikiContent;
-		this.wikiContentHtml = wikiContentHtml;
+	public long getSubHisId() {
+		return subHisId;
+	}
+
+	public void setSubHisId(long subHisId) {
+		this.subHisId = subHisId;
 	}
 
 	public String getProfile() {
@@ -85,11 +76,11 @@ public class RequestHistoryResponse {
 		this.subTitle = subTitle;
 	}
 
-	public String getSubId() {
+	public long getSubId() {
 		return subId;
 	}
 
-	public void setSubId(String subId) {
+	public void setSubId(long subId) {
 		this.subId = subId;
 	}
 

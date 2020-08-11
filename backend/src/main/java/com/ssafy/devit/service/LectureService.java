@@ -70,5 +70,5 @@ public interface LectureService {
 	public List<RequestHistoryResponse> getRequestLecturesList(long lectureId, int startPage, String reqType, String acceptType) throws Exception;
 	
 	// 요청 리스트 요청 받기 또는 거절하기 업데이트 하기
-	public void updateRequestLecture(long subHisId, String type) throws Exception;
+	public void updateRequestLecture(long subId, long subHisId, String type, String reqType) throws Exception;
 }

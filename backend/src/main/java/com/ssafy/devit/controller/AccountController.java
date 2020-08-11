@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,9 +15,10 @@ import com.ssafy.devit.config.security.JwtTokenProvider;
 import com.ssafy.devit.model.CommonResponse;
 import com.ssafy.devit.model.request.LoginRequest;
 import com.ssafy.devit.model.request.SignUpRequest;
-import com.ssafy.devit.model.user.User;
+import com.ssafy.devit.model.user.LoginResponse;
 import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.service.UserAuthDetailService;
+import com.ssafy.devit.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -37,13 +35,17 @@ public class AccountController {
 
 	@Autowired // 회원 관리
 	UserAuthDetailService userAuthDetailService;
-	
+
+	@Autowired
+	UserService userService;
+
 	@Autowired
 	PasswordEncoder passwordEncoder;
 
 	@Autowired
 	JwtTokenProvider jwtTokenProvider;
 
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = LoginResponse.class) })
 	@PostMapping("/login")
 	@ApiOperation(value = "로그인")
 	public ResponseEntity<CommonResponse> login(@RequestBody LoginRequest request) {
@@ -62,9 +64,15 @@ public class AccountController {
 					result.result = "비밀번호가 일치 하지 않습니다";
 					response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 				} else {
+//					LoginResponse loginResponse = new LoginResponse();
+//					loginResponse.setToken(jwtTokenProvider.createToken(String.valueOf(user.getUserId()),
+//							userAuthDetailService.getRoles(user.getUserId())));
+//					loginResponse.setUserId(user.getUserId());
+//					loginResponse.setNickname(user.getNickname());
+//					loginResponse.setProfile(user.getNickname());
 					result.msg = "success";
-					result.result = jwtTokenProvider.createToken(
-							String.valueOf(user.getUserId()),
+//					result.result = loginResponse;
+					result.result = jwtTokenProvider.createToken(String.valueOf(user.getUserId()),
 							userAuthDetailService.getRoles(user.getUserId()));
 					response = new ResponseEntity<>(result, HttpStatus.OK);
 				}
@@ -89,7 +97,7 @@ public class AccountController {
 		log.info(">> Load : signUp <<");
 		final CommonResponse result = new CommonResponse();
 		ResponseEntity<CommonResponse> response = null;
-		
+
 		// DB에 user Email이 있다면 그에 해당하는 user 정보를 / 그렇지 않을 경우 null 반환
 		try {
 			// email, nickname 중복 체크
