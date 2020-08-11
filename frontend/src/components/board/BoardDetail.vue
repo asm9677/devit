@@ -52,9 +52,9 @@
                                 {{ item.boardTitle }}
                             </v-list-item>
                             <v-list-item>
-                                <v-icon size="40">mdi-account-circle</v-icon>
-                                <!--<v-list-item-avatar color="grey"><img src=""
-                                alt="John"></v-list-item-avatar>-->
+                                <v-list-item-avatar size="30" style="margin-right:0px;">
+                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                            </v-list-item-avatar>
                                 <v-list-item-content>
                                     <v-list-item class="board_writer">{{ item.userName }}</v-list-item>
                                     <v-list-item class="board_info">
@@ -117,9 +117,9 @@
                                 <v-col :key="`${index}_vcol`" style="float:right;" :style="{'width': (replyItem.parentReplyId == 0) ? '100%' : '90%'}">
 
                                     <v-list-item>
-                                        <v-icon size="40">mdi-account-circle</v-icon>
-                                        <!--<v-list-item-avatar color="grey"><img src=""
-                                        alt="John"></v-list-item-avatar>-->
+                                <v-list-item-avatar size="30" style="margin-right:0px;">
+                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                            </v-list-item-avatar>
                                         <v-list-item-content>
                                             <v-list-item class="comment_writer">{{ replyItem.userName }}</v-list-item>
                                             <v-list-item class="comment_info">

@@ -7,6 +7,7 @@ public class ReplyResponse {
 	private long boardId;	
 	private long userId;
 	private String userName;
+	private String profile;
 	private Date replyCreated;
 	private String replyContent;
 	private long parentReplyId;
@@ -16,18 +17,27 @@ public class ReplyResponse {
 	
 	public ReplyResponse() {}
 	
-	public ReplyResponse(long boardReplyId, long boardId, long userId, String userName, Date replyCreated, String replyContent, long parentReplyId, Date replyModified,
+	public ReplyResponse(long boardReplyId, long boardId, long userId, String userName, String profile, Date replyCreated, String replyContent, long parentReplyId, Date replyModified,
 	String deleteYn, String isMine){
 		this.boardReplyId = boardReplyId;
 		this.boardId = boardId;
 		this.userId = userId;
 		this.userName = userName;
+		this.profile = profile;
 		this.replyCreated = replyCreated;
 		this.replyContent = replyContent;
 		this.parentReplyId = parentReplyId;
 		this.replyModified = replyModified;
 		this.deleteYn = deleteYn;
 		this.isMine = isMine;
+	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
 	}
 
 	////////////////////////////////////////////////////////
