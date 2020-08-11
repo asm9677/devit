@@ -57,7 +57,7 @@ public class BoardController {
 	@ApiOperation(value = "게시물 등록")
 	public ResponseEntity<CommonResponse> upload(@RequestBody BoardUploadRequest request) throws Exception{
 		log.info(">> boardUpLoad <<");
-		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		final CommonResponse result = new CommonResponse();
 		ResponseEntity<CommonResponse> response = null;
 		BoardRequest board = null;
@@ -85,11 +85,11 @@ public class BoardController {
 		BoardResponse boardResponse = null;
 		try {
 			
-			User user = null;
+			UserAuthDetails user = null;
 			try {
-				user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			} catch (Exception e) {
-				user = new User();
+				user = new UserAuthDetails();
 				user.setUserId(0);
 			}
 
@@ -143,11 +143,11 @@ public class BoardController {
 		//Board board = null;
 		BoardResponse boardResponse = null;
 		try {
-			User user = null;
+			UserAuthDetails user = null;
 			try {
-				user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			} catch (Exception e) {
-				user = new User();
+				user = new UserAuthDetails();
 				user.setUserId(0);
 			}
 

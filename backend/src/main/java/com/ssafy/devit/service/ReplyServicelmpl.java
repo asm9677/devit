@@ -32,11 +32,11 @@ public class ReplyServicelmpl implements ReplyService {
 		if(boardId < 1) {
 			throw new Exception("잘못된 replyId가 나왔습니다.");
 		}
-		User user = null;
+		UserAuthDetails user = null;
 		try {
-			user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		}catch(Exception e) {
-			user = new User();
+			user = new UserAuthDetails();
 			user.setUserId(0);
 		}
 		return replyRepository.info(boardId, user.getUserId());
