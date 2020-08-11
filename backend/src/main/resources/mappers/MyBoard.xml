@@ -62,7 +62,8 @@
          		case when c.cnt is null then 0
                      when c.cnt = 0 then 0
                      else ceil(c.cnt/#{itemsperpage})
-				end as pageCnt
+				end as pageCnt,
+				c.board_reply_id as boardReplyId
            from board a
 		        inner join 
 		        user b 

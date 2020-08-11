@@ -29,7 +29,9 @@
          		a.count as boardCount, 
          		(select count(1) from board_reply where delete_yn = 'N' and board_id = a.board_id) as replyCount,
          		a.modified as boardModified,
-         		if(a.user_id = #{userId}, 'Y', 'N') as isMine
+         		if(a.user_id = #{userId}, 'Y', 'N') as isMine,
+         		a.lecture_id as lectureId,
+         		a.sub_id as subId
          from board a
 		 left outer join user b on a.user_id = b.user_id
          where a.board_id = #{bid} and a.delete_yn = 'N';
@@ -66,7 +68,9 @@
          		case when c.cnt is null then 0
                      when c.cnt = 0 then 0
                      else ceil(c.cnt/#{itemsperpage})
-				end as pageCnt
+				end as pageCnt,
+         		a.lecture_id as lectureId,
+         		a.sub_id as subId
            from board a
 		        left outer join 
 		        user b 
@@ -148,7 +152,9 @@
          		a.created as boardCreated, 
          		a.count as boardCount, 
          		(select count(1) from board_reply where delete_yn = 'N' and board_id = a.board_id) as replyCount,
-         		a.modified as boardModified
+         		a.modified as boardModified,
+         		a.lecture_id as lectureId,
+         		a.sub_id as subId
            from board a
 		        left outer join 
 		        user b 

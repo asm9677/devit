@@ -52,7 +52,7 @@
                                 {{ item.boardTitle }}
                             </v-list-item>
                             <v-list-item>
-                                <v-list-item-avatar size="30" style="margin-right:0px;">
+                                <v-list-item-avatar size="40" style="margin-right:0px;">
                                 <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                             </v-list-item-avatar>
                                 <v-list-item-content>
@@ -117,7 +117,7 @@
                                 <v-col :key="`${index}_vcol`" style="float:right;" :style="{'width': (replyItem.parentReplyId == 0) ? '100%' : '90%'}">
 
                                     <v-list-item>
-                                <v-list-item-avatar size="30" style="margin-right:0px;">
+                                <v-list-item-avatar size="40" style="margin-right:0px;">
                                 <v-img :src="'http://i3a101.p.ssafy.io/images/' + replyItem.profile"></v-img>
                             </v-list-item-avatar>
                                         <v-list-item-content>
