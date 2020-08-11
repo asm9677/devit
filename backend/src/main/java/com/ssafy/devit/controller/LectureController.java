@@ -429,9 +429,9 @@ public class LectureController {
 			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = false, dataType = "String", paramType = "header") })
 	@ApiOperation(value = "요청 리스트 가져오기")
 	@GetMapping("/historys")
-	public ResponseEntity<CommonResponse> getRequestHistorys(@RequestParam("lectureid") long lectureId,
-			@RequestParam("startpage") int startPage, @RequestParam("reqtype") String reqType,
-			@RequestParam("accepttype") String acceptType) {
+	public ResponseEntity<CommonResponse> getRequestHistorys(@RequestParam("lectureId") long lectureId,
+			@RequestParam("startPage") int startPage, @RequestParam("reqType") String reqType,
+			@RequestParam("acceptType") String acceptType) {
 		log.info(">> Load : getRequestHistorys <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
@@ -455,8 +455,8 @@ public class LectureController {
 	@ApiOperation(value = "요청 리스트 목록 처리")
 	@PutMapping("/historys")
 	public ResponseEntity<CommonResponse> updateRequestHistory(@RequestParam("type") String type,
-			@RequestParam("reqType") String reqType, @RequestParam("subhisid") long subHisId,
-			@RequestParam("subid") long subId) {
+			@RequestParam("reqType") String reqType, @RequestParam("subHisId") long subHisId,
+			@RequestParam("subId") long subId) {
 		log.info(">> Load : updateRequestHistory <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
