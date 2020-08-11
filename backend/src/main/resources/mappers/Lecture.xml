@@ -93,7 +93,11 @@
 		    CASE
 		        WHEN lk.lecture_id IS NULL THEN FALSE
 		        ELSE TRUE
-		    END AS userLikeYn
+		    END AS userLikeYn,
+            CASE
+				WHEN exists (select 1 from lecture_auth where lecture_id = l.lecture_id and user_id = #{userId}) THEN TRUE
+                ELSE FALSE
+			END AS manageYn		    
 		FROM
 		    lecture l
 		        LEFT OUTER JOIN

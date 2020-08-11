@@ -18,30 +18,18 @@ public class LectureOneResponse {
 	private int likeCount;
 	private String tagName;
 	private boolean userLikeYn;
+	private boolean manageYn;
 
 	public LectureOneResponse() {
 
 	}
 
-	public LectureOneResponse(long lectureId, long userId, long commonId, String title, String content,
-			String thumbnailUrl, String nickname, String profile, Date created, int type, int lectureCount,
-			int viewCount, int likeCount, String tagName, boolean userLikeYn) {
-		super();
-		this.lectureId = lectureId;
-		this.userId = userId;
-		this.commonId = commonId;
-		this.title = title;
-		this.content = content;
-		this.thumbnailUrl = thumbnailUrl;
-		this.nickname = nickname;
-		this.profile = profile;
-		this.created = created;
-		this.type = type;
-		this.lectureCount = lectureCount;
-		this.viewCount = viewCount;
-		this.likeCount = likeCount;
-		this.tagName = tagName;
-		this.userLikeYn = userLikeYn;
+	public boolean isManageYn() {
+		return manageYn;
+	}
+
+	public void setManageYn(boolean manageYn) {
+		this.manageYn = manageYn;
 	}
 
 	public String getProfile() {

@@ -115,6 +115,8 @@ public class LectureController {
 		return response;
 	}
 
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
 	@ApiOperation(value = "대표 프로젝트 상세 정보 가져오기")
 	@GetMapping("/{lectureId}")
 	public ResponseEntity<CommonResponse> getLecture(@PathVariable long lectureId) {
