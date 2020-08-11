@@ -26,7 +26,7 @@
 		    END AS userLikeYn
 		FROM
 		    lecture l
-		        LEFT OUTER JOIN
+		        INNER JOIN
 		    user u ON l.user_id = u.user_id
 		        LEFT OUTER JOIN
 		    lecture_sub_index lsi ON l.lecture_id = lsi.lecture_id
@@ -44,7 +44,7 @@
 		    FROM
 		        lecture_tag
 		    GROUP BY common_id) lt ON l.common_id = lt.common_id
-		        LEFT OUTER JOIN
+		        INNER JOIN
 		    (SELECT 
 		        *
 		    FROM
@@ -52,9 +52,9 @@
 		    WHERE
 		        user_id = #{userId} AND like_flag = 'Y') lk ON lk.lecture_id = l.lecture_id
 		WHERE
-		    EXISTS (select 1 from lecture_like where user_id = #{userId} AND like_flag = 'Y' and lecture_id = l.lecture_id)
+		    1=1
 		GROUP BY l.lecture_id
-		ORDER BY l.lecture_id
+		ORDER BY lk.modified desc
 		LIMIT #{startPage}, #{itemsperpage};
       </select>
       
@@ -72,27 +72,24 @@
 		    IFNULL(lg.like_count, 0) likeCount,
 		    lsh.thumbnail_url thumbnailUrl,
             (SELECT nickname FROM user WHERE user_id = lsh.user_id) nickname,
-		    CASE
-		        WHEN
-		            EXISTS( SELECT 
-		                    1
-		                FROM
-		                    lecture_sub_his_like
-		                WHERE
-		                    like_flag = 'Y' AND user_id = #{userId}
-		                        AND lecture_id = lsh.lecture_id
-		                        AND sub_id = lsh.sub_id
-		                        AND sub_his_id = lsh.sub_his_id)
-		        THEN
-		            TRUE
-		        ELSE FALSE
-		    END userLikeYn
+		    TRUE as userLikeYn
 		FROM
 		    lecture_sub_index lsi
 		        INNER JOIN
 		    lecture_sub_history lsh ON lsi.lecture_id = lsh.lecture_id
 		        AND lsi.sub_id = lsh.sub_id
 		        AND lsh.req_type = 'video'
+		        INNER JOIN
+		        (
+		         select lecture_id, sub_id, sub_his_id, modified
+		           from lecture_sub_his_like
+		          where user_id = #{userId}
+		            and like_flag = 'Y'
+		         ) lshl
+		        on
+		        lsh.lecture_id = lshl.lecture_id and
+		        lsh.sub_id = lshl.sub_id and
+		        lsh.sub_his_id = lshl.sub_his_id
 		        LEFT OUTER JOIN
 		    (SELECT 
 		        COUNT(1) like_count, lecture_id, sub_id, sub_his_id
@@ -103,9 +100,6 @@
 		        AND lsh.sub_his_id = lg.sub_his_id
 		WHERE
 		    lsh.player_url IS NOT NULL
-		  and exists (select 1 from lecture_sub_his_like 
-		  				where user_id = #{userId} and lecture_id = lsh.lecture_id 
-		  				  and sub_id = lsh.sub_id and sub_his_id = lsh.sub_his_id
-		  				  and like_flag = 'Y');
+     ORDER BY lshl.modified desc;
 	</select>
 </mapper>
