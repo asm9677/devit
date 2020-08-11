@@ -209,9 +209,9 @@ public class LectureServiceImpl implements LectureService {
 	}
 
 	@Override
-	public void updateRequestLecture(long subHisId, String type) throws Exception {
+	public void updateRequestLecture(long subId, long subHisId, String type, String lwType) throws Exception {
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		lectureRepository.updateRequestLecture(subHisId, type);
+		lectureRepository.updateRequestLecture(subId, subHisId, type, lwType);
 	}
 
 }

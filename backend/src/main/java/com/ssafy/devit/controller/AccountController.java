@@ -64,14 +64,16 @@ public class AccountController {
 					result.result = "비밀번호가 일치 하지 않습니다";
 					response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 				} else {
-					LoginResponse loginResponse = new LoginResponse();
-					loginResponse.setToken(jwtTokenProvider.createToken(String.valueOf(user.getUserId()),
-							userAuthDetailService.getRoles(user.getUserId())));
-					loginResponse.setUserId(user.getUserId());
-					loginResponse.setNickname(user.getNickname());
-					loginResponse.setProfile(user.getNickname());
+//					LoginResponse loginResponse = new LoginResponse();
+//					loginResponse.setToken(jwtTokenProvider.createToken(String.valueOf(user.getUserId()),
+//							userAuthDetailService.getRoles(user.getUserId())));
+//					loginResponse.setUserId(user.getUserId());
+//					loginResponse.setNickname(user.getNickname());
+//					loginResponse.setProfile(user.getNickname());
 					result.msg = "success";
-					result.result = loginResponse;
+//					result.result = loginResponse;
+					result.result = jwtTokenProvider.createToken(String.valueOf(user.getUserId()),
+							userAuthDetailService.getRoles(user.getUserId()));
 					response = new ResponseEntity<>(result, HttpStatus.OK);
 				}
 			} else {

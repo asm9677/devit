@@ -92,7 +92,7 @@ public interface LectureRepository {
 	public List<RequestHistoryResponse> selectRequestLecturesList(@Param("lectureId") long lectureId, @Param("startPage") int startPage, @Param("reqType") String[] reqType, @Param("acceptType") String acceptType) throws Exception;
 	
 	// 요청 리스트 요청 받기 또는 거절하기 업데이트 하기
-	public void updateRequestLecture(@Param("subHisId") long subHisId, @Param("type") String type) throws Exception;
+	public void updateRequestLecture(@Param("subId") long subId, @Param("subHisId") long subHisId, @Param("type") String type, @Param("reqType") String lwType) throws Exception;
 	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
 	
