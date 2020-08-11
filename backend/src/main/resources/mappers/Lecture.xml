@@ -507,13 +507,13 @@
 	   		 		#{type}
 	   		 	</foreach>
 	   		 </if>
-			 <if test="acceptType == '허용'">
+			 <if test="acceptType == 'allow'">
 			 	AND lsh.accept_yn = 'Y'
 			 </if>
-			 <if test="acceptType == '대기'">
+			 <if test="acceptType == 'wait'">
 			 	AND lsh.accept_yn IS NULL
 			 </if>
-			 <if test="acceptType == '거절'">
+			 <if test="acceptType == 'reject'">
 			 	AND lsh.accept_yn = 'N'
 			 </if>
 	ORDER BY lsh.created DESC
