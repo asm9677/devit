@@ -21,6 +21,7 @@
          select a.board_id as boardId, 
          		a.user_id as userId, 
          		b.nickname as userName, 
+         		b.profile as profile, 
          		a.title as boardTitle, 
          		a.content as boardContent, 
          		a.type as boardType, 
