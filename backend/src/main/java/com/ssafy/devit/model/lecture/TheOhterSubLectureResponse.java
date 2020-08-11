@@ -7,15 +7,14 @@ public class TheOhterSubLectureResponse {
 	private String title;
 	private String playerUrl;
 	private String playTime;
+	private String nickname;
 	private int viewCount;
 	private int likeCount;
 	private String thumbnailUrl;
 	private boolean userLikeYn;
 
-	
-
 	public TheOhterSubLectureResponse(long lectureId, long subId, long subHisId, String title, String playerUrl,
-			String playTime, int viewCount, int likeCount, String thumbnailUrl, boolean userLikeYn) {
+			String playTime, String nickname, int viewCount, int likeCount, String thumbnailUrl, boolean userLikeYn) {
 		super();
 		this.lectureId = lectureId;
 		this.subId = subId;
@@ -23,6 +22,7 @@ public class TheOhterSubLectureResponse {
 		this.title = title;
 		this.playerUrl = playerUrl;
 		this.playTime = playTime;
+		this.nickname = nickname;
 		this.viewCount = viewCount;
 		this.likeCount = likeCount;
 		this.thumbnailUrl = thumbnailUrl;
@@ -31,6 +31,14 @@ public class TheOhterSubLectureResponse {
 
 	public TheOhterSubLectureResponse() {
 		super();
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 	public long getLectureId() {
@@ -104,8 +112,6 @@ public class TheOhterSubLectureResponse {
 	public void setUserLikeYn(boolean userLikeYn) {
 		this.userLikeYn = userLikeYn;
 	}
-	
-	
 
 	public long getSubHisId() {
 		return subHisId;
@@ -122,7 +128,5 @@ public class TheOhterSubLectureResponse {
 				+ viewCount + ", likeCount=" + likeCount + ", thumbnailUrl=" + thumbnailUrl + ", userLikeYn="
 				+ userLikeYn + "]";
 	}
-
-	
 
 }

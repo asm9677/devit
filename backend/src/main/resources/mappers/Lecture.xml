@@ -30,6 +30,7 @@
 		    l.view_count viewCount,
 		    l.thumbnail_Url thumbnailUrl,
 		    u.nickname,
+		    u.profile,
 		    COUNT(lsi.sub_id) lectureCount,
 		    l.view_count viewCount,
 		    IFNULL(likeCount, 0) AS likeCount,
@@ -83,6 +84,7 @@
 		    l.content,
 		    l.thumbnail_url thumbnailUrl,
 		    u.nickname,
+		    u.profile,
 		    l.created,
 		    COUNT(lsi.sub_id) lectureCount,
    		    l.view_count viewCount,
@@ -413,6 +415,7 @@
 		    lsh.view_count viewCount,
 		    IFNULL(lg.like_count, 0) likeCount,
 		    lsh.thumbnail_url thumbnailUrl,
+            (SELECT nickname FROM user WHERE user_id = #{userId}) nickname,
 		    CASE
 		        WHEN
 		            EXISTS( SELECT 
@@ -443,7 +446,7 @@
 		        AND lsh.sub_id = lg.sub_id
 		        AND lsh.sub_his_id = lg.sub_his_id
 		WHERE
-		    lsi.sub_id = #{subId};
+		    lsi.sub_id = #{subId} AND player_url IS NOT NULL;
 	</select>
 	
 	<!-- 같은 종류 다른 영상 눌렀을 경우 상세 정보 -->
