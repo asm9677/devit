@@ -1,20 +1,35 @@
 package com.ssafy.devit.model.lecture;
 
-public class RequestHistoryResponse {
-	private String profile;
-	private String nickname;
-	private String created;
-	private String subTitle;
-	private String subId;
-	private String acceptYn;
-	private String reqType;
-	private String thumbnailUrl;
-	private String hisTitle;
-	private String playerUrl;
-	private String playTime;
-	private String wikiContent;
-	private String wikiContentHtml;
+import io.swagger.annotations.ApiModelProperty;
 
+public class RequestHistoryResponse {
+	@ApiModelProperty(example = "userProfileUrl")
+	private String profile;
+	@ApiModelProperty(example = "userNickname")
+	private String nickname;
+	@ApiModelProperty(example = "2020-08-06 05:41:06")
+	private String created;
+	@ApiModelProperty(example = "변수란!")
+	private String subTitle;
+	@ApiModelProperty(example = "1")
+	private String subId;
+	@ApiModelProperty(example = "Y 또는 N 또는 null")
+	private String acceptYn;
+	@ApiModelProperty(example = "video 또는 wiki")
+	private String reqType;
+	@ApiModelProperty(example = "videoThumbnailUrl")
+	private String thumbnailUrl;
+	@ApiModelProperty(example = "이런것이다!")
+	private String hisTitle;
+	@ApiModelProperty(example = "playerUrl")
+	private String playerUrl;
+	@ApiModelProperty(example = "13:30")
+	private String playTime;
+	@ApiModelProperty(example = "texttext.....")
+	private String wikiContent;
+	@ApiModelProperty(example = "<h1>text...</h1>")
+	private String wikiContentHtml;
+	
 	public RequestHistoryResponse() {
 
 	}
