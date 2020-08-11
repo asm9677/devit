@@ -83,22 +83,28 @@
                                                         </tr>
                                                     </table>
                                                 </v-list-item-content>
-
                                                 <v-list-item-action> <v-btn icon style="height:0px;"></v-btn> </v-list-item-action>
-                                                <v-list-item-action> <v-btn icon style="height:0px;"></v-btn> </v-list-item-action>
-                                                                                                                                
-                                                            </v-list-item>
+                                                <v-list-item-action> <v-btn icon style="height:0px;"></v-btn> </v-list-item-action>                                                                                    
+                                            </v-list-item>
                                     </v-flex>
                                 </v-layout>
                             </v-list> 
    
-                            <v-list style="padding:20px 30px;">
-                                <v-layout>
+                            <v-list style="padding:0px 10px; margin-bottom:30px;">
+                                <v-list-item style="min-height:10px;" >
+                                <v-list-item-content style="margin-right:10px;">
+                                    <v-layout>
                                     <v-spacer></v-spacer><v-spacer></v-spacer>
                                     <v-btn depressed color="primary" @click="updateChapter">
                                         저장하기
                                     </v-btn>    
                                 </v-layout>
+                                                </v-list-item-content>
+                                                <v-list-item-action> <v-btn icon style="height:0px;"></v-btn> </v-list-item-action>
+                                                <v-list-item-action> <v-btn icon style="height:0px;"></v-btn> </v-list-item-action>                                                                                    
+                                            </v-list-item>
+                                
+                                
                             </v-list>      
                     </v-flex>                    
                     <v-flex v-show="option" style="border-left:1px solid #e2e2e2" md3 lg3 xl3> 
@@ -123,6 +129,7 @@
             v-model="snackbar"
             timeout="1500"
             color="primary"        
+            right
             
         >
             {{msg}}
@@ -133,7 +140,7 @@
                     제목
                 </v-card-title>
                 <v-card-text>
-                    <v-text-field v-model="title" dense></v-text-field>
+                    <v-text-field v-model="title" dense ref="title" id="title"></v-text-field>
                 </v-card-text>
                 <v-card-title>
                     검색 키워드
@@ -147,6 +154,8 @@
                         append-icon=""
                         v-model="tags"
                         dense
+                        ref="tags"
+                        id="tags"
                     >
                         <template v-slot:selection="{ attrs, item, parent, selected }">
                             <v-chip
@@ -164,9 +173,10 @@
                     </v-combobox>
                 </v-card-text>
                 <v-card-actions>
+                    
                     <v-layout>
                         <v-spacer></v-spacer>
-                        <v-btn depressed color="primary" @click="curItem.title=title; curItem.tags=tags; curItem.order=0; dialog=false;">
+                        <v-btn depressed color="primary" @click="saveChapter()">
                             저장하기
                         </v-btn>    
                         <div style="margin-right:5px"></div>
@@ -204,6 +214,7 @@ export default {
 
             dialog: false,
             curItem: null,
+            curIndex: -1,
             title: '',
             tags: [],
         }
@@ -223,6 +234,7 @@ export default {
             this.snackbar = true;
         },
         openDialog(item, index){
+            this.curIndex = -1;
             if(item == null){
                 item = {
                     "commonId": 0,
@@ -233,7 +245,7 @@ export default {
                     "videoYn": false,
                     "wikiYn": false,
                 }
-                this.chapter.splice(index, 0, item);
+                this.curIndex = index;
             }
 
             this.curItem = item;
@@ -275,6 +287,8 @@ export default {
             http.axios.post('/api/v1/lectures/sub', request).then(({data}) => {
             }).finally(() => {
                 this.getIndexList();
+                this.snackbar = true;
+                this.msg = '저장되었습니다.';
             })
         },
         getIndexList() {
@@ -292,6 +306,22 @@ export default {
                     })
                 }
             })
+        },
+        saveChapter(){
+            if(!this.title){
+                this.goto('#title', '목차명을 입력해주세요.')
+                this.$refs.title.focus();   
+            }
+            else if(!this.tags.length) {
+                this.goto('#tags', '검색 키워드를 입력해주세요.')
+                this.$refs.tags.focus();   
+            }else{
+                this.curItem.title=this.title;
+                this.curItem.tags=this.tags; 
+                this.curItem.order=0; 
+                this.dialog=false;
+                this.chapter.splice(this.curIndex, 0, this.curItem);
+            }
         }
     }
 }
