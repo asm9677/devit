@@ -30,6 +30,7 @@
 				br.board_id as boardId,
 				br.user_id as userId,
 				u.nickname as userName,
+				u.profile as profile,
 				br.reply_content as replyContent,
 				br.reply_created as replyCreated,
 				br.reply_modified as replyModified,

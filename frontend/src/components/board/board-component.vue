@@ -18,16 +18,13 @@
                 <v-col v-for="item in props.items" :key="item.boardId">
                     <v-card @click="goToDetail(item.boardId)" style="cursor:pointer">
                         <v-list-item>
-                            <v-icon size="40">mdi-account-circle</v-icon>
-                            <!--<v-list-item-avatar color="grey"><img src=""
-                            alt="John"></v-list-item-avatar>-->
+                            <v-list-item-avatar size="30" style="margin-right:0px;">
+                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                            </v-list-item-avatar>
                             <v-list-item-content>
-                                <!--<v-list-item-title class="headline">{{ item.title }}</v-list-item-title>-->
                                 <v-list-item class="board_writer">{{ item.userName }}</v-list-item>
                                 <v-list-item class="board_info">
                                     {{item.boardModified ? item.boardModified : item.boardCreated | moment('YYYY-MM-DD HH:mm')}}
-                                    <!-- <v-icon color="red" size="15" style="margin:0 5px;">mdi-heart-outline</v-icon>
-                                    {{item.likes ? item.likes : 0}} -->
                                     <v-icon size="15" style="margin:0 5px;">mdi-eye</v-icon>
                                     {{item.boardCount}}
                                     <v-icon size="15" style="margin:0 5px;">mdi-comment-processing</v-icon>
@@ -136,7 +133,7 @@
         },
         methods: {
             searchByPage() {
-                if(this.searchTxt != null && this.searchTxt != ""){
+                if (this.searchTxt != null && this.searchTxt != "") {
                     this.page = 1;
                 }
                 http
@@ -147,7 +144,9 @@
                     )
                     .then(({data}) => {
                         this.items = data.result;
-                        this.pageCnt = data.result[0].pageCnt;
+                        this.pageCnt = data
+                            .result[0]
+                            .pageCnt;
                         console.log("data.result", data.result)
                     })
                     .catch((error) => {
