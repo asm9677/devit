@@ -10,6 +10,7 @@ public class UserAuthDetails implements UserDetails {
 	private long userId;
 	private String nickname;
 	private String email;
+	private String profile;
 	private String password;
 
 	private Collection<? extends GrantedAuthority> authorities;
@@ -84,6 +85,14 @@ public class UserAuthDetails implements UserDetails {
 
 	}
 
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+
 	public UserAuthDetails(String email, String nickname, String password) {
 		super();
 		this.nickname = nickname;
@@ -93,8 +102,10 @@ public class UserAuthDetails implements UserDetails {
 
 	@Override
 	public String toString() {
-		return "UserAuthDetails [userId=" + userId + ", nickname=" + nickname + ", email=" + email + ", password="
-				+ password + ", authorities=" + authorities + "]";
+		return "UserAuthDetails [userId=" + userId + ", nickname=" + nickname + ", email=" + email + ", profile="
+				+ profile + ", password=" + password + ", authorities=" + authorities + "]";
 	}
+
+
 
 }

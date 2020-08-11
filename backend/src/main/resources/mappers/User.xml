@@ -24,14 +24,14 @@
 	<!-- 사용자 Email로 검색 -->
 	<select id="findUserByEmail" resultType="UserAuthDetails">
 		SELECT 
-		    u.user_id AS userId, nickname, email, password
+		    u.user_id AS userId, nickname, email, password, profile
 		FROM user u
 		WHERE email = #{email};
 	</select>
 	
 	<!-- 사용자 userId로 검색 -->
 	<select id="findUserByUserId" resultType="UserAuthDetails">
-		select user_id AS userId, nickname, email, password
+		select user_id AS userId, nickname, email, password, profile
 		from user
 		where user_id = #{userId}
 	</select>
