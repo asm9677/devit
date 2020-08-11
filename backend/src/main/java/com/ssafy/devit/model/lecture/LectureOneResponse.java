@@ -10,6 +10,7 @@ public class LectureOneResponse {
 	private String content;
 	private String thumbnailUrl;
 	private String nickname;
+	private String profile;
 	private Date created;
 	private int type;
 	private int lectureCount;
@@ -23,8 +24,8 @@ public class LectureOneResponse {
 	}
 
 	public LectureOneResponse(long lectureId, long userId, long commonId, String title, String content,
-			String thumbnailUrl, String nickname, Date created, int type, int lectureCount, int viewCount,
-			int likeCount, String tagName, boolean userLikeYn) {
+			String thumbnailUrl, String nickname, String profile, Date created, int type, int lectureCount,
+			int viewCount, int likeCount, String tagName, boolean userLikeYn) {
 		super();
 		this.lectureId = lectureId;
 		this.userId = userId;
@@ -33,6 +34,7 @@ public class LectureOneResponse {
 		this.content = content;
 		this.thumbnailUrl = thumbnailUrl;
 		this.nickname = nickname;
+		this.profile = profile;
 		this.created = created;
 		this.type = type;
 		this.lectureCount = lectureCount;
@@ -40,6 +42,14 @@ public class LectureOneResponse {
 		this.likeCount = likeCount;
 		this.tagName = tagName;
 		this.userLikeYn = userLikeYn;
+	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
 	}
 
 	public long getLectureId() {
