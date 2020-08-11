@@ -67,5 +67,8 @@ public interface LectureService {
 	public LectureSubOneResponse getOneOtherSubLecture(LectureSubOtherRequest request) throws Exception;
 	
 	// 요청 리스트 가져오기
-	public List<RequestHistoryResponse> getRequestLecturesList(@Param("lectureId") long lectureId, @Param("startPage") int startPage, @Param("reqType") String reqType, @Param("acceptType") String acceptType) throws Exception;
+	public List<RequestHistoryResponse> getRequestLecturesList(long lectureId, int startPage, String reqType, String acceptType) throws Exception;
+	
+	// 요청 리스트 요청 받기 또는 거절하기 업데이트 하기
+	public void updateRequestLecture(long subHisId, String type) throws Exception;
 }

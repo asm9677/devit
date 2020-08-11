@@ -2,7 +2,6 @@ package com.ssafy.devit.controller;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
+import com.ssafy.devit.model.lecture.RequestHistoryResponse;
 import com.ssafy.devit.model.request.HistoryLikeRequest;
 import com.ssafy.devit.model.request.LectureAuthRequest;
 import com.ssafy.devit.model.request.LectureRequest;
@@ -33,13 +33,11 @@ import com.ssafy.devit.service.LectureService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Example;
 
-@ApiResponses(value = { @ApiResponse(code = 401, message = "Unauthorized", response = CommonResponse.class),
-		@ApiResponse(code = 403, message = "Forbidden", response = CommonResponse.class),
-		@ApiResponse(code = 404, message = "Not Found", response = CommonResponse.class),
-		@ApiResponse(code = 500, message = "Failure", response = CommonResponse.class) })
 @RestController
 @RequestMapping("/api/v1/lectures")
 public class LectureController {
@@ -426,11 +424,16 @@ public class LectureController {
 		return response;
 	}
 
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = RequestHistoryResponse.class) })
 	@ApiImplicitParams({
-			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = false, dataType = "String", paramType = "header") })
 	@ApiOperation(value = "요청 리스트 가져오기")
 	@GetMapping("/historys")
-	public ResponseEntity<CommonResponse> getRequestHistorys(@RequestParam("lectureId") long lectureId, @RequestParam("startPage") int startPage, @RequestParam("reqType") String reqType, @RequestParam("acceptType") String acceptType) {
+	public ResponseEntity<CommonResponse> getRequestHistorys(
+			@ApiParam(value = "대표 프로젝트 ID", required = true) @RequestParam("lectureId") long lectureId,
+			@ApiParam(value = "시작 페이지 부터 20개", required = true, defaultValue = "0") @RequestParam("startPage") int startPage,
+			@ApiParam(value = "video or wiki", required = true, example = "video,wiki") @RequestParam("reqType") String reqType,
+			@ApiParam(value = "검색조건", required = true) @RequestParam("acceptType") String acceptType) {
 		log.info(">> Load : getRequestHistorys <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
@@ -443,6 +446,33 @@ public class LectureController {
 			result.msg = "fail";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 			log.info(">> Error : getRequestHistory <<");
+			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
+
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = Void.class) })
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "요청 리스트 목록 처리")
+	@PutMapping("/historys")
+	public ResponseEntity<CommonResponse> updateRequestHistory(
+			@ApiParam(value = "Y 또는 N", required = true) @RequestParam("type") String type,
+			@ApiParam(value = "subHistory ID", required = true) @RequestParam("subHisId") long subHisId) {
+		log.info(">> Load : updateRequestHistory <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			lectureService.updateRequestLecture(subHisId, type);
+			result.msg = "success";
+			result.result = "성공적으로 적용 되었습니다";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			result.result = "로그인 세션이 만료 되었거나 권한이 없습니다";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			log.info(">> Error : updateRequestHistory <<");
 			log.info(e.getMessage().toString());
 		}
 		return response;

@@ -208,4 +208,10 @@ public class LectureServiceImpl implements LectureService {
 		return lectureRepository.selectRequestLecturesList(lectureId, startPage, req.split(","), acceptType);
 	}
 
+	@Override
+	public void updateRequestLecture(long subHisId, String type) throws Exception {
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		lectureRepository.updateRequestLecture(subHisId, type);
+	}
+
 }

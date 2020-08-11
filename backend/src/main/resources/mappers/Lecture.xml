@@ -519,4 +519,11 @@
 	ORDER BY lsh.created DESC
 	   LIMIT #{startPage}, 20;
 	</select>
+	
+	<!-- 요청 리스트 요청받기 또는 거절하기 업데이트 하기 -->
+	<update id="updateRequestLecture">
+		UPDATE lecture_sub_history
+		   SET accept_yn = #{type}
+		   WHERE sub_his_id = #{subHisId}
+	</update>
 </mapper>
