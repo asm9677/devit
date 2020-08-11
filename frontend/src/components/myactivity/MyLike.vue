@@ -106,7 +106,7 @@
             this.loading = true;
             http
                 .axios
-                .get(`/api/v1/lectures?page=${this.page}&type=${this.level}`)
+                .get(`/api/v1/myLikeLecture?page=${this.page}&itemsperpage=4`)
                 .then(({data}) => {
                     this.page++;
                     this.letureItems = data.result;
@@ -129,7 +129,7 @@
                         this.loading = true;
                         http
                             .axios
-                            .get(`/api/v1/lectures?page=${this.page}&type=${this.level}`)
+                            .get(`/api/v1/myLikeLecture?page=${this.page}&itemsperpage=4`)
                             .then(({data}) => {
                                 this.page++;
 
@@ -144,21 +144,6 @@
                             })
                     }
                 }
-            },
-            addItem(i) {
-                this
-                    .letureItems
-                    .push({
-                        "lectureId": i,
-                        "title": '다 같이 배우는 파이썬',
-                        "thumbnailUrl": `https://picsum.photos/500/300?image=${i * 5}`,
-                        "nickname": "미용쓰기",
-                        "lectureCount": 20,
-                        "viewCount": 9900000,
-                        "likeCount": 999,
-                        "tagName": 'python,프로그래밍 언어,GUI',
-                        "userLikeYn": i % 3 == 0
-                    })
             },
             move(url) {
                 this
