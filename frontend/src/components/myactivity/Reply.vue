@@ -9,10 +9,10 @@
                     <v-list v-if="true" link="link">
                         <div
                             class="boardContent"
-                            style="width:100%; border-bottom:1px solid #c8c8c8; "
+                            style="width:100%; border-bottom:1px solid #c8c8c8; cursor:pointer;"
                             v-for="item in items"
-                            :key="item.boardId"
-                            @click="$emit('showDetail', 1)">
+                            :key="item.boardReplyId"
+                            @click="goToDetail(item.boardId, item.boardType, item.lectureId, item.subId)">
                             <v-list-item style="width:100%;">
                                 <v-list-item-content style="padding-bottom:0px;">
                                     <div class="v-list-item__title">{{ item.boardTitle }}</div>
@@ -22,9 +22,9 @@
                             <v-list-item>
                                 <v-list-item-content style="padding-top:0px;">
                                     <v-list-item-subtitle>
-                                        <v-avatar class="profile" size="15">
-                                            <v-img :src="'https://picsum.photos/500/300?image=15'"></v-img>
-                                        </v-avatar>
+                                        <v-list-item-avatar size="15" style="margin:0px;">
+                                            <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                        </v-list-item-avatar>
                                         <span style="margin-left:3px; font-size:12px;">{{ item.userName }}</span>
                                         &nbsp;&nbsp;
                                         <span style="font-size:12px;">
@@ -70,7 +70,11 @@
         data() {
             return {page: 1, pageCnt: 0, itemsPerPage: 4, items: [{}]}
         },
-        watch: {},
+        watch: {
+            page() {
+                this.searchByPage()
+            }
+        },
         created() {},
         mounted() {
             this.searchByPage();
@@ -91,7 +95,21 @@
                     .catch((error) => {
                         console.dir(error)
                     })
+                },
+            goToDetail(boardId, boardType, lectureId, subId) {
+                if (!lectureId) {
+
+                    this
+                    .$router
+                    .push({
+                        path: '/board/detail',
+                        query: {
+                            "boardtype": boardType,
+                            "boardId": boardId
+                        }
+                    });
                 }
+            }
         }
     }
 </script>
