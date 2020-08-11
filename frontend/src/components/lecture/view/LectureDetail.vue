@@ -255,6 +255,7 @@ export default {
         this.lectureId = this.$route.params.id;
         http.axios.get(`/api/v1/lectures/${this.$route.params.id}`).then(({data}) => {
             this.item = data.result;
+            console.dir(this.item)
         }).catch((error) => {
             
         }).finally(() => {

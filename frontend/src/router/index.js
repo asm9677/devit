@@ -22,6 +22,7 @@ import MyLike from '@/components/myactivity/MyLike.vue'
 import MyLikeLecture from '@/components/myactivity/MyLikeLecture.vue'
 import MyLikeVideo from '@/components/myactivity/MyLikeVideo.vue'
 
+
 Vue.use(VueRouter)
 
 

@@ -10,11 +10,9 @@
                             tile
                         >                        
                             <v-img 
-                                :src="'https://picsum.photos/500/300?image=20'"
-                                :lazy-src="'https://picsum.photos/500/300?image=20'"
+                                :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                                 aspect-ratio="1.7"
                                 :ref="'img'+i"
-                                
                             ></v-img>
                         </v-avatar>
                     </div>
@@ -37,14 +35,6 @@
                     <v-card :height="height" tile flat >
                     </v-card>
                     <v-row>
-                        <v-avatar
-                            class="profile"
-                            size=20
-                        >
-                            <v-img 
-                                :src="'https://picsum.photos/500/300?image=5'"
-                            ></v-img>
-                        </v-avatar>
                         <span class="nickname" style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
                     </v-row>
                 </v-col>
@@ -81,7 +71,7 @@
                 return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
         },
-        props: ['darkOption'],
+        props: ['darkOption', 'lectureId', 'subId'],
         data() {
             return {                
                 anotherHeight: 768,
@@ -123,8 +113,10 @@
             window.addEventListener('resize', this.handleResize2);
         },
         created(){            
-            for(let i = 0; i < 20; i++)
-                this.addItem(i);
+            http.axios.get(`/api/v1/lectures/sub/history/${this.subId}`).then(({data}) => {
+                this.items = data.result;
+                console.dir(data)
+            })
         },
         beforeDestroy(){
             window.removeEventListener('resize', this.handleResize2);
@@ -136,20 +128,6 @@
             move(url){
                 this.$router.push(url).catch(()=>{location.reload(true);});
             },
-            addItem(i){
-                this.items.push({
-                    "lectureId": i,
-                    "title": '다 같이 배우는 파이썬',
-                    "thumbnailUrl": `https://picsum.photos/500/300?image=${i*5}`,
-                    "nickname": "미용쓰기",
-                    "lectureCount": 20,
-                    "viewCount": 9900000,
-                    "likeCount": 999,
-                    "tagName": 'python,프로그래밍 언어,GUI',
-                    "userLikeYn": i%3 == 0
-                })
-            }
-
         }
     }
 </script>

@@ -47,7 +47,7 @@
                                                 size=20
                                             >
                                                 <v-img 
-                                                    :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                                                    :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
                                                 ></v-img>
                                             </v-avatar>
                                             <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
@@ -105,6 +105,7 @@ export default {
         http.axios.get(`/api/v1/lectures?page=${this.page}&type=${this.level}`).then(({data}) => {
             this.page++;
             this.items = data.result;
+            console.dir(data.result)
         }).finally(() => {
             this.loading = false;
         })
