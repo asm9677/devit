@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.devit.model.CommonResponse;
 import com.ssafy.devit.model.common.Common;
 import com.ssafy.devit.model.user.User;
+import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.service.CommonService;
 
 import io.swagger.annotations.ApiOperation;
@@ -39,11 +40,11 @@ public class CommonController {
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		try {
-			User user = null;
+			UserAuthDetails user = null;
 			try {
-				user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			} catch (Exception e) {
-				user = new User();
+				user = new UserAuthDetails();
 				user.setUserId(0);
 			}
 			result.result = commonService.findInfomationBySearch(user.getUserId(), searchText, startPage);
