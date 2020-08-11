@@ -118,7 +118,7 @@
 
                                     <v-list-item>
                                 <v-list-item-avatar size="30" style="margin-right:0px;">
-                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + replyItem.profile"></v-img>
                             </v-list-item-avatar>
                                         <v-list-item-content>
                                             <v-list-item class="comment_writer">{{ replyItem.userName }}</v-list-item>
@@ -382,6 +382,9 @@
                                             userName: data
                                                 .result[i]
                                                 .userName,
+                                            profile: data
+                                                .result[i]
+                                                .profile,
                                             isShow: false,
                                             showType: ""
                                         })
