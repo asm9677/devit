@@ -15,4 +15,7 @@ public interface BoardService {
 
 	public void createBoardWithLecture(BoardWithLectureRequest boardWithLectureRequest) throws Exception;
 	public List<BoardResponse> lectureQnaList(long lectureId, long subId) throws Exception;
+	
+	public List<BoardResponse> myBoardList(long startPage, long itemsperpage) throws Exception;
+	public List<BoardResponse> myReplyList(long startPage, long itemsperpage) throws Exception;
 }

@@ -25,7 +25,8 @@ import com.ssafy.devit.model.request.BoardWithLectureRequest;
 import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.model.user.UserResponse;
-import com.ssafy.devit.service.MyLikeService;
+import com.ssafy.devit.service.BoardService;
+import com.ssafy.devit.service.LectureService;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -41,11 +42,85 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/api/v1")
-public class MyLikeController {
+public class MyActivityController {
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
+
 	@Autowired
-	MyLikeService myLikeService;
+	LectureService lectureService;
+
+	@Autowired
+	BoardService boardService;
+	
+	
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@GetMapping("myMngLecture")
+	@ApiOperation(value = "관리중인 프로젝트 목록 조회")
+	public ResponseEntity<CommonResponse> myMngLectureList(@RequestParam("page") int startPage, @RequestParam("itemsperpage") int itemsperpage) throws Exception {
+		
+		log.info(">> my managing lecture list info <<");
+		
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			
+			
+			result.msg = "success";
+			result.result = lectureService.myMngLectureList(startPage, itemsperpage);
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return response;
+	}
+	
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@GetMapping("myboard")
+	@ApiOperation(value = "내가 쓴 게시글 목록 조회")
+	public ResponseEntity<CommonResponse> myBoardList(@RequestParam("page") int startPage, @RequestParam("itemsperpage") int itemsperpage) throws Exception {
+		
+		log.info(">> my board list info <<");
+		
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			
+			
+			result.msg = "success";
+			result.result = boardService.myBoardList(startPage, itemsperpage);
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return response;
+	}
+	
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@GetMapping("myreply")
+	@ApiOperation(value = "내가 쓴 댓글 목록 조회")
+	public ResponseEntity<CommonResponse> myReplyList(@RequestParam("page") int startPage, @RequestParam("itemsperpage") int itemsperpage) throws Exception {
+		
+		log.info(">> my reply list info <<");
+		
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			
+			
+			result.msg = "success";
+			result.result = boardService.myReplyList(startPage, itemsperpage);
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return response;
+	}
 	
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
@@ -61,7 +136,7 @@ public class MyLikeController {
 			
 			
 			result.msg = "success";
-			result.result = myLikeService.myLikeLectureList(startPage, itemsperpage);
+			result.result = lectureService.myLikeLectureList(startPage, itemsperpage);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -84,7 +159,7 @@ public class MyLikeController {
 			
 			
 			result.msg = "success";
-			result.result = myLikeService.myLikeVideoList(startPage, itemsperpage);
+			result.result = lectureService.myLikeVideoList(startPage, itemsperpage);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

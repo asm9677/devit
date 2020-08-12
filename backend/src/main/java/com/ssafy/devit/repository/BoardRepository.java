@@ -20,4 +20,8 @@ public interface BoardRepository {
 	public void createBoardWithLecture(BoardWithLectureRequest boardWithLectureRequest) throws Exception;
 	
 	public List<BoardResponse> lectureQnaList(@Param("lectureId") long lectureId, @Param("subId") long subId) throws Exception;
+
+	public List<BoardResponse> myBoardList(@Param("userId") long userId, @Param("startPage") long startPage, @Param("itemsperpage") long itemsperpage) throws Exception;
+	public List<BoardResponse> myReplyList(@Param("userId") long userId, @Param("startPage") long startPage, @Param("itemsperpage") long itemsperpage) throws Exception;
+
 }

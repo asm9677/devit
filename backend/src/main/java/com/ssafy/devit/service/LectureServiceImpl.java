@@ -213,5 +213,33 @@ public class LectureServiceImpl implements LectureService {
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		lectureRepository.updateRequestLecture(subId, subHisId, type, lwType);
 	}
+	
 
+	@Override
+	public List<LecturesResponse> myLikeLectureList(long startPage, long itemsperpage) throws Exception {
+		
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		startPage = (startPage-1) * itemsperpage;
+		return lectureRepository.myLikeLectureList(user.getUserId(), startPage, itemsperpage);
+	}
+	
+	@Override
+	public List<TheOhterSubLectureResponse> myLikeVideoList(long startPage, long itemsperpage) throws Exception {
+		
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		startPage = (startPage-1) * itemsperpage;
+		return lectureRepository.myLikeVideoList(user.getUserId(), startPage, itemsperpage);
+	}
+	
+	
+	@Override
+	public List<LecturesResponse> myMngLectureList(long startPage, long itemsperpage) throws Exception {
+		
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		startPage = (startPage-1) * itemsperpage;
+		return lectureRepository.myMngLectureList(user.getUserId(), startPage, itemsperpage);
+	}
 }
