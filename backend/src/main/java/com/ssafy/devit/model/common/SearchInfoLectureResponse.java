@@ -1,35 +1,53 @@
 package com.ssafy.devit.model.common;
 
-public class SearchInfoResponse {
+import io.swagger.annotations.ApiModelProperty;
+
+public class SearchInfoLectureResponse {
+	@ApiModelProperty(example = "대표 프로젝트 ID")
 	private long lectureId;
+	@ApiModelProperty(example = "대표 프로젝트 제목")
 	private String title;
+	@ApiModelProperty(example = "대표  프로젝트 내용")
 	private String content;
+	@ApiModelProperty(example = "대표 프로젝트 썸네일")
 	private String thumbnailUrl;
+	@ApiModelProperty(example = "대표 프로젝트를 생성한 사용자 닉네임")
 	private String nickname;
+	@ApiModelProperty(example = "대표 프로젝트를 생성한 사용자 프로필")
+	private String profile;
+	@ApiModelProperty(example = "대표 프로젝트에 속해있는 목차의 개수, 총 강의 수")
 	private int lectureCount;
+	@ApiModelProperty(example = "대표 프로젝트 조회 수")
 	private int viewCount;
+	@ApiModelProperty(example = "대표 프로젝트 좋아요 수")
 	private int likeCount;
+	@ApiModelProperty(example = "해당 API 요청시 반환되는 대표 프로젝트 총 개수")
+	private int totalCount;
+	@ApiModelProperty(example = "태그들")
 	private String tagName;
+	@ApiModelProperty(example = "초,중,고급 타입")
 	private int type;
+	@ApiModelProperty(example = "사용자 좋아요 처리 여부")
 	private boolean userLikeYn;
 
-	public SearchInfoResponse() {
+	public SearchInfoLectureResponse() {
 
 	}
 
-	public SearchInfoResponse(long lectureId, String title, String content, String thumbnailUrl, String nickname,
-			int lectureCount, int viewCount, int likeCount, String tagName, int type, boolean userLikeYn) {
-		this.lectureId = lectureId;
-		this.title = title;
-		this.content = content;
-		this.thumbnailUrl = thumbnailUrl;
-		this.nickname = nickname;
-		this.lectureCount = lectureCount;
-		this.viewCount = viewCount;
-		this.likeCount = likeCount;
-		this.tagName = tagName;
-		this.type = type;
-		this.userLikeYn = userLikeYn;
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
+	}
+
+	public int getTotalCount() {
+		return totalCount;
+	}
+
+	public void setTotalCount(int totalCount) {
+		this.totalCount = totalCount;
 	}
 
 	public long getLectureId() {
