@@ -104,14 +104,12 @@ public class LectureServiceImpl implements LectureService {
 		if (dto.getLikeCount() > 0) {
 			// 좋아요를 누른 적이 있다면
 			String likeFlag = dto.getLikeFlag().equals("Y") ? "N" : "Y";
-			System.out.println(1);
 			lectureRepository.updateLikeHistoryByUserId(user.getUserId(), request.getLectureId(), request.getSubId(),
 					request.getSubHisId(), likeFlag);
 		} else {
 			// 좋아요를 누른 적이 한번도 없다면
 			lectureRepository.insertLikeHistoryByUserId(user.getUserId(), request.getLectureId(), request.getSubId(),
 					request.getSubHisId());
-			System.out.println(2);
 		}
 	}
 
