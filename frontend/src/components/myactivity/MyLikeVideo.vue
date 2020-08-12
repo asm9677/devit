@@ -2,19 +2,18 @@
     <div style="margin:50px">
 
         <v-layout row="row" wrap="wrap">
-            <v-flex>
-                <div style="width:100%; margin:0 10px; padding:0 60px;">
+            
+                <div style="width:100%; margin:0 auto;">
                     <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">내가 좋아요한 동영상</span>
                 </div>
-                <v-flex
+                <v-flex>
                     v-for="(item,i) in items"
                     :key="`4${i}`"
                     xs12="xs12"
                     sm6="sm6"
                     md4="md4"
                     lg3="lg3"
-                    xl2="xl2"
-                    style="margin:0 auto; padding:0 60px;">
+                    xl2="xl2">
                     <v-card
                         tile="tile"
                         flat="flat"
@@ -61,7 +60,7 @@
 
                         </v-list>
                     </v-card>
-                </v-flex>
+                
             </v-flex>
         </v-layout>
     </div>
@@ -73,10 +72,11 @@
     crossorigin="anonymous"></script>
 <script>
     import http from "@/util/http_common.js"
+    import store from "@/store/index.js"
 
     export default {
         data() {
-            return {items: [], level: this.$route.query.level, page: 1, itemsperpage: 10, loading: false}
+            return {items: [], level: this.$route.query.level, page: 1, itemsperpage: 20, loading: false}
         },
         filters: {
             convertView(num) {
@@ -103,7 +103,12 @@
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
         },
-        created() {
+        created(){
+            if(!store.state.token) {
+                this.$router.push('/')
+            }
+        },
+        mounted() {
             this.loading = true;
             http
                 .axios
