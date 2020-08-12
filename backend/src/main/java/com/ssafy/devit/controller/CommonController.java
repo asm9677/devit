@@ -35,8 +35,8 @@ public class CommonController {
 
 	@ApiOperation(value = "검색어로 프로젝트 정보들 가져오기")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = SearchInfoLectureResponse.class) })
-	@PostMapping("/search/lectures")
-	public ResponseEntity<CommonResponse> searchInfoLectureBySearchText(@RequestBody SearchFormRequest request) {
+	@GetMapping("/search/lectures")
+	public ResponseEntity<CommonResponse> searchInfoLectureBySearchText(SearchFormRequest request) {
 		log.info(">> Load : searchInfoLectureBySearchText <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
@@ -56,8 +56,8 @@ public class CommonController {
 	
 	@ApiOperation(value = "검색어로 목차 정보들 가져오기")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = SearchInfoIndexResponse.class) })
-	@PostMapping("/search/indexs")
-	public ResponseEntity<CommonResponse> searchInfoIndexBySearchText(@RequestBody SearchFormRequest request) {
+	@GetMapping("/search/indexs")
+	public ResponseEntity<CommonResponse> searchInfoIndexBySearchText(SearchFormRequest request) {
 		log.info(">> Load : searchInfoIndexBySearchText <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
