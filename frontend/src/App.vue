@@ -74,4 +74,31 @@ export default {
             -webkit-border-radius: 3px;
         } 
     }
+    .v-application p{
+        margin: 0px;
+    } 
+
+    blockquote {
+        color: #7f8fa4;
+        font-size: inherit;
+        padding: 8px 24px;
+        margin: 16px 0;
+        border-left: 3px solid #eaeaea;
+    }
+
+    hr {
+        border-top: 1px solid #e1e1e1;
+    }
+
+    pre {
+        margin-bottom: 16px;
+        font-size: 13px;
+        line-height: 1.6em;
+        overflow-x: auto;
+        border-radius: 2px;
+    }
+
+    a {
+        text-decoration:none
+    }
 </style>

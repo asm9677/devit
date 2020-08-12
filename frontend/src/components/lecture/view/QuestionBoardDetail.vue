@@ -1,7 +1,7 @@
 <template>
     <div>
-        <v-layout wrap>            
-            <v-list style dense>
+        <v-layout wrap style="width:100%;">            
+            <v-list style="width:100%" dense>
                 <v-list-item>
                     <v-list-item-content class="wrap-text">
                         {{item.boardTitle}}
@@ -53,17 +53,17 @@
                             ></v-img>
                         </v-list-item-avatar >
                         <v-list-item-content>
-                            <v-list-item-title>
-                                {{replyItem.userName}}
+                            <v-list-item-title style="margin-bottom:4px;">
+                                <span style="font-weight:700; font-family:'Malgun Gothic';">{{replyItem.userName}}</span>
                             </v-list-item-title>
-                            <v-list-item-subtitle class="wrap-text" v-html="replyItem.replyContent">
+                            <v-list-item-subtitle class="wrap-text" v-html="replyItem.replyContent" style="color:black; font-weight:400; font-family:'Malgun Gothic';">
                             </v-list-item-subtitle>
-                            <v-list-item-subtitle>
-                                {{replyItem.replyModified | moment('YYYY.MM.DD. HH:mm')}} &middot; <div v-if="replyItem.isMine=='Y'"><span style="font-size:12px;">수정</span>  <span style="font-size:12px;">삭제</span>  </div>
+                            <v-list-item-subtitle style="color:#979797; font-size:12px; font-weight:400; font-family:'Malgun Gothic'; margin-top:7px;">
+                                {{replyItem.replyModified | moment('YYYY.MM.DD. HH:mm')}} <template v-if="replyItem.isMine=='Y'">&middot; <span style="font-size:12px;">수정</span>  <span style="font-size:12px;">삭제</span>  </template>
                             </v-list-item-subtitle> 
                         </v-list-item-content>                    
                     </v-list-item>
-                    <v-list-item :key="`${i}_divider`" >
+                    <v-list-item :key="`${i}_divider`" style="min-height:0px;">
                         <v-divider />
                     </v-list-item>
                 </template>
@@ -137,7 +137,7 @@ export default {
 }
 
 .v-list {
-  height: 550px;
+  height: 650px;
   overflow-y: auto;
   padding-right:15px;
 }
