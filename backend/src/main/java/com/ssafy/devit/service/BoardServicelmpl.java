@@ -3,11 +3,13 @@ package com.ssafy.devit.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.devit.model.lecture.BoardResponse;
 import com.ssafy.devit.model.request.BoardRequest;
 import com.ssafy.devit.model.request.BoardWithLectureRequest;
+import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.repository.BoardRepository;
 
 @Service
@@ -78,5 +80,23 @@ public class BoardServicelmpl implements BoardService {
 		}
 		
 		return boardRepository.lectureQnaList(lectureId, subId);
+	}
+	
+	@Override
+	public List<BoardResponse> myBoardList(long startPage, long itemsperpage) throws Exception {
+		
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		startPage = (startPage-1) * itemsperpage;
+		return boardRepository.myBoardList(user.getUserId(), startPage, itemsperpage);
+	}
+	
+	@Override
+	public List<BoardResponse> myReplyList(long startPage, long itemsperpage) throws Exception {
+		
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		startPage = (startPage-1) * itemsperpage;
+		return boardRepository.myReplyList(user.getUserId(), startPage, itemsperpage);
 	}
 }
