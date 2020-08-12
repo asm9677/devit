@@ -75,7 +75,11 @@
                 this.searchByPage()
             }
         },
-        created() {},
+        created(){
+            if(!store.state.token) {
+                this.$router.push('/')
+            }
+        },
         mounted() {
             this.searchByPage();
         },

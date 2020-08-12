@@ -93,7 +93,7 @@ export default {
               { title: '내가 쓴 글/댓글', active: false, path: '/myboard' },
               { title: '내가 좋아요한 강의', active: false, path: '/mylike' },
               // { title: '수강한 강의', active: false, path: '/' },
-              { title: '참여중인 프로젝트', active: false, path: '/' },
+              { title: '참여중인 프로젝트', active: false, path: '/myreqlist' },
               { title: '관리중인 프로젝트', active: false, path: '/mymnglecture' },
             ],
           },
