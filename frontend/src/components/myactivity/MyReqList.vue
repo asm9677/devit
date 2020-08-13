@@ -10,9 +10,12 @@
                                 <template v-for="(item,index) in items">
                                     <v-divider :key="`${index}_divider`"/>
                                     <v-list-item :key="`${index}_memberList`" link @click="curItem=item">
-                                        <v-list-item-avatar size="30" rounded="false">
-                                            <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.lectureThumbnail"></v-img>
+                                        <v-list-item-avatar size="30" rounded="0">
+                                            <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.lectureThumbnailUrl"></v-img>
                                         </v-list-item-avatar>
+                                        <v-list-item-content>
+                                            {{item.lectureTitle}}
+                                        </v-list-item-content>
                                         <v-list-item-content>
                                             <v-list-item-title>
                                                 <b>{{item.subTitle}}</b>&nbsp;      
@@ -21,7 +24,6 @@
                                                 <span> {{item.nickname}} {{item.created | diffDate}}</span>
                                             </v-list-item-subtitle>                                                
                                         </v-list-item-content>
-                                        
                                         <v-list-item-action>
                                             <v-icon color="green" v-if="item.acceptYn=='Y'">
                                                 mdi-check-circle-outline
