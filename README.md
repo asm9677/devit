@@ -6,34 +6,22 @@
 
 ## Index
 
-1. [DevIT UP! - 참여형 강의 플랫폼](#DevIT-UP!-참여형-강의-플랫폼)
-
-2. [Index](#Index)
-
-3. [Team's 'DevIT' 프로젝트 참여자](#Team's-'DevIT'-프로젝트-참여자)
-
-4. [기획 및 협업을 위한 작업물](#기획-및-협업을-위한-작업물)
-
-5. [Project structure](#Project-structure)
-
-6. [Develop tools](#Develop-tools)
-   1. [IDE used](#IDE-used)
-   2. [Tool/Program used](#Tool/Program-used)
-   3. [Develop env/infra](#Develop-env/infra)
-   4. [Cooperation](#Cooperation)
-   5. [Library used](#Library-used)
-      - [backend](#backend)
-      - [frontend](#frontend)
-
-7. [Project process](#Project-process)
-
-8. [Branch strategy](#Branch-strategy)
-   - [[type] commit msg, issue key](#[type]-commit-msg,-issue-key)
-   - [[Detail] 규칙](#[Detail]-규칙)
-
-9. [Project docs](#Project-docs)
-
-
+1. [Team's 'DevIT' 프로젝트 참여자](##Team's-'DevIT'-프로젝트-참여자)
+2. [기획 및 협업을 위한 작업물](##기획-및-협업을-위한-작업물)
+3. [Project structure](##Project-structure)
+4. [Develop tools](##Develop-tools)
+   - [IDE used](###IDE-used)
+   - [Tool/Program used](###Tool/Program-used)
+   - [Develop env/infra](###Develop-env/infra)
+   - [Cooperation](###Cooperation)
+   - [Library used](###Library-used)
+     - [backend](#####backend)
+     - [frontend](#####frontend)
+5. [Project process](##Project-process)
+6. [Branch strategy](##Branch-strategy)
+   - [[type] commit msg, issue key](###[type]-commit-msg,-issue-key)
+   - [[Detail] 규칙](###[Detail]-규칙)
+7. [Project docs](##Project-docs)
 
 <br>
 
@@ -60,7 +48,15 @@
 
 ## 기획 및 협업을 위한 작업물
 
-[DevIT Up! - 참여형 강의 플랫폼](https://www.notion.so/msnodeve/DevIT-Up-64f92628821f46478d47d57fb70f016f)
+Notion으로 오세요! [DevIT Up! - 참여형 강의 플랫폼](https://www.notion.so/msnodeve/DevIT-Up-64f92628821f46478d47d57fb70f016f)
+
+
+
+<br>
+
+<br>
+
+
 
 
 
@@ -71,6 +67,7 @@
 ├── .gitignore # Git 버전 관리에서 제외할 파일 목록을 지정하는 파일
 ├── .gitlab-ci.yml # CI/CD 관련 Gitlab-runner 사용 파일
 ├── README.md
+├── image # 이미지 관련 폴더
 ├── res # 출력물
 │   └── 초기 와이어프레임
 │   	├── image # 와이어프레임 이미지
@@ -195,11 +192,9 @@
 - [vuedraggable](https://www.npmjs.com/package/vuedraggable)_v2.24.0
 - [vuetify](https://vuetifyjs.com/ko/)_v2.3.4
 - [vuex](https://vuex.vuejs.org/kr/)_v3.4.0
-
 - [vue videojs](https://jsfiddle.net/amosgwa/avyto22v/)
 - [kakao login api](https://developers.kakao.com/docs/latest/ko/kakaologin/js)
 - [jQuery](https://jquery.com/)
-
 - [fontawesome](https://fontawesome.com/)
 
 
@@ -214,7 +209,7 @@
 
 ## Project process
 
-
+<img src="./image/project_process.png"/>
 
 
 
@@ -261,7 +256,5 @@
 
 **[Frontend docs](./frontend)**
 
-##### [Backend docs](./backend)
-
-#### 
+**[Backend docs](./backend)**
 
