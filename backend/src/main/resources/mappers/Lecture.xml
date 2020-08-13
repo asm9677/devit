@@ -223,8 +223,7 @@
 		FROM
 		    lecture_tag
 		GROUP BY tag_name
-		ORDER BY tagCount DESC
-		LIMIT 20;
+		ORDER BY tagCount DESC;
 	</select>
 	
 	<!-- 사용자가 좋아요를 눌렀는지 확인 -->
