@@ -8,6 +8,7 @@ import com.ssafy.devit.model.request.BoardWithLectureRequest;
 
 public interface BoardService {
 	public void upload(BoardRequest board) throws Exception;
+	public void uploadNotice(long  boardId) throws Exception;
 	public BoardResponse info(long bid, long userId) throws Exception;
 	public void delete(long bid) throws Exception;
 	public void update(BoardResponse boardResponse, long bid) throws Exception;

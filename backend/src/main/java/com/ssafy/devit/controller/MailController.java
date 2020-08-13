@@ -3,6 +3,8 @@ package com.ssafy.devit.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,33 +31,128 @@ public class MailController {
 	MailService mailService;
 
 	@Async
-	@GetMapping
-	public void sendMail(@RequestParam("email") String email) throws Exception {
-		log.info(">> Load : sendMail <<");
+	@GetMapping("/confirmCheck")
+	// 이메일인증을 마친 계정인지 확인
+	public ResponseEntity<CommonResponse> confirmCheck(@RequestParam("email") String email) throws Exception {
+		log.info(">> Load : confirmCheck <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		
 		try {
-			mailService.updateEmailConfirm(email);
-		} catch (Exception e) {
-			log.info(">> Error : sendMail <<");
+			int temp = mailService.checkEmailConfirm(email); 
+			if( temp > 0) {			
+				result.msg = "success: already confirmed";
+				result.result = "이미 인증된 계정입니다.";
+				response = new ResponseEntity<>(result, HttpStatus.OK);			
+				return response;
+			}else {				
+				result.msg = "success: need to confirm";
+				result.result = "인증이 필요한 계정입니다..";
+				response = new ResponseEntity<>(result, HttpStatus.OK);
+				return response;
+			}	
+		}catch	(Exception e) {
+			log.info(">> Error : emailConfirmMail <<");
 			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			result.result = "계정 인증여부 확인 실패.";
+			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
+		
+		return response;
 	}
 
-	@GetMapping("/confirm")
-	public String confirmMail(@RequestParam("email") String email, @RequestParam("code") int code) {
-		log.info(">> Load : confirmMail <<");
-		try {
-			if (mailService.confirmEmailCode(email, code) >= 1) {
-				// 이메일 인증 완료
-				mailService.updateEmailConfirm(email);
-			} else {
-
-			}
-		} catch (Exception e) {
-			log.info(">> Error : confirmMail <<");
-			log.info(e.getMessage().toString());
-		}
-		String projectUrl = "";
-		return "redirect:http://www.naver.com";
+	@GetMapping("/sendMailToConfirm")
+	// 계정인증을 위한 메일 전송
+	public ResponseEntity<CommonResponse> emailConfirmMail(@RequestParam("email_to") String email_to) {
+		log.info(">> Load : emailConfirmMail <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		
+		try {			
+			mailService.sendEmailConfirmMail(email_to);
+			result.msg = "success";
+			result.result = "성공적으로 이메일 확인 메일이 보내졌습니다.";
+			response = new ResponseEntity<>(result, HttpStatus.OK);
 			
+		} catch (Exception e) {
+			log.info(">> Error : emailConfirmMail <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			result.result = "계정 인증 메일 발송 실패.";
+			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		}
+		
+		return response;			
+	}
+	
+	@GetMapping("/emailConfirm")
+	// 이거 하면 user 테이블의 email_confirm이 'Y'가 됨
+	public ResponseEntity<CommonResponse> emailConfirm(@RequestParam("email") String email) {
+		log.info(">> Load : emailConfirm <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		
+		try {			
+			mailService.updateEmailConfirm(email);
+			result.msg = "success";
+			result.result = "성공적으로 계정인증이 완료되었습니다.";
+			response = new ResponseEntity<>(result, HttpStatus.OK);
+			
+		} catch (Exception e) {
+			log.info(">> Error : updateEmailConfirm <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			result.result = "계정 인증 실패.";
+			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		}
+		
+		return response;
+			
+	}
+	
+	@GetMapping("/passwordConfirm")
+	// 비밀번호 찾기 요청으로써, 실행되면 비밀번호 찾기 요청을 본인이 한게 맞는지 확인하는 메일이 보내진다.
+	// (이거는 프론트에서 하는거 맞겠지?)메일로 보낸 링크를 사용자가 클릭하면 passwordChangeRandom를 실행한다.
+	public ResponseEntity<CommonResponse> passwordConfirmMail(@RequestParam("email_to") String email_to) {
+		log.info(">> Load : passeordConfirmMail <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		
+		try {
+			mailService.sendPasswordFindConfirmMail(email_to);	
+			result.msg = "success";
+			result.result = "성공적으로 비밀번호 변경 확인 메일이 보내졌습니다.";
+			response = new ResponseEntity<>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			log.info(">> Error : passwordConfirmMail <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			result.result = "비밀번호 변경 확인 메일이 발송 실패.";
+			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		}				
+		return response;
+	}
+	
+	@GetMapping("/passwordChangeRandom")
+	// 임의의 비밀번호로 변경이 되고 그 비밀번호가 메일로 보내진다.
+	public ResponseEntity<CommonResponse> passwordChangeRandom(@RequestParam("email_to") String email_to) {
+		log.info(">> Load : passeordChange <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		
+		try {
+			mailService.updatePasswordRandom(email_to);	
+			result.msg = "success";
+			result.result = "성공적으로 비밀번호가 변경 되었습니다.";
+			response = new ResponseEntity<>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			log.info(">> Error : passwordChagne <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			result.result = "비밀번호 변경 실패.";
+			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		}				
+		return response;
 	}
 }

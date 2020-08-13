@@ -223,8 +223,7 @@
 		FROM
 		    lecture_tag
 		GROUP BY tag_name
-		ORDER BY tagCount DESC
-		LIMIT 20;
+		ORDER BY tagCount DESC;
 	</select>
 	
 	<!-- 사용자가 좋아요를 눌렀는지 확인 -->
@@ -399,12 +398,36 @@
 		    	ON lt.common_id = lsi.common_id
 		WHERE
 		    lsi.lecture_id = #{lectureId} AND lsi.order = #{order};
+		    
+		
+		SELECT @subHisV := lsi.video_id FROM lecture_sub_index lsi WHERE lsi.lecture_id = #{lectureId} AND lsi.order = #{order};
+		
+		SELECT @subHisW := lsi.wiki_id FROM lecture_sub_index lsi WHERE lsi.lecture_id = #{lectureId} AND lsi.order = #{order};
+		
+		UPDATE lecture_sub_history SET view_count = view_count+1 WHERE sub_his_id = @subHisV;
+		
+		UPDATE lecture_sub_history SET view_count = view_count+1 WHERE sub_his_id = @subHisW;
 	</select>
 	
 	<!-- 강의, 위키 리퀘스트 날리기 -->
-	<insert id="insertSubHistory">
+	<insert id="insertSubHistory" useGeneratedKeys="true" keyProperty="subHisId" parameterType="LectureSubHistoryRequest" >
 		INSERT INTO lecture_sub_history(lecture_id, sub_id, user_id, modifier, play_time, player_url, wiki_content, wiki_content_html, req_type, title, thumbnail_url)
 		VALUES(#{lectureId}, #{subId}, #{userId}, #{userId}, #{playTime}, #{playerUrl}, #{wikiContent}, #{wikiContentHtml}, #{reqType}, #{title}, #{thumbnailUrl})
+	</insert>
+	
+	<!-- 권한자에게 리퀘스트 알림 날리기 -->
+	<insert id="uploadNoticeAuth">
+		INSERT INTO notice(
+			notice_type, 
+    		user_id,    		 
+    		sub_his_id, 
+    		lecture_id, 
+    		sub_id    		
+		)
+		select  3, la.user_id, lsh.sub_his_id, lsh.lecture_id, lsh.sub_id
+		from lecture_sub_history lsh 
+		left outer join lecture_auth la on lsh.lecture_id = la.lecture_id
+		where lsh.sub_his_id = #{subHisId};
 	</insert>
 	
 	<!-- 같은 종류의 다른 동영상 -->
@@ -413,6 +436,7 @@
 		    lsi.lecture_id lectureId,
 		    lsi.sub_id subId,
             lsh.sub_his_id subHisId,
+            lsi.order,
 		    lsh.title,
 		    lsh.player_url playerUrl,
 		    lsh.play_time playTime,
@@ -420,6 +444,7 @@
 		    IFNULL(lg.like_count, 0) likeCount,
 		    lsh.thumbnail_url thumbnailUrl,
             (SELECT nickname FROM user WHERE user_id = lsh.user_id) nickname,
+            (SELECT profile FROM user WHERE user_id = lsh.user_id) profile,
 		    CASE
 		        WHEN
 		            EXISTS( SELECT 
@@ -614,6 +639,7 @@
 		    IFNULL(lg.like_count, 0) likeCount,
 		    lsh.thumbnail_url thumbnailUrl,
             (SELECT nickname FROM user WHERE user_id = lsh.user_id) nickname,
+            (SELECT profile FROM user WHERE user_id = lsh.user_id) profile,
 		    TRUE as userLikeYn
 		FROM
 		    lecture_sub_index lsi

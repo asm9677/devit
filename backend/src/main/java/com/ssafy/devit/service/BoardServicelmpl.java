@@ -27,6 +27,11 @@ public class BoardServicelmpl implements BoardService {
 	}
 	
 	@Override
+	public void uploadNotice(long boardId) throws Exception {		
+		boardRepository.uploadNotice(boardId);
+	}
+	
+	@Override
 	public BoardResponse info(long bid, long userId) throws Exception {
 		if(bid < 1) {
 			throw new Exception("잘못된 boardId가 나왔습니다.");

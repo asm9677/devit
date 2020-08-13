@@ -3,7 +3,7 @@ package com.ssafy.devit.model.reply;
 import java.util.Date;
 
 public class Reply {
-	//private long boardReplyId;
+	private long boardReplyId;
 	private long boardId;	
 	private long userId;
 	private Date replyCreated;
@@ -21,13 +21,13 @@ public class Reply {
 		this.parentReplyId = parentReplyId;
 	}
 
-//	public long getBoardReplyId() {
-//		return boardReplyId;
-//	}
-//
-//	public void setBoardReplyId(long boardReplyId) {
-//		this.boardReplyId = boardReplyId;
-//	}
+	public long getBoardReplyId() {
+		return boardReplyId;
+	}
+	public void setBoardReplyId(long boardReplyId) {
+		this.boardReplyId = boardReplyId;
+	}
+	
 	public long getBoardId() {
 		return boardId;
 	}
