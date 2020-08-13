@@ -1,6 +1,6 @@
 package com.ssafy.devit.model.lecture;
 
-public class MainResponse {
+public class MainStatusResponse {
 	private String totalUsers; //누적 회원 수
 	private String totalDeviters; //강의에 참여한 사람
 	private String totalLectures; //누적 강의 수
@@ -26,9 +26,10 @@ public class MainResponse {
 		this.totalLectures = totalLectures;
 	}
 	
+
+	public MainStatusResponse() {}
 	
-	
-	public MainResponse(String totalUsers, String totalDeviters, String totalLectures){
+	public MainStatusResponse(String totalUsers, String totalDeviters, String totalLectures){
 		this.totalUsers = totalUsers;
 		this.totalDeviters = totalDeviters;
 		this.totalLectures = totalLectures;
