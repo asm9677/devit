@@ -15,4 +15,13 @@
 		SELECT count(*) FROM user
 		WHERE email = #{email} AND code = #{code}
 	</select>
+	
+	<select id="checkEmailConfirm" resultType="Integer">
+		SELECT count(*) FROM user
+		WHERE email = #{email} AND email_confirm = 'Y'
+	</select>	
+	
+	<update id="updatePasswordRandom">
+		UPDATE user SET password = #{password} WHERE email = #{email} 
+	</update>
 </mapper>

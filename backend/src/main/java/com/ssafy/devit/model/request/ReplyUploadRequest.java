@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class ReplyUploadRequest {
 
-	//private long boardReplyId;
+	private long boardReplyId;
 	private long boardId;
 	private long userId;	
 	private String replyContent;
@@ -22,13 +22,13 @@ public class ReplyUploadRequest {
 	public ReplyUploadRequest() {
 		super();
 	}
-//	public long getBoardReplyId() {
-//		return boardReplyId;
-//	}
-//
-//	public void setBoardReplyId(long boardReplyId) {
-//		this.boardReplyId = boardReplyId;
-//	}
+	public long getBoardReplyId() {
+		return boardReplyId;
+	}
+
+	public void setBoardReplyId(long boardReplyId) {
+		this.boardReplyId = boardReplyId;
+	}
 	
 	public long getBoardId() {
 		return boardId;

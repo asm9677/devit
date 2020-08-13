@@ -9,7 +9,7 @@ buildscript {
 
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    }
+    }    
 }
 
 apply plugin : 'java'
@@ -50,6 +50,10 @@ dependencies {
 
 	// Mail service
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	
+	// FireBase
+	implementation 'com.google.firebase:firebase-admin:6.8.1'
+    implementation group: 'com.squareup.okthhp3', name: 'okhttp', version: '4.2.2'
 	
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude module: 'junit'

@@ -59,6 +59,8 @@ public interface LectureRepository {
 	@Transactional
 	public void insertSubHistory(LectureSubHistoryRequest lecture) throws Exception;
 	
+	public void uploadNoticeAuth(LectureSubHistoryRequest lecture) throws Exception;
+	
 	// 강의 권한 병경
 	@Transactional
 	public void updateLectureAuth(@Param("lectureId") long lectureId, @Param("auths") List<LectureAuthRequest> auths) throws Exception;
@@ -84,7 +86,7 @@ public interface LectureRepository {
 	
 	public void updateLectureViewCount(@Param("lectureId") long lectureId) throws Exception;
 	
-	public void insertAuthLecture(@Param("lectureId") long lectureId, @Param("userId") long userId, @Param("role") String role) throws Exception;
+	public void insertAuthLecture(@Param("lectureId") long lectureId, @Param("userId") long userId, @Param("role") String role) throws Exception;	
 	
 	public List<LectureRoleUsersResponse> selectRoleUsersByLectureId(@Param("lectureId") long lectureId) throws Exception;
 }

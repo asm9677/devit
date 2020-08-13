@@ -10,6 +10,7 @@ import com.ssafy.devit.model.request.ReplyUpdateRequest;
 
 public interface ReplyRepository {
 	public void upload(Reply reply);
+	public void uploadNotice(@Param("boardReplyId") long boardReplyId);
 	public List<ReplyResponse> info(@Param("bid") long bid, @Param("userId") long userId) throws Exception;
 	public void delete(long reply_id) throws Exception;
 	public void update(ReplyUpdateRequest request) throws Exception;

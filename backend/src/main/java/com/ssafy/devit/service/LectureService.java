@@ -50,6 +50,9 @@ public interface LectureService {
 	// 강의 위키 요청 리퀘스트
 	public void registrySubHistory(LectureSubHistoryRequest lecture) throws Exception;
 	
+	// 요청 올라왔다고 알려주기
+	public void uploadNoticeAuth(LectureSubHistoryRequest lecture) throws Exception;
+	
 	// 강의 권한 병경
 	public void updateLectureAuth(long lectureId, List<LectureAuthRequest> auth) throws Exception;
 	

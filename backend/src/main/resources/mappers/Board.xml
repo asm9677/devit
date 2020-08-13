@@ -11,6 +11,19 @@
 			values(#{userId}, #{boardTitle}, #{boardContent}, #{boardType}, #{boardCount}, now())
 		</insert>
 		
+	<!-- 알림 업로드 -->
+		<!-- <insert id="uploadNotice"> -->
+		<insert id="uploadNotice">
+			insert into notice(
+				notice_type, 
+				user_id,				 
+				board_id
+			)
+			select  1, u.user_id, #{boardId}
+			from user u			
+			where u.active = 'Y';
+		</insert>
+		
    <!--  게시글 조회 -->
       <select id="info" resultType="BoardResponse">
       

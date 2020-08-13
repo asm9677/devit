@@ -5,10 +5,25 @@
 <mapper namespace="com.ssafy.devit.repository.ReplyRepository">
 	
 	<!-- 댓글 등록 -->
-	<insert id="upload">
-		insert into board_reply(user_id, board_id, reply_content, parent_reply_id)
-		values(#{userId}, #{boardId}, #{replyContent}, #{parentReplyId})
-	</insert>
+		<insert id="upload" useGeneratedKeys="true" keyProperty="boardReplyId" parameterType="Reply">
+			insert into board_reply(user_id, board_id, reply_content, parent_reply_id)
+			values(#{userId}, #{boardId}, #{replyContent}, #{parentReplyId})
+		</insert>
+	
+	<!-- 댓글 알림 등록 -->
+		<insert id="uploadNotice">			
+			insert into notice(
+				notice_type, 
+				user_id,				 
+				board_id
+			)
+			select  if(b.type = 1, 1, 2), b.user_id, b.board_id
+			from board b
+			left outer join board_reply br on b.board_id = br.board_id
+			where b.board_id = br.board_id 
+			and br.board_reply_id = #{boardReplyId}
+			and b.user_id != br.user_id;
+		</insert>
 	
 	<!--  댓글 삭제 -->
 		<update id="delete">
