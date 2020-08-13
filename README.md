@@ -1,4 +1,4 @@
-# DevIT Up! - 참여형 강의 플랫폼
+# DevIT Up! 참여형 강의 플랫폼
 
 <br>
 
@@ -6,7 +6,40 @@
 
 ## Index
 
-[TOC]
+1. [DevIT UP! - 참여형 강의 플랫폼](#DevIT-UP!-참여형-강의-플랫폼)
+
+2. [Index](#Index)
+
+3. [Team's 'DevIT' 프로젝트 참여자](#Team's-'DevIT'-프로젝트-참여자)
+
+4. [기획 및 협업을 위한 작업물](#기획-및-협업을-위한-작업물)
+
+5. [Project structure](#Project-structure)
+
+6. [Develop tools](#Develop-tools)
+   1. [IDE used](#IDE-used)
+   2. [Tool/Program used](#Tool/Program-used)
+   3. [Develop env/infra](#Develop-env/infra)
+   4. [Cooperation](#Cooperation)
+   5. [Library used](#Library-used)
+      - [backend](#backend)
+      - [frontend](#frontend)
+
+7. [Project process](#Project-process)
+
+8. [Branch strategy](#Branch-strategy)
+   - [[type] commit msg, issue key](#[type]-commit-msg,-issue-key)
+   - [[Detail] 규칙](#[Detail]-규칙)
+
+9. [Project docs](#Project-docs)
+
+
+
+<br>
+
+<br>
+
+
 
 ## Team's 'DevIT' 프로젝트 참여자
 
@@ -177,7 +210,11 @@
 
 
 
-## 프로젝트 전체 프로세스
+
+
+## Project process
+
+
 
 
 
@@ -189,9 +226,7 @@
 
 
 
-### Branch strategy
-
----
+## Branch strategy
 
 | 브랜치 이름         | 목적                            | 비고 |
 | ------------------- | ------------------------------- | ---- |
@@ -201,8 +236,8 @@
 | release             | 배포 하기 전 브랜치             |      |
 | fix                 | 배포한 제품 버그 발견시 버그 킬 |      |
 
-> [type] commit msg, issue key
->
+### [type] commit msg, issue key
+
 > - feature : 새로운 기능 관련해서 작업한 내용을 적을 때 사용
 > - fix : 버그를 수정했을 때 사용
 > - doc : 문서 README.md를 수정했을 때 사용
@@ -210,10 +245,9 @@
 > - cicd : 배포관련이나 빌드 관련 작업 했을 때 사용
 > - style : 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우 사용
 > - refactor: 코드 리팩토링 할때 사용
->
->
-> [Detail] 규칙
->
+
+### [Detail] 규칙
+
 > - 제목은 50자를 넘기지 말것
 > - 대문자로 작성
 > - 마침표를 붙이지 말것
@@ -223,11 +257,9 @@
 
 
 
-### Project docs
+## Project docs
 
----
-
-##### [Frontend docs](./frontend)
+**[Frontend docs](./frontend)**
 
 ##### [Backend docs](./backend)
 
