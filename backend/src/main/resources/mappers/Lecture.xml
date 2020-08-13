@@ -341,7 +341,7 @@
 		    lshw.wiki_content_html wikiContentHtml,
 		    lt.tagName,
 		    lshv.thumbnail_url thumbnailUrl,
-		                (SELECT COUNT(1) FROM lecture_sub_index WHERE lecture_id = 110) AS lectureCount,
+			(SELECT COUNT(1) FROM lecture_sub_index WHERE lecture_id = #{lectureId} AND lecture_sub_index.order != 0) AS lectureCount,
 		    CASE
 		        WHEN EXISTS(SELECT 1
 		                	FROM lecture_sub_his_like
@@ -553,6 +553,18 @@
 		   SET accept_yn = #{type},
 		   	   modified = now()
 	     WHERE sub_his_id = #{subHisId};
+	  
+ 	     <if test='type == "N" and reqType == "video"'>
+	     	UPDATE lecture_sub_index 
+			SET video_id = NULL
+			WHERE sub_id = #{subId};
+	     </if>
+	     
+   	     <if test='type == "N" and reqType == "wiki"'>
+	     	UPDATE lecture_sub_index 
+			SET wiki_id = NULL
+			WHERE sub_id = #{subId};
+	     </if>
 	     
 	     <if test='type == "Y" and reqType == "video"'>
 	     	UPDATE lecture_sub_index
