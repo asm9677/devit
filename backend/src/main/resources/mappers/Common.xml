@@ -94,10 +94,13 @@
 	           1=1
 			   left outer join
 	           (
-	            select count(1) as totalDeviters
-	              from lecture_sub_history 
-				 where accept_yn = 'Y'
-			  group by user_id
+	            select count(1) as totalDeviters 
+                from (
+		                select user_id
+			              from lecture_sub_history 
+						 where accept_yn = 'Y'
+					  group by user_id
+		              ) a
 	           ) d
 	           on
 	           1=1
