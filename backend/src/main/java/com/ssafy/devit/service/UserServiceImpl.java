@@ -86,4 +86,9 @@ public class UserServiceImpl implements UserService {
 	public String getUserPasswordByUserId(long userId) throws Exception {
 		return userRepository.getUserPasswordByUserId(userId);
 	}
+	
+	@Override
+	public String getUserIsAdmin(long userId) throws Exception{
+		return userRepository.getUserIsAdmin(userId);
+	};
 }

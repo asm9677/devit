@@ -51,13 +51,13 @@ public class BoardServicelmpl implements BoardService {
 	}
 	
 	@Override
-	public List<BoardResponse> listinfo(long startPage, long type, long itemsperpage, String searchselect, String searchtxt, long userId) throws Exception {
+	public List<BoardResponse> listinfo(long startPage, long type, long itemsperpage, String searchselect, String searchtxt) throws Exception {
 		if(type < 1) {
 			throw new Exception("잘못된 type이 나왔습니다.");
 		}
 		startPage = (startPage-1) * itemsperpage;
 //		return boardRepository.listinfo(type);
-		return boardRepository.listinfo(startPage, type, itemsperpage, searchselect, searchtxt, userId);
+		return boardRepository.listinfo(startPage, type, itemsperpage, searchselect, searchtxt);
 		
 	}
 	

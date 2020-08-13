@@ -8,7 +8,7 @@
                             <v-list-item style="margin-bottom:5px;">
                                 <v-hover v-slot:default="{ hover }">
                                     <v-btn
-                                        v-show="isBtnShow"
+                                        v-if="isBtnShow"
                                         outlined="outlined"
                                         depressed="depressed"
                                         text="text"

@@ -196,4 +196,32 @@ public class UserController {
 		}
 		return response;
 	}
+	
+	@GetMapping("/user/isadmin")
+	@ApiOperation(value = "유저 admin 여부")
+	public ResponseEntity<CommonResponse> getUserIsAdmin() {
+		log.info(">> Load : getUserIsAdmin <<");
+		final CommonResponse result = new CommonResponse();
+		ResponseEntity<CommonResponse> response = null;
+		
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			user = new UserAuthDetails();
+			user.setUserId(0);
+		}
+		
+		try {
+			result.result = userService.getUserIsAdmin(user.getUserId());
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			log.info(">> Error : getUserIsAdmin <<");
+			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
 }

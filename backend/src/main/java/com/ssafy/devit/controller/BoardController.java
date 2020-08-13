@@ -183,19 +183,9 @@ public class BoardController {
 		// PathVariable로 type를 받아서 해당 게시글 목록을 조회한다.
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
-		
-
-		UserAuthDetails user = null;
-		try {
-			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		} catch (Exception e) {
-			user = new UserAuthDetails();
-			user.setUserId(0);
-		}
-		
 		try {
 			result.msg = "success";
-			result.result = boardService.listinfo(startPage, type, itemsperpage, searchselect, searchtxt, user.getUserId());
+			result.result = boardService.listinfo(startPage, type, itemsperpage, searchselect, searchtxt);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

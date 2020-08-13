@@ -71,10 +71,7 @@
                      else ceil(c.cnt/#{itemsperpage})
 				end as pageCnt,
          		a.lecture_id as lectureId,
-         		a.sub_id as subId,
-         		case when exists (select 1 from user_role where user_id = #{userId} and user_role = 'ROLE_ADMIN') then 'Y'
-         			else 'N'
-         		end as isAdmin
+         		a.sub_id as subId
            from board a
 		        left outer join 
 		        user b 
