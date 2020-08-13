@@ -21,10 +21,10 @@
                                                                                     <v-list-item-title>
                                                                                         {{item.title}} 
                                                                                         <div style="float:right">
-                                                                                            <v-icon color="primary lighten-1" v-show="!item.videoYn">
+                                                                                            <v-icon :color="item.videoYn ? 'primary lighten-1' : 'error darken-1'" v-show="!item.videoYn">
                                                                                                 mdi-play-circle-outline
                                                                                             </v-icon>    
-                                                                                            <v-icon style="margin-left:5px;" color="primary lighten-1" v-show="!item.wikiYn">
+                                                                                            <v-icon style="margin-left:5px;" :color="item.wikiYn ? 'primary lighten-1' : 'error darken-1'" v-show="!item.wikiYn">
                                                                                                 mdi-script-text-outline
                                                                                             </v-icon>                                                                                     
                                                                                         </div>
@@ -95,7 +95,7 @@
                                 <v-list-item-content style="margin-right:10px;">
                                     <v-layout>
                                     <v-spacer></v-spacer><v-spacer></v-spacer>
-                                    <v-btn depressed color="primary" @click="updateChapter">
+                                    <v-btn outlined color="primary" @click="updateChapter">
                                         저장하기
                                     </v-btn>    
                                 </v-layout>
@@ -117,7 +117,8 @@
                             <v-list-item>                                       
                                 <v-list-item-content style="font-size:14px;">                                
                                     <div>
-                                        
+                                        하나의 목차에는 여러 사람들이 영상을 올리고, 위키 문서를 수정할 수 있습니다.
+                                        <span class="primary--text">적절한 범위와 주제를 가지고 프로젝트가 어떤 방향으로 나아갈지 제시</span>해보세요! 
                                     </div>                                
                                 </v-list-item-content>                                    
                             </v-list-item>                            
@@ -319,7 +320,8 @@ export default {
                 this.curItem.tags=this.tags; 
                 this.curItem.order=0; 
                 this.dialog=false;
-                this.chapter.splice(this.curIndex, 0, this.curItem);
+                if(this.curIndex != -1)
+                    this.chapter.splice(this.curIndex, 0, this.curItem);
             }
         }
     }

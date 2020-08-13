@@ -10,31 +10,23 @@
                                 <v-list-item>
                                     <v-list-item-title>
                                         <div style="margin-top:15px;">
-                                            <v-textarea
-                                                v-model="content"
-                                                no-resize
-                                                rows=10
-                                                outlined
-                                                placeholder="마크다운 에디터 개발 예정입니다."      
-                                                ref="content"                                                                                           
-                                                id="content"
-                                            ></v-textarea>
+                                            <editor v-model="content" height="450"> </editor>
                                         </div>
                                     </v-list-item-title>
+                                </v-list-item>
+                                <v-list-item style="margin-top:20px;">
+                                    <v-layout>
+                                        <v-spacer></v-spacer>
+                                        <v-btn  color="success" outlined @click="ValidationForm">
+                                            저장하기
+                                        </v-btn>    
+                                        <div style="margin-right:7px"></div>
+                                    </v-layout>
                                 </v-list-item>
                             </v-list> 
    
                             <v-list style="padding:20px 100px;">
-                                <v-layout>
-                                    <v-spacer></v-spacer>
-                                    <v-btn depressed color="primary" @click="ValidationForm">
-                                        저장하기
-                                    </v-btn>    
-                                    <div style="margin-right:5px"></div>
-                                    <v-btn depressed>
-                                        취소하기
-                                    </v-btn>    
-                                </v-layout>
+                                
                             </v-list>      
                     </v-flex>                    
                     <v-flex v-show="option" style="border-left:1px solid #e2e2e2" md3 lg3 xl3> 
@@ -62,10 +54,12 @@
         <v-snackbar
             v-model="snackbar"
             timeout="1500"
-            color="primary"        
-            right            
+            :color="color"        
+            right                        
         >
             {{msg}}
+
+
         </v-snackbar>
   </div>
 </template>
@@ -75,22 +69,31 @@
 import http from "@/util/http_common.js"
 import axios from "axios"
 import store from "@/store/index.js"
+import Editor from "@/components/common/Editor.vue"
 export default {
+    components: {
+        Editor,
+    }, 
     props: ['option','tab','curTab'],
     watch: {
         curTab(){
             if(this.tab == this.curTab){
                 this.getIntroPage();
             }
+        },
+        content() {
+            console.dir(this.content)
         }
     },
     data() {
         return {         
             commonId: 0,
             lectureId: 0,
-            content: '',
+            content: '123',
+            
             snackbar: false,
             msg: '',            
+            color:'success',
         }
     },
     created(){
@@ -98,19 +101,11 @@ export default {
         this.getIntroPage();
     },
     methods: {
-        goto(target, msg){
-            this.$vuetify.goTo(target, {
-                duration: 300,
-                offset: 150,
-                easing: 'easeInOutCubic'
-            })
-            this.msg = msg;
-            this.snackbar = true;
-        },
         ValidationForm(){
             if(!this.content){          
-                this.goto('#content', '설명을 입력해주세요.')
-                this.$refs.content.focus();                                
+                this.msg = "내용을 입력해주세요!";
+                this.snackbar = true;                         
+                this.color = "error darken-1"
             }else{
                 this.saveIntroPage();
             }
@@ -132,6 +127,7 @@ export default {
             }).then(({data}) => {
                 this.snackbar = true;
                 this.msg = '저장되었습니다.';
+                this.color = "success"
             })
         }
         

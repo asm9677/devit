@@ -1,8 +1,32 @@
 <template>
   <div style="; margin-top:20px;">
-        <v-card tile flat >
-                <v-layout wrap>
-                    <v-flex xs12 sm12 md8 lg8 xl8 style="margin-left:0px;">                         
+        <v-card tile flat >            
+                <v-layout wrap>    
+                    <v-container fluid v-show="!items.length" >         
+                        <v-row>
+                            <v-col cols="12">
+                                <v-row
+                                    align="end"
+                                    justify="center"
+                                style="height: 300px;"
+                                >                                    
+                                    <v-icon style="font-size:120px;"> mdi-emoticon-cry-outline </v-icon>                                
+                                </v-row>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12">
+                                <v-row
+                                    align="end"
+                                    justify="center"
+                                >       
+                                    <div style="font-size:20px"> 요청 목록이 비어있습니다 :( </div>    
+                                </v-row>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                    
+                    <v-flex xs12 sm12 md8 lg8 xl8 style="margin-left:0px;" v-if="items.length ">                         
                             <v-list style="padding:10px 0px;" dense>
                                 <v-list-item>
                                     요청 목록
@@ -42,7 +66,7 @@
                                 </template>
                             </v-list>    
                     </v-flex>                    
-                    <v-flex v-show="option"  md4 lg4 xl4> 
+                    <v-flex v-show="option"  md4 lg4 xl4  v-if="items.length "> 
                         <v-list style="position: sticky; top:60px;" dense>
                             <div style="
                                     width:100%; 
@@ -79,7 +103,7 @@
                                     margin:30px 0px;
                                 ">                              
                                 
-                                        <v-img v-if="curItem.reqType == 'video'" :src="'http://i3a101.p.ssafy.io/images/' + curItem.thumbnailUrl">
+                                        <v-img v-if="curItem.reqType == 'video'" :src="'http://i3a101.p.ssafy.io/images/' + (curItem ? curItem.thumbnailUrl : '')">
                                             <template v-slot:placeholder>
                                                 <v-row
                                                 class="fill-height ma-0"
@@ -118,6 +142,8 @@ export default {
 
             items: [],
             curItem: null,
+
+            height: 500,
         }
     },
     filters: {
