@@ -24,7 +24,12 @@ public class ReplyServicelmpl implements ReplyService {
 		if(reply == null) {
 			throw new Exception("잘못된 reply가 나왔습니다.");
 		}
-		replyRepository.upload(reply);
+		replyRepository.upload(reply);		
+	}
+	
+	@Override
+	public void uploadNotice(long boardReplyId) throws Exception {		
+		replyRepository.uploadNotice(boardReplyId);		
 	}
 	
 	@Override

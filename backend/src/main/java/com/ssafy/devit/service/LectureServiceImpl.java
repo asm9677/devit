@@ -173,6 +173,11 @@ public class LectureServiceImpl implements LectureService {
 		lecture.setUserId(user.getUserId());
 		lectureRepository.insertSubHistory(lecture);
 	}
+	
+	@Override
+	public void uploadNoticeAuth(LectureSubHistoryRequest lecture) throws Exception{
+		lectureRepository.uploadNoticeAuth(lecture);
+	}
 
 	@Override
 	public void updateLectureAuth(List<LectureAuthRequest> auths) throws Exception {

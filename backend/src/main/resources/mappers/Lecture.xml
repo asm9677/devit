@@ -402,9 +402,24 @@
 	</select>
 	
 	<!-- 강의, 위키 리퀘스트 날리기 -->
-	<insert id="insertSubHistory">
+	<insert id="insertSubHistory" useGeneratedKeys="true" keyProperty="subHisId" parameterType="LectureSubHistoryRequest" >
 		INSERT INTO lecture_sub_history(lecture_id, sub_id, user_id, modifier, play_time, player_url, wiki_content, wiki_content_html, req_type, title, thumbnail_url)
 		VALUES(#{lectureId}, #{subId}, #{userId}, #{userId}, #{playTime}, #{playerUrl}, #{wikiContent}, #{wikiContentHtml}, #{reqType}, #{title}, #{thumbnailUrl})
+	</insert>
+	
+	<!-- 권한자에게 리퀘스트 알림 날리기 -->
+	<insert id="insertNoticeAuth">
+		INSERT INTO notice(
+			notice_type, 
+    		user_id,    		 
+    		sub_his_id, 
+    		lecture_id, 
+    		sub_id    		
+		)
+		select  3, la.user_id, lsh.sub_his_id, lsh.lecture_id, lsh.sub_id
+		from lecture_sub_history lsh 
+		left outer join lecture_auth la on lsh.lecture_id = la.lecture_id
+		where lsh.sub_his_id = #{subHisId};
 	</insert>
 	
 	<!-- 같은 종류의 다른 동영상 -->

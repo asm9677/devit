@@ -59,7 +59,11 @@ public interface LectureRepository {
 	// 강의, 위키 리퀘스트 요청
 	@Transactional
 	public void insertSubHistory(LectureSubHistoryRequest lecture) throws Exception;
-		
+	
+	// 강의 권한 변경
+	@Transactional
+	public void updateLectureAuth(@Param("lectureId") long lectureId, @Param("auths") List<LectureAuthRequest> auths) throws Exception;
+	
 	// 같은 종류의 다른 강의들 가져오기
 	public List<TheOhterSubLectureResponse> selectTheOtherSubLectures(@Param("subId") long subId, @Param("userId") long userId) throws Exception;
 	
@@ -94,6 +98,8 @@ public interface LectureRepository {
 	// 요청 리스트 요청 받기 또는 거절하기 업데이트 하기
 	public void updateRequestLecture(@Param("subId") long subId, @Param("subHisId") long subHisId, @Param("type") String type, @Param("reqType") String lwType) throws Exception;
 	
+	public void uploadNoticeAuth(LectureSubHistoryRequest lecture) throws Exception;
+	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
 	
 	public LectureOneResponse selectLectureByLectureId(@Param("lectureId") long lectureId, @Param("userId") long userId) throws Exception;
@@ -102,7 +108,7 @@ public interface LectureRepository {
 	
 	public void updateLectureViewCount(@Param("lectureId") long lectureId) throws Exception;
 	
-	public void insertAuthLecture(@Param("lectureId") long lectureId, @Param("userId") long userId, @Param("role") String role) throws Exception;
+	public void insertAuthLecture(@Param("lectureId") long lectureId, @Param("userId") long userId, @Param("role") String role) throws Exception;	
 	
 	public List<LectureRoleUsersResponse> selectRoleUsersByLectureId(@Param("lectureId") long lectureId) throws Exception;
 }
