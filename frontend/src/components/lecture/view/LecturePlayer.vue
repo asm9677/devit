@@ -141,7 +141,7 @@
                             </v-list-item>
                             <v-list>
                                 <v-list-item>                                
-                                    <another-video :darkOption="darkOption" :lectureId="lectureId" :subId="subId"></another-video>
+                                    <another-video :darkOption="darkOption" :lectureId="lectureId" :subId="subId" :tabs="tabs" :order="order"></another-video>
                                 </v-list-item>
                             </v-list>
                             
@@ -238,29 +238,7 @@
                                 </v-list-item-action>
                             </v-list-item>   
                         </v-list>
-                    </v-tab-item>
-                    <v-tab-item>
-                        <v-list :dark="darkOption">
-                            <v-list-item>
-                                <v-list-item-content>
-                                    <v-list-item-title>
-                                        기여하기
-                                    </v-list-item-title>                        
-                                </v-list-item-content>
-                                <v-list-item-action @click="closeList">
-                                    <v-icon>
-                                        mdi-close
-                                    </v-icon>
-                                </v-list-item-action>
-                            </v-list-item>
-                            <v-list>
-                                <v-list-item>                                
-                                    
-                                </v-list-item>
-                            </v-list>
-                        </v-list>                        
-                    </v-tab-item>
-                    
+                    </v-tab-item>                    
                     <v-tab-item>
                         <v-list>
                             <v-list-item>
@@ -290,8 +268,7 @@
                                 </v-list-item-content>
                             </v-list-item>                            
                         </v-list>
-                    </v-tab-item>
-                    
+                    </v-tab-item>                    
                 </v-tabs>
             </v-card>
         </v-expand-x-transition>
@@ -300,19 +277,19 @@
 
             <div style="position:absolute; top:0px; left:0px; width:100%; height:100%; z-index:10; ">            
                     <div :style="{'width' : videoWidth+'px'}">
-                        <video
-                            ref="video"
-                            id="livestation-player"
-                            class="video-js vjs-default-skin vjs-big-play-centered"
-                            controls
-                            preload="auto"
-                            data-setup='{}'
-                            style="width:100%;min-height:500px;"   
-                            poster="http://i3a101.p.ssafy.io/images/2659d2f2-f9c6-4074-8921-fe6d1a70a122.jpg"
-                            v-show="sub.playerUrl"
-                        >
-                            <source :src="`http://i3a101.p.ssafy.io/images/${sub.playerUrl}`"></source>
-                        </video>        
+                        <div id="videoFrame">
+                            <video
+                                ref="video"
+                                id="livestation-player"
+                                class="video-js vjs-default-skin vjs-big-play-centered"
+                                controls
+                                data-setup='{}'
+                                style="width:100%;min-height:500px;"   
+                                :poster="`http://i3a101.p.ssafy.io/images/${sub.thumbnailUrl}`"
+                            >
+                                <!-- <source src="http://i3a101.p.ssafy.io/images/example2.mp4"></source> -->
+                            </video>
+                        </div>        
                         <div v-show="!sub.playerUrl" style="padding:15px;">
                             등록된 영상이 없습니다.
                         </div>
@@ -444,6 +421,10 @@ export default {
     },
     data(){
         return {
+            tabName: ['index','another','question','setting','detail'],
+            tabs: 0,
+            menu: 0,
+            
             lectureId: 0,
             subId: 0,
             subHisId: 0,
@@ -466,14 +447,11 @@ export default {
             listWidth:400,
             videoWidth:500,
             list: true,
-            tabs: 0,
-            menu: 0,
 
             myPlayer: null,
 
             btnLoading: false,
             snackbar: false,
-
         }
     },
     watch: {
@@ -489,6 +467,30 @@ export default {
         },
         autoPlay() {
             localStorage.setItem('autoPlay', this.autoPlay ? 'true' : 'false');
+        },
+        tabs() {
+            if(this.tabs == 4) {
+                history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}&subId=${this.subId}&subHisId=${this.subHisId}&boardId=${this.boardId}`);
+            }else {
+                history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}&subId=${this.subId}&subHisId=${this.subHisId}`);
+            }            
+        },
+        sub() {
+            var videoPlayer = document.getElementById('videoFrame');
+            $('#videoFrame').html(
+                `
+                    <video
+                        class="video-js vjs-default-skin vjs-big-play-centered"
+                        controls
+                        data-setup='{}'
+                        style="width:100%;min-height:500px;"   
+                        poster="http://i3a101.p.ssafy.io/images/${this.sub.thumbnailUrl}"
+                    >
+                        <source src="http://i3a101.p.ssafy.io/images/${this.sub.playerUrl}"> </source>
+                    </video>
+                `
+            )
+            
         }
     },
     filters: {
@@ -496,20 +498,19 @@ export default {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         },
     },
-    created(){        
+    created(){    
+        console.dir(this.tabName[-1])
         this.lectureId = this.$route.params.id;
         this.order = this.$route.query.order;
-
-        http.axios.get(`/api/v1/lectures/sub/${this.lectureId}?order=${this.order}`).then(({data}) => {
-            if(data.result) {
-                this.sub = data.result;
-                this.subId = this.sub.subId;
-                this.subHisId = this.sub.subHisId;
-            }else{
-                // alert("존재하지 않는 강의 입니다.");
-                // this.move("/")
-            }
-        })
+        this.tabs = this.tabName.indexOf(this.$route.params.tabName);             
+        this.menu = this.tabs;
+        if(this.menu == 4) {
+            this.menu = 2;
+            this.boardId = this.$route.query.boardId
+        }
+        this.subId = this.$route.query.subId;    
+        this.subHisId = this.$route.query.subHisId;
+        
         
         this.darkOption = localStorage.getItem('darkOption')        
         if(this.darkOption == null)
@@ -524,6 +525,13 @@ export default {
             this.autoPlay= this.autoPlay == 'true';
     },
     mounted() {
+  
+        if(this.subHisId) {
+            this.loadSub();     
+        }else {
+            this.loadMain();
+        }  
+
         if(this.darkOption){
             $('.LecturePlayer .v-list-item__content').css('color', '#d4d4d4')
             $('.LecturePlayer .wiki-paragraph').css('color', '#d4d4d4')
@@ -531,30 +539,47 @@ export default {
             $('.LecturePlayer .v-list-item__content').css('color', '#000000DE')
             $('.LecturePlayer .wiki-paragraph').css('color', '#000000DE')
         }
+        if(this.tabs == -1)   {
+            this.closeList();
+        }
         
         this.handleResize()
         window.addEventListener('resize', this.handleResize)     
-        // 동영상 길이 구하는 법
-        // var myPlayer = videojs('livestation-player');  
-        // myPlayer.ready(function() {
-        //     var key = setInterval(() => {
-        //         if(myPlayer.duration()){
-        //             console.dir(myPlayer.duration())
-        //             clearInterval(key);
-        //         }
-        //     }, 100)
-        // });
-
-        // 종료 시 다음 강의로 넘어가기
-        // myPlayer.on('ended', function() {
-        // //    alert("끝!")
-        //  });
-
     },
     beforeDestroy(){
         window.removeEventListener('resize', this.handleResize);
     },
     methods: {
+        loadMain() {
+            http.axios.get(`/api/v1/lectures/sub/${this.lectureId}?order=${this.order}`).then(({data}) => {
+                if(data.result) {                    
+                    this.sub = data.result;
+                    this.subId = this.sub.subId;
+                    this.subHisId = this.sub.subHisId;
+                }else{
+                    // alert("존재하지 않는 강의 입니다.");
+                    // this.move("/")
+                }
+            }).finally( () => {
+                var myPlayer = document.getElementById('livestation-player');
+            $('#livestation-player').html(`<source src="http://i3a101.p.ssafy.io/images/${this.sub.playerUrl}">`)
+            $('#livestation-player').attr('poster',`http://i3a101.p.ssafy.io/images/${this.sub.thumbnailUrl}`)
+            })  
+        },
+        loadSub() {
+            http.axios.get(`/api/v1/lectures/sub/history?lectureId=${this.lectureId}&subId=${this.subId}&subHisId=${this.subHisId}`).then(({data}) => {
+                if(data.result) {                    
+                    this.sub = data.result;
+                    console.dir(data.result);
+                }else{
+                    console.dir(data);
+                }
+            }).finally( () => {
+                var myPlayer = document.getElementById('livestation-player');
+            $('#livestation-player').html(`<source src="http://i3a101.p.ssafy.io/images/${this.sub.playerUrl}">`)
+            $('#livestation-player').attr('poster',`http://i3a101.p.ssafy.io/images/${this.sub.thumbnailUrl}`)
+            }) 
+        },
         handleResize() {
             this.navWidth = this.$refs.nav.miniVariantWidth;
             this.videoWidth = document.body.scrollWidth - this.listWidth - this.navWidth;
@@ -567,6 +592,7 @@ export default {
             this.videoWidth = document.body.scrollWidth - this.listWidth - this.navWidth;
             this.list = false;
             this.menu = -1;
+            this.tabs = -1;
         },
 
         openList(){
@@ -580,7 +606,7 @@ export default {
             this.$router.push(url)
         },
         showDetail(id){
-            this.tabs=5;
+            this.tabs=4;
             this.boardId = id;
         },
         clickLike(){

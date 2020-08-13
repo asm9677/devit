@@ -60,6 +60,10 @@ public class ReplyController {
 		try {
 			replyService.upload(reply);
 			// bid에 해당하는 게시글을 조회한다.
+			log.info("boardId :" + reply.getBoardReplyId());
+			//// notice insert!!
+			replyService.uploadNotice(reply.getBoardReplyId());
+			////
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {

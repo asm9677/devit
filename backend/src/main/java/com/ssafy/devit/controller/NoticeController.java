@@ -1,5 +1,7 @@
 package com.ssafy.devit.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,19 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
 import com.ssafy.devit.model.lecture.BoardResponse;
-import com.ssafy.devit.model.request.BoardRequest;
+import com.ssafy.devit.model.notice.Notice;
+import com.ssafy.devit.model.notice.NoticeResponse;
 import com.ssafy.devit.model.request.BoardUpdateRequest;
-import com.ssafy.devit.model.request.BoardUploadRequest;
-import com.ssafy.devit.model.request.BoardWithLectureRequest;
 import com.ssafy.devit.model.user.User;
-import com.ssafy.devit.model.user.UserAuthDetails;
-import com.ssafy.devit.model.user.UserResponse;
-import com.ssafy.devit.service.MyBoardService;
+import com.ssafy.devit.service.NoticeService;
+import com.ssafy.devit.service.UserService;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -41,55 +40,64 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/api/v1")
-public class MyBoardController {
+public class NoticeController {
 	Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	MyBoardService myBoardService;
+	NoticeService noticeService;
 	
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
-	@GetMapping("myboard")
-	@ApiOperation(value = "내가 쓴 게시글 목록 조회")
-	public ResponseEntity<CommonResponse> myBoardList(@RequestParam("page") int startPage, @RequestParam("itemsperpage") int itemsperpage) throws Exception {
-		
-		log.info(">> my board list info <<");
-		
+	@GetMapping("notice/{userId}")
+	@ApiOperation(value = "알림 조회")
+	public ResponseEntity<CommonResponse> info() throws Exception {
+		log.info(">> notice info <<");
+		// PathVariable로 bid를 받아서 해당 게시글을 조회한다.
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
+		
 		try {
-			
-			
+			User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
 			result.msg = "success";
-			result.result = myBoardService.myBoardList(startPage, itemsperpage);
+			result.result = noticeService.getNotice(user.getUserId());
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+			result.msg = "fail to getNotice";
+			System.out.println("fail to get data");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		} 
 		return response;
 	}
-	
+
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
-	@GetMapping("myreply")
-	@ApiOperation(value = "내가 쓴 댓글 목록 조회")
-	public ResponseEntity<CommonResponse> myReplyList(@RequestParam("page") int startPage, @RequestParam("itemsperpage") int itemsperpage) throws Exception {
-		
-		log.info(">> my reply list info <<");
-		
+	@PutMapping("/notice")
+	@ApiOperation(value = "알림 읽음 처리")
+	public ResponseEntity<CommonResponse> setNoticeRead(@RequestParam("notice_id") long noticeId) throws Exception{
+		log.info(">> noticeUpdate <<");
+
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
+		
 		try {
-			
-			
+			User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+			noticeService.setNoticeRead(noticeId);
 			result.msg = "success";
-			result.result = myBoardService.myReplyList(startPage, itemsperpage);
+			
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+			result.msg = "fail to setNotice";
+			System.out.println("fail to set data");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		} 
 		return response;
 	}
+
+	
 }

@@ -91,12 +91,18 @@ export default {
             items: []
         }
     },
+    watch: {
+        subId() {
+            this.initBoard()
+        }
+    },
     created() {
-        this.initBoard();
+        
     },
     mounted(){
         console.dir(this.lectureId);
         console.dir(this.subId);
+        this.initBoard();
         this.questionHeight = $('body').prop("clientHeight") - this.$refs.question.offsetTop - 120;
     },
     methods:{

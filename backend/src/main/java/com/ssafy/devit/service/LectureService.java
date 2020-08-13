@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.ssafy.devit.model.lecture.ChangeHistoryResponse;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
 import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
@@ -48,6 +49,9 @@ public interface LectureService {
 	// 강의 위키 요청 리퀘스트
 	public void registrySubHistory(LectureSubHistoryRequest lecture) throws Exception;
 	
+	// 요청 올라왔다고 알려주기
+	public void uploadNoticeAuth(LectureSubHistoryRequest lecture) throws Exception;
+	
 	// 강의 권한 병경
 	public void updateLectureAuth(List<LectureAuthRequest> auth) throws Exception;
 	
@@ -71,4 +75,17 @@ public interface LectureService {
 	
 	// 요청 리스트 요청 받기 또는 거절하기 업데이트 하기
 	public void updateRequestLecture(long subId, long subHisId, String type, String reqType) throws Exception;
+	
+	// 내가 좋아요한 프로젝트 리스트 가져오기
+	public List<LecturesResponse> myLikeLectureList(long startPage, long itemsperpage) throws Exception;
+	
+	// 내가 좋아요한 강의 리스트 가져오기
+	public List<TheOhterSubLectureResponse> myLikeVideoList(long startPage, long itemsperpage) throws Exception;
+	
+	// 내가 관리중인 프로젝트 가져오기
+	public List<LecturesResponse> myMngLectureList(long startPage, long itemsperpage) throws Exception;
+
+	// 변경 사항 이력 가져오기
+	public List<ChangeHistoryResponse> getChangeHistoryList(@Param("lectureId") long lectureId) throws Exception;
+		
 }

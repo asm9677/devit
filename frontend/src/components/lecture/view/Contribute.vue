@@ -1,6 +1,6 @@
 <template>
-    <v-dialog v-model="dialog" max-width="768px" style="" hide-overlay>
-        <v-tabs v-model="tabs" icons-and-text grow hide-slider color="success">
+    <v-dialog v-model="dialog" max-width="768px" style="" hide-overlay persistent>         
+        <v-tabs v-model="tabs" icons-and-text grow hide-slider color="success" >
             <v-tab>
                 <span>영상</span>
                 <v-icon>mdi-movie</v-icon>                
@@ -87,50 +87,43 @@
                         <v-text-field outlined dense placeholder="제목을 정해보세요!" v-model="title">
                         </v-text-field>
                     </v-stepper-content>
-                    <v-layout>
-                        <v-spacer />
-                        <v-btn color="success" outlined @click="requestVideo">
-                            요청하기
-                        </v-btn>
-                        <v-btn color="normal" outlined style="margin-left:20px; margin-right:28px;" @click="">
-                            미리보기
-                        </v-btn>
-                    </v-layout>
                 </v-stepper>
             </v-tab-item>       
             <v-tab-item>            
-                <v-card tile>
+                <v-card tile flat>
                     <v-list :dark="darkOption" >
                         <v-list-item>
                             <v-list-item-content>
-                                <v-list-item-title>
-                                    위키
-                                </v-list-item-title>                                                            
+                                <editor :height="550"> </editor>
+                                <!-- <v-textarea outlined auto-grow placeholder="텍스트 에디터 적용 예정입니다." :rows="10" v-model="content" /> -->
                             </v-list-item-content>
-                        </v-list-item>     
-                        <v-list-item>
-                            <v-list-item-content>
-                                <v-textarea outlined auto-grow placeholder="텍스트 에디터 적용 예정입니다." :rows="10" v-model="content" />
-                            </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item style="margin-top:15px;">
-                            <v-list-item-content>
-                            </v-list-item-content>
-                            <v-list-item-action>
-                                <v-btn outlined color="success" @click="requestWiki">
-                                    요청하기
-                                </v-btn>
-                            </v-list-item-action>
-                            <v-list-item-action>
-                                <v-btn outlined color="success">
-                                    미리보기
-                                </v-btn>
-                            </v-list-item-action>
-                        </v-list-item>
+                        </v-list-item>         
+                                      
                     </v-list>
+                    
                 </v-card>
             </v-tab-item> 
         </v-tabs>
+        <v-list>
+        <v-list-item style="margin-top:15px;">        
+            <v-list-item-content>
+                <v-btn outlined color="error" max-width="80" @click="$emit('closeDialog')">
+                    취소
+                </v-btn>
+            </v-list-item-content>
+            <v-list-item-action>
+                <v-btn outlined color="success" @click="tabs ? requestWiki() : requestVideo()">
+                    요청하기
+                </v-btn>
+            </v-list-item-action>
+            <v-list-item-action>
+                <v-btn outlined color="success">
+                    미리보기
+                </v-btn>
+            </v-list-item-action>
+        </v-list-item> 
+        </v-list>
+       
         <v-snackbar
             v-model="isUpload"
             timeout="-1"
@@ -179,7 +172,11 @@
 <script>
 import http from "@/util/http_common.js";
 import axios from "axios";
+import Editor from "@/components/common/Editor.vue"
 export default {
+    components: {
+        Editor,
+    },
     props:['darkOption', 'dialog', 'lectureId', 'subId'],
     watch: {
         dialog() {
@@ -347,5 +344,15 @@ export default {
     .nomargin{
         margin:0px;
     }
-
+    .v-stepper {
+        border-radius: 0px;
+        border-top:1px solid #d4d4d4;
+        border-bottom:1px solid #d4d4d4;
+        box-shadow: none;
+    }
+    .v-card {
+        border-radius: 0px;
+        border-top:1px solid #d4d4d4;
+        border-bottom:1px solid #d4d4d4;
+    }
 </style>

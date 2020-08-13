@@ -1,7 +1,7 @@
 <template>
     <v-list ref="another" class="LecturePlayer" style="width:100%; overflow-y:auto; font-size:14px" :dark="darkOption" :style="{'height': anotherHeight+'px'}">
         <div fluid v-for="(item, i) in items" :key="i + '_item'" style="width:100%">
-            <v-row style="cursor:pointer;" >
+            <v-row style="cursor:pointer;" @click="move(`/lecture/player/undefined/${item.lectureId}?order=${order}&subId=${item.subId}&subHisId=${item.subHisId}`)">
                 <v-col :cols="4">
                     <div style="margin: 0px auto;">
                         <v-avatar
@@ -71,7 +71,7 @@
                 return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
         },
-        props: ['darkOption', 'lectureId', 'subId'],
+        props: ['darkOption', 'lectureId', 'subId', 'order', 'tabs'],
         data() {
             return {                
                 anotherHeight: 768,
@@ -95,6 +95,13 @@
                     $('.LecturePlayer .nickname').css('color', '#000000DE')
                 }                
             },
+            subId () {
+                this.getList();
+            },
+            tabs() {
+                this.getList();
+            }
+
         },
         mounted() {
             if(this.darkOption){
@@ -113,10 +120,7 @@
             window.addEventListener('resize', this.handleResize2);
         },
         created(){            
-            http.axios.get(`/api/v1/lectures/sub/history/${this.subId}`).then(({data}) => {
-                this.items = data.result;
-                console.dir(data)
-            })
+            this.getList();
         },
         beforeDestroy(){
             window.removeEventListener('resize', this.handleResize2);
@@ -126,8 +130,16 @@
                 this.anotherHeight = $('body').prop("clientHeight")-this.$refs.another.$el.offsetTop
             },   
             move(url){
-                this.$router.push(url).catch(()=>{location.reload(true);});
+                this.$router.push(url).then(() => {}).catch(()=>{location.reload(true);});
             },
+
+            getList() {
+                console.dir(this.subId)
+                http.axios.get(`/api/v1/lectures/sub/history/${this.subId}`).then(({data}) => {
+                    this.items = data.result;
+                    console.dir(data)
+                })
+            }
         }
     }
 </script>

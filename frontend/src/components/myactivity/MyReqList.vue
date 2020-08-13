@@ -2,9 +2,8 @@
     <div style="margin:50px">
         <v-container justify-center="justify-center">
             <v-layout row="row" wrap="wrap">
-                
                     <div style="width:100%; margin:0 auto;">
-                        <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">내가 좋아요한 강의</span>
+                        <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">관리중인 프로젝트</span>
                     </div>
                     <v-flex
                         v-for="(item,i) in items"
@@ -61,7 +60,6 @@
                             </v-list>
                         </v-card>
                     </v-flex>
-                
             </v-layout>
         </v-container>
     </div>
@@ -114,7 +112,7 @@
             http
                 .axios
                 .get(
-                    `/api/v1/myLikeLecture?page=${this.page}&itemsperpage=${this.itemsperpage}`
+                    `/api/v1/myMngLecture?page=${this.page}&itemsperpage=${this.itemsperpage}`
                 )
                 .then(({data}) => {
                     this.page++;
@@ -139,7 +137,7 @@
                         http
                             .axios
                             .get(
-                                `/api/v1/myLikeLecture?page=${this.page}&itemsperpage=${this.itemsperpage}`
+                                `/api/v1/myMngLecture?page=${this.page}&itemsperpage=${this.itemsperpage}`
                             )
                             .then(({data}) => {
                                 this.page++;

@@ -21,6 +21,8 @@ import MyBoard from '@/components/myactivity/MyBoard.vue'
 import MyLike from '@/components/myactivity/MyLike.vue'
 import MyLikeLecture from '@/components/myactivity/MyLikeLecture.vue'
 import MyLikeVideo from '@/components/myactivity/MyLikeVideo.vue'
+import MyMngLecture from '@/components/myactivity/MyMngLecture.vue'
+import MyReqList from '@/components/myactivity/MyReqList.vue'
 
 
 Vue.use(VueRouter)
@@ -86,7 +88,7 @@ const routes = [
   },
 
   {
-    path: '/lecture/player/:id',
+    path: '/lecture/player/:tabName/:id',
     name: 'LecturePlayer',
     component: LecturePlayer
   },
@@ -113,6 +115,18 @@ const routes = [
     path: '/mylike/video',
     name: 'MyLikeVideo',
     component: MyLikeVideo
+  },
+
+  {
+    path: '/mymnglecture',
+    name: 'MyMngLecture',
+    component: MyMngLecture
+  },
+
+  {
+    path: '/myreqlist',
+    name: 'MyReqList',
+    component: MyReqList
   },
 ]
 

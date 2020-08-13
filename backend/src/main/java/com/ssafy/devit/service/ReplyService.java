@@ -8,6 +8,7 @@ import com.ssafy.devit.model.request.ReplyUpdateRequest;
 
 public interface ReplyService {
 	public void upload(Reply reply) throws Exception;
+	public void uploadNotice(long boardReplyId) throws Exception;
 	public List<ReplyResponse> info(long boardId) throws Exception;
 	public void delete(long reply_id) throws Exception;
 	public void update(ReplyUpdateRequest request) throws Exception;

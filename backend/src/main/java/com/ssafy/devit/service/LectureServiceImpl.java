@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.devit.model.common.Common;
+import com.ssafy.devit.model.lecture.ChangeHistoryResponse;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
 import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
@@ -104,14 +105,12 @@ public class LectureServiceImpl implements LectureService {
 		if (dto.getLikeCount() > 0) {
 			// 좋아요를 누른 적이 있다면
 			String likeFlag = dto.getLikeFlag().equals("Y") ? "N" : "Y";
-			System.out.println(1);
 			lectureRepository.updateLikeHistoryByUserId(user.getUserId(), request.getLectureId(), request.getSubId(),
 					request.getSubHisId(), likeFlag);
 		} else {
 			// 좋아요를 누른 적이 한번도 없다면
 			lectureRepository.insertLikeHistoryByUserId(user.getUserId(), request.getLectureId(), request.getSubId(),
 					request.getSubHisId());
-			System.out.println(2);
 		}
 	}
 
@@ -173,6 +172,11 @@ public class LectureServiceImpl implements LectureService {
 		lecture.setUserId(user.getUserId());
 		lectureRepository.insertSubHistory(lecture);
 	}
+	
+	@Override
+	public void uploadNoticeAuth(LectureSubHistoryRequest lecture) throws Exception{
+		lectureRepository.uploadNoticeAuth(lecture);
+	}
 
 	@Override
 	public void updateLectureAuth(List<LectureAuthRequest> auths) throws Exception {
@@ -213,5 +217,38 @@ public class LectureServiceImpl implements LectureService {
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		lectureRepository.updateRequestLecture(subId, subHisId, type, lwType);
 	}
+	
 
+	@Override
+	public List<LecturesResponse> myLikeLectureList(long startPage, long itemsperpage) throws Exception {
+		
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		startPage = (startPage-1) * itemsperpage;
+		return lectureRepository.myLikeLectureList(user.getUserId(), startPage, itemsperpage);
+	}
+	
+	@Override
+	public List<TheOhterSubLectureResponse> myLikeVideoList(long startPage, long itemsperpage) throws Exception {
+		
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		startPage = (startPage-1) * itemsperpage;
+		return lectureRepository.myLikeVideoList(user.getUserId(), startPage, itemsperpage);
+	}
+	
+	
+	@Override
+	public List<LecturesResponse> myMngLectureList(long startPage, long itemsperpage) throws Exception {
+		
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		startPage = (startPage-1) * itemsperpage;
+		return lectureRepository.myMngLectureList(user.getUserId(), startPage, itemsperpage);
+	}
+
+	@Override
+	public List<ChangeHistoryResponse> getChangeHistoryList(long lectureId) throws Exception {
+		return lectureRepository.selectChangeHistoryList(lectureId);
+	}
 }
