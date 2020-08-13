@@ -86,7 +86,27 @@ public class CommonController {
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			log.info(">> Error : getMainInfo <<");
+			log.info(">> Error : getMainStatus <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+	
+	@ApiOperation(value = "메인화면 랭킹 현황 가져오기")
+	@GetMapping("/main/rank")
+	public ResponseEntity<CommonResponse> getMainRank(){
+		
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			result.result = commonService.getMainRank();
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			log.info(">> Error : getMainRank <<");
 			log.info(e.getMessage().toString());
 			result.msg = "fail";
 			result.result = e.getMessage().toString();

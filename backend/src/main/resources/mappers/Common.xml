@@ -134,7 +134,7 @@
 	</select>
 	
    	<!-- 메인화면 데빗 현황 조회 -->
-      <select id="getMainStatus" resultType="MainResponse">
+      <select id="getMainStatus" resultType="MainStatusResponse">
       
 		select concat(format(ifnull(u.totalUsers, 0), 0), '명') as totalUsers, 
 			   concat(format(ifnull(d.totalDeviters, 0), 0), '명') as totalDeviters, 
@@ -170,5 +170,67 @@
 	           ) l
 	           on
 	           1=1;
+      </select>
+      
+      
+      	
+   	<!-- 메인화면 랭킹 현황 조회 -->
+      <select id="getMainRank" resultType="MainRankResponse">
+			select a.user_id as userId,
+				   a.nickname as nickname,
+				   a.email as email,
+				   a.profile as profile,
+				   a.totalScore as totalScore
+			  from (
+					select u.user_id,
+						   u.nickname,
+                           u.email,
+                           u.profile,
+                           b.boardCnt,
+                           r.replyCnt,
+                           a.acceptCnt,
+                           q.reqCnt,
+                           ifnull(b.boardScore, 0) + ifnull(r.replyScore, 0) + ifnull(a.acceptScore, 0) + ifnull(q.reqScore, 0) as totalScore 
+					  from user u
+                           left outer join
+                           (
+                            select user_id, count(1) as boardCnt, count(1) * 15 as boardScore
+                              from board
+						  group by user_id
+						   ) b
+                           on
+                           u.user_id = b.user_id
+                           left outer join
+                           (
+                            select user_id, count(1) as replyCnt, count(1) * 5 as replyScore
+                              from board_reply
+						  group by user_id
+						   ) r
+                           on
+                           u.user_id = r.user_id
+                           left outer join
+                           (
+                            select user_id, count(1) as acceptCnt, count(1) * 100 as acceptScore
+                              from lecture_sub_history
+							 where accept_yn = 'Y'
+                               and delete_yn = 'N'
+						  group by user_id
+						   ) a
+                           on
+                           u.user_id = a.user_id
+                           left outer join
+                           (
+                            select user_id, count(1) as reqCnt, count(1) * 20 as reqScore
+                              from lecture_sub_history
+							 where ifnull(accept_yn, 'N') = 'N'
+                               and delete_yn = 'N'
+						  group by user_id
+						   ) q
+                           on
+                           u.user_id = q.user_id
+					 where u.active = 'Y'
+				   ) a
+		   order by a.totalScore desc, a.replyCnt desc, a.boardCnt desc, a.acceptCnt desc, a.reqCnt desc
+           limit 0, 8;
       </select>
 </mapper>

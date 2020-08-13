@@ -208,6 +208,18 @@
                 .catch((error) => {
                     console.dir(error)
                 })
+
+                http
+                .axios
+                .get(`/api/v1/commons/main/rank`, {})
+                .then(({data}) => {
+                    this.totalUsers = data.result.totalUsers;
+                    this.totalDeviters = data.result.totalDeviters;
+                    this.totalLectures = data.result.totalLectures;
+                })
+                .catch((error) => {
+                    console.dir(error)
+                })
             }
     }
 </script>

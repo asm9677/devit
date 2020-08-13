@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import com.ssafy.devit.model.common.Common;
 import com.ssafy.devit.model.common.SearchInfoIndexResponse;
 import com.ssafy.devit.model.common.SearchInfoLectureResponse;
-import com.ssafy.devit.model.lecture.MainResponse;
+import com.ssafy.devit.model.lecture.MainRankResponse;
+import com.ssafy.devit.model.lecture.MainStatusResponse;
 import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.repository.CommonRepository;
 
@@ -54,9 +55,14 @@ public class CommonServiceImpl implements CommonService {
 	};
 
 	@Override
-	public MainResponse getMainStatus() throws Exception {
+	public MainStatusResponse getMainStatus() throws Exception {
 
 		return commonRepository.getMainStatus();
+	}
+	
+	@Override
+	public List<MainRankResponse> getMainRank() throws Exception{
+		return commonRepository.getMainRank();
 	}
 
 }
