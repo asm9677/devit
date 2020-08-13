@@ -173,7 +173,7 @@
                 if (confirm("삭제하시겠습니까?")) {
                     http
                         .axios
-                        .put('/api/v1/deleteLecture', {"lectureId": this.item.lectureId})
+                        .put('/api/v1/deleteLecture', {"lectureId": lectureId})
                         .then(({data}) => {
                             if (data.msg == "noauth") {
                                 this.errorMsg = "프로젝트 관리 권한이 없습니다.";

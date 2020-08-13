@@ -730,6 +730,7 @@
 			     ON 
 			     la.lecture_id = l.lecture_id
 		   WHERE 1=1
+		     and l.deleted_flag = 'N'
 		GROUP BY l.lecture_id
 		ORDER BY la.modified desc
 		   LIMIT #{startPage}, #{itemsperpage};
@@ -774,7 +775,7 @@
 	<!-- 프로젝트 삭제 -->
 	<update id="deleteLecture">
 		UPDATE lecture
-		   SET delete_flag = 'Y',
+		   SET deleted_flag = 'Y',
 			   modified = now()
 		 WHERE lecture_id = #{lectureId};
 	</update>
