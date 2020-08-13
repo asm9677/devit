@@ -129,6 +129,7 @@
 					 lshw.wiki_content LIKE CONCAT('%', #{text},'%') OR
 					 tag.tag_name LIKE CONCAT('%', #{text},'%'))
  			</foreach>
+				AND lsi.order != 0
 		 ORDER BY lsh.view_count DESC, likeCount DESC
 	     LIMIT #{startPage}, 20;
 	</select>
