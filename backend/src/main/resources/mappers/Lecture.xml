@@ -398,6 +398,15 @@
 		    	ON lt.common_id = lsi.common_id
 		WHERE
 		    lsi.lecture_id = #{lectureId} AND lsi.order = #{order};
+		    
+		
+		SELECT @subHisV := lsi.video_id FROM lecture_sub_index lsi WHERE lsi.lecture_id = #{lectureId} AND lsi.order = #{order};
+		
+		SELECT @subHisW := lsi.wiki_id FROM lecture_sub_index lsi WHERE lsi.lecture_id = #{lectureId} AND lsi.order = #{order};
+		
+		UPDATE lecture_sub_history SET view_count = view_count+1 WHERE sub_his_id = @subHisV;
+		
+		UPDATE lecture_sub_history SET view_count = view_count+1 WHERE sub_his_id = @subHisW;
 	</select>
 	
 	<!-- 강의, 위키 리퀘스트 날리기 -->
