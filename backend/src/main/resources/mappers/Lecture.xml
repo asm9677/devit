@@ -436,6 +436,7 @@
 		    lsi.lecture_id lectureId,
 		    lsi.sub_id subId,
             lsh.sub_his_id subHisId,
+            lsi.order,
 		    lsh.title,
 		    lsh.player_url playerUrl,
 		    lsh.play_time playTime,
@@ -443,6 +444,7 @@
 		    IFNULL(lg.like_count, 0) likeCount,
 		    lsh.thumbnail_url thumbnailUrl,
             (SELECT nickname FROM user WHERE user_id = lsh.user_id) nickname,
+            (SELECT profile FROM user WHERE user_id = lsh.user_id) profile,
 		    CASE
 		        WHEN
 		            EXISTS( SELECT 
@@ -637,6 +639,7 @@
 		    IFNULL(lg.like_count, 0) likeCount,
 		    lsh.thumbnail_url thumbnailUrl,
             (SELECT nickname FROM user WHERE user_id = lsh.user_id) nickname,
+            (SELECT profile FROM user WHERE user_id = lsh.user_id) profile,
 		    TRUE as userLikeYn
 		FROM
 		    lecture_sub_index lsi
