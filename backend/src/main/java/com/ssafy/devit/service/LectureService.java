@@ -87,5 +87,11 @@ public interface LectureService {
 
 	// 변경 사항 이력 가져오기
 	public List<ChangeHistoryResponse> getChangeHistoryList(@Param("lectureId") long lectureId) throws Exception;
+	
+	//프로젝트 관리 권한 여부 가져오기
+	public String checkUserManageAuth(long lectureId) throws Exception;
+	
+	//프로젝트 삭제
+	public void deleteLecture(long lectureId) throws Exception;
 		
 }

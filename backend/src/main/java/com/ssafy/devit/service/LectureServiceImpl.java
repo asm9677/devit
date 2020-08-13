@@ -251,4 +251,17 @@ public class LectureServiceImpl implements LectureService {
 	public List<ChangeHistoryResponse> getChangeHistoryList(long lectureId) throws Exception {
 		return lectureRepository.selectChangeHistoryList(lectureId);
 	}
+	
+	@Override
+	public String checkUserManageAuth(long lectureId) throws Exception{
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return lectureRepository.checkUserManageAuth(user.getUserId(), lectureId);
+	}
+
+	@Override
+	public void deleteLecture(long lectureId) throws Exception {
+		// 사용자 id 가져오기
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		lectureRepository.deleteLecture(user.getUserId(), lectureId);
+	}
 }

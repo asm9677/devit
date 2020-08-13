@@ -119,5 +119,7 @@ public interface LectureRepository {
 	public List<LecturesResponse> myLikeLectureList(@Param("userId") long userId, @Param("startPage") long startPage, @Param("itemsperpage") long itemsperpage) throws Exception;
 	public List<TheOhterSubLectureResponse> myLikeVideoList(@Param("userId") long userId, @Param("startPage") long startPage, @Param("itemsperpage") long itemsperpage) throws Exception;
 	public List<LecturesResponse> myMngLectureList(@Param("userId") long userId, @Param("startPage") long startPage, @Param("itemsperpage") long itemsperpage) throws Exception;
-
+	
+	public String checkUserManageAuth(@Param("userId") long userId, @Param("lectureId") long lectureId) throws Exception;
+	public void deleteLecture(@Param("lectureId") long lectureId, @Param("userId") long userId) throws Exception;
 }
