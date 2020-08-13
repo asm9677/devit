@@ -2,6 +2,7 @@
     <v-container fluid="fluid">
         <div style="width:100%">
             <v-btn
+                v-if="isAdmin"
                 @click="newBoard()"
                 depressed="depressed"
                 outlined="outlined"
@@ -124,11 +125,23 @@
                         // boardCreated: '2020/07/06', boardModified: '2020/07/06', boardCount: '3,743',
                         // likes: '152'
                     }
-                ]
+                ],
+                isAdmin: false
             }
         },
         mounted() {
             //boardtype별 조회
+
+            http
+                .axios
+                .get(`/api/v1/users/user/isadmin`, {})
+                .then(({data}) => {
+                    this.isAdmin = (this.boardtype != 1 || data.result == 'Y');
+                })
+                .catch((error) => {
+                    console.dir(error)
+                });
+                
             this.searchByPage();
         },
         methods: {

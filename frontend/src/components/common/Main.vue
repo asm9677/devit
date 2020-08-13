@@ -194,7 +194,37 @@
 
     export default {
         data() {
-            return {totalUsers: "", totalDeviters: "", totalLectures: "", items : []}
+            return {
+                totalUsers: "",
+                totalDeviters: "",
+                totalLectures: "",
+                items: [
+                    {
+                        "nickname": ""
+                    }, 
+                    {
+                        "nickname": ""
+                    }, 
+                    {
+                        "nickname": ""
+                    }, 
+                    {
+                        "nickname": ""
+                    }, 
+                    {
+                        "nickname": ""
+                    }, 
+                    {
+                        "nickname": ""
+                    }, 
+                    {
+                        "nickname": ""
+                    }, 
+                    {
+                        "nickname": ""
+                    }, 
+                ]
+            }
         },
         created() {
             http
@@ -207,8 +237,7 @@
                 })
                 .catch((error) => {
                     console.dir(error)
-                })
-
+                });
                 http
                 .axios
                 .get(`/api/v1/commons/main/rank`, {})
@@ -217,7 +246,7 @@
                 })
                 .catch((error) => {
                     console.dir(error)
-                })
+                });
             }
     }
 </script>

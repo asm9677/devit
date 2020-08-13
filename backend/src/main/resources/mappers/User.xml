@@ -116,4 +116,10 @@
 		 where user_id = #{userId};
 	</select>
 	
+	<!-- 유저 admin 여부 -->
+	<select id="getUserIsAdmin" resultType="String">
+		select case when exists (select 1 from user_role where user_id = #{userId} and user_role = 'ROLE_ADMIN') then 'Y' else 'N' end as isAdmin
+  		  from dual;
+	</select>
+	
 </mapper>
