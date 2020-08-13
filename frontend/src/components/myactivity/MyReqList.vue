@@ -3,18 +3,15 @@
         <v-container justify-center="justify-center">
             <v-layout row="row" wrap="wrap">
                     <div style="width:100%; margin:0 auto;">
-                        <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">관리중인 프로젝트</span>
+                        <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">요청 목록</span>
                     </div>
-                    <v-flex xs12 sm12 md8 lg8 xl8 style="margin-left:0px;">                         
+                    <v-flex xs12 sm12 md8 lg8 xl8 style="margin-top:30px; margin-left:0px;">                         
                             <v-list style="padding:10px 0px;" dense>
-                                <v-list-item>
-                                    요청 목록
-                                </v-list-item>  
                                 <template v-for="(item,index) in items">
                                     <v-divider :key="`${index}_divider`"/>
                                     <v-list-item :key="`${index}_memberList`" link @click="curItem=item">
-                                        <v-list-item-avatar size="30">
-                                            <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                        <v-list-item-avatar size="30" rounded="false">
+                                            <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.lectureThumbnail"></v-img>
                                         </v-list-item-avatar>
                                         <v-list-item-content>
                                             <v-list-item-title>
@@ -94,8 +91,8 @@
                                             </template>
                                         </v-img>
                                 </div>     
-                                <v-btn color="primary" block depressed style="margin:10px 0px;" @click="requestProcess(curItem,'Y')">적용</v-btn>  
-                                <v-btn color="primary" block depressed style="margin:10px 0px;" @click="requestProcess(curItem,'N')">취소</v-btn>  
+                                <!-- <v-btn color="primary" block depressed style="margin:10px 0px;" @click="requestProcess(curItem,'Y')">적용</v-btn>  
+                                <v-btn color="primary" block depressed style="margin:10px 0px;" @click="requestProcess(curItem,'N')">취소</v-btn>   -->
                                 <v-btn color="primary" block depressed style="margin:10px 0px;">상세보기</v-btn>  
                             </div>
                         </v-list>
@@ -114,9 +111,39 @@
     import store from "@/store/index.js"
 
     export default {
+        //props: ['option'],
         data() {
-            return {items: [], level: this.$route.query.level, page: 1, itemsperpage: 20, loading: false}
+            return {items: [], level: this.$route.query.level, page: 1, itemsperpage: 20, loading: false,
+            curItem: null, option:true}
         },
+    filters: {
+        idOfEmail(val) {
+            let id = val.substring(0,val.indexOf('@'))
+            return '@' + (id ? id : val)
+        },
+        diffDate(val) {
+            let diff = (new Date() - new Date(val)) / 1000;
+            if(diff < 60)
+                return '방금 전'
+            diff /= 60;
+            if(diff < 60)
+                return parseInt(diff) + '분 전'
+
+            diff /= 60;
+            if(diff < 24)
+                return parseInt(diff) + '시간 전'
+
+            diff /= 24;
+            if(diff < 7)
+                return parseInt(diff) + '일 전'
+            if (diff < 30)
+                return parseInt(diff/7) + '주 전'
+            if (diff < 365)
+                return parseInt(diff/30) + '달 전'
+            return parseInt(diff/365) + '년 전'
+            return val
+        }
+    },
         created(){
             if(!store.state.token) {
                 this.$router.push('/')
@@ -132,6 +159,7 @@
                 .then(({data}) => {
                     this.page++;
                     this.items = data.result;
+                    console.log(this.items)
                 })
                 . finally(() => {
                     this.loading = false;
