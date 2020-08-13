@@ -1,14 +1,14 @@
 <template>
     <v-layout id="main" style="width:100%;">      
-        <div id="editorFrame" :style="{'height' : (height ? height+'px' : 'auto')}" :class="{focused : isFocus}">
-            <ul :class="{focused : isFocus}">
+        <div id="editorFrame" :class="{focused : isFocus}">
+            <ul v-show="hideTab==null" :class="{focused : isFocus}">
                 <li>
                     <button :class="{active : isActive}" @click="isActive = true">
                         Write
                     </button>
                 </li>
                 <li>
-                    <button :class="{active : !isActive}" @click="isActive = false">
+                    <button :class="{active : !isActive}" @click="isActive = false;">
                         Preview
                     </button>
                 </li>
@@ -31,7 +31,8 @@
 
                 </li>
             </ul>            
-            <div id="editor" contenteditable v-show="isActive" @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress"></div>
+            <!-- <div id="editor" contenteditable v-show="isActive" @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress"></div> -->
+            <textarea id="editor" v-show="isActive" @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress" :value="value" :style="{'height' : (height ? height+'px' : 'auto')}" />
             <div id="view" v-show="!isActive" v-html="parseContent"> </div>
         </div>
     </v-layout>
@@ -40,22 +41,23 @@
 <script>
 import axios from "axios";
 export default {
-    props: ['width', 'height', 'hideTab'], 
+    props: ['value', 'height', 'hideTab'],
     watch: {
         isActive(){ 
-            if(!this.isActive){
-                this.parseContent = this.parseMd(this.content);
-                console.dir(this.parseContent)
+            if(!this.isActive){                
+                this.parseContent = this.parseMd($('#editor').val());
             }
+        },        
+        hideTab(){
+            console.dir(this.hideTab)
         }
     },
     data() {
         return {
             isFocus: false,
             isActive: true,
-            content: '',
             parseContent: '',
-
+            content: '',
             toolbar: [
                 {
                     icon: 'mdi-format-header-1',
@@ -153,8 +155,8 @@ export default {
             }            
             document.execCommand('insertText', false, selectionText)
         },
-        onInput(e){
-            this.content = e.target.innerText;
+        onInput(e){            
+            this.$emit('input', e.target.value);
         },
         checkKeypress(e) {
             // if(e.keyCode == 13){
@@ -179,14 +181,12 @@ export default {
             if(flag) {
                 let clipboardData = event.clipboardData || window.clipboardData;
                 let pastedData = clipboardData.getData('Text');
-                console.dir(pastedData)
                 document.execCommand('insertText', false, pastedData)
             }
             return false;
         },
 
         imageTransfer(blob) {
-            console.dir(this.$router.app.$store.state.token)
             let name = blob.name;
 
             var frm = new FormData();
@@ -198,8 +198,6 @@ export default {
                     'Content-Type': 'multipart/form-data'
                 }
             }).then(({data}) => {
-                console.dir(name)
-                console.dir(data.result);
                 document.execCommand('insertText', false, `![${name}](http://i3a101.p.ssafy.io/images/${data.result})`);
             })
             .catch((error) => {
@@ -291,8 +289,8 @@ export default {
         margin-top:15px;
         font-size: 13px;
         width:100%;
-        height:90%;
         overflow-y:auto;
+        resize: none;
     }
 
     #view{

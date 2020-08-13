@@ -23,7 +23,7 @@
                                 </v-list-item>
                                 <v-list-item>
                                     <v-list-item-title>
-                                    <div style="width:100%; height:25em; border:2px dashed gray; cursor:pointer; margin-top:15px;" @click="clickImg($event)" id="image">
+                                    <div v-show="!thumbnailUrl" style="width:100%; border:2px dashed gray; cursor:pointer; margin-top:15px; overflow-y:visible;" :style="{'height': height+'px'}" @click="clickImg($event)" id="image" >
                                         <input type="file"
                                             v-show="false"				                                            
                                             accept="image/png, image/jpeg, image/bmp"		
@@ -44,9 +44,10 @@
                                                 <div class="primary--text" sytle="display:block;font-size:14px;">이미지 업로드</div>
                                                 <div style="font-size:14px;">클릭해서 대표 이미지를 선택하세요.</div>
                                             </div>
-                                        </div>
-                                        <v-img v-if="thumbnailUrl" :src="`http://i3a101.p.ssafy.io/images/${thumbnailUrl}`" min-height="100%" min-width="100%" aspect-ratio="1.7"/>                                        
+                                        </div>                                                                                
                                     </div>
+                                    <v-img v-if="thumbnailUrl" :src="`http://i3a101.p.ssafy.io/images/${thumbnailUrl}`" min-width="100%" aspect-ratio="1.77" contain @click="clickImg($event)" style="cursor:pointer; border:2px dashed gray;" />
+
                                     </v-list-item-title> 
                                 </v-list-item>
                             </v-list>
@@ -120,13 +121,10 @@
                             <v-list style="padding:20px 100px;">
                                 <v-layout>
                                     <v-spacer></v-spacer>
-                                    <v-btn depressed color="primary" @click="ValidationForm">
+                                    <v-btn  color="success" outlined @click="ValidationForm">
                                         저장하기
                                     </v-btn>    
                                     <div style="margin-right:5px"></div>
-                                    <v-btn depressed>
-                                        취소하기
-                                    </v-btn>    
                                 </v-layout>
                                     
                                 
@@ -173,8 +171,8 @@
         <v-snackbar
             v-model="snackbar"
             right
-            timeout="1500"
-            color="primary"        
+            timeout="2000"
+            :color="color"        
         >
             {{msg}}
         </v-snackbar>
@@ -209,13 +207,20 @@ export default {
             tags: [],
 
             snackbar: false,
-            msg: '',            
+            msg: '',          
+            color: 'success',
+            
+            height: 300,
         }
     },
     created(){
         this.lectureId = this.$route.params.id;
         this.getDefaultPage();
     },
+    mounted(){
+        this.height = $('#image').width()/1.77;
+    },
+    
     methods: {
         clickImg(){
             $("#file").click();
@@ -241,7 +246,7 @@ export default {
             })
             this.$refs.file.value = ''
         },
-        goto(target, msg){
+        goto(target, msg, color){
             this.$vuetify.goTo(target, {
                 duration: 300,
                 offset: 150,
@@ -249,19 +254,20 @@ export default {
             })
             this.msg = msg;
             this.snackbar = true;
+            this.color = color;
         },
         ValidationForm(){
             if(!this.title){
-                this.goto('#title', '프로젝트명을 입력해주세요.')
+                this.goto('#title', '프로젝트명을 입력해주세요.', 'error darken-1')
                 this.$refs.title.focus();                
             }
             else if(!this.thumbnailUrl){
-                this.goto('#image', '대표 이미지를 선택해주세요.')                
+                this.goto('#image', '대표 이미지를 선택해주세요.', 'error darken-1')                
             }
             else if(!this.type){
-                this.goto('#type', '레벨을 설정해주세요.')                                
+                this.goto('#type', '레벨을 설정해주세요.', 'error darken-1')                                
             }else if(!this.tags.length){
-                this.goto('#tags', '검색 키워드를 입력해주세요.')          
+                this.goto('#tags', '검색 키워드를 입력해주세요.', 'error darken-1')          
                 this.$refs.tags.focus();      
             }else{
                 this.saveDefaultPage();
@@ -292,6 +298,7 @@ export default {
             }).then(({data}) => {
                 this.snackbar = true;
                 this.msg = '저장되었습니다.';
+                this.color = "success"
             })
         }
         
