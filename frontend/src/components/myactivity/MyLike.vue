@@ -72,9 +72,9 @@
                 :key="`4${i}`"
                 xs12="xs12"
                 sm6="sm6"
-                md4="md4"
+                md4="md3"
                 lg3="lg3"
-                xl2="xl2">
+                xl2="xl3">
                 <v-card
                     tile="tile"
                     flat="flat"
@@ -83,7 +83,7 @@
                         :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                         :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                         aspect-ratio="1.7"
-                        @click="move(`/lecture/detail/${item.lectureId}`)"></v-img>
+                        @click="move(`/lecture/player/undefined/${item.lectureId}?order=${item.order}&subId=${item.subId}&subHisId=${item.subHisId}`)"></v-img>
 
                     <v-list>
                         <div @click="move(`/lecture/player/undefined/${item.lectureId}?order=${item.order}&subId=${item.subId}&subHisId=${item.subHisId}`)">
