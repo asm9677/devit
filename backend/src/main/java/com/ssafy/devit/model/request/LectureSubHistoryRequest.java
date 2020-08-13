@@ -1,6 +1,7 @@
 package com.ssafy.devit.model.request;
 
 public class LectureSubHistoryRequest {
+	private long subHisId;
 	private long lectureId;
 	private long subId;
 	private long userId;
@@ -31,6 +32,14 @@ public class LectureSubHistoryRequest {
 		this.thumbnailUrl = thumbnailUrl;
 	}
 
+	public long getSubHisId() {
+		return subHisId;
+	}
+	
+	public void setSubHisId(long subHisId) {
+		this.subHisId =  subHisId;
+	}
+	
 	public long getLectureId() {
 		return lectureId;
 	}

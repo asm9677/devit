@@ -65,6 +65,9 @@ public class BoardController {
 		try {
 			boardService.upload(board);
 			 // bid에 해당하는 게시글을 조회한다.
+			if(board.getBoardType() == 1) { // 공지사항 알림
+				boardService.uploadNotice(board.getBoardId());
+			}
 			result.msg = "success";
 			result.result = board.getBoardId();
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
