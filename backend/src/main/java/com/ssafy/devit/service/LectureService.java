@@ -93,5 +93,9 @@ public interface LectureService {
 	
 	//프로젝트 삭제
 	public void deleteLecture(long lectureId) throws Exception;
+	
+	// 나의 요청 리스트 가져오기
+	public List<RequestHistoryResponse> myReqList(long startPage, long itemsperpage) throws Exception;
+		
 		
 }

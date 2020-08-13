@@ -3,6 +3,9 @@ package com.ssafy.devit.model.lecture;
 import io.swagger.annotations.ApiModelProperty;
 
 public class RequestHistoryResponse {
+
+	private String lectureThumbnailUrl;
+	private String lectureTitle;
 	@ApiModelProperty(example = "userProfileUrl")
 	private String profile;
 	@ApiModelProperty(example = "userNickname")
@@ -34,6 +37,22 @@ public class RequestHistoryResponse {
 
 	public RequestHistoryResponse() {
 
+	}
+
+	public String getLectureThumbnailUrl() {
+		return lectureThumbnailUrl;
+	}
+
+	public void setLectureThumbnailUrl(String lectureThumbnailUrl) {
+		this.lectureThumbnailUrl = lectureThumbnailUrl;
+	}
+
+	public String getLectureTitle() {
+		return lectureTitle;
+	}
+
+	public void setLectureTitle(String lectureTitle) {
+		this.lectureTitle = lectureTitle;
 	}
 
 	public long getSubHisId() {
@@ -150,7 +169,8 @@ public class RequestHistoryResponse {
 
 	@Override
 	public String toString() {
-		return "RequestHistoryResponse [profile=" + profile + ", nickname=" + nickname + ", created=" + created
+		return "RequestHistoryResponse [lectureThumbnailUrl=" + lectureThumbnailUrl + "lectureTitle=" + lectureTitle
+				+ ", profile=" + profile + ", nickname=" + nickname + ", created=" + created
 				+ ", subTitle=" + subTitle + ", subId=" + subId + ", acceptYn=" + acceptYn + ", reqType=" + reqType
 				+ ", thumbnailUrl=" + thumbnailUrl + ", hisTitle=" + hisTitle + ", playerUrl=" + playerUrl
 				+ ", playTime=" + playTime + ", wikiContent=" + wikiContent + ", wikiContentHtml=" + wikiContentHtml

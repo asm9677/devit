@@ -122,4 +122,8 @@ public interface LectureRepository {
 	
 	public String checkUserManageAuth(@Param("userId") long userId, @Param("lectureId") long lectureId) throws Exception;
 	public void deleteLecture(@Param("userId") long userId, @Param("lectureId") long lectureId) throws Exception;
+	
+	// 요청 리스트 가져오기
+	public List<RequestHistoryResponse> myReqList(@Param("userId") long userId, @Param("startPage") long startPage, @Param("itemsperpage") long itemsperpage) throws Exception;
+		
 }
