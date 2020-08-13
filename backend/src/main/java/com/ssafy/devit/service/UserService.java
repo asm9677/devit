@@ -24,4 +24,6 @@ public interface UserService {
 	public void modifyUserInfo(UserProfileUpdateReqeust request) throws Exception;
 	
 	public String getUserPasswordByUserId(long userId) throws Exception;
+
+	public String getUserIsAdmin(long userId) throws Exception;
 }

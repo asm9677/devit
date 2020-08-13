@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ssafy.devit.model.common.Common;
+import com.ssafy.devit.model.lecture.ChangeHistoryResponse;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
 import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
@@ -98,6 +99,9 @@ public interface LectureRepository {
 	// 요청 리스트 요청 받기 또는 거절하기 업데이트 하기
 	public void updateRequestLecture(@Param("subId") long subId, @Param("subHisId") long subHisId, @Param("type") String type, @Param("reqType") String lwType) throws Exception;
 	
+	// 변경 사항 이력 가져오기
+	public List<ChangeHistoryResponse> selectChangeHistoryList(@Param("lectureId") long lectureId) throws Exception;
+	
 	public void uploadNoticeAuth(LectureSubHistoryRequest lecture) throws Exception;
 	
 	public List<LecturesResponse> selectLectures(@Param("userId") long userId, @Param("startPage") int startPage, @Param("type") int type) throws Exception;
@@ -111,4 +115,9 @@ public interface LectureRepository {
 	public void insertAuthLecture(@Param("lectureId") long lectureId, @Param("userId") long userId, @Param("role") String role) throws Exception;	
 	
 	public List<LectureRoleUsersResponse> selectRoleUsersByLectureId(@Param("lectureId") long lectureId) throws Exception;
+
+	public List<LecturesResponse> myLikeLectureList(@Param("userId") long userId, @Param("startPage") long startPage, @Param("itemsperpage") long itemsperpage) throws Exception;
+	public List<TheOhterSubLectureResponse> myLikeVideoList(@Param("userId") long userId, @Param("startPage") long startPage, @Param("itemsperpage") long itemsperpage) throws Exception;
+	public List<LecturesResponse> myMngLectureList(@Param("userId") long userId, @Param("startPage") long startPage, @Param("itemsperpage") long itemsperpage) throws Exception;
+
 }

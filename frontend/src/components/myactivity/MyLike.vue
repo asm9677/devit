@@ -134,6 +134,7 @@
     crossorigin="anonymous"></script>
 <script>
     import http from "@/util/http_common.js"
+    import store from "@/store/index.js"
 
     export default {
         data() {
@@ -164,7 +165,12 @@
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
         },
-        created() {
+        created(){
+            if(!store.state.token) {
+                this.$router.push('/')
+            }
+        },
+        mounted() {
             http
                 .axios
                 .get(`/api/v1/myLikeLecture?page=1&itemsperpage=4`)

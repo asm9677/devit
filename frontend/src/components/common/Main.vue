@@ -126,7 +126,7 @@
                                 </v-flex>
                                 <v-flex class="rank_top_ranker">
                                     <span class="rank">2위</span>
-                                    <span class="ranker">C++이 제일 쉬웠어요</span>
+                                    <span class="ranker">{{this.items[1].nickname}}</span>
                                 </v-flex>
                             </v-layout>
                         </v-flex>
@@ -137,7 +137,7 @@
                                 </v-flex>
                                 <v-flex class="rank_top_ranker">
                                     <span class="rank">1위</span>
-                                    <span class="ranker">초고교급 개발자</span>
+                                    <span class="ranker">{{this.items[0].nickname}}</span>
                                 </v-flex>
                             </v-layout>
                         </v-flex>
@@ -148,7 +148,7 @@
                                 </v-flex>
                                 <v-flex class="rank_top_ranker">
                                     <span class="rank">3위</span>
-                                    <span class="ranker">허니버터아몬드</span>
+                                    <span class="ranker">{{this.items[2].nickname}}</span>
                                 </v-flex>
                             </v-layout>
                         </v-flex>
@@ -164,23 +164,23 @@
                     <v-layout column="column" wrap="wrap">
                         <v-flex>
                             <span class="rank">4위</span>
-                            <span class="ranker">cjftn5832</span>
+                            <span class="ranker">{{this.items[3].nickname}}</span>
                         </v-flex>
                         <v-flex>
                             <span class="rank">5위</span>
-                            <span class="ranker">강원도 햇감자</span>
+                            <span class="ranker">{{this.items[4].nickname}}</span>
                         </v-flex>
                         <v-flex>
                             <span class="rank">6위</span>
-                            <span class="ranker">codingmaster</span>
+                            <span class="ranker">{{this.items[5].nickname}}</span>
                         </v-flex>
                         <v-flex>
                             <span class="rank">7위</span>
-                            <span class="ranker">올해는꼭취업</span>
+                            <span class="ranker">{{this.items[6].nickname}}</span>
                         </v-flex>
                         <v-flex>
                             <span class="rank">8위</span>
-                            <span class="ranker">jennykim94</span>
+                            <span class="ranker">{{this.items[7].nickname}}</span>
                         </v-flex>
                     </v-layout>
                 </v-flex>
@@ -194,7 +194,37 @@
 
     export default {
         data() {
-            return {totalUsers: "", totalDeviters: "", totalLectures: ""}
+            return {
+                totalUsers: "",
+                totalDeviters: "",
+                totalLectures: "",
+                items: [
+                    {
+                        "nickname": ""
+                    }, 
+                    {
+                        "nickname": ""
+                    }, 
+                    {
+                        "nickname": ""
+                    }, 
+                    {
+                        "nickname": ""
+                    }, 
+                    {
+                        "nickname": ""
+                    }, 
+                    {
+                        "nickname": ""
+                    }, 
+                    {
+                        "nickname": ""
+                    }, 
+                    {
+                        "nickname": ""
+                    }, 
+                ]
+            }
         },
         created() {
             http
@@ -207,7 +237,16 @@
                 })
                 .catch((error) => {
                     console.dir(error)
+                });
+                http
+                .axios
+                .get(`/api/v1/commons/main/rank`, {})
+                .then(({data}) => {
+                    this.items = data.result;
                 })
+                .catch((error) => {
+                    console.dir(error)
+                });
             }
     }
 </script>

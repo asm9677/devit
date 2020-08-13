@@ -18,7 +18,7 @@
             <v-list-item 
                 v-for="(item,index) in chapter" :key="`${index}_contents`"
                 link
-                @click="move(`/lecture/player/${lectureId}?order=${index+1}`)"
+                @click="move(`/lecture/player/index/${lectureId}?order=${index+1}`)"
             >
                 <v-list-item-avatar>
                     <v-icon>

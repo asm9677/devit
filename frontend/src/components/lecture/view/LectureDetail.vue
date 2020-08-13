@@ -85,7 +85,7 @@
                                         <v-list-item 
                                             v-for="(item,index) in chapter" :key="`${index}_contents`"
                                             link
-                                            @click="move(`/lecture/player/${lectureId}?order=${index+1}`)"
+                                            @click="move(`/lecture/player/index/${lectureId}?order=${index+1}`)"
                                         >
                                             <v-list-item-avatar>
                                                 <v-icon color="primary lighten-2">
@@ -161,8 +161,8 @@
                                         </v-avatar>
                                         <span style="margin-left:5px;font-size:16px">{{item.nickname}}</span>
                                         <div style="margin-top:20px;" /> 
-                                        <v-btn depressed dark color="primary" large block @click="move(`/lecture/player/${$route.params.id}?order=1`)"><span style="font-size:20px;">수강하기</span></v-btn>
-                                        <v-btn depressed dark color="primary" large block @click="move(`/lecture/management/default/${$route.params.id}`)" style="margin-top:10px;"><span style="font-size:20px;">관리하기</span></v-btn>
+                                        <v-btn depressed dark color="primary" large block @click="move(`/lecture/player/index/${$route.params.id}?order=1`)"><span style="font-size:20px;">수강하기</span></v-btn>
+                                        <v-btn v-if="item.manageYn" depressed dark color="primary" large block @click="move(`/lecture/management/default/${$route.params.id}`)" style="margin-top:10px;"><span style="font-size:20px;">관리하기</span></v-btn>
                                 </div>
                             </v-layout>
                         </div>
@@ -201,7 +201,7 @@ export default {
         items(val,prev){
             if(val.length > 10)
                 val.pop()            
-        }
+        },
     },
     filters: {
         convertView(num) {
@@ -319,7 +319,7 @@ export default {
             })
         },
         move(url){
-            this.$router.push(url)
+            this.$router.push(url);
         },
         getIndexList() {
             http.axios.get(`/api/v1/lectures/subs/${this.lectureId}`).then(({data}) => {
