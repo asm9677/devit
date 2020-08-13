@@ -11,7 +11,7 @@ public interface BoardService {
 	public BoardResponse info(long bid, long userId) throws Exception;
 	public void delete(long bid) throws Exception;
 	public void update(BoardResponse boardResponse, long bid) throws Exception;
-	public List<BoardResponse> listinfo(long startPage, long type, long itemsperpage, String searchselect, String searchtxt) throws Exception;
+	public List<BoardResponse> listinfo(long startPage, long type, long itemsperpage, String searchselect, String searchtxt, long userId) throws Exception;
 
 	public void createBoardWithLecture(BoardWithLectureRequest boardWithLectureRequest) throws Exception;
 	public List<BoardResponse> lectureQnaList(long lectureId, long subId) throws Exception;
