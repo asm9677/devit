@@ -761,4 +761,21 @@
 			 WHERE lsh.lecture_id = #{lectureId}
 		  ORDER BY modified DESC;
       </select>
+      
+      <!-- 프로젝트 관리 권한 여부 조회 -->
+      <select id="checkUserManageAuth" resultType="String">
+      		select case when exists(select 1 from lecture_auth where user_id = #{userId} and lecture_id = #{lectureId} and delete_yn = 'N')
+      		            then 'Y'
+      		            else 'N'
+      		            end as isManager
+      		  from dual;
+      </select>
+	
+	<!-- 프로젝트 삭제 -->
+	<update id="deleteLecture">
+		UPDATE lecture
+		   SET delete_flag = 'Y',
+			   modified = now()
+		 WHERE lecture_id = #{lectureId};
+	</update>
 </mapper>

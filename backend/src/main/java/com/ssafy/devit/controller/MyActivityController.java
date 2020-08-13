@@ -167,4 +167,39 @@ public class MyActivityController {
 		}
 		return response;
 	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "프로젝트 삭제")
+	@PutMapping("deleteLecture")
+	public ResponseEntity<CommonResponse> deleteLecture(@RequestParam("lectureId") long lectureId) {
+		log.info(">> Load : deleteLecture <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+
+			// 사용자 id 가져오기
+			String isManager = lectureService.checkUserManageAuth(lectureId);
+			
+			if("N".equals(isManager)) {
+
+				result.msg = "noauth";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+				
+			}else {
+
+				lectureService.deleteLecture(lectureId);
+				result.msg = "success";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			}
+			
+		} catch (Exception e) {
+			log.info(">> Error : updateLectureLike <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+
 }
