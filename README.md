@@ -6,22 +6,22 @@
 
 ## Index
 
-1. [Team's 'DevIT' 프로젝트 참여자](##Team's-'DevIT'-프로젝트-참여자)
-2. [기획 및 협업을 위한 작업물](##기획-및-협업을-위한-작업물)
-3. [Project structure](##Project-structure)
-4. [Develop tools](##Develop-tools)
-   - [IDE used](###IDE-used)
-   - [Tool/Program used](###Tool/Program-used)
-   - [Develop env/infra](###Develop-env/infra)
-   - [Cooperation](###Cooperation)
-   - [Library used](###Library-used)
-     - [backend](#####backend)
-     - [frontend](#####frontend)
-5. [Project process](##Project-process)
-6. [Branch strategy](##Branch-strategy)
-   - [[type] commit msg, issue key](###[type]-commit-msg,-issue-key)
-   - [[Detail] 규칙](###[Detail]-규칙)
-7. [Project docs](##Project-docs)
+1. [Team's 'DevIT' 프로젝트 참여자](#Team's-'DevIT'-프로젝트-참여자)
+2. [기획 및 협업을 위한 작업물](#기획-및-협업을-위한-작업물)
+3. [Project structure](#Project-structure)
+4. [Develop tools](#Develop-tools)
+   - [IDE used](#IDE-used)
+   - [Tool/Program used](#Tool/Program-used)
+   - [Develop env/infra](#Develop-env/infra)
+   - [Cooperation](#Cooperation)
+   - [Library used](#Library-used)
+     - [backend](#backend)
+     - [frontend](#frontend)
+5. [Project process](#Project-process)
+6. [Branch strategy](#Branch-strategy)
+   - [type, commit msg, issue key](#[type]-commit-msg,-issue-key)
+   - [Detail. 규칙](#[Detail]-규칙)
+7. [Project docs](#Project-docs)
 
 <br>
 
