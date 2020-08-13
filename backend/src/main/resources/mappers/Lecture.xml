@@ -416,7 +416,7 @@
 	</insert>
 	
 	<!-- 권한자에게 리퀘스트 알림 날리기 -->
-	<insert id="insertNoticeAuth">
+	<insert id="uploadNoticeAuth">
 		INSERT INTO notice(
 			notice_type, 
     		user_id,    		 
