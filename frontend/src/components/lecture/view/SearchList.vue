@@ -6,90 +6,181 @@
                 <v-layout wrap ref="main">
                     <v-flex xs12 sm12 md8 lg8 xl8 ref="left" style="margin-left:0px; padding:20px;">       
                         <v-list>
-                            <h1 style="margin-left:10px;"><span class="primary--text">{{keyword}}</span> 검색 결과</h1>
-                            <v-container fluid v-for="(item, i) in items" :key="i + '_item'">
-                                <v-row style="cursor:pointer;" @click="move(`/lecture/detail/${item.lectureId}`)">
-                                    <v-col :cols="4">
-                                        <div style="margin: 0px auto;">
-                                            <v-avatar
-                                                class="profile"
-                                                size="100%"
-                                                tile>
-                                                <v-img 
-                                                    :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
-                                                    :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
-                                                    aspect-ratio="1.7"
-                                                    :ref="'img'+i"
-                                                    min-height="100"
-                                                    min-width="170"
-                                                    style="border-radius:5px;"
-                                                ></v-img>
-                                            </v-avatar>
-                                        </div>
-                                    </v-col>
-                                    <v-col :cols="7">
-                                        <v-row>
-                                        <v-card
-                                            tile
-                                            flat
-                                            :ref="'content'+i"
-                                        >
-                                            <v-list-item-title>
-                                                <h3>{{item.title}}</h3>
-                                            </v-list-item-title>
-
-                                            <v-list-item-subtitle>
-                                                총 {{item.lectureCount}}강의 &middot; 조회수 {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}
-                                            </v-list-item-subtitle>
-                                            <v-list-item-subtitle>
-                                                #
-                                                <v-chip                                            
-                                                    :color="`primary lighten-4`"                                            
-                                                    class="ma-1"
-                                                    v-for="(tag,index) in item.tagName.split(',')"   
-                                                    :key="i+'_'+index+'_tag'"
-                                                    small
-                                                    label
-                                                    @click.stop="reSearch(tag)"
-                                                >  
-                                                    <span style="color:black">
-                                                        {{tag}}
-                                                    </span>
-                                                </v-chip>                                                                                                   
-                                            </v-list-item-subtitle>
-                                        </v-card>
-                                        
-                                        </v-row>
-                                        <v-card :height="height" tile flat >
-                                        
-                                        </v-card>
-                                        <v-row>
-                                        
+                            <h1 style="margin-left:10px;"><span class="primary--text">{{keyword.join(',')}}</span> 검색 결과</h1>
+                            <div style="height:30px"> </div>
+                            <div v-show="!type">
+                                <h3 style="color:#3c569b;padding-bottom:13px;border-bottom: 3px solid #4a63a6;">위키 ({{totalWiki}}건) <span style="font-size:14px; color:#666666; float:right; height:30px; padding-top:10px;cursor:pointer;" @click="expand(1)">더보기</span></h3>
+                                <v-container fluid v-for="(item, i) in wiki" :key="i + '_item1'">
+                                    <v-row style="cursor:pointer;" @click="move(`/lecture/player/undefined/${item.lectureId}?order=${item.order}`)">
+                                        <v-col :cols="4">
+                                            <div style="margin: 0px auto;">
                                                 <v-avatar
                                                     class="profile"
-                                                    size=20
-                                                >
+                                                    size="100%"
+                                                    tile>
                                                     <v-img 
-                                                            :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
-                                                            
-                                                        ></v-img>
-                                                    </v-avatar>
-                                                <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
-                                        </v-row>
+                                                        :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                                                        aspect-ratio="1.7"
+                                                        :ref="'img'+i"
+                                                        min-height="100"
+                                                        min-width="170"
+                                                        style="border-radius:5px;"
+                                                    ></v-img>
+                                                </v-avatar>
+                                            </div>
+                                        </v-col>
+                                        <v-col :cols="7">
+                                            <v-row>
+                                            <v-card
+                                                tile
+                                                flat
+                                                :ref="'content'+i"
+                                            >
+                                                <v-list-item-title>
+                                                    <h3>{{item.title}}</h3>
+                                                </v-list-item-title>
 
-                                    </v-col>
-                                </v-row>
-                                <v-divider :key="i + '_divider'"></v-divider>
-                            </v-container>
+                                                <v-list-item-subtitle>
+                                                    총 {{item.lectureCount}}강의 &middot; 조회수 {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}
+                                                </v-list-item-subtitle>
+                                                <v-list-item-subtitle>
+                                                    #
+                                                    <v-chip                                            
+                                                        :color="`primary lighten-4`"                                            
+                                                        class="ma-1"
+                                                        v-for="(tag,index) in item.tagName ? item.tagName.split(',') : ''"   
+                                                        :key="i+'_'+index+'_tag1'"
+                                                        small
+                                                        label
+                                                        @click.stop="clickTag(tag)"
+                                                    >  
+                                                        <span style="color:black">
+                                                            {{tag}}
+                                                        </span>
+                                                    </v-chip>                                                                                                   
+                                                </v-list-item-subtitle>
+                                            </v-card>
+                                            
+                                            </v-row>
+                                            <v-card :height="height" tile flat >
+                                            
+                                            </v-card>
+                                            <v-row>
+                                            
+                                                    <v-avatar
+                                                        class="profile"
+                                                        size=20
+                                                    >
+                                                        <v-img 
+                                                                :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
+                                                                
+                                                            ></v-img>
+                                                        </v-avatar>
+                                                    <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
+                                            </v-row>
+
+                                        </v-col>
+                                    </v-row>
+                                    <v-divider :key="i + '_divider1'"></v-divider>
+                                </v-container>
+                                <div style="margin-top:30px;" />
+                                <h3 style="color:#3c569b;padding-bottom:13px;border-bottom: 3px solid #4a63a6;">프로젝트 ({{totalProject}}건) <span style="font-size:14px; color:#666666; float:right; height:30px; padding-top:10px;cursor:pointer;" @click="expand(2)">더보기</span></h3>
+                                <v-container fluid v-for="(item, i) in project" :key="i + '_item2'">
+                                    <v-row style="cursor:pointer;" @click="move(`/lecture/detail/${item.lectureId}`)">
+                                        <v-col :cols="4">
+                                            <div style="margin: 0px auto;">
+                                                <v-avatar
+                                                    class="profile"
+                                                    size="100%"
+                                                    tile>
+                                                    <v-img 
+                                                        :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                                                        aspect-ratio="1.7"
+                                                        :ref="'img'+i"
+                                                        min-height="100"
+                                                        min-width="170"
+                                                        style="border-radius:5px;"
+                                                    ></v-img>
+                                                </v-avatar>
+                                            </div>
+                                        </v-col>
+                                        <v-col :cols="7">
+                                            <v-row>
+                                            <v-card
+                                                tile
+                                                flat
+                                                :ref="'content'+i"
+                                            >
+                                                <v-list-item-title>
+                                                    <h3>{{item.title}}</h3>
+                                                </v-list-item-title>
+
+                                                <v-list-item-subtitle>
+                                                    총 {{item.lectureCount}}강의 &middot; 조회수 {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}
+                                                </v-list-item-subtitle>
+                                                <v-list-item-subtitle>
+                                                    #
+                                                    <v-chip                                            
+                                                        :color="`primary lighten-4`"                                            
+                                                        class="ma-1"
+                                                        v-for="(tag,index) in item.tagName.split(',')"   
+                                                        :key="i+'_'+index+'_tag2'"
+                                                        small
+                                                        label
+                                                        @click.stop="clickTag(tag)"
+                                                    >  
+                                                        <span style="color:black">
+                                                            {{tag}}
+                                                        </span>
+                                                    </v-chip>                                                                                                   
+                                                </v-list-item-subtitle>
+                                            </v-card>
+                                            
+                                            </v-row>
+                                            <v-card :height="height" tile flat >
+                                            
+                                            </v-card>
+                                            <v-row>
+                                            
+                                                    <v-avatar
+                                                        class="profile"
+                                                        size=20
+                                                    >
+                                                        <v-img 
+                                                                :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
+                                                                
+                                                            ></v-img>
+                                                        </v-avatar>
+                                                    <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
+                                            </v-row>
+
+                                        </v-col>
+                                    </v-row>
+                                    <v-divider :key="i + '_divider2'"></v-divider>
+                                </v-container>
+                            </div>
+                            <search-detail-list v-if="type" :type="type"> </search-detail-list>
                         </v-list>
-                        
                     </v-flex>                    
                     <v-flex v-show="option" style="border-left:1px solid #e2e2e2" md4 lg4 xl4> 
-                        <div style="position: sticky; top:130px;">
+                        <div style="position: sticky; top:130px; ; height:500px; overflow-y:auto;">
                             <v-container>
                                 <span style="normal--text; margin-left:10px;"> 추천 키워드 </span>
                                 <p/>
-                                <div class="chips" v-for="(tag,i) in tags" :key="i+'_chips'" @click="reSearch(tag.tagName)">
+                                <v-chip                                            
+                                    :color="`primary lighten-4`"                                            
+                                    class="ma-1"
+                                    v-for="(tag,i) in keyword"   
+                                    :key="i+'_keyword3'"
+                                    label
+                                    @click.stop="removeKeyword(tag)"
+                                    style="margin-left:10px;"
+                                >  
+                                    <span style="color:black">
+                                        {{tag}}
+                                    </span>
+                                </v-chip>   
+                                <div class="chips" v-for="(tag,i) in tags" :key="i+'_chips3'" @click="addKeyword(tag.tagName)">
                                     <span class="chips_title">
                                         {{tag.tagName}}
                                     </span>
@@ -102,9 +193,6 @@
                     </v-flex>
                 </v-layout>
         </v-card>
-        <v-overlay :value="loading" opacity=0>
-            <v-progress-circular indeterminate color="primary lighten-4" size="64"></v-progress-circular>
-        </v-overlay>
       </v-container>
   </div>
 </template>
@@ -112,7 +200,11 @@
 <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
 <script>
 import http from "@/util/http_common.js"
+import SearchDetailList from "@/components/lecture/view/SearchDetailList.vue"
 export default {
+    components :{
+        SearchDetailList,
+    },
     filters: {
         convertView(num) {
             if(num < 1000){
@@ -138,15 +230,30 @@ export default {
     },
     data() {
         return {            
-            items:[],
+            project:[],
+            wiki:[],
             option: true,
-            keyword: '',
+            keyword: [],
             height: 20,
-            loading: false,
             page: 1,
             tags: [],
             scrollPos:0,
+            type:0,
+
+            totalProject: 0,
+            totalWiki: 0,
         }
+    },
+    created(){
+        console.dir('hello')
+        this.keyword = this.$route.query.keyword;   
+        if(typeof this.keyword == 'string') {
+            this.keyword = [this.keyword]
+        }
+        this.type = this.$route.query.type;
+        this.tagSearch();
+        this.projectSearch();
+        this.wikiSearch();
     },
     mounted() {
         window.addEventListener('resize', this.handleResize)
@@ -157,42 +264,10 @@ export default {
                     this.height = 0;
             }
     },
-    created(){
-        this.keyword = this.$route.query.keyword;        
-
-        this.search(this.keyword);
-        document.addEventListener('scroll', this.handleScroll);
-    },
     beforeDestroy(){
-        document.removeEventListener('scroll', this.handleScroll);
         document.removeEventListener('resize', this.handleResize);
     },
     methods: {
-        handleScroll(e){
-            if($(document).scrollTop() < this.scrollPos){                
-                this.scrollPos = $(document).scrollTop();
-                return;
-            }
-            this.scrollPos = $(document).scrollTop();
-
-            if($(document).scrollTop() + $(document)[0].scrollingElement.clientHeight + 100 >= $(document).height()){
-                if(!this.loading){
-                    this.loading = true;
-                    http.axios.get(`/api/v1/commons/${this.keyword}/${this.page}`)
-                        .then(({data}) => {
-                            if(data.result.length){
-                                this.page++;                            
-                                for(let i in data.result)
-                                    this.items.push(data.result[i]);
-                            }
-                        }).finally(() => {
-                            setTimeout(() => {
-                                this.loading = false;
-                            }, 600)                            
-                        })
-                }
-            }          
-        },
         handleResize() {
             this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
             if(this.$refs.img0){
@@ -208,44 +283,69 @@ export default {
                 easing: 'easeInOutCubic'
             })
         },        
-        reSearch(keyword){
-            history.pushState('', '', `/search?keyword=${keyword}`);
-            this.keyword = keyword;
-            this.search(keyword);
-         
-        },
-        search(keyword){
+        tagSearch() {
             http.axios.get('/api/v1/lectures/tags').then(({data}) => {
-                this.tags = data.result
-            })        
-            
-            if(!this.loading){
-                this.loading = true;
-                http.axios.get(`/api/v1/commons/${keyword}/1`).then(({data}) => {
-                    this.items = data.result                
-                    this.page++;
-                }).finally(() => {
-                    this.loading = false;
-                })
+                this.tags = []
+                for(let i in data.result)
+                {
+                    if(this.keyword.indexOf(data.result[i].tagName) == -1)
+                        this.tags.push(data.result[i])
+                }
+            })
+        },
+        projectSearch(){
+            let request = `/api/v1/commons/search/lectures?startPage=${this.page}`
+            for(let i in this.keyword){
+                request += `&searchText=${this.keyword[i]}`
             }
+            http.axios.get(request).then(({data}) => {
+                this.project = [];
+
+                if(data.result[0]) {
+                    this.project = data.result.slice(0,5);
+                    this.totalProject = data.result[0].totalCount;
+                }
+            })
+        },
+        wikiSearch(){
+            let request = `/api/v1/commons/search/indexs?startPage=${this.page}`
+            for(let i in this.keyword){
+                request += `&searchText=${this.keyword[i]}`
+            }
+            http.axios.get(request).then(({data}) => {
+                this.wiki = [];
+                console.dir(data)
+                if(data.result[0]) {
+                    this.wiki = data.result.slice(0,5);
+                    this.totalWiki = data.result[0].totalCount;
+                }
+            })
         },
         move(url){
             this.$router.push(url).catch(()=>{location.reload(true);});            
         },
-        addItem(i){
-            this.items.push({
-                "lectureId": i,
-                "title": '다 같이 배우는 파이썬',
-                "thumbnailUrl": `https://picsum.photos/500/300?image=${i*5}`,
-                "nickname": "미용쓰기",
-                "lectureCount": 20,
-                "viewCount": 9900000,
-                "likeCount": 999,
-                "tagName": 'python,프로그래밍 언어,GUI',
-                "userLikeYn": i%3 == 0
-            })
-        }
 
+        addKeyword(keyword) {
+            this.$router.push(`${this.$route.fullPath}&keyword=${keyword}`)
+        },
+        removeKeyword(keyword) {
+            if(this.keyword.length == 1)
+                return;
+            let request = this.$route.path + '?'
+            for(let key in this.$route.query) {
+                for(let i in this.$route.query[key]) {
+                    if(this.$route.query[key][i] != keyword || key != 'keyword')
+                        request += `&${key}=${this.$route.query[key][i]}`;
+                }
+            }
+            this.$router.push(request)
+        },
+        clickTag(tag) {
+            this.$router.push(`/search?keyword=${tag}`).catch(() => {location.reload(true)})
+        },
+        expand(type){
+            this.$router.push(`${this.$route.fullPath}&type=${type}`)
+        }
     }
 }
 </script>

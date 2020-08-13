@@ -35,7 +35,7 @@
                     <v-card :height="height" tile flat >
                     </v-card>
                     <v-row>
-                        <span class="nickname" style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
+                        <span class="nickname" style="font-size:12px">{{item.nickname}}</span>
                     </v-row>
                 </v-col>
             </v-row>

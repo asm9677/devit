@@ -327,7 +327,7 @@
                                         <v-chip                                            
                                             :color="`primary lighten-4`"                                            
                                             class="ma-1"
-                                            v-for="(tag,index) in sub.tagName"   
+                                            v-for="(tag,index) in sub.tagName ? sub.tagName.split(',') : ''"   
                                             :key="index+'_tag'"
                                             small
                                             label
