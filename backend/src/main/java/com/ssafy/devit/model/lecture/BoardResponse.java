@@ -19,13 +19,12 @@ public class BoardResponse {
 	private long lectureId;
 	private long subId;
 	private long boardReplyId;
-	private String isAdmin;
 	
 	public BoardResponse() {}
 	
 	public BoardResponse(long boardId, long userId, String nickName, String profile, String boardTitle, String boardContent, 
 			long boardType, Date boardCreated, Date boardModified, long boardCount, long replyCount, String isMine, long pageCnt,
-			long lectureId, long subId, long boardReplyId, String isAdmin){
+			long lectureId, long subId, long boardReplyId){
 		this.boardId = boardId;
 		this.userId = userId;
 		this.userName = nickName;
@@ -41,7 +40,6 @@ public class BoardResponse {
 		this.lectureId = lectureId;
 		this.subId = subId;
 		this.boardReplyId = boardReplyId;
-		this.isAdmin = isAdmin;
 	}
 
 	public String getUserName() {
@@ -180,14 +178,6 @@ public class BoardResponse {
 
 	public void setBoardReplyId(long boardReplyId) {
 		this.boardReplyId = boardReplyId;
-	}
-
-	public String getIsAdmin() {
-		return isAdmin;
-	}
-
-	public void setIsAdmin(String isAdmin) {
-		this.isAdmin = isAdmin;
 	}
 	
 }

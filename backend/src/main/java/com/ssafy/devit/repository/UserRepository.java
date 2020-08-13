@@ -43,4 +43,6 @@ public interface UserRepository {
 	public void updateUserInfo(UserProfileUpdateReqeust request) throws Exception; 
 	
 	public String getUserPasswordByUserId(long userId) throws Exception;
+
+	public String getUserIsAdmin(long userId) throws Exception;
 }
