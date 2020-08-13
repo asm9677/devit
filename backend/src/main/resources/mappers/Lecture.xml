@@ -527,7 +527,8 @@
 	<!-- 요청 리스트 요청받기 또는 거절하기 업데이트 하기 -->
 	<update id="updateRequestLecture">
 		UPDATE lecture_sub_history
-		   SET accept_yn = #{type}
+		   SET accept_yn = #{type},
+		   	   modified = now()
 	     WHERE sub_his_id = #{subHisId};
 	     
 	     <if test='type == "Y" and reqType == "video"'>
@@ -646,63 +647,90 @@
 			
 		
 	<!-- 내가 관리중인 프로젝트 목록 조회 -->
-	      <select id="myMngLectureList" resultType="LecturesResponse">
-	 SELECT l.lecture_id lectureId,
-		    l.title,
-		    l.user_id userId,
-		    l.common_id commonId,
-		    l.view_count viewCount,
-		    l.thumbnail_Url thumbnailUrl,
-		    u.nickname,
-		    u.profile,
-		    COUNT(lsi.sub_id) lectureCount,
-		    l.view_count viewCount,
-		    IFNULL(likeCount, 0) AS likeCount,
-		    lt.tagName,
-		    CASE
-		        WHEN exists (select 1 from lecture_like where lecture_id = l.lecture_id and user_id = #{userId}) THEN FALSE
-		        ELSE TRUE
-		    END AS userLikeYn
-	   FROM lecture l
-		    INNER JOIN
-		    user u 
-		    ON 
-		    l.user_id = u.user_id
-		    LEFT OUTER JOIN
-		    lecture_sub_index lsi 
-		    ON 
-		    l.lecture_id = lsi.lecture_id
-		    LEFT OUTER JOIN
-		    (
-		    SELECT lecture_id, 
-		           COUNT(1) AS likeCount
-		      FROM lecture_like
-		     WHERE like_flag = 'Y'
-		  GROUP BY lecture_id
-		     ) ll 
-		     ON 
-		     l.lecture_id = ll.lecture_id
-		     LEFT OUTER JOIN
-		     ( 
-		     SELECT common_id, 
-		            GROUP_CONCAT(tag_name) tagName
-		       FROM lecture_tag
-		   GROUP BY common_id
-		     ) lt 
-		     ON 
-		     l.common_id = lt.common_id
-		     INNER JOIN
-		     (
-		     SELECT lecture_id, modified
-		       FROM lecture_auth
-		      WHERE user_id = #{userId} 
-		        AND delete_yn = 'N'
-		     ) la
-		     ON 
-		     la.lecture_id = l.lecture_id
-	   WHERE 1=1
-	GROUP BY l.lecture_id
-	ORDER BY la.modified desc
-	   LIMIT #{startPage}, #{itemsperpage};
+    <select id="myMngLectureList" resultType="LecturesResponse">
+		 SELECT l.lecture_id lectureId,
+			    l.title,
+			    l.user_id userId,
+			    l.common_id commonId,
+			    l.view_count viewCount,
+			    l.thumbnail_Url thumbnailUrl,
+			    u.nickname,
+			    u.profile,
+			    COUNT(lsi.sub_id) lectureCount,
+			    l.view_count viewCount,
+			    IFNULL(likeCount, 0) AS likeCount,
+			    lt.tagName,
+			    CASE
+			        WHEN exists (select 1 from lecture_like where lecture_id = l.lecture_id and user_id = #{userId}) THEN FALSE
+			        ELSE TRUE
+			    END AS userLikeYn
+		   FROM lecture l
+			    INNER JOIN
+			    user u 
+			    ON 
+			    l.user_id = u.user_id
+			    LEFT OUTER JOIN
+			    lecture_sub_index lsi 
+			    ON 
+			    l.lecture_id = lsi.lecture_id
+			    LEFT OUTER JOIN
+			    (
+			    SELECT lecture_id, 
+			           COUNT(1) AS likeCount
+			      FROM lecture_like
+			     WHERE like_flag = 'Y'
+			  GROUP BY lecture_id
+			     ) ll 
+			     ON 
+			     l.lecture_id = ll.lecture_id
+			     LEFT OUTER JOIN
+			     ( 
+			     SELECT common_id, 
+			            GROUP_CONCAT(tag_name) tagName
+			       FROM lecture_tag
+			   GROUP BY common_id
+			     ) lt 
+			     ON 
+			     l.common_id = lt.common_id
+			     INNER JOIN
+			     (
+			     SELECT lecture_id, modified
+			       FROM lecture_auth
+			      WHERE user_id = #{userId} 
+			        AND delete_yn = 'N'
+			     ) la
+			     ON 
+			     la.lecture_id = l.lecture_id
+		   WHERE 1=1
+		GROUP BY l.lecture_id
+		ORDER BY la.modified desc
+		   LIMIT #{startPage}, #{itemsperpage};
+      </select>
+      
+      <!-- 변경 사항  이력 가져오기 -->
+      <select id="selectChangeHistoryList" resultType="ChangeHistoryResponse">
+	        SELECT lsh.lecture_id lectureId,
+				   lsh.sub_id subId,
+		           lsh.sub_his_id subHisId,
+		           lsh.created,
+		           lsh.modified,
+		           lsh.title,
+		           lsh.thumbnail_url thumbnailUrl,
+		           lsh.play_time playTime,
+		           lsh.player_url playerUrl,
+		           lsh.wiki_content wikiContent,
+		           lsh.wiki_content_html wikiContentHtml,
+		           lsh.view_count viewCount,
+		           lsh.req_type reqType,
+		           lsh.accept_yn acceptYn,
+		           u.user_id userId,
+		           u.nickname,
+		           u.profile
+			  FROM lecture_sub_history lsh
+					LEFT OUTER JOIN user u
+		            ON
+		            lsh.modifier = u.user_id
+			 WHERE lsh.lecture_id = #{lectureId}
+		  ORDER BY modified DESC;
       </select>
 </mapper>

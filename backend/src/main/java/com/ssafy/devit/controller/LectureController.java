@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
+import com.ssafy.devit.model.lecture.ChangeHistoryResponse;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.RequestHistoryResponse;
 import com.ssafy.devit.model.request.HistoryLikeRequest;
@@ -33,10 +34,8 @@ import com.ssafy.devit.service.LectureService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Example;
 
 @RestController
 @RequestMapping("/api/v1/lectures")
@@ -471,6 +470,28 @@ public class LectureController {
 		} catch (Exception e) {
 			result.msg = "fail";
 			result.result = "로그인 세션이 만료 되었거나 권한이 없습니다";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			log.info(">> Error : updateRequestHistory <<");
+			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
+	
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = ChangeHistoryResponse.class) })
+	@ApiOperation(value = "변경 사항 이력 가져오기")
+	@GetMapping("/historys/{lectureId}")
+	public ResponseEntity<CommonResponse> getChangeHistoryList(@PathVariable("lectureId") long lectureId) {
+		log.info(">> Load : updateRequestHistory <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			result.msg = "success";
+			result.result = lectureService.getChangeHistoryList(lectureId);
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			result.result = "변경 이력을 가져오는데 오류가 발생했습니다";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			log.info(">> Error : updateRequestHistory <<");
 			log.info(e.getMessage().toString());

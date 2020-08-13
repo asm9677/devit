@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.devit.model.common.Common;
+import com.ssafy.devit.model.lecture.ChangeHistoryResponse;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
 import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
@@ -239,5 +240,10 @@ public class LectureServiceImpl implements LectureService {
 		
 		startPage = (startPage-1) * itemsperpage;
 		return lectureRepository.myMngLectureList(user.getUserId(), startPage, itemsperpage);
+	}
+
+	@Override
+	public List<ChangeHistoryResponse> getChangeHistoryList(long lectureId) throws Exception {
+		return lectureRepository.selectChangeHistoryList(lectureId);
 	}
 }

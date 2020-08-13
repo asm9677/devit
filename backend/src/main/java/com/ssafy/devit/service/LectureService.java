@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.ssafy.devit.model.lecture.ChangeHistoryResponse;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
 import com.ssafy.devit.model.lecture.LectureRoleUsersResponse;
 import com.ssafy.devit.model.lecture.LectureSubIndexResponse;
@@ -80,4 +81,8 @@ public interface LectureService {
 	
 	// 내가 관리중인 프로젝트 가져오기
 	public List<LecturesResponse> myMngLectureList(long startPage, long itemsperpage) throws Exception;
+
+	// 변경 사항 이력 가져오기
+	public List<ChangeHistoryResponse> getChangeHistoryList(@Param("lectureId") long lectureId) throws Exception;
+		
 }
