@@ -75,61 +75,51 @@
 	
 	<!-- 대표 프로젝트 상세 정보 -->
 	<select id="selectLectureByLectureId" resultType="LectureOneResponse">
-		SELECT 
-		    l.lecture_id lectureId,
-		    l.title,
-		    l.type,
-		    l.user_id userId,
-		    l.common_id commonId,
-		    l.content,
-		    l.thumbnail_url thumbnailUrl,
-		    u.nickname,
-		    u.profile,
-		    l.created,
-		    COUNT(lsi.sub_id) lectureCount,
-   		    l.view_count viewCount,
-			ifnull(likeCount, 0) likeCount,
-		    lt.tagName,
-		    CASE
-		        WHEN lk.lecture_id IS NULL THEN FALSE
-		        ELSE TRUE
-		    END AS userLikeYn,
-            CASE
-				WHEN exists (select 1 from lecture_auth where lecture_id = l.lecture_id and user_id = #{userId}) THEN TRUE
-                ELSE FALSE
-			END AS manageYn		    
-		FROM
-		    lecture l
-		        LEFT OUTER JOIN
-		    user u ON l.user_id = u.user_id
-		        LEFT OUTER JOIN
-		    lecture_sub_index lsi ON l.lecture_id = lsi.lecture_id
-		        LEFT OUTER JOIN
-		    (SELECT 
-		        lecture_id, count(1) AS likeCount
-		    FROM
-		        lecture_like
-		    WHERE
-		        lecture_id = #{lectureId} AND like_flag = 'Y'
-            ) ll ON
-            l.lecture_id = ll.lecture_id
-		        LEFT OUTER JOIN
-		    (SELECT 
-		        common_id, GROUP_CONCAT(tag_name) tagName
-		    FROM
-		        lecture_tag
-		    GROUP BY common_id) lt ON l.common_id = lt.common_id
-		        LEFT OUTER JOIN
-		    (SELECT 
-		        lecture_id
-		    FROM
-		        lecture_like
-		    WHERE
-		        user_id = #{userId} AND like_flag = 'Y'
-			) lk
-            ON lk.lecture_id = l.lecture_id
-		WHERE
-		    l.lecture_id = #{lectureId}
+				SELECT 
+				l.lecture_id lectureId,
+				l.title,
+				l.type,
+				l.user_id userId,
+				l.common_id commonId,
+				l.content,
+				l.thumbnail_url thumbnailUrl,
+				u.nickname,
+				u.profile,
+				l.created,
+				COUNT(lsi.sub_id) lectureCount,
+				l.view_count viewCount,
+				ifnull(likeCount, 0) likeCount,
+				lt.tagName,
+				CASE WHEN lk.lecture_id IS NULL
+					THEN FALSE
+					ELSE TRUE
+				END AS userLikeYn,
+				CASE
+					WHEN exists (select 1 from lecture_auth where lecture_id = l.lecture_id and user_id = #{userId})
+                    THEN TRUE
+					ELSE FALSE
+				END AS manageYn		    
+		  FROM lecture l
+				LEFT OUTER JOIN user u
+                ON l.user_id = u.user_id
+				LEFT OUTER JOIN lecture_sub_index lsi
+                ON l.lecture_id = lsi.lecture_id AND lsi.order != 0
+					LEFT OUTER JOIN (SELECT lecture_id, count(1) AS likeCount
+									   FROM lecture_like
+									  WHERE lecture_id = #{lectureId} AND like_flag = 'Y'
+					) ll 
+					ON l.lecture_id = ll.lecture_id
+					LEFT OUTER JOIN (SELECT common_id, GROUP_CONCAT(tag_name) tagName
+									   FROM lecture_tag
+								   GROUP BY common_id
+                    ) lt
+                    ON l.common_id = lt.common_id
+					LEFT OUTER JOIN(SELECT lecture_id
+									  FROM lecture_like
+									 WHERE user_id = #{userId} AND like_flag = 'Y'
+					) lk
+				    ON lk.lecture_id = l.lecture_id
+		WHERE l.lecture_id = #{lectureId}
 		GROUP BY l.lecture_id
 		ORDER BY l.lecture_id;
 	</select>
