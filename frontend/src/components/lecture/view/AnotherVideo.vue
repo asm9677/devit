@@ -130,7 +130,7 @@
                 this.anotherHeight = $('body').prop("clientHeight")-this.$refs.another.$el.offsetTop
             },   
             move(url){
-                this.$router.push(url).catch(()=>{location.reload(true);});
+                this.$router.push(url).then(() => {}).catch(()=>{location.reload(true);});
             },
 
             getList() {

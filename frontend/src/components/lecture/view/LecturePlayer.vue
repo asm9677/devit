@@ -277,18 +277,19 @@
 
             <div style="position:absolute; top:0px; left:0px; width:100%; height:100%; z-index:10; ">            
                     <div :style="{'width' : videoWidth+'px'}">
-                        <video
-                            ref="video"
-                            id="livestation-player"
-                            class="video-js vjs-default-skin vjs-big-play-centered"
-                            controls
-                            preload="auto"
-                            data-setup='{}'
-                            style="width:100%;min-height:500px;"   
-                            :poster="`http://i3a101.p.ssafy.io/images/${sub.thumbnailUrl}`"
-                        >
-                            <source src="http://i3a101.p.ssafy.io/images/example2.mp4"></source>
-                        </video>        
+                        <div id="videoFrame">
+                            <video
+                                ref="video"
+                                id="livestation-player"
+                                class="video-js vjs-default-skin vjs-big-play-centered"
+                                controls
+                                data-setup='{}'
+                                style="width:100%;min-height:500px;"   
+                                :poster="`http://i3a101.p.ssafy.io/images/${sub.thumbnailUrl}`"
+                            >
+                                <!-- <source src="http://i3a101.p.ssafy.io/images/example2.mp4"></source> -->
+                            </video>
+                        </div>        
                         <div v-show="!sub.playerUrl" style="padding:15px;">
                             등록된 영상이 없습니다.
                         </div>
@@ -475,9 +476,21 @@ export default {
             }            
         },
         sub() {
-            var myPlayer = videojs('livestation-player');  
-            myPlayer.src({type: 'video/mp4',src: `http://i3a101.p.ssafy.io/images/${this.sub.playerUrl}`});
-            myPlayer.ready();
+            var videoPlayer = document.getElementById('videoFrame');
+            $('#videoFrame').html(
+                `
+                    <video
+                        class="video-js vjs-default-skin vjs-big-play-centered"
+                        controls
+                        data-setup='{}'
+                        style="width:100%;min-height:500px;"   
+                        poster="http://i3a101.p.ssafy.io/images/${this.sub.thumbnailUrl}"
+                    >
+                        <source src="http://i3a101.p.ssafy.io/images/${this.sub.playerUrl}"> </source>
+                    </video>
+                `
+            )
+            
         }
     },
     filters: {
@@ -485,7 +498,7 @@ export default {
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         },
     },
-    created(){        
+    created(){    
         console.dir(this.tabName[-1])
         this.lectureId = this.$route.params.id;
         this.order = this.$route.query.order;
@@ -512,11 +525,12 @@ export default {
             this.autoPlay= this.autoPlay == 'true';
     },
     mounted() {
+  
         if(this.subHisId) {
             this.loadSub();     
         }else {
             this.loadMain();
-        }
+        }  
 
         if(this.darkOption){
             $('.LecturePlayer .v-list-item__content').css('color', '#d4d4d4')
@@ -546,6 +560,10 @@ export default {
                     // alert("존재하지 않는 강의 입니다.");
                     // this.move("/")
                 }
+            }).finally( () => {
+                var myPlayer = document.getElementById('livestation-player');
+            $('#livestation-player').html(`<source src="http://i3a101.p.ssafy.io/images/${this.sub.playerUrl}">`)
+            $('#livestation-player').attr('poster',`http://i3a101.p.ssafy.io/images/${this.sub.thumbnailUrl}`)
             })  
         },
         loadSub() {
@@ -556,6 +574,10 @@ export default {
                 }else{
                     console.dir(data);
                 }
+            }).finally( () => {
+                var myPlayer = document.getElementById('livestation-player');
+            $('#livestation-player').html(`<source src="http://i3a101.p.ssafy.io/images/${this.sub.playerUrl}">`)
+            $('#livestation-player').attr('poster',`http://i3a101.p.ssafy.io/images/${this.sub.thumbnailUrl}`)
             }) 
         },
         handleResize() {
