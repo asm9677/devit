@@ -25,6 +25,10 @@
 
 
 
+## 기획 및 협업을 위한 작업물
+
+[DevIT Up! - 참여형 강의 플랫폼](https://www.notion.so/msnodeve/DevIT-Up-64f92628821f46478d47d57fb70f016f)
+
 
 
 ## Project structure
@@ -101,27 +105,81 @@
 
 ## Develop tools
 
-|      | Backend                 | Frontend |
-| ---- | ----------------------- | -------- |
-| IDE  | STS(Srping Tool Suites) |          |
-|      |                         |          |
-|      |                         |          |
+### IDE used
+
+- [STS(Srping Tool Suite 4](https://spring.io/tools)_v4.7.0.RELEASE
+- [VScode](https://code.visualstudio.com/)_v1.47.3
+
+
+
+### Tool/Program used
+
+- [MySQL Wrokbench](https://www.mysql.com/products/workbench/)_v8.0.20
+- [Typora](https://typora.io/)_v0.9.93
+
+
+
+### Develop env/infra
+
+- Windows10
+- AWS EC2(Ubuntu 18.04.4 LTS)
+- [Docker](https://www.docker.com/)_v2.3.0.4(46911)
+- [Docker-Compose](https://docs.docker.com/compose/)
+- [Gitlab-runner](https://docs.gitlab.com/runner/install/)
+
+
+
+### Cooperation
+
+- [Notion](https://www.notion.so/?utm_source=google&utm_campaign=brand_alpha&utm_content=kr&utm_term=notion&gclid=CjwKCAjwps75BRAcEiwAEiACMVWDOmfXiknyZ8fM5R2Mz9RPhteMAG_we-lVp-VPGqx9rgqrsglEFxoC9d8QAvD_BwE)
+- [Gitlab](https://about.gitlab.com/)
+- [Goormide](https://ide.goorm.io/)
+- [Webex](https://www.webex.com/ko/index.html)
+- [Discord](https://discord.com/new)
+
+
+
+### Library used
+
+##### backend
+
+- [swagger2](https://www.baeldung.com/swagger-2-documentation-for-spring-rest-api)_v2.9.2
+- [spring security](https://spring.io/projects/spring-security)
+- [spring mail service](https://www.baeldung.com/spring-email)
+- [spring mybatis](https://mvnrepository.com/artifact/org.mybatis/mybatis-spring)_v1.3.2
+- [mysql, jdbc](https://spring.io/guides/gs/accessing-data-mysql/)
 
 
 
 
 
-#### backend
+##### frontend
 
-- 사용 IDE : 
+- [axios](https://joshua1988.github.io/vue-camp/vue/axios.html)_v0.19.2
+- [vue](https://kr.vuejs.org/v2/guide/index.html)_v2.6.11
+- [vue-moment](https://www.npmjs.com/package/vue-moment)_v4.1.0
+- [vue-router](https://router.vuejs.org/kr/guide/)_v3.2.0
+- [vuedraggable](https://www.npmjs.com/package/vuedraggable)_v2.24.0
+- [vuetify](https://vuetifyjs.com/ko/)_v2.3.4
+- [vuex](https://vuex.vuejs.org/kr/)_v3.4.0
 
-- [Springboot](https://spring.io/projects/spring-boot)
+- [vue videojs](https://jsfiddle.net/amosgwa/avyto22v/)
+- [kakao login api](https://developers.kakao.com/docs/latest/ko/kakaologin/js)
+- [jQuery](https://jquery.com/)
+
+- [fontawesome](https://fontawesome.com/)
 
 
 
 <br><br>
 
-# 프로젝트 전체 프로세스
+
+
+
+
+## 프로젝트 전체 프로세스
+
+
 
 
 
