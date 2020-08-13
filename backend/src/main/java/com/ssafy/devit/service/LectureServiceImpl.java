@@ -264,4 +264,14 @@ public class LectureServiceImpl implements LectureService {
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		lectureRepository.deleteLecture(user.getUserId(), lectureId);
 	}
+	
+	@Override
+	public List<RequestHistoryResponse> myReqList(long startPage, long itemsperpage) throws Exception{
+
+		
+		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		startPage = (startPage-1) * itemsperpage;
+		return lectureRepository.myReqList(user.getUserId(), startPage, itemsperpage);
+	};
 }

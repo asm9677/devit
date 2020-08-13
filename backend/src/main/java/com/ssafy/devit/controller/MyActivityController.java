@@ -204,4 +204,27 @@ public class MyActivityController {
 		return response;
 	}
 
+	
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@GetMapping("myReqList")
+	@ApiOperation(value = "요청 목록 조회")
+	public ResponseEntity<CommonResponse> myReqList(@RequestParam("page") int startPage, @RequestParam("itemsperpage") int itemsperpage) throws Exception {
+		
+		log.info(">> my Request list info <<");
+		
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			
+			
+			result.msg = "success";
+			result.result = lectureService.myReqList(startPage, itemsperpage);
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return response;
+	}
 }
