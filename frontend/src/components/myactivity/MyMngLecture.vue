@@ -2,64 +2,27 @@
     <div style="margin:50px">
         <v-container justify-center="justify-center">
             <v-layout row="row" wrap="wrap">
-                    <div style="width:100%; margin:0 auto;">
-                        <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">관리중인 프로젝트</span>
-                    </div>
-                    <v-flex
-                        v-for="(item,i) in items"
-                        :key="`4${i}`"
-                        xs12="xs12"
-                        sm6="sm6"
-                        md4="md4"
-                        lg3="lg3"
-                        xl2="xl2">
-                        <v-card
-                            tile="tile"
-                            flat="flat"
-                            style="margin-left:10px; margin-top:20px;cursor:pointer;">
+                <div style="width:100%; margin:0 auto;">
+                    <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">관리중인 프로젝트</span>
+                    <div style="width:100%; margin-bottom:30px;"></div>
+
+                    <v-data-table :headers="headers" :items="items" class="elevation-1">
+                        <template v-slot:item.thumbnailUrl="{ item }">
                             <v-img
+                                max-width="200"
                                 :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                                 :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                                 aspect-ratio="1.7"
                                 @click="move(`/lecture/detail/${item.lectureId}`)"></v-img>
-                            <v-list>
-                                <div @click="move(`/lecture/detail/${item.lectureId}`)">
-                                    <v-list-item-title>
-                                        <h3>{{item.title}}</h3>
-                                    </v-list-item-title>
-                                    <v-list-item-subtitle>
-                                        조회수
-                                        {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}
-                                    </v-list-item-subtitle>
+                        </template>
+                        <template v-slot:item.btn="{item}">
+                            <v-btn depressed="depressed" small="small" text color="success">관리하기</v-btn>
+                            <!-- <div style="margin:5px"></div> -->
+                            <v-btn depressed="depressed" small="small" text color="error">삭제하기</v-btn>
+                        </template>
+                    </v-data-table>
+                </div>
 
-                                    <v-list-item-subtitle>
-                                        총
-                                        {{item.lectureCount}}강의
-                                    </v-list-item-subtitle>
-                                </div>
-                                <v-list-item-subtitle>
-                                    #
-                                    <v-chip
-                                        :color="`primary lighten-4`"
-                                        class="ma-1"
-                                        v-for="(tag,index) in item.tagName ? item.tagName.split(',') : ''"
-                                        :key="i+'_'+index+'_tag'"
-                                        small="small"
-                                        label="label"
-                                        @click="move(`/search?keyword=${tag}`)">
-                                        <span style="color:black">
-                                            {{tag}}
-                                        </span>
-                                    </v-chip>
-                                </v-list-item-subtitle>
-                                <v-avatar class="profile" size="20">
-                                    <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
-                                </v-avatar>
-                                <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
-
-                            </v-list>
-                        </v-card>
-                    </v-flex>
             </v-layout>
         </v-container>
     </div>
@@ -75,7 +38,40 @@
 
     export default {
         data() {
-            return {items: [], level: this.$route.query.level, page: 1, itemsperpage: 20, loading: false}
+            return {
+                headers: [
+                    {
+                        text: '이미지',
+                        value: 'thumbnailUrl',
+                        align: 'center',
+                        width: '200'
+                    }, {
+                        text: '강좌명',
+                        value: 'title',
+                        align: 'start'
+                    }, {
+                        text: '강의 수',
+                        value: 'lectureCount',
+                        align: 'center',
+                        width: '100'
+                    }, {
+                        text: '조회 수',
+                        value: 'viewCount',
+                        align: 'center',
+                        width: '100'
+                    }, {
+                        text: '관리하기',
+                        value: 'btn',
+                        align: 'center',
+                        width: '100'
+                    }
+                ],
+                items: [],
+                level: this.$route.query.level,
+                page: 1,
+                itemsperpage: 1000,
+                loading: false
+            }
         },
         filters: {
             convertView(num) {
@@ -102,9 +98,11 @@
                     .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
         },
-        created(){
-            if(!store.state.token) {
-                this.$router.push('/')
+        created() {
+            if (!store.state.token) {
+                this
+                    .$router
+                    .push('/')
             }
         },
         mounted() {
