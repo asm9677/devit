@@ -88,7 +88,7 @@ const routes = [
   },
 
   {
-    path: '/lecture/player/:id',
+    path: '/lecture/player/:tabName/:id',
     name: 'LecturePlayer',
     component: LecturePlayer
   },

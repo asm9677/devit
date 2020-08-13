@@ -112,7 +112,7 @@
                 </v-btn>
             </v-list-item-content>
             <v-list-item-action>
-                <v-btn outlined color="success" @click="requestWiki">
+                <v-btn outlined color="success" @click="tabs ? requestWiki() : requestVideo()">
                     요청하기
                 </v-btn>
             </v-list-item-action>
