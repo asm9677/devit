@@ -51,6 +51,9 @@ dependencies {
 	// Mail service
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	
+	// Base64 encoding
+	compile 'org.apache.commons:commons-lang3:3.5'
+	
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude module: 'junit'
     }

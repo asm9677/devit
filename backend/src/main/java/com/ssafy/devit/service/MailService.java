@@ -1,7 +1,6 @@
 package com.ssafy.devit.service;
 
-import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.RequestParam;
+import com.ssafy.devit.model.request.SignUpRequest;
 
 public interface MailService { // to MailServiceImpl
 	
@@ -15,6 +14,8 @@ public interface MailService { // to MailServiceImpl
 	
 	public void sendPasswordFindConfirmMail(String email) throws Exception;
 	
-	public void updatePasswordRandom(String email) throws Exception;	
+	public void updatePasswordRandom(String email) throws Exception;
+
+	public void sendConfirmEmail(SignUpRequest request) throws Exception;	
 	
 }
