@@ -1,6 +1,7 @@
 <template>
     <div>
         <v-layout wrap style="width:100%;">            
+            <div id="pos" style="height:0px" />
             <v-list id="question" style="width:100%" dense :style="{'height' : questionHeight+'px'}">
                 <v-list-item>
                     <v-list-item-content class="wrap-text">
@@ -153,14 +154,15 @@ export default {
     mounted() {
         console.dir('mounted')
         this.detailBoardResize()
-        document.addEventListener('resize', this.detailBoardResize)
+        window.addEventListener('resize', this.detailBoardResize)
     },
     beforeDestroy(){
-        document.removeEventListener('resize', this.detailBoardResize)
+        window.removeEventListener('resize', this.detailBoardResize)
     },
     methods:{
-        detailBoardResize() {
-            this.questionHeight = $('body').height()-$('#question').offset().top
+        detailBoardResize() {      
+            if(this.tabs == 4)      
+                this.questionHeight = $('body').height()-$('#pos').offset().top
         },
         writeReply() {
             http.axios.post(`/api/v1/reply`,{

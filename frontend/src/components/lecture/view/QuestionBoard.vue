@@ -109,14 +109,12 @@ export default {
         
     },
     mounted(){
-        console.dir(this.lectureId);
-        console.dir(this.subId);
         this.initBoard();
         this.questionBoardResize()
-        document.addEventListener('resize', this.questionBoardResize())
+        window.addEventListener('resize', this.questionBoardResize())
     },
     beforeDestroy(){
-        document.removeEventListener('resize', this.questionBoardResize())
+        window.removeEventListener('resize', this.questionBoardResize())
     },
     methods:{
         questionBoardResize() {

@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" max-width="768px" style="" hide-overlay persistent :dark="darkOption">         
+    <v-dialog v-model="dialog" max-width="768px" hide-overlay persistent :dark="darkOption">       
         <v-tabs v-model="tabs" icons-and-text grow hide-slider color="success" :dark="darkOption">
             <v-tab>
                 <span>영상</span>
@@ -78,7 +78,7 @@
                                     <div style="font-size:14px;" :style="{'color' : (darkOption ? '#d4d4d4' : '')}">클릭해서 썸네일을 선택하세요.</div>
                                 </div>
                             </div>
-                            <v-img v-else="thumbnailUrl" :src="`http://i3a101.p.ssafy.io/images/${thumbnailUrl}`" min-height="100%" min-width="100%" aspect-ratio="1.7"/>
+                            <v-img v-else :src="`http://i3a101.p.ssafy.io/images/${thumbnailUrl}`" min-height="100%" min-width="100%" aspect-ratio="1.7"/>
                         </div>
                     </v-stepper-content>
                     <v-stepper-step :complete="title != ''" step="3">제목 정하기</v-stepper-step>
@@ -94,7 +94,7 @@
                     <v-list :dark="darkOption" >
                         <v-list-item>
                             <v-list-item-content>
-                                <editor :height="550"> </editor>
+                                <editor v-model="content" :height="550"> </editor>
                                 <!-- <v-textarea outlined auto-grow placeholder="텍스트 에디터 적용 예정입니다." :rows="10" v-model="content" /> -->
                             </v-list-item-content>
                         </v-list-item>         
@@ -117,7 +117,7 @@
                 </v-btn>
             </v-list-item-action>
             <v-list-item-action>
-                <v-btn outlined color="success">
+                <v-btn outlined color="success" @click="initPreview()">
                     미리보기
                 </v-btn>
             </v-list-item-action>
@@ -166,6 +166,21 @@
         >
             {{msg}}
         </v-snackbar>
+        <v-dialog v-model="preview" hide-overlay max-width="768"> 
+            <div id="videoFrame2" v-show="!tabs">
+                <video
+                    class="video-js vjs-default-skin vjs-big-play-centered"
+                    controls                      
+                    data-setup='{}'
+                    style="position: relative; height: 0; overflow: hidden; width: 768px; height: auto;"                       
+                >
+                    <!-- <source :src="`http://i3a101.p.ssafy.io/images/${playerUrl}`"> </source> -->
+                </video>
+            </div>
+            <div class="wiki-paragraph" v-show="tabs" v-html="parse(content)" style="background-color: #ffffff;">
+                
+            </div>
+        </v-dialog>
     </v-dialog>
 </template>
 
@@ -173,19 +188,26 @@
 import http from "@/util/http_common.js";
 import axios from "axios";
 import Editor from "@/components/common/Editor.vue"
+import parse from "@/lib/markdown/ParseMd.js";
+
 export default {
     components: {
         Editor,
     },
-    props:['darkOption', 'dialog', 'lectureId', 'subId'],
+    props:['darkOption', 'dialog', 'lectureId', 'subId', 'wiki'],
     watch: {
         dialog() {
             if(this.dialog == false)
                 this.$emit('closeDialog')
+        },
+        wiki() {
+            this.content = this.wiki;
         }
     },
     data(){
         return {
+            preview: false,
+
             tabs: 0,
             step: 1,
 
@@ -204,6 +226,24 @@ export default {
         }
     },
     methods: {
+        parse,
+        initPreview() {
+            this.preview=true;
+            $('#videoFrame2').html(
+                `
+                    <video
+                        class="video-js vjs-default-skin vjs-big-play-centered"
+                        controls                      
+                        data-setup='{}'
+                        style="position: relative; height: 0; overflow: hidden; width: 768px; height: auto;"   
+                        poster="http://i3a101.p.ssafy.io/images/${this.thumbnailUrl}"
+                    >
+                        <source src="http://i3a101.p.ssafy.io/images/${this.playerUrl}"> </source>
+                    </video>
+                `
+            )
+
+        },
         clickVideo(){
             $("#file").click();
         },
@@ -279,6 +319,7 @@ export default {
         },
 
         requestWiki(){
+            console.dir
             http.axios.post('/api/v1/lectures/sub/history', {
                 "lectureId": this.lectureId,
                 "subId": this.subId,
@@ -287,7 +328,7 @@ export default {
                 "wikiContentHtml": this.content,
             }).then(({data}) => {
                 console.dir(data)
-                this.dialog = false;
+                this.$emit('closeDialog');
                 this.snackbar = true;
                 this.msg = '정상적으로 요청되었습니다.';
             })
@@ -318,7 +359,7 @@ export default {
                     "thumbnailUrl": this.thumbnailUrl,
                     "title": this.title,
                 }).then(({data}) => {
-                    this.dialog = false;
+                    this.$emit('closeDialog');
                     this.snackbar = true;
                     this.msg = '정상적으로 요청되었습니다.';
                 })
