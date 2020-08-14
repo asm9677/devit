@@ -16,7 +16,6 @@ import com.ssafy.devit.model.lecture.LikeDTO;
 import com.ssafy.devit.model.lecture.RequestHistoryResponse;
 import com.ssafy.devit.model.lecture.TagResponse;
 import com.ssafy.devit.model.lecture.TheOhterSubLectureResponse;
-import com.ssafy.devit.model.request.HistoryLikeRequest;
 import com.ssafy.devit.model.request.LectureAuthRequest;
 import com.ssafy.devit.model.request.LectureRequest;
 import com.ssafy.devit.model.request.LectureSubHistoryRequest;

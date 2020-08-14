@@ -10,6 +10,15 @@
                             prepend-icon="mdi-account"
                             v-model="nickname"
                         ></v-text-field>
+                        <div>
+                            <span style="float:left">
+                                {{ nick_text }}
+                            </span>
+                            
+                            <v-btn color="primary" style="width:15%; float:right" depressed large @click="vaildNickname">
+                                중복확인
+                            </v-btn>
+                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -19,6 +28,15 @@
                             prepend-icon="mdi-email"
                             v-model="email"
                         ></v-text-field>
+                        <div>
+                            <span style="float:left">
+                                {{ email_text }}
+                            </span>
+                            
+                            <v-btn color="primary" style="width:20%; float:right" depressed large @click="vaildEmail">
+                                이메일 인증
+                            </v-btn>
+                        </div>
                     </td>
                 </tr>
                 <!-- <tr width="100%" style="background-color='red'">
@@ -79,7 +97,9 @@ export default {
             password: '',
             re_password: '',
             code: '',    
-            check: false,        
+            check: false,
+            nick_text: '닉네임 중복 체크를 해주세요',
+            email_text: '아메일 인증을 해주세요',
         }
     },
 
@@ -95,6 +115,29 @@ export default {
                 this.$router.push("/")
             }).catch((error) => {
                 console.dir(error)
+            })
+        },
+        vaildNickname(){
+            http.axios.get(`/api/v1/users/user/${this.nickname}`)
+            .then(({data}) => {
+                if(data.msg == "success"){
+                    this.nick_text = data.result;
+                }else if(data.msg == "duplicate"){
+                    this.nick_text = data.result;
+                }
+            }).catch((error) => {
+                this.nick_text = "사용할 수 없는 닉네임 입니다.";
+            })
+        },
+        vaildEmail(){
+            http.axios.get(`/api/v1/mail/sendMailToConfirm?email_to=${this.email}`)
+            .then(({data}) => {
+                if(data.msg == "success"){
+                    this.email_text = data.result;
+                }
+            }).catch((error) => {
+                // 에러 반환
+                this.email_text = "계정 인증 메일 발송 실패";
             })
         }
     }
