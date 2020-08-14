@@ -160,12 +160,6 @@ public class LectureServiceImpl implements LectureService {
 
 	@Override
 	public List<LectureRoleUsersResponse> selectRoleUsersByLectureId(long lectureId) throws Exception {
-		UserAuthDetails user = null;
-		try {
-			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		} catch (Exception e) {
-			throw new Exception("로그인이 필요합니다");
-		}
 		return lectureRepository.selectRoleUsersByLectureId(lectureId);
 	}
 
