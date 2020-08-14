@@ -1,4 +1,4 @@
-# DevIT Up! - 참여형 강의 플랫폼
+# DevIT Up! 참여형 강의 플랫폼
 
 <br>
 
@@ -6,7 +6,28 @@
 
 ## Index
 
-[TOC]
+1. [Team's 'DevIT' 프로젝트 참여자](#teams-devit-프로젝트-참여자)
+2. [기획 및 협업을 위한 작업물](#기획-및-협업을-위한-작업물)
+3. [Project structure](#project-structure)
+4. [Develop tools](#develop-tools)
+   - [IDE used](#ide-used)
+   - [Tool/Program used](#toolprogram-used)
+   - [Develop env/infra](#develop-envinfra)
+   - [Cooperation](#cooperation)
+   - [Library used](#library-used)
+     - [backend](#backend)
+     - [frontend](#frontend)
+5. [Project process](#project-process)
+6. [Branch strategy](#branch-strategy)
+   - [type, commit msg, issue key](#type-commit-msg-issue-key)
+   - [Detail. 규칙](#detail-규칙)
+7. [Project docs](#project-docs)
+
+<br>
+
+<br>
+
+
 
 ## Team's 'DevIT' 프로젝트 참여자
 
@@ -25,6 +46,18 @@
 
 
 
+## 기획 및 협업을 위한 작업물
+
+Notion으로 오세요! [DevIT Up! - 참여형 강의 플랫폼](https://www.notion.so/msnodeve/DevIT-Up-64f92628821f46478d47d57fb70f016f)
+
+
+
+<br>
+
+<br>
+
+
+
 
 
 ## Project structure
@@ -34,6 +67,7 @@
 ├── .gitignore # Git 버전 관리에서 제외할 파일 목록을 지정하는 파일
 ├── .gitlab-ci.yml # CI/CD 관련 Gitlab-runner 사용 파일
 ├── README.md
+├── image # 이미지 관련 폴더
 ├── res # 출력물
 │   └── 초기 와이어프레임
 │   	├── image # 와이어프레임 이미지
@@ -101,27 +135,83 @@
 
 ## Develop tools
 
-|      | Backend                 | Frontend |
-| ---- | ----------------------- | -------- |
-| IDE  | STS(Srping Tool Suites) |          |
-|      |                         |          |
-|      |                         |          |
+### IDE used
+
+- [STS(Srping Tool Suite 4](https://spring.io/tools)_v4.7.0.RELEASE
+- [VScode](https://code.visualstudio.com/)_v1.47.3
+
+
+
+### Tool/Program used
+
+- [MySQL Wrokbench](https://www.mysql.com/products/workbench/)_v8.0.20
+- [Typora](https://typora.io/)_v0.9.93
+
+
+
+### Develop env/infra
+
+- Windows10
+- AWS EC2(Ubuntu 18.04.4 LTS)
+- [Docker](https://www.docker.com/)_v2.3.0.4(46911)
+- [Docker-Compose](https://docs.docker.com/compose/)
+- [Gitlab-runner](https://docs.gitlab.com/runner/install/)
+
+
+
+### Cooperation
+
+- [Notion](https://www.notion.so/?utm_source=google&utm_campaign=brand_alpha&utm_content=kr&utm_term=notion&gclid=CjwKCAjwps75BRAcEiwAEiACMVWDOmfXiknyZ8fM5R2Mz9RPhteMAG_we-lVp-VPGqx9rgqrsglEFxoC9d8QAvD_BwE)
+- [Gitlab](https://about.gitlab.com/)
+- [Goormide](https://ide.goorm.io/)
+- [Webex](https://www.webex.com/ko/index.html)
+- [Discord](https://discord.com/new)
+
+
+
+### Library used
+
+##### backend
+
+- [swagger2](https://www.baeldung.com/swagger-2-documentation-for-spring-rest-api)_v2.9.2
+- [spring security](https://spring.io/projects/spring-security)
+- [spring mail service](https://www.baeldung.com/spring-email)
+- [spring mybatis](https://mvnrepository.com/artifact/org.mybatis/mybatis-spring)_v1.3.2
+- [mysql, jdbc](https://spring.io/guides/gs/accessing-data-mysql/)
 
 
 
 
 
-#### backend
+##### frontend
 
-- 사용 IDE : 
-
-- [Springboot](https://spring.io/projects/spring-boot)
+- [axios](https://joshua1988.github.io/vue-camp/vue/axios.html)_v0.19.2
+- [vue](https://kr.vuejs.org/v2/guide/index.html)_v2.6.11
+- [vue-moment](https://www.npmjs.com/package/vue-moment)_v4.1.0
+- [vue-router](https://router.vuejs.org/kr/guide/)_v3.2.0
+- [vuedraggable](https://www.npmjs.com/package/vuedraggable)_v2.24.0
+- [vuetify](https://vuetifyjs.com/ko/)_v2.3.4
+- [vuex](https://vuex.vuejs.org/kr/)_v3.4.0
+- [vue videojs](https://jsfiddle.net/amosgwa/avyto22v/)
+- [kakao login api](https://developers.kakao.com/docs/latest/ko/kakaologin/js)
+- [jQuery](https://jquery.com/)
+- [fontawesome](https://fontawesome.com/)
 
 
 
 <br><br>
 
-# 프로젝트 전체 프로세스
+
+
+
+
+
+
+## Project process
+
+<img src="./image/project_process.png"/>
+
+
 
 
 
@@ -131,9 +221,7 @@
 
 
 
-### Branch strategy
-
----
+## Branch strategy
 
 | 브랜치 이름         | 목적                            | 비고 |
 | ------------------- | ------------------------------- | ---- |
@@ -143,8 +231,8 @@
 | release             | 배포 하기 전 브랜치             |      |
 | fix                 | 배포한 제품 버그 발견시 버그 킬 |      |
 
-> [type] commit msg, issue key
->
+### [type] commit msg, issue key
+
 > - feature : 새로운 기능 관련해서 작업한 내용을 적을 때 사용
 > - fix : 버그를 수정했을 때 사용
 > - doc : 문서 README.md를 수정했을 때 사용
@@ -152,10 +240,9 @@
 > - cicd : 배포관련이나 빌드 관련 작업 했을 때 사용
 > - style : 코드 포맷팅, 세미콜론 누락, 코드 변경이 없는 경우 사용
 > - refactor: 코드 리팩토링 할때 사용
->
->
-> [Detail] 규칙
->
+
+### [Detail] 규칙
+
 > - 제목은 50자를 넘기지 말것
 > - 대문자로 작성
 > - 마침표를 붙이지 말것
@@ -165,13 +252,9 @@
 
 
 
-### Project docs
+## Project docs
 
----
+**[Frontend docs](./frontend)**
 
-##### [Frontend docs](./frontend)
-
-##### [Backend docs](./backend)
-
-#### 
+**[Backend docs](./backend)**
 

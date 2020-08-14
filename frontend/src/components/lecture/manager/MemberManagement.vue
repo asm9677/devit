@@ -4,7 +4,7 @@
                 <v-layout wrap>
                     <v-flex xs12 sm12 md9 lg9 xl9 style="margin-left:0px;">                         
                             <v-list style="padding:20px 20px;">
-                                <v-list outlined style="padding-top:0px;">                                        
+                                <v-list outlined style="padding-top:0px;" v-show="isOwner">                                        
                                     <v-list-item >
                                         <v-list-item-title>
                                             <v-list-item-title>멤버 초대</v-list-item-title> 
@@ -46,7 +46,7 @@
                                                             <v-avatar
                                                                 class="profile"                                                    
                                                             >
-                                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile | imgFilter"></v-img>
+                                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                                                             </v-avatar>
                                                             {{item.text }}
                                                             <v-icon small right @click="parent.selectItem(item)">mdi-close</v-icon>
@@ -55,7 +55,7 @@
                                                 </template>
                                                 <template v-slot:item="{ index, item }">                                                
                                                     <v-list-item-avatar>
-                                                        <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile | imgFilter"></v-img>
+                                                        <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                                                     </v-list-item-avatar>
                                                     <v-list-item-content>
                                                         <v-list-item-title v-html="item.text"></v-list-item-title>
@@ -85,7 +85,7 @@
                                     </v-list-item>
                                     <v-list-item>
                                         <v-spacer />
-                                        <v-btn depressed color="primary" @click="invite()">
+                                        <v-btn outlined color="primary" @click="invite()">
                                             초대하기
                                         </v-btn>    
                                     </v-list-item>   
@@ -100,7 +100,7 @@
                                         <v-divider :key="`${index}_divider`"/>
                                         <v-list-item :key="`${index}_memberList`">
                                             <v-list-item-avatar>
-                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile | imgFilter"></v-img>
+                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                                             </v-list-item-avatar>
                                             <v-list-item-content>
                                                 <v-list-item-title>
@@ -162,9 +162,9 @@
         </v-card>
         <v-snackbar
             v-model="snackbar"
-            timeout="1500"
+            timeout="2000"
             color="primary"        
-            
+            right            
         >
             {{msg}}
         </v-snackbar>
@@ -240,12 +240,6 @@ export default {
             return parseInt(diff/365) + '년 전'
             return val
         },
-        imgFilter(val){
-            if(val == 'http://i3a101.p.ssafy.io/images/null')
-                return `https://picsum.photos/500/300?image=${parseInt(Math.random()*50+1)}`
-            return val
-
-        }
     },    
     methods: {
         goto(target, msg){
@@ -307,13 +301,20 @@ export default {
             this.memberSearch()
         },
         exitProject(item){
-            console.dir(item)
+            if(item.email == this.$router.app.$store.state.email && this.isOwner){
+                this.snackbar = true;
+                this.msg = 'Owner 권한을 위임한 후에 시도하시길 바랍니다.'
+                return;
+            }
             http.axios.delete(`/api/v1/lectures/auth/${item.authId}`, {
                 "userId": item.userId,
             }).then(({data}) => {
                 console.dir(data);
-            }).finally(() => {
-                this.memberSearch()
+            }).finally(() => {                
+                if(item.email == this.$router.app.$store.state.email)
+                    this.$router.push('/lecture/detail/${this.lectureId}')
+                else
+                    this.memberSearch()                
             })
 
         },

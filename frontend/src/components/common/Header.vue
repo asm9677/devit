@@ -115,6 +115,14 @@
                     <v-btn depressed color="primary" outlined @click="move('/join')">회원가입</v-btn>                
             </div>            
         </v-app-bar>
+        <v-snackbar 
+            v-model="snackbar"
+            timeout="2000"
+            right
+            color="primary"
+        >
+            {{msg}}
+        </v-snackbar>
         <temp-board :dialog="tempDialog" @closeTempBoard="tempDialog=false"></temp-board>
     </div>
 </template>
@@ -159,6 +167,8 @@ export default {
             dialog: false,
             logo:true,
             tempDialog: false,
+            snackbar: false,
+            msg: '',
         }
     },
     methods: {
@@ -180,8 +190,11 @@ export default {
         },
         createProject(){                        
             http.axios.post('/api/v1/lectures').then(({data}) => {
-                if(data.result.lectureId)
+                if(data.result.lectureId){
+                    this.snackbar = true;
+                    this.msg = "프로젝트가 생성되었습니다."
                     this.move(`/lecture/management/default/${data.result.lectureId}`);
+                }
             }).catch(({data}) => {
                 alert("프로젝트 생성에 실패하였습니다.");
             })

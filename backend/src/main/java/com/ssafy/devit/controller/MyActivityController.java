@@ -22,6 +22,8 @@ import com.ssafy.devit.model.request.BoardRequest;
 import com.ssafy.devit.model.request.BoardUpdateRequest;
 import com.ssafy.devit.model.request.BoardUploadRequest;
 import com.ssafy.devit.model.request.BoardWithLectureRequest;
+import com.ssafy.devit.model.request.LectureRequest;
+import com.ssafy.devit.model.request.UserProfileUpdateReqeust;
 import com.ssafy.devit.model.user.User;
 import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.model.user.UserResponse;
@@ -160,6 +162,64 @@ public class MyActivityController {
 			
 			result.msg = "success";
 			result.result = lectureService.myLikeVideoList(startPage, itemsperpage);
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return response;
+	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "프로젝트 삭제")
+	@PutMapping("deleteLecture")
+	public ResponseEntity<CommonResponse> deleteLecture(@RequestBody LectureRequest request) {
+		log.info(">> Load : deleteLecture <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+
+			// 사용자 id 가져오기
+			String isManager = lectureService.checkUserManageAuth(request.getLectureId());
+			
+			if("N".equals(isManager)) {
+
+				result.msg = "noauth";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+				
+			}else {
+
+				lectureService.deleteLecture(request.getLectureId());
+				result.msg = "success";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			}
+			
+		} catch (Exception e) {
+			log.info(">> Error : updateLectureLike <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+
+	
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@GetMapping("myReqList")
+	@ApiOperation(value = "요청 목록 조회")
+	public ResponseEntity<CommonResponse> myReqList(@RequestParam("page") int startPage, @RequestParam("itemsperpage") int itemsperpage) throws Exception {
+		
+		log.info(">> my Request list info <<");
+		
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			
+			
+			result.msg = "success";
+			result.result = lectureService.myReqList(startPage, itemsperpage);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

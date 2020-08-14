@@ -2,66 +2,64 @@
     <div style="margin:50px">
         <v-container justify-center="justify-center">
             <v-layout row="row" wrap="wrap">
-                    <div style="width:100%; margin:0 auto;">
-                        <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">관리중인 프로젝트</span>
-                    </div>
-                    <v-flex
-                        v-for="(item,i) in items"
-                        :key="`4${i}`"
-                        xs12="xs12"
-                        sm6="sm6"
-                        md4="md4"
-                        lg3="lg3"
-                        xl2="xl2">
-                        <v-card
-                            tile="tile"
-                            flat="flat"
-                            style="margin-left:10px; margin-top:20px;cursor:pointer;">
-                            <v-img
-                                :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
-                                :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
-                                aspect-ratio="1.7"
-                                @click="move(`/lecture/detail/${item.lectureId}`)"></v-img>
-                            <v-list>
-                                <div @click="move(`/lecture/detail/${item.lectureId}`)">
-                                    <v-list-item-title>
-                                        <h3>{{item.title}}</h3>
-                                    </v-list-item-title>
-                                    <v-list-item-subtitle>
-                                        조회수
-                                        {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}
-                                    </v-list-item-subtitle>
+                <div style="width:100%; margin:0 auto;">
+                    <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">관리중인 프로젝트</span>
+                    <div style="width:100%; margin-bottom:30px;"></div>
 
-                                    <v-list-item-subtitle>
-                                        총
-                                        {{item.lectureCount}}강의
-                                    </v-list-item-subtitle>
-                                </div>
-                                <v-list-item-subtitle>
-                                    #
-                                    <v-chip
-                                        :color="`primary lighten-4`"
-                                        class="ma-1"
-                                        v-for="(tag,index) in item.tagName ? item.tagName.split(',') : ''"
-                                        :key="i+'_'+index+'_tag'"
+                    <v-list>
+                        <div
+                            class=""
+                            style="width:100%; border-bottom:1px solid #c8c8c8; cursor:pointer;"
+                            v-for="item in items"
+                            :key="item.lectureId">
+                            <v-list-item style="width:100%;">
+                                <v-list-item-content>
+                                    <div>
+                                        <v-img
+                                            max-width="170"
+                                            max-height="100"
+                                            :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                                            :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                                            aspect-ratio="1.7"
+                                            @click="move(`/lecture/detail/${item.lectureId}`)"></v-img>
+                                    </div>
+                                </v-list-item-content>
+                                <v-list-item-content @click="move(`/lecture/detail/${item.lectureId}`)">
+                                    <div style="width:500px;">{{item.title}}</div>
+                                </v-list-item-content>
+                                <v-list-item-content @click="move(`/lecture/detail/${item.lectureId}`)">
+                                    <div style="text-align:right; width:50px;">{{item.lectureCount}}</div>
+                                </v-list-item-content>
+                                <v-list-item-content @click="move(`/lecture/detail/${item.lectureId}`)">
+                                    <div style="text-align:right; width:50px;">{{item.viewCount}}</div>
+                                </v-list-item-content>
+                                <v-list-item-content>
+                                    <v-btn
+                                        depressed="depressed"
                                         small="small"
-                                        label="label"
-                                        @click="move(`/search?keyword=${tag}`)">
-                                        <span style="color:black">
-                                            {{tag}}
-                                        </span>
-                                    </v-chip>
-                                </v-list-item-subtitle>
-                                <v-avatar class="profile" size="20">
-                                    <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
-                                </v-avatar>
-                                <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
+                                        text="text"
+                                        color="success"
+                                        @click="move(`/lecture/management/default/${item.lectureId}`)">관리하기</v-btn>
+                                    <v-btn
+                                        depressed="depressed"
+                                        small="small"
+                                        text="text"
+                                        color="error"
+                                        @click="remove(`${item.lectureId}`)">삭제하기</v-btn>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </div>
+                    </v-list>
+                </div>
 
-                            </v-list>
-                        </v-card>
-                    </v-flex>
             </v-layout>
         </v-container>
+        <v-snackbar v-model="snackbar" timeout="1500" color="primary">
+            {{msg}}
+        </v-snackbar>
+        <v-snackbar v-model="errorSnackbar" timeout="1500" color="error">
+            {{errorMsg}}
+        </v-snackbar>
     </div>
 </template>
 
@@ -75,36 +73,23 @@
 
     export default {
         data() {
-            return {items: [], level: this.$route.query.level, page: 1, itemsperpage: 20, loading: false}
-        },
-        filters: {
-            convertView(num) {
-                if (num < 1000) {
-                    return num + '회'
-                }
-
-                if (num >= 100000000) {
-                    num /= 100000000;
-                    return parseFloat(num).toFixed(2) + '억회'
-                }
-                if (num >= 10000) {
-                    num /= 10000;
-                    return parseFloat(num).toFixed(0) + '만회'
-                }
-                if (num >= 1000) {
-                    num /= 1000;
-                    return parseFloat(num).toFixed(1) + '천회'
-                }
-            },
-            convertLike(num) {
-                return num
-                    .toString()
-                    .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return {
+                items: [],
+                level: this.$route.query.level,
+                page: 1,
+                itemsperpage: 10,
+                loading: false,
+                errorMsg: "",
+                errorSnackbar: false,
+                msg: "",
+                snackbar: false
             }
         },
-        created(){
-            if(!store.state.token) {
-                this.$router.push('/')
+        created() {
+            if (!store.state.token) {
+                this
+                    .$router
+                    .push('/')
             }
         },
         mounted() {
@@ -158,6 +143,43 @@
                 this
                     .$router
                     .push(url)
+            },
+            remove(lectureId) {
+                if (confirm("삭제하시겠습니까?")) {
+                    http
+                        .axios
+                        .put('/api/v1/deleteLecture', {"lectureId": lectureId})
+                        .then(({data}) => {
+                            if (data.msg == "noauth") {
+                                this.errorMsg = "프로젝트 관리 권한이 없습니다.";
+                                this.errorSnackbar = true;
+                            } else {
+
+                                this.msg = "삭제되었습니다.";
+                                this.snackbar = true;
+
+                                this.page = 1;
+                                this.loading = true;
+                                http
+                                    .axios
+                                    .get(
+                                        `/api/v1/myMngLecture?page=${this.page}&itemsperpage=${this.itemsperpage}`
+                                    )
+                                    .then(({data}) => {
+                                        this.page++;
+                                        this.items = data.result;
+                                    })
+                                    . finally(() => {
+                                        this.loading = false;
+                                    })
+
+                                document.addEventListener('scroll', this.handleScroll);
+                            }
+                        })
+                        .catch((error) => {
+                            console.dir(error)
+                        })
+                    }
             }
         }
     }

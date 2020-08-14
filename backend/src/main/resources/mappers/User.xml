@@ -92,7 +92,7 @@
 		WHERE
 		    NOT EXISTS( SELECT 1
 		        FROM lecture_auth la
-		        WHERE la.user_id = a.user_id  AND la.lecture_id = #{lectureId})
+		        WHERE la.user_id = a.user_id AND la.lecture_id = #{lectureId} AND la.delete_yn = 'N')
 		GROUP BY a.user_id , a.nickname , a.email
 		ORDER BY a.val
 		LIMIT 0 , 10;

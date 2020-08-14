@@ -44,7 +44,7 @@
 		        LEFT OUTER JOIN
 		    user u ON l.user_id = u.user_id
 		        LEFT OUTER JOIN
-		    lecture_sub_index lsi ON l.lecture_id = lsi.lecture_id
+		    lecture_sub_index lsi ON l.lecture_id = lsi.lecture_id AND lsi.order != 0
 		        LEFT OUTER JOIN
 		    (SELECT 
 		        lecture_id, COUNT(1) AS likeCount
@@ -75,61 +75,51 @@
 	
 	<!-- 대표 프로젝트 상세 정보 -->
 	<select id="selectLectureByLectureId" resultType="LectureOneResponse">
-		SELECT 
-		    l.lecture_id lectureId,
-		    l.title,
-		    l.type,
-		    l.user_id userId,
-		    l.common_id commonId,
-		    l.content,
-		    l.thumbnail_url thumbnailUrl,
-		    u.nickname,
-		    u.profile,
-		    l.created,
-		    COUNT(lsi.sub_id) lectureCount,
-   		    l.view_count viewCount,
-			ifnull(likeCount, 0) likeCount,
-		    lt.tagName,
-		    CASE
-		        WHEN lk.lecture_id IS NULL THEN FALSE
-		        ELSE TRUE
-		    END AS userLikeYn,
-            CASE
-				WHEN exists (select 1 from lecture_auth where lecture_id = l.lecture_id and user_id = #{userId}) THEN TRUE
-                ELSE FALSE
-			END AS manageYn		    
-		FROM
-		    lecture l
-		        LEFT OUTER JOIN
-		    user u ON l.user_id = u.user_id
-		        LEFT OUTER JOIN
-		    lecture_sub_index lsi ON l.lecture_id = lsi.lecture_id
-		        LEFT OUTER JOIN
-		    (SELECT 
-		        lecture_id, count(1) AS likeCount
-		    FROM
-		        lecture_like
-		    WHERE
-		        lecture_id = #{lectureId} AND like_flag = 'Y'
-            ) ll ON
-            l.lecture_id = ll.lecture_id
-		        LEFT OUTER JOIN
-		    (SELECT 
-		        common_id, GROUP_CONCAT(tag_name) tagName
-		    FROM
-		        lecture_tag
-		    GROUP BY common_id) lt ON l.common_id = lt.common_id
-		        LEFT OUTER JOIN
-		    (SELECT 
-		        lecture_id
-		    FROM
-		        lecture_like
-		    WHERE
-		        user_id = #{userId} AND like_flag = 'Y'
-			) lk
-            ON lk.lecture_id = l.lecture_id
-		WHERE
-		    l.lecture_id = #{lectureId}
+				SELECT 
+				l.lecture_id lectureId,
+				l.title,
+				l.type,
+				l.user_id userId,
+				l.common_id commonId,
+				l.content,
+				l.thumbnail_url thumbnailUrl,
+				u.nickname,
+				u.profile,
+				l.created,
+				COUNT(lsi.sub_id) lectureCount,
+				l.view_count viewCount,
+				ifnull(likeCount, 0) likeCount,
+				lt.tagName,
+				CASE WHEN lk.lecture_id IS NULL
+					THEN FALSE
+					ELSE TRUE
+				END AS userLikeYn,
+				CASE
+					WHEN exists (select 1 from lecture_auth where lecture_id = l.lecture_id and user_id = #{userId} AND delete_yn = 'N')
+                    THEN TRUE
+					ELSE FALSE
+				END AS manageYn		    
+		  FROM lecture l
+				LEFT OUTER JOIN user u
+                ON l.user_id = u.user_id
+				LEFT OUTER JOIN lecture_sub_index lsi
+                ON l.lecture_id = lsi.lecture_id AND lsi.order != 0
+					LEFT OUTER JOIN (SELECT lecture_id, count(1) AS likeCount
+									   FROM lecture_like
+									  WHERE lecture_id = #{lectureId} AND like_flag = 'Y'
+					) ll 
+					ON l.lecture_id = ll.lecture_id
+					LEFT OUTER JOIN (SELECT common_id, GROUP_CONCAT(tag_name) tagName
+									   FROM lecture_tag
+								   GROUP BY common_id
+                    ) lt
+                    ON l.common_id = lt.common_id
+					LEFT OUTER JOIN(SELECT lecture_id
+									  FROM lecture_like
+									 WHERE user_id = #{userId} AND like_flag = 'Y'
+					) lk
+				    ON lk.lecture_id = l.lecture_id
+		WHERE l.lecture_id = #{lectureId}
 		GROUP BY l.lecture_id
 		ORDER BY l.lecture_id;
 	</select>
@@ -223,8 +213,7 @@
 		FROM
 		    lecture_tag
 		GROUP BY tag_name
-		ORDER BY tagCount DESC
-		LIMIT 20;
+		ORDER BY tagCount DESC;
 	</select>
 	
 	<!-- 사용자가 좋아요를 눌렀는지 확인 -->
@@ -336,13 +325,14 @@
 		    lshv.view_count viewCount,
 		    lg.video_like_count likeCount,
 		    u.nickname,
+            u.profile,
 		    lshv.play_time playTime,
 		    lshv.player_url playerUrl,
 		    lshw.wiki_content wikiContent,
 		    lshw.wiki_content_html wikiContentHtml,
 		    lt.tagName,
 		    lshv.thumbnail_url thumbnailUrl,
-		                (SELECT COUNT(1) FROM lecture_sub_index WHERE lecture_id = 110) AS lectureCount,
+			(SELECT COUNT(1) FROM lecture_sub_index WHERE lecture_id = #{lectureId} AND lecture_sub_index.order != 0) AS lectureCount,
 		    CASE
 		        WHEN EXISTS(SELECT 1
 		                	FROM lecture_sub_his_like
@@ -399,6 +389,15 @@
 		    	ON lt.common_id = lsi.common_id
 		WHERE
 		    lsi.lecture_id = #{lectureId} AND lsi.order = #{order};
+		    
+		
+		SELECT @subHisV := lsi.video_id FROM lecture_sub_index lsi WHERE lsi.lecture_id = #{lectureId} AND lsi.order = #{order};
+		
+		SELECT @subHisW := lsi.wiki_id FROM lecture_sub_index lsi WHERE lsi.lecture_id = #{lectureId} AND lsi.order = #{order};
+		
+		UPDATE lecture_sub_history SET view_count = view_count+1 WHERE sub_his_id = @subHisV;
+		
+		UPDATE lecture_sub_history SET view_count = view_count+1 WHERE sub_his_id = @subHisW;
 	</select>
 	
 	<!-- 강의, 위키 리퀘스트 날리기 -->
@@ -428,6 +427,7 @@
 		    lsi.lecture_id lectureId,
 		    lsi.sub_id subId,
             lsh.sub_his_id subHisId,
+            lsi.order,
 		    lsh.title,
 		    lsh.player_url playerUrl,
 		    lsh.play_time playTime,
@@ -435,6 +435,7 @@
 		    IFNULL(lg.like_count, 0) likeCount,
 		    lsh.thumbnail_url thumbnailUrl,
             (SELECT nickname FROM user WHERE user_id = lsh.user_id) nickname,
+            (SELECT profile FROM user WHERE user_id = lsh.user_id) profile,
 		    CASE
 		        WHEN
 		            EXISTS( SELECT 
@@ -545,6 +546,18 @@
 		   SET accept_yn = #{type},
 		   	   modified = now()
 	     WHERE sub_his_id = #{subHisId};
+	  
+ 	     <if test='type == "N" and reqType == "video"'>
+	     	UPDATE lecture_sub_index 
+			SET video_id = NULL
+			WHERE sub_id = #{subId};
+	     </if>
+	     
+   	     <if test='type == "N" and reqType == "wiki"'>
+	     	UPDATE lecture_sub_index 
+			SET wiki_id = NULL
+			WHERE sub_id = #{subId};
+	     </if>
 	     
 	     <if test='type == "Y" and reqType == "video"'>
 	     	UPDATE lecture_sub_index
@@ -640,6 +653,7 @@
 		    IFNULL(lg.like_count, 0) likeCount,
 		    lsh.thumbnail_url thumbnailUrl,
             (SELECT nickname FROM user WHERE user_id = lsh.user_id) nickname,
+            (SELECT profile FROM user WHERE user_id = lsh.user_id) profile,
 		    TRUE as userLikeYn
 		FROM
 		    lecture_sub_index lsi
@@ -728,6 +742,7 @@
 			     ON 
 			     la.lecture_id = l.lecture_id
 		   WHERE 1=1
+		     and l.deleted_flag = 'N'
 		GROUP BY l.lecture_id
 		ORDER BY la.modified desc
 		   LIMIT #{startPage}, #{itemsperpage};
@@ -735,12 +750,11 @@
       
       <!-- 변경 사항  이력 가져오기 -->
       <select id="selectChangeHistoryList" resultType="ChangeHistoryResponse">
-	        SELECT lsh.lecture_id lectureId,
-				   lsh.sub_id subId,
+	        SELECT lsh.sub_id subId,
 		           lsh.sub_his_id subHisId,
 		           lsh.created,
 		           lsh.modified,
-		           lsh.title,
+		           (SELECT title FROM lecture_sub_index WHERE sub_id = lsh.sub_id) title,
 		           lsh.thumbnail_url thumbnailUrl,
 		           lsh.play_time playTime,
 		           lsh.player_url playerUrl,
@@ -751,7 +765,8 @@
 		           lsh.accept_yn acceptYn,
 		           u.user_id userId,
 		           u.nickname,
-		           u.profile
+		           u.profile,
+                   u.email
 			  FROM lecture_sub_history lsh
 					LEFT OUTER JOIN user u
 		            ON
@@ -759,4 +774,60 @@
 			 WHERE lsh.lecture_id = #{lectureId}
 		  ORDER BY modified DESC;
       </select>
+      
+      <!-- 프로젝트 관리 권한 여부 조회 -->
+      <select id="checkUserManageAuth" resultType="String">
+      		select case when exists(select 1 from lecture_auth where user_id = #{userId} and lecture_id = #{lectureId} and delete_yn = 'N')
+      		            then 'Y'
+      		            else 'N'
+      		            end as isManager
+      		  from dual;
+      </select>
+	
+	<!-- 프로젝트 삭제 -->
+	<update id="deleteLecture">
+		UPDATE lecture
+		   SET deleted_flag = 'Y',
+			   modified = now()
+		 WHERE lecture_id = #{lectureId};
+	</update>
+	
+	
+	<!-- 나의 요청 목록 리스트 가져오기 -->
+	<select id="myReqList" resultType="RequestHistoryResponse">
+	  SELECT l.title as lectureTitle,
+	  		 l.thumbnail_url as lectureThumbnailUrl,
+	  		 u.profile, 
+	  		 u.nickname, 
+	  		 lsh.created, 
+	  		 lsi.title subTitle, 
+	  		 lsi.sub_id subId, 
+	  		 lsh.accept_yn acceptYn,
+			 lsh.req_type reqType, 
+			 lsh.thumbnail_url thumbnailUrl, 
+			 lsh.title hisTitle, 
+			 lsh.player_url playerUrl,
+             lsh.play_time playTime, 
+             lsh.wiki_content wikiContent, 
+             lsh.wiki_content_html wikiContentHtml, 
+             lsh.sub_his_id subHisId
+		FROM lecture_sub_history lsh
+	         LEFT OUTER JOIN 
+	         user u
+			 ON 
+			 u.user_id = lsh.user_id
+			 LEFT OUTER JOIN 
+			 lecture_sub_index lsi
+	         ON 
+	         lsi.lecture_id = lsh.lecture_id AND 
+	         lsi.sub_id = lsh.sub_id
+	         LEFT OUTER JOIN
+	         lecture l
+	         on
+	         lsh.lecture_id = l.lecture_id
+	   WHERE 1=1 
+	     AND lsh.user_id = #{userId}
+	ORDER BY lsh.created DESC
+	   LIMIT #{startPage}, #{itemsperpage};
+	</select>
 </mapper>

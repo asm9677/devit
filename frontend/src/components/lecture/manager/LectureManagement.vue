@@ -12,11 +12,16 @@
                 <v-flex xs12 sm12 md12 lg12 xl12>                     
                     <h1 class="primary--text" v-show="option" style="float:left">{{items[tab].title}}</h1>   
                     <v-tabs v-model="tab" hide-slider right icons-and-text show-arrows>
+                        
                         <v-tab v-for="(item,i) in items" :key="`${i}_tab`">
                             <span class="primary--text lighten-1">{{item.title}}</span>
                             <v-icon small>{{tab == i ? 'mdi-circle' : item.icon }}</v-icon>
                         </v-tab>
-                        
+                        <v-tab key="detail_tab" @click="$router.push(`/lecture/detail/${lectureId}`)">
+                            <span class="primary--text lighten-1">강의 페이지</span>                            
+                            <v-icon small>mdi-circle-outline</v-icon>
+                        </v-tab>
+
                         <v-tab-item>
                             <Default :option='option' :tab='0' :curTab="tab"> </Default>
                         </v-tab-item>
@@ -32,6 +37,7 @@
                         <v-tab-item>
                             <ChapterManagement :option='option' :tab='4' :curTab="tab"> </ChapterManagement>
                         </v-tab-item>
+                        <v-tab-item></v-tab-item>
                     </v-tabs>           
                 </v-flex>       
 
@@ -59,6 +65,7 @@ export default {
     },
     data() {
         return {          
+            lectureId: 0,
             tabName: ['default','intro','member','request','index'],
             tab: 0,  
             option: false,
@@ -93,6 +100,7 @@ export default {
         }
     },
     created(){
+        this.lectureId = this.$route.params.id;
         if(!store.state.token) {
             this.$router.push('/')
         }
@@ -113,6 +121,9 @@ export default {
         handleResize() {
             this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
         },
+        zz(){
+            alert(zz)
+        }
     }
 }
 </script>

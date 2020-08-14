@@ -11,9 +11,9 @@
                 :key="`4${i}`"
                 xs12="xs12"
                 sm6="sm6"
-                md4="md4"
+                md3="md3"
                 lg3="lg3"
-                xl2="xl2">
+                xl3="xl3">
                 <v-card
                     tile="tile"
                     flat="flat"
@@ -72,9 +72,9 @@
                 :key="`4${i}`"
                 xs12="xs12"
                 sm6="sm6"
-                md4="md4"
+                md4="md3"
                 lg3="lg3"
-                xl2="xl2">
+                xl2="xl3">
                 <v-card
                     tile="tile"
                     flat="flat"
@@ -83,10 +83,10 @@
                         :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                         :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                         aspect-ratio="1.7"
-                        @click="move(`/lecture/detail/${item.lectureId}`)"></v-img>
+                        @click="move(`/lecture/player/undefined/${item.lectureId}?order=${item.order}&subId=${item.subId}&subHisId=${item.subHisId}`)"></v-img>
 
                     <v-list>
-                        <div @click="move(`/lecture/detail/${item.lectureId}`)">
+                        <div @click="move(`/lecture/player/undefined/${item.lectureId}?order=${item.order}&subId=${item.subId}&subHisId=${item.subHisId}`)">
                             <v-list-item-title>
                                 <h3>{{item.title}}</h3>
                             </v-list-item-title>
@@ -94,29 +94,9 @@
                                 조회수
                                 {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}
                             </v-list-item-subtitle>
-
-                            <v-list-item-subtitle>
-                                총
-                                {{item.lectureCount}}강의
-                            </v-list-item-subtitle>
                         </div>
-                        <!-- <v-list-item-subtitle>
-                            #
-                            <v-chip
-                                :color="`primary lighten-4`"
-                                class="ma-1"
-                                v-for="(tag,index) in item.tagName ? item.tagName.split(',') : ''"
-                                :key="i+'_'+index+'_tag'"
-                                small="small"
-                                label="label"
-                                @click="move(`/search?keyword=${tag}`)">
-                                <span style="color:black">
-                                    {{tag}}
-                                </span>
-                            </v-chip>
-                        </v-list-item-subtitle> -->
                         <v-avatar class="profile" size="20">
-                            <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"></v-img>
+                            <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                         </v-avatar>
                         <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
 

@@ -118,7 +118,7 @@
                 itemsPerPageArray: [
                     10, 20, 50
                 ],
-                itemsPerPage: 4,
+                itemsPerPage: 6,
                 items: [
                     {
                         // boardId: 2, userName: '홍길동', boardTitle: '글제목2', boardContent: '글내용2',

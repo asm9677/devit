@@ -20,13 +20,13 @@
         <v-card tile flat>
                 <v-layout wrap ref="main">
                     <v-flex xs12 sm12 md8 lg8 xl8 ref="left" style="margin-left:0px; padding:20px;">       
-                        <v-card>
+                        
                             <v-img 
                                 :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
-                                :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
-                                aspect-ratio="1.7"
+                                aspect-ratio="1.77"
+                                contain
                             ></v-img>                            
-                        </v-card>
+                        
 
                         <div v-show="!option" style="width:100%;">
                             <h1> {{item.title}}</h1>        
@@ -74,9 +74,7 @@
 
                         <div id="introduce" style="margin-top:40px;">
                             <h3>프로젝트 소개</h3>    
-                            <div class="content">
-                                {{item.content}}
-                            </div>                        
+                            <div class="content" v-html="parse(item.content)" />                                
                         </div>
                         <div id="curriculum" style="margin-top:40px;">
                             <h3>교육 과정</h3>      
@@ -100,22 +98,86 @@
                                             </v-list-item-action>
                                         </v-list-item>
                                     </v-list>
-                                <div style="height:30px"/>
+                                <div style="height:50px"/>
                             </div>                            
                         </div>
                         <div id="changes" style="margin-top:40px;">
                             <h3>변경 사항</h3>    
                             <div class="content">
-                                미구현 기능입니다.
-                                <div style="height:250px"/>
+                                <v-list style="padding:0px;">          
+                                    <template v-for="(item,index) in history">
+                                        <v-divider :key="`${index}_divider`"/>
+                                        <v-list-item :key="`${index}_history`">
+                                            <v-list-item-avatar>
+                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                            </v-list-item-avatar>
+                                            <v-list-item-content>
+                                                <v-list-item-title>
+                                                    <b>{{item.nickname}}</b>&nbsp;
+                                                </v-list-item-title>
+                                                <v-list-item-subtitle> <i>{{item.title}}에 {{item.reqType == 'wiki' ? '위키 문서 수정' : '메인 영상 업로드'}}</i> </v-list-item-subtitle>
+                                            </v-list-item-content>
+                                            <v-list-item-action style="margin-right:5px">
+                                                {{item.modified | diffDate}}
+                                            </v-list-item-action>  
+                                        </v-list-item>
+                                    </template>    
+                                    <v-list-item v-if="!isExpand && expand_history.length">             
+                                        <v-list-item-content>
+                                            
+                                        </v-list-item-content>
+                                        <v-list-item-action @click="isExpand = true" style="cursor:pointer;">
+                                            더보기
+                                        </v-list-item-action>
+                                    </v-list-item>
+                                    <template v-for="(item,index) in expand_history" v-if="isExpand && expand_history.length">
+                                        <v-divider :key="`${index}_divider2`"/>
+                                        <v-list-item :key="`${index}_expand_history`">
+                                            <v-list-item-avatar>
+                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                            </v-list-item-avatar>
+                                            <v-list-item-content>
+                                                <v-list-item-title>
+                                                    <b>{{item.nickname}}</b>&nbsp;
+                                                </v-list-item-title>
+                                                <v-list-item-subtitle> <i>{{item.title}}에 {{item.reqType == 'wiki' ? '위키 문서 수정' : '메인 영상 업로드'}}</i> </v-list-item-subtitle>
+                                            </v-list-item-content>
+                                            <v-list-item-action style="margin-right:5px">
+                                                {{item.modified | diffDate}}
+                                            </v-list-item-action>  
+                                        </v-list-item>
+                                    </template>   
+                                    
+                                    <!-- <v-divider :key="_divider"/> -->
+                                </v-list>
+                                <div style="height:50px"/>
                             </div>                              
                         </div>
                         <div id="helped" style="margin-top:40px;">
                             <h3>도움주신 분들</h3>  
                             <div class="content">
-                                미구현 기능입니다.
-                                <div style="height:700px"/>
+                                <v-list style="padding:0px;">        
+                                    <template v-for="(item,index) in admin">
+                                        <v-divider :key="`${index}_divider`"/>
+                                        <v-list-item :key="`${index}_memberList`">
+                                            <v-list-item-avatar>
+                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                            </v-list-item-avatar>
+                                            <v-list-item-content>
+                                                <v-list-item-title>
+                                                    <b>{{item.nickname}}</b>&nbsp;
+                                                     <span class="v-list-item__subtitle">{{item.email | idOfEmail}}</span></v-list-item-title>
+                                                <v-list-item-subtitle > {{item.created | diffDate}}</v-list-item-subtitle>
+                                            </v-list-item-content>
+
+                                            <v-list-item-action style="margin-right:5px">
+                                                {{item.role}}
+                                            </v-list-item-action>  
+                                        </v-list-item>                                        
+                                    </template>
+                                </v-list>
                             </div>      
+                            <div style="height:300px" /> 
                         </div>
                         
                     </v-flex>                    
@@ -156,7 +218,7 @@
                                                 size=30
                                             >
                                                 <v-img 
-                                                    :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                                                    :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
                                                 ></v-img>
                                         </v-avatar>
                                         <span style="margin-left:5px;font-size:16px">{{item.nickname}}</span>
@@ -196,6 +258,8 @@
 <script>
 import eventBus from "@/lib/EventBus.js"
 import http from "@/util/http_common.js"
+import parse from "@/lib/markdown/ParseMd.js";
+
 export default {
     watch: {
         items(val,prev){
@@ -204,6 +268,33 @@ export default {
         },
     },
     filters: {
+        idOfEmail(val) {
+            let id = val.substring(0,val.indexOf('@'))
+            return '@' + (id ? id : val)
+        },
+        diffDate(val) {
+            let diff = (new Date() - new Date(val)) / 1000;
+            if(diff < 60)
+                return '방금 전'
+            diff /= 60;
+            if(diff < 60)
+                return parseInt(diff) + '분 전'
+
+            diff /= 60;
+            if(diff < 24)
+                return parseInt(diff) + '시간 전'
+
+            diff /= 24;
+            if(diff < 7)
+                return parseInt(diff) + '일 전'
+            if (diff < 30)
+                return parseInt(diff/7) + '주 전'
+            if (diff < 365)
+                return parseInt(diff/30) + '달 전'
+            return parseInt(diff/365) + '년 전'
+            return val
+        },
+
         convertView(num) {
             if(num < 1000){
                 return num + '회'
@@ -249,9 +340,15 @@ export default {
             btnLoading: false,
 
             chapter: [],
+
+            history: [],
+            expand_history: [],
+            isExpand: false,
+
+            admin: [],
         }
     },
-    created(){                
+    created(){               
         this.lectureId = this.$route.params.id;
         http.axios.get(`/api/v1/lectures/${this.$route.params.id}`).then(({data}) => {
             this.item = data.result;
@@ -262,6 +359,8 @@ export default {
             this.mainLoading = false;
         })
         this.getIndexList();
+        this.getHistoryList();
+        this.getAdminList();
     },
     mounted() {        
         this.menuHeight = this.$refs.menu.$el.offsetTop;        
@@ -275,6 +374,7 @@ export default {
         eventBus.$emit("displayLogo", true);
     },
     methods: {
+        parse,
         handleResize() {
             this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
         },        
@@ -338,6 +438,26 @@ export default {
                     })
                 }
             })
+        },
+        getHistoryList() {
+            http.axios.get(`/api/v1/lectures/historys/${this.lectureId}`).then(({data}) => {
+                this.history = [];
+                this.expand_history = [];
+                console.dir(data.result)
+                for(let i in data.result){         
+                    if(data.result[i].acceptYn){
+                        if(this.history.length < 5)
+                            this.history.push(data.result[i])
+                        else
+                            this.expand_history.push(data.result[i])
+                    }
+                }
+            })
+        },
+        getAdminList(){
+            http.axios.get(`/api/v1/lectures/auth/${this.lectureId}`).then(({data}) => {
+                this.admin = data.result;
+            });
         }
         
     }
