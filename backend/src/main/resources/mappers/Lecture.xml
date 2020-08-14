@@ -332,6 +332,10 @@
 		    lshw.wiki_content_html wikiContentHtml,
 		    lt.tagName,
 		    lshv.thumbnail_url thumbnailUrl,
+		    <![CDATA[
+		    	if(1 < #{order}, true, false) prePage,
+            	if(#{order} < (SELECT COUNT(1) FROM lecture_sub_index WHERE lecture_id = 106 AND lecture_sub_index.order != 0), true, false) tailPage,
+		    ]]>
 			(SELECT COUNT(1) FROM lecture_sub_index WHERE lecture_id = #{lectureId} AND lecture_sub_index.order != 0) AS lectureCount,
 		    CASE
 		        WHEN EXISTS(SELECT 1
@@ -471,7 +475,7 @@
 	
 	<!-- 같은 종류 다른 영상 눌렀을 경우 상세 정보 -->
 	<select id="selectOneOtherSubLecture" resultType="LectureSubOneResponse">
-			select lsi.lecture_id as lectureId,
+		select lsi.lecture_id as lectureId,
 			   lsi.sub_id as subId,
 			   lsh.sub_his_id subHisId,
 			   lsi.order,
@@ -486,7 +490,11 @@
                lshw.wiki_content as wikiContent,
                lshw.wiki_content_html as wikiContentHtml,
                (select group_concat(tag_name) from lecture_tag where common_id = lsi.common_id) as tagName,
-               if(exists (select 1 from lecture_sub_his_like where lecture_id = #{lectureId} and sub_id = #{subId} and sub_his_id = #{subHisId} and user_id = #{userId} and like_flag = 'Y'), true, false) as userLikeYn
+               if(exists (select 1 from lecture_sub_his_like where lecture_id = #{lectureId} and sub_id = #{subId} and sub_his_id = #{subHisId} and user_id = #{userId} and like_flag = 'Y'), true, false) as userLikeYn,
+               <![CDATA[
+		   	   	if(1 < lsi.order, true, false) prePage,
+			   	if(lsi.order < (SELECT COUNT(1) FROM lecture_sub_index WHERE lecture_id = #{lectureId} AND lecture_sub_index.order != 0), true, false) tailPage
+		   	   ]]>               
           from lecture_sub_index lsi
                left outer join
                lecture_sub_history lsh

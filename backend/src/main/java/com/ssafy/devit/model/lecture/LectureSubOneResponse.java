@@ -1,45 +1,61 @@
 package com.ssafy.devit.model.lecture;
 
-public class LectureSubOneResponse {
-	private long lectureId;
-	private long subId;
-	private long subHisId;
-	private int order;
-	private String title;
-	private int viewCount;
-	private int likeCount;
-	private String profile;
-	private String nickname;
-	private String playTime;
-	private String playerUrl;
-	private String wikiContent;
-	private String wikiContentHtml;
-	private String tagName;
-	private String thumbnailUrl;
-	private boolean userLikeYn;
-	private int lectureCount;
+import io.swagger.annotations.ApiModelProperty;
 
-	public LectureSubOneResponse(long lectureId, long subId, long subHisId, int order, String title, int viewCount,
-			int likeCount, String profile, String nickname, String playTime, String playerUrl, String wikiContent,
-			String wikiContentHtml, String tagName, String thumbnailUrl, boolean userLikeYn, int lectureCount) {
-		super();
-		this.lectureId = lectureId;
-		this.subId = subId;
-		this.subHisId = subHisId;
-		this.order = order;
-		this.title = title;
-		this.viewCount = viewCount;
-		this.likeCount = likeCount;
-		this.profile = profile;
-		this.nickname = nickname;
-		this.playTime = playTime;
-		this.playerUrl = playerUrl;
-		this.wikiContent = wikiContent;
-		this.wikiContentHtml = wikiContentHtml;
-		this.tagName = tagName;
-		this.thumbnailUrl = thumbnailUrl;
-		this.userLikeYn = userLikeYn;
-		this.lectureCount = lectureCount;
+public class LectureSubOneResponse {
+	@ApiModelProperty(example = "프로젝트 ID")
+	private long lectureId;
+	@ApiModelProperty(example = "강의 ID")
+	private long subId;
+	@ApiModelProperty(example = "히스토리 ID")
+	private long subHisId;
+	@ApiModelProperty(example = "순서")
+	private int order;
+	@ApiModelProperty(example = "제목")
+	private String title;
+	@ApiModelProperty(example = "조회 수")
+	private int viewCount;
+	@ApiModelProperty(example = "좋아요 수")
+	private int likeCount;
+	@ApiModelProperty(example = "사용자 프로필")
+	private String profile;
+	@ApiModelProperty(example = "사용자 닉네임")
+	private String nickname;
+	@ApiModelProperty(example = "영상 시간")
+	private String playTime;
+	@ApiModelProperty(example = "영상 위치")
+	private String playerUrl;
+	@ApiModelProperty(example = "위키")
+	private String wikiContent;
+	@ApiModelProperty(example = "위키 HTML")
+	private String wikiContentHtml;
+	@ApiModelProperty(example = "태그들")
+	private String tagName;
+	@ApiModelProperty(example = "썸네일")
+	private String thumbnailUrl;
+	@ApiModelProperty(example = "좋아요 여부")
+	private boolean userLikeYn;
+	@ApiModelProperty(example = "강의 수")
+	private int lectureCount;
+	@ApiModelProperty(example = "이전 강의 여부")
+	private boolean prePage;
+	@ApiModelProperty(example = "다음 강의 여부")
+	private boolean tailPage;
+
+	public boolean isPrePage() {
+		return prePage;
+	}
+
+	public void setPrePage(boolean prePage) {
+		this.prePage = prePage;
+	}
+
+	public boolean isTailPage() {
+		return tailPage;
+	}
+
+	public void setTailPage(boolean tailPage) {
+		this.tailPage = tailPage;
 	}
 
 	public LectureSubOneResponse() {
