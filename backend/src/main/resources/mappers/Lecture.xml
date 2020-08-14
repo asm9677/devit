@@ -44,7 +44,7 @@
 		        LEFT OUTER JOIN
 		    user u ON l.user_id = u.user_id
 		        LEFT OUTER JOIN
-		    lecture_sub_index lsi ON l.lecture_id = lsi.lecture_id
+		    lecture_sub_index lsi ON l.lecture_id = lsi.lecture_id AND lsi.order != 0
 		        LEFT OUTER JOIN
 		    (SELECT 
 		        lecture_id, COUNT(1) AS likeCount
@@ -325,6 +325,7 @@
 		    lshv.view_count viewCount,
 		    lg.video_like_count likeCount,
 		    u.nickname,
+            u.profile,
 		    lshv.play_time playTime,
 		    lshv.player_url playerUrl,
 		    lshw.wiki_content wikiContent,
@@ -738,12 +739,11 @@
       
       <!-- 변경 사항  이력 가져오기 -->
       <select id="selectChangeHistoryList" resultType="ChangeHistoryResponse">
-	        SELECT lsh.lecture_id lectureId,
-				   lsh.sub_id subId,
+	        SELECT lsh.sub_id subId,
 		           lsh.sub_his_id subHisId,
 		           lsh.created,
 		           lsh.modified,
-		           lsh.title,
+		           (SELECT title FROM lecture_sub_index WHERE sub_id = lsh.sub_id) title,
 		           lsh.thumbnail_url thumbnailUrl,
 		           lsh.play_time playTime,
 		           lsh.player_url playerUrl,
@@ -754,7 +754,8 @@
 		           lsh.accept_yn acceptYn,
 		           u.user_id userId,
 		           u.nickname,
-		           u.profile
+		           u.profile,
+                   u.email
 			  FROM lecture_sub_history lsh
 					LEFT OUTER JOIN user u
 		            ON

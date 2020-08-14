@@ -39,9 +39,19 @@ public class ChangeHistoryResponse {
 	private String nickname;
 	@ApiModelProperty(example = "사용자 프로필")
 	private String profile;
+	@ApiModelProperty(example = "사용자 이메일")
+	private String email;
 
 	public ChangeHistoryResponse() {
 
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public long getLectureId() {
