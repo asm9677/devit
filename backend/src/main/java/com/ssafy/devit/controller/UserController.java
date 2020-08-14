@@ -186,7 +186,7 @@ public class UserController {
 			} else {
 				result.msg = "duplicate";
 				result.result = "사용 불가능한 닉네임 입니다";
-				response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			log.debug(">> Error : checkForNickName <<");

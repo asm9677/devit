@@ -23,10 +23,10 @@ spring:
       max-file-size: 1024MB
       max-request-size: 1024MB
   mail:
-    host: smtp.naver.com
+    host: smtp.gmail.com
     port: 465
-    username: msno2@naver.com
-    password: "TEST"
+    username: "i3a101.devit.io@gmail.com"
+    password: "dntnvmfhwprxm!@"
     properties:
       mail.smtp.auth: true
       mail.smtp.ssl.enable: true
@@ -43,8 +43,8 @@ spring:
   profiles: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://localhost:3306/devit?allowMultiQueries=true
-    url: jdbc:mysql://i3a101.p.ssafy.io:3306/devit?allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/devit?allowMultiQueries=true
+#    url: jdbc:mysql://i3a101.p.ssafy.io:3306/devit?allowMultiQueries=true
     username: root
     password: devit
   devtools:
@@ -60,10 +60,10 @@ spring:
       max-file-size: 512MB
       max-request-size: 512MB
   mail:
-     host: smtp.naver.com
+     host: smtp.gmail.com
      port: 465
-     username: dlrmsdn135@naver.com
-     password: "0"
+     username: "i3a101.devit.io@gmail.com"
+     password: "dntnvmfhwprxm!@"
      properties:
         mail.smtp.auth: true
         mail.smtp.ssl.enable: true

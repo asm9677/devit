@@ -1,5 +1,7 @@
 package com.ssafy.devit.controller;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +95,7 @@ public class AccountController {
 
 	@PostMapping("/signup")
 	@ApiOperation(value = "가입하기")
-	public ResponseEntity<CommonResponse> signUp(@RequestBody SignUpRequest request) {
+	public ResponseEntity<CommonResponse> signUp(@Valid SignUpRequest request) {
 		log.info(">> Load : signUp <<");
 		final CommonResponse result = new CommonResponse();
 		ResponseEntity<CommonResponse> response = null;
