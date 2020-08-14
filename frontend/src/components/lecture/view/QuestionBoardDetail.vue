@@ -1,10 +1,10 @@
 <template>
     <div>
         <v-layout wrap style="width:100%;">            
-            <v-list style="width:100%" dense>
+            <v-list id="question" style="width:100%" dense :style="{'height' : questionHeight+'px'}">
                 <v-list-item>
                     <v-list-item-content class="wrap-text">
-                        {{item.boardTitle}}
+                        {{item.boardTitle}} 
                     </v-list-item-content>
                 </v-list-item>
                 <v-list-item>
@@ -22,9 +22,26 @@
                         </v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action>
-                        <v-icon>
-                            mdi-dots-vertical
-                        </v-icon>
+                        <v-menu bottom left >
+                            <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                :dark="darkOption"
+                                icon
+                                v-bind="attrs"
+                                v-on="on"
+                            >
+                                <v-icon>mdi-dots-vertical</v-icon>
+                            </v-btn>
+                            </template>
+                            <v-list style="margin:0px;padding:0px;" :dark="darkOption">
+                                <v-list-item link @click="editMode=true">
+                                    <v-list-item-title>수정하기</v-list-item-title>
+                                </v-list-item>
+                                <v-list-item link @click="removeBoard">
+                                    <v-list-item-title>삭제하기</v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
                     </v-list-item-action>
                 </v-list-item>
                 <v-list-item>                    
@@ -32,10 +49,20 @@
                 </v-list-item>
                 <v-list-item>
                     <v-list-item-content>
-                        <v-list-item-subtitle class="wrap-text">
+                        <v-list-item-subtitle class="wrap-text" v-if="!editMode">
                             {{item.boardContent}}
                         </v-list-item-subtitle>
+                        <div v-else>
+                            <div>
+                                <v-textarea v-model="item.boardContent" color="success" outlined></v-textarea>                            
+                            </div>
+                            <div style="float:right">
+                                <v-btn outlined color="success" @click="updateBoard">저장</v-btn>
+                                <v-btn outlined color="success" style="margin-left:5px;" @click="initBoard(); editMode=false">취소</v-btn>
+                            </div>
+                        </div>
                     </v-list-item-content>
+                    
                 </v-list-item>
                 <v-list-item style="min-height:0px; margin-top:20px;">                    
                     <v-divider />
@@ -46,7 +73,7 @@
                     </v-list-item-subtitle>
                 </v-list-item>
                 <template v-for="(replyItem,i) in reply">
-                    <v-list-item  :key="`${i}_reply`" three-line="">
+                    <v-list-item  :key="`${i}_reply`" three-line v-if="editReplyIdx != i">
                         <v-list-item-avatar size="30" style="margin-right:10px;">
                             <v-img 
                                 :src="'http://i3a101.p.ssafy.io/images/' + replyItem.profile"
@@ -56,12 +83,25 @@
                             <v-list-item-title style="margin-bottom:4px;">
                                 <span style="font-weight:700; font-family:'Malgun Gothic';">{{replyItem.userName}}</span>
                             </v-list-item-title>
-                            <v-list-item-subtitle class="wrap-text" v-html="replyItem.replyContent" style="color:black; font-weight:400; font-family:'Malgun Gothic';">
+                            <v-list-item-subtitle class="wrap-text" v-html="replyItem.replyContent" style="font-weight:400; font-family:'Malgun Gothic';" :style="{'color': (darkOption ? '' : 'black') }">
                             </v-list-item-subtitle>
                             <v-list-item-subtitle style="color:#979797; font-size:12px; font-weight:400; font-family:'Malgun Gothic'; margin-top:7px;">
-                                {{replyItem.replyModified | moment('YYYY.MM.DD. HH:mm')}} <template v-if="replyItem.isMine=='Y'">&middot; <span style="font-size:12px;">수정</span>  <span style="font-size:12px;">삭제</span>  </template>
+                                {{replyItem.replyModified | moment('YYYY.MM.DD. HH:mm')}} <template v-if="replyItem.isMine=='Y'">&middot; <span style="font-size:12px;cursor:pointer;" @click="editReplyIdx=i">수정</span>  <span style="font-size:12px;cursor:pointer;" @click="removeReply(replyItem)">삭제</span>  </template>
                             </v-list-item-subtitle> 
                         </v-list-item-content>                    
+                    </v-list-item>
+                    <v-list-item :key="`${i}_replyUpdate`"  v-else>
+                        <v-list-item-content>
+                            <div>
+                                <div>
+                                    <v-textarea v-model="replyItem.replyContent" color="success" outlined></v-textarea>                            
+                                </div>
+                                <div style="float:right">
+                                    <v-btn outlined color="success" @click="updateReply(replyItem)">저장</v-btn>
+                                    <v-btn outlined color="success" style="margin-left:5px;" @click="initBoard(); editReplyIdx=-1">취소</v-btn>
+                                </div>
+                            </div>
+                        </v-list-item-content>
                     </v-list-item>
                     <v-list-item :key="`${i}_divider`" style="min-height:0px;">
                         <v-divider />
@@ -86,30 +126,48 @@
 <script>
 import http from "@/util/http_common.js"
 export default {
-    props: ['boardId'],
+    props: ['darkOption', 'tabs', 'boardId' , 'refresh'],
     data() {
         return {
             item: {},
             reply: {},
-            replyContent: ''
+            replyContent: '',
+            questionHeight: 768,
+
+            editMode: false,
+            editReplyIdx : -1,
         }
     },
     watch: {
         boardId() {
             this.initBoard();
+        },
+        tabs() {
+            this.editMode = false;
         }
     },
     created(){
+        console.dir('created')
         this.initBoard()       
     },
-    methods: {
+    mounted() {
+        console.dir('mounted')
+        this.detailBoardResize()
+        document.addEventListener('resize', this.detailBoardResize)
+    },
+    beforeDestroy(){
+        document.removeEventListener('resize', this.detailBoardResize)
+    },
+    methods:{
+        detailBoardResize() {
+            this.questionHeight = $('body').height()-$('#question').offset().top
+        },
         writeReply() {
             http.axios.post(`/api/v1/reply`,{
                 "boardId": this.boardId,
                 "parentReplyId": 0,
                 "replyContent": this.replyContent,
             }).then(({data}) => {
-                console.dir(data.result)
                 this.reply = data.result
             }).finally(() => {
                 this.replyContent = '';
@@ -125,7 +183,40 @@ export default {
                 console.dir(data.result)
                 this.reply = data.result
             }) 
-        }
+        },
+        removeBoard() {
+            http.axios.delete(`/api/v1/board/${this.boardId}`).then(({data}) => {
+                this.$emit('removeBoard');
+            })
+        },
+        updateBoard() {
+            http.axios.put(`/api/v1/board`, {                
+                "boardContent": this.item.boardContent,
+                "boardId": this.item.boardId,
+                "boardTitle": this.item.boardTitle,
+                "boardType": this.item.boardType   
+            }).then(({data}) => {
+                this.initBoard();
+                this.editMode = false;
+            })
+        },
+
+        removeReply(item) {
+            http.axios.delete(`/api/v1/reply/${item.boardReplyId}`).then(({data}) => {
+                this.initBoard();
+            })
+        },
+
+        updateReply(item) {
+            http.axios.put(`/api/v1/reply`, {                
+                "boardId": item.boardId,
+                "boardReplyId": item.boardReplyId,
+                "replyContent": item.replyContent,
+            }).then(({data}) => {
+                this.initBoard();
+                this.editReplyIdx = -1;
+            })
+        },
     }
 }
 </script>
@@ -136,7 +227,7 @@ export default {
   white-space: normal;  
 }
 
-.v-list {
+#question {
   height: 650px;
   overflow-y: auto;
   padding-right:15px;

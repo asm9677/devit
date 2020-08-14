@@ -32,8 +32,6 @@
                             </v-list-item-subtitle>                            
                         </v-card>
                     </v-row>
-                    <v-card :height="height" tile flat >
-                    </v-card>
                     <v-row>
                         <span class="nickname" style="font-size:12px">{{item.nickname}}</span>
                     </v-row>
@@ -110,11 +108,6 @@
             }else{            
                 $('.LecturePlayer .v-list-item__title').css('color', '#000000DE')
                 $('.LecturePlayer .nickname').css('color', '#000000DE')
-            }
-            if(this.$refs.img0){
-                this.height = this.$refs.img0[0].$el.offsetHeight - this.$refs.content0[0].$el.offsetHeight-25
-                if(this.height < 0)
-                    this.height = 0;
             }
             this.handleResize2()
             window.addEventListener('resize', this.handleResize2);
