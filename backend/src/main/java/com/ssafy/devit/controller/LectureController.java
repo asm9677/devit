@@ -465,6 +465,8 @@ public class LectureController {
 
 		try {
 			lectureService.updateRequestLecture(subId, subHisId, type, reqType);
+			// upload notice to request user
+			lectureService.uploadNoticeUser(subHisId);
 			result.msg = "success";
 			result.result = "성공적으로 적용 되었습니다";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);

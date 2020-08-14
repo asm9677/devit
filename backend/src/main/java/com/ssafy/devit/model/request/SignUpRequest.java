@@ -1,13 +1,13 @@
 package com.ssafy.devit.model.request;
 
+import java.io.Serializable;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 import io.swagger.annotations.ApiModelProperty;
 
-public class SignUpRequest {
+public class SignUpRequest implements Serializable {
 
 	@NotBlank(message = "이메일은 필수 입력 값입니다.")
 	@Email(message = "이메일 형식에 맞지 않습니다.")
@@ -15,7 +15,7 @@ public class SignUpRequest {
 	private String email;
 
 	@NotBlank(message = "비밀번호는 필수 입력 값입니다.")
-	@Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}", message = "비밀번호는 영문 대,소문자와 숫자, 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자의 비밀번호여야 합니다.")
+//	@Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}", message = "비밀번호는 영문 대,소문자와 숫자, 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자의 비밀번호여야 합니다.")
 	@ApiModelProperty(value = "비밀번호", dataType = "String", required = true)
 	private String password;
 

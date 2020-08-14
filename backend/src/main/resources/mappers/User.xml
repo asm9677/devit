@@ -6,8 +6,8 @@
 	
 	<!-- 사용자 등록  -->
 	<insert id="insertUser">
-		INSERT INTO user(email, nickname, password)
-		VALUES(#{email}, #{nickname}, #{password});
+		INSERT INTO user(email, nickname, password, email_confirm)
+		VALUES(#{email}, #{nickname}, #{password}, 'Y');
 		
 		SELECT @userId := max(user_id) FROM user;
 		

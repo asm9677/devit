@@ -572,9 +572,20 @@
 		</if>
 	</update>
 	
+	<!-- 요청자에게 피드백 알림 -->
+	<insert id="uploadNoticeUser">
+		INSERT INTO notice(
+			notice_type, 
+    		user_id,    		 
+    		sub_his_id, 
+    		lecture_id, 
+    		sub_id    		
+		)
+		select  4, lsh.user_id, lsh.sub_his_id, lsh.lecture_id, lsh.sub_id
+		from lecture_sub_history lsh		
+		where lsh.sub_his_id = #{subHisId};	
+	</insert>
 	
-	
-		
 	<!-- 내가 좋아요 한 프로젝트 목록 조회 -->
 	      <select id="myLikeLectureList" resultType="LecturesResponse">
 		SELECT 

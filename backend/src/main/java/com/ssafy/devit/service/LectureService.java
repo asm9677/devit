@@ -76,6 +76,9 @@ public interface LectureService {
 	// 요청 리스트 요청 받기 또는 거절하기 업데이트 하기
 	public void updateRequestLecture(long subId, long subHisId, String type, String reqType) throws Exception;
 	
+	// 요청 올린 사용자에게 피드백 알림 주기
+	public void uploadNoticeUser(long subHisId) throws Exception;
+	
 	// 내가 좋아요한 프로젝트 리스트 가져오기
 	public List<LecturesResponse> myLikeLectureList(long startPage, long itemsperpage) throws Exception;
 	
