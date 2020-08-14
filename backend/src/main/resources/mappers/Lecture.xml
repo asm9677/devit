@@ -95,7 +95,7 @@
 					ELSE TRUE
 				END AS userLikeYn,
 				CASE
-					WHEN exists (select 1 from lecture_auth where lecture_id = l.lecture_id and user_id = #{userId})
+					WHEN exists (select 1 from lecture_auth where lecture_id = l.lecture_id and user_id = #{userId} AND delete_yn = 'N')
                     THEN TRUE
 					ELSE FALSE
 				END AS manageYn		    
