@@ -325,6 +325,7 @@
 		    lshv.view_count viewCount,
 		    lg.video_like_count likeCount,
 		    u.nickname,
+            u.profile,
 		    lshv.play_time playTime,
 		    lshv.player_url playerUrl,
 		    lshw.wiki_content wikiContent,
