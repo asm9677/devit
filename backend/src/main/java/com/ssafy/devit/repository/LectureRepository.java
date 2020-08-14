@@ -99,6 +99,9 @@ public interface LectureRepository {
 	// 요청 리스트 요청 받기 또는 거절하기 업데이트 하기
 	public void updateRequestLecture(@Param("subId") long subId, @Param("subHisId") long subHisId, @Param("type") String type, @Param("reqType") String lwType) throws Exception;
 	
+	// 요청자에게 피드백 알림
+	public void uploadNoticeUser(@Param("subHisId") long subHisId) throws Exception;
+	
 	// 변경 사항 이력 가져오기
 	public List<ChangeHistoryResponse> selectChangeHistoryList(@Param("lectureId") long lectureId) throws Exception;
 	

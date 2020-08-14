@@ -39,10 +39,11 @@ public class MailServiceImpl implements MailService { // to MailRepository
 		int code = getRandomCode();
 		mailRepository.updateCode(email_to, code);
 		
-		String email_from = "dlrmsdn135@naver.com";
+		String email_from = "i3a101.devit.io@gmail.com";
 		String subject = "[DevIT] 계정 인증 메일입니다.";		
 		String text = "링크를 클릭하면  본 계정의 인증이 완료됩니다.<br /><br />";		
 		text += "<a href='localhost:8080/api/v1/mail/passwordConfirm?email=" + email_to + "&code=" + code + "'> 계정 인증 </a>";
+		text += "<br /><a href='www.naver.com'> naver </a>";
 		
 		sendMail(email_from, email_to, subject, text);
 	}	
@@ -55,12 +56,12 @@ public class MailServiceImpl implements MailService { // to MailRepository
 		int code = getRandomCode();
 		mailRepository.updateCode(email_to, code);
 		
-		String email_from = "dlrmsdn135@naver.com";
+		String email_from = "i3a101.devit.io@gmail.com";
 		String subject = "[DevIT] 비밀번호 찾기 확인 메일입니다.";		
 		String text = "해당 계정으로 비밀번호 찾기 요청이 발생하였습니다.<br />본인이 요청한 것이 맞다면 아래의 링크를 클릭해주세요.<br />"
 				+ "링크를 클릭하면 비밀번호가 변경됩니다.<br />변경된 비밀번호는 메일로 발송됩니다.<br /><br />";
 		text += "<a href='localhost:8080/api/v1/mail/passwordConfirm?email=" + email_to + "&code=" + code + "'> 비밀번호 변경 </a>";
-				
+		
 		sendMail(email_from, email_to, subject, text);
 	}
 	
@@ -70,7 +71,7 @@ public class MailServiceImpl implements MailService { // to MailRepository
 		
 		mailRepository.updatePasswordRandom(email_to, password_encoded);
 		
-		String email_from = "dlrmsdn135@naver.com";
+		String email_from = "i3a101.devit.io@gmail.com";
 		String subject = "[DevIT] 비밀번호가 변경되었습니다.";		
 		String text = "해당 계정의 임시 비밀번호가 발급되었습니다.<br />비밀번호 변경을 통해 개인정보를 보호하세요.<br />";
 		text += "password : " + password;
@@ -98,7 +99,8 @@ public class MailServiceImpl implements MailService { // to MailRepository
 		message.setSubject(subject);
 		message.setFrom(new InternetAddress(email_from));
 		message.addRecipient(RecipientType.TO, new InternetAddress(email_to));
-		message.setText(text, "UTF-8", "html");
+		// message.setText(text, "UTF-8", "html");
+		message.setContent(text, "text/html;charset=euc-kr");
 		
 		javaMailSender.send(message);		
 	}

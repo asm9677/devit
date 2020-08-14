@@ -218,6 +218,10 @@ public class LectureServiceImpl implements LectureService {
 		lectureRepository.updateRequestLecture(subId, subHisId, type, lwType);
 	}
 	
+	@Override
+	public void uploadNoticeUser(long subHisId) throws Exception{
+		lectureRepository.uploadNoticeUser(subHisId);
+	}	
 
 	@Override
 	public List<LecturesResponse> myLikeLectureList(long startPage, long itemsperpage) throws Exception {

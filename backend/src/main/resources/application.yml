@@ -60,13 +60,16 @@ spring:
       max-file-size: 512MB
       max-request-size: 512MB
   mail:
-     host: smtp.naver.com
+     host: smtp.gmail.com
      port: 465
-     username: dlrmsdn135@naver.com
-     password: "0"
+     username: "i3a101.devit.io@gmail.com"
+     password: "dntnvmfhwprxm!@"
      properties:
         mail.smtp.auth: true
         mail.smtp.ssl.enable: true
+        mail.smtp.ssl.trust: smtp.gmail.com
+        mail.smtp.starttls.enable: false
+        
     
 mybatis:
   type-aliases-package: com.ssafy.devit.model
