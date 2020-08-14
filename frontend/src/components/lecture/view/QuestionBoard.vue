@@ -1,15 +1,16 @@
 <template>
     <v-layout wrap ref="main">
         <v-spacer></v-spacer>
-        <v-btn v-if="!isWrite" light color="success" outlined @click="isWrite=true">
+        <v-btn v-if="!isWrite" light color="success" outlined @click="isWrite=true; title=''; content=''">
             질문하기
         </v-btn>
-        <v-list v-else style="width:100%;">
+        <v-list v-else style="width:100%;" :dark="darkOption" >
             <v-list-item>
                 <v-text-field dense outlined placeholder="제목을 입력하세요." color="success" hide-details style="margin-bottom:10px" v-model="title"></v-text-field>                
             </v-list-item>
             <v-list-item>                
                 <v-textarea dense outlined auto-grow placeholder="" color="success" hide-details style="margin-bottom:4px" v-model="content"></v-textarea>                                
+                
             </v-list-item>
             <v-list-item>
                 <v-list-item-content>
@@ -26,7 +27,7 @@
                 </v-list-item-action>
             </v-list-item>
         </v-list>
-        <div ref="question" :style="{'height': questionHeight+'px'}" style="width:100%; overflow-y:auto; margin-top:20px;">
+        <div id="question" ref="question" :style="{'height': questionHeight+'px'}" style="width:100%; overflow-y:auto; margin-top:20px;">
             <v-list v-if="true" link>
                 <div class="boardContent" style="width:100%; border:1px solid #4CAF50; border-radius:5px; margin:10px 0px;" v-for="(item,i) in items" :key="i+'_div'" @click="$emit('show-detail', item.boardId)">
                     <v-list-item style="width:100%;">
@@ -76,9 +77,13 @@
 
 <script>
 import http from "@/util/http_common.js"
+import Editor from "@/components/common/Editor.vue"
 
 export default {
-    props: ['lectureId', 'subId'],
+    components: {
+        Editor,
+    },
+    props: ['darkOption', 'lectureId', 'subId','refresh'],
     data(){
         return {            
             questionHeight: 768,
@@ -94,6 +99,10 @@ export default {
     watch: {
         subId() {
             this.initBoard()
+        },
+        refresh() {
+            this.initBoard();
+            this.questionBoardResize();
         }
     },
     created() {
@@ -103,9 +112,16 @@ export default {
         console.dir(this.lectureId);
         console.dir(this.subId);
         this.initBoard();
-        this.questionHeight = $('body').prop("clientHeight") - this.$refs.question.offsetTop - 120;
+        this.questionBoardResize()
+        document.addEventListener('resize', this.questionBoardResize())
+    },
+    beforeDestroy(){
+        document.removeEventListener('resize', this.questionBoardResize())
     },
     methods:{
+        questionBoardResize() {
+            this.questionHeight = $('body').height()-$('#question').offset().top
+        },
         initBoard() {
             http.axios.get(`/api/v1/board/lecture?lectureId=${this.lectureId}&subId=${this.subId}`).then(({data}) => {
                 console.dir(data)

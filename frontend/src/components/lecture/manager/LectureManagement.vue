@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import http from "@/util/http_common.js"
 import store from "@/store/index.js"
 import Default from "@/components/lecture/manager/Default.vue"
 import Intro from "@/components/lecture/manager/Intro.vue"
@@ -109,6 +110,17 @@ export default {
         if(this.tab == -1){
             alert('잘못된 접근입니다.')
         }        
+
+        http.axios.get(`/api/v1/lectures/${this.lectureId}`).then(({data}) => {
+            if(!data.result.manageYn) {
+                this.$router.push('/')
+                alert('권한이 없습니다!')                
+            }
+        }).catch((error) => {
+            
+        }).finally(() => {
+            
+        })
     },
     mounted() {
         window.addEventListener('resize', this.handleResize)
@@ -121,9 +133,6 @@ export default {
         handleResize() {
             this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
         },
-        zz(){
-            alert(zz)
-        }
     }
 }
 </script>

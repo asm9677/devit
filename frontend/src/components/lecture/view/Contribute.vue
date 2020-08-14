@@ -1,6 +1,6 @@
 <template>
-    <v-dialog v-model="dialog" max-width="768px" style="" hide-overlay persistent>         
-        <v-tabs v-model="tabs" icons-and-text grow hide-slider color="success" >
+    <v-dialog v-model="dialog" max-width="768px" style="" hide-overlay persistent :dark="darkOption">         
+        <v-tabs v-model="tabs" icons-and-text grow hide-slider color="success" :dark="darkOption">
             <v-tab>
                 <span>영상</span>
                 <v-icon>mdi-movie</v-icon>                
@@ -10,7 +10,7 @@
                 <v-icon>mdi-wikipedia</v-icon>
             </v-tab>
             <v-tab-item> 
-                <v-stepper v-model="step" vertical non-linear>
+                <v-stepper v-model="step" vertical non-linear :dark="darkOption" style="border:none;">
                     <v-stepper-step :complete="playerUrl != ''" step="1">
                         영상 업로드
                     </v-stepper-step>
@@ -35,7 +35,7 @@
                                 <v-icon style="font-size:40px;" color='success'> mdi-movie-open</v-icon>
                                 <div>                                        
                                     <div class="success--text" sytle="display:block;font-size:14px;">비디오 업로드</div>
-                                    <div style="font-size:14px;">클릭해서 비디오를 선택하세요.</div>
+                                    <div style="font-size:14px;" :style="{'color' : (darkOption ? '#d4d4d4' : '')}">클릭해서 비디오를 선택하세요.</div>
                                 </div>
                             </div>                            
                             <video
@@ -75,7 +75,7 @@
                                 <v-icon style="font-size:40px;" color='primary'> mdi-image</v-icon>
                                 <div>                                        
                                     <div class="primary--text" sytle="display:block;font-size:14px;">이미지 업로드</div>
-                                    <div style="font-size:14px;">클릭해서 썸네일을 선택하세요.</div>
+                                    <div style="font-size:14px;" :style="{'color' : (darkOption ? '#d4d4d4' : '')}">클릭해서 썸네일을 선택하세요.</div>
                                 </div>
                             </div>
                             <v-img v-else="thumbnailUrl" :src="`http://i3a101.p.ssafy.io/images/${thumbnailUrl}`" min-height="100%" min-width="100%" aspect-ratio="1.7"/>
@@ -84,13 +84,13 @@
                     <v-stepper-step :complete="title != ''" step="3">제목 정하기</v-stepper-step>
                         
                     <v-stepper-content step="3">
-                        <v-text-field outlined dense placeholder="제목을 정해보세요!" v-model="title">
+                        <v-text-field outlined dense placeholder="제목을 정해보세요!" v-model="title" color="success">
                         </v-text-field>
                     </v-stepper-content>
                 </v-stepper>
             </v-tab-item>       
-            <v-tab-item>            
-                <v-card tile flat>
+            <v-tab-item :dark="darkOption" >            
+                <v-card tile flat :dark="darkOption" style="border:none;">
                     <v-list :dark="darkOption" >
                         <v-list-item>
                             <v-list-item-content>

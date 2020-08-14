@@ -1,6 +1,6 @@
 <template>
     <v-layout wrap style="width:100%;">
-        <v-list>
+        <v-list :dark="darkOption" style="width:100%">
             <v-list-item>
                 <v-list-item-content>
                     프로그래밍 시작하기 : 파이썬 입문
@@ -8,30 +8,34 @@
                         {{order}}강 / {{totalCount}}강
                     </v-list-item-subtitle>  
                     <div style="margin-top:15px" />
-                    <v-list-item-subtitle>    
-                        <v-progress-linear :value="order/totalCount*100"></v-progress-linear>                                    
-                    </v-list-item-subtitle>    
+                    <v-progress-linear :value="order/totalCount*100"></v-progress-linear>                                      
                 </v-list-item-content>                                
-            </v-list-item>                            
+            </v-list-item>                    
         </v-list>
-        <v-list ref="contents" style="overflow-y:auto; font-size:14px; width:95%" :style="{'height':contentHeight+'px'}" :dark="darkOption">
-            <v-list-item 
-                v-for="(item,index) in chapter" :key="`${index}_contents`"
-                link
-                @click="move(`/lecture/player/index/${lectureId}?order=${index+1}`)"
-            >
-                <v-list-item-avatar>
-                    <v-icon>
-                        mdi-play-circle-outline
-                    </v-icon>
-                </v-list-item-avatar>
-                <v-list-item-content>    
-                    {{item.title}}
-                </v-list-item-content>
-                <v-list-item-action>
-                    {{item.playTime}}
-                </v-list-item-action>
-            </v-list-item>
+        <v-list ref="contents" style="overflow-y:auto; font-size:14px; width:100%" :style="{'height':contentHeight+'px'}" :dark="darkOption">
+            
+            <template v-for="(item,index) in chapter">
+                <v-divider :key="`${index}_divider`" />
+                <v-list-item 
+                    :key="`${index}_contents`"
+                    link                
+                    @click="move(`/lecture/player/index/${lectureId}?order=${index+1}`)"
+                    :style="{'background-color': (order == index+1 ? (darkOption ? '#373838' : '#f2f2f2') : '')}"
+                >            
+                    <v-list-item-avatar>
+                        <v-icon :color="item.videoYn ? 'primary' : 'error lighten-1'">
+                            mdi-play-circle-outline
+                        </v-icon>
+                    </v-list-item-avatar>
+                    <v-list-item-content>    
+                        {{item.title}} 
+                    </v-list-item-content>
+                    <v-list-item-action>
+                        {{item.playTime}}
+                    </v-list-item-action>
+                </v-list-item>
+            </template>
+            <v-divider />
         </v-list>
     </v-layout>
 </template>

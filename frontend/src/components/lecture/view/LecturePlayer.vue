@@ -148,7 +148,7 @@
                         </v-list>
                     </v-tab-item>
                     <v-tab-item>
-                        <v-list>
+                        <v-list :dark="darkOption">
                             <v-list-item>
                                 <v-list-item-content>
                                     <v-list-item-title>
@@ -162,11 +162,11 @@
                                 </v-list-item-action>
                             </v-list-item>
                         </v-list>
-                        <v-list>
+                        <v-list :dark="darkOption">
                             <v-list-item>
                                 <v-list-item-content>
                                     <v-list-item-title>
-                                        <QuestionBoard :darkOption="darkOption" :lectureId="lectureId" :subId="subId" @show-detail="showDetail"> </QuestionBoard>             
+                                        <QuestionBoard :darkOption="darkOption" :lectureId="lectureId" :subId="subId" :refresh="boardRefresh" @show-detail="showDetail"> </QuestionBoard>             
                                     </v-list-item-title>                        
                                 </v-list-item-content>
                             </v-list-item>                            
@@ -240,7 +240,7 @@
                         </v-list>
                     </v-tab-item>                    
                     <v-tab-item>
-                        <v-list>
+                        <v-list :dark="darkOption">
                             <v-list-item>
                                 <v-list-item-avatar @click="tabs=2">
                                     <v-icon>
@@ -259,11 +259,11 @@
                                 </v-list-item-action>
                             </v-list-item>
                         </v-list>
-                        <v-list>
+                        <v-list :dark="darkOption">
                             <v-list-item>
                                 <v-list-item-content>
                                     <v-list-item-title>                                       
-                                        <QuestionBoardDetail :darkOption="darkOption" :boardId="boardId"></QuestionBoardDetail> 
+                                        <QuestionBoardDetail :darkOption="darkOption" :tabs="tabs" :boardId="boardId" @removeBoard="tabs=2"></QuestionBoardDetail> 
                                     </v-list-item-title>                        
                                 </v-list-item-content>
                             </v-list-item>                            
@@ -276,102 +276,129 @@
         
 
             <div style="position:absolute; top:0px; left:0px; width:100%; height:100%; z-index:10; ">            
+                <v-layout style="position:fixed; z-index:99; bottom:0px; left:0px;" :style="{'width': videoWidth + 'px'}">               
+                                <v-bottom-navigation
+                                    absolute 
+                                    :background-color="darkOption ? '#373838' : '#88CBF8'"                                
+                                >
+                                    <v-btn @click="move(`/lecture/detail/${$route.params.id}`)">
+                                        <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-exit-to-app mdi-rotate-180</v-icon>
+                                    </v-btn>
+                                    <v-tabs :background-color="darkOption ? '#373838' : '#88CBF8'">                                
+                                    </v-tabs>
+                                    <v-btn>
+                                        <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-skip-previous</v-icon>
+                                    </v-btn>
+                                    <v-btn>
+                                        <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-skip-next</v-icon>
+                                    </v-btn>
+                                    
+                                </v-bottom-navigation>
+                            </v-layout>
                     <div :style="{'width' : videoWidth+'px'}">
-                        <div id="videoFrame">
-                            <video
-                                ref="video"
-                                id="livestation-player"
-                                class="video-js vjs-default-skin vjs-big-play-centered"
-                                controls
-                                data-setup='{}'
-                                style="width:100%;min-height:500px;"   
-                                :poster="`http://i3a101.p.ssafy.io/images/${sub.thumbnailUrl}`"
-                            >
-                                <!-- <source src="http://i3a101.p.ssafy.io/images/example2.mp4"></source> -->
-                            </video>
-                        </div>        
-                        <div v-show="!sub.playerUrl" style="padding:15px;">
-                            등록된 영상이 없습니다.
-                        </div>
-                        <v-layout style="position:fixed; z-index:99; bottom:0px; left:0px;" :style="{'width': videoWidth + 'px'}">               
-                            <v-bottom-navigation
-                                absolute 
-                                :background-color="darkOption ? '#373838' : '#88CBF8'"                                
-                            >
-                                <v-btn @click="move(`/lecture/detail/${$route.params.id}`)">
-                                    <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-exit-to-app mdi-rotate-180</v-icon>
-                                </v-btn>
-                                <v-tabs :background-color="darkOption ? '#373838' : '#88CBF8'">                                
-                                </v-tabs>
-                                <v-btn>
-                                    <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-skip-previous</v-icon>
-                                </v-btn>
-                                <v-btn>
-                                    <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-skip-next</v-icon>
-                                </v-btn>
-                                
-                            </v-bottom-navigation>
-                        </v-layout>
+                        <div v-show="sub.playerUrl">
+                            <div id="videoFrame">
+                                <video
+                                    ref="video"
+                                    id="livestation-player"
+                                    class="video-js vjs-default-skin vjs-big-play-centered"
+                                    controls
+                                    data-setup='{}'
+                                    style="width:100%;min-height:500px;"   
+                                    :poster="`http://i3a101.p.ssafy.io/images/${sub.thumbnailUrl}`"
+                                >
+                                    <!-- <source src="http://i3a101.p.ssafy.io/images/example2.mp4"></source> -->
+                                </video>
+                            </div>        
+                            <div v-show="!sub.playerUrl" style="padding:15px;">
+                                등록된 영상이 없습니다.
+                            </div>                            
 
-                        <v-list :dark="darkOption">
-                            <v-list-item>
-                                <v-list-item-content>
-                                    <v-list-item-title>
-                                        {{sub.title}}
-                                    </v-list-item-title>
-                                    <v-list-item-subtitle>
-                                        조회수 {{sub.viewCount | convertNumber}} &middot; <v-icon small :color="sub.userLikeYn ? 'pink' : 'normal'">mdi-heart</v-icon> {{sub.likeCount | convertNumber}}
-                                    </v-list-item-subtitle>
-                                    <v-list-item-subtitle>
-                                    #
-                                        <v-chip                                            
-                                            :color="`primary lighten-4`"                                            
-                                            class="ma-1"
-                                            v-for="(tag,index) in sub.tagName ? sub.tagName.split(',') : ''"   
-                                            :key="index+'_tag'"
-                                            small
-                                            label
-                                            @click="move(`/search?keyword=${tag}`)"
-                                        >  
-                                            <span style="color:black">
-                                                {{tag}}
-                                            </span>
-                                        </v-chip>                                                                                                   
-                                    </v-list-item-subtitle>
-                                    <v-list-item-subtitle>
-                                        <v-avatar
-                                                class="profile"
-                                                size=20
-                                            >
-                                                <v-img 
-                                                    :src="'https://picsum.photos/500/300?image=15'"
-                                                ></v-img>
-                                        </v-avatar>
-                                        <span style="margin-left:5px;font-size:12px">{{sub.nickname}}</span>
-                                    </v-list-item-subtitle>
-                                </v-list-item-content>
-                                <v-list-item-action>
-                                    <v-btn small class="mx-2" fab light color="white" @click="asynClickLike()" :loading="btnLoading">
-                                        <v-icon :color="sub.userLikeYn ? 'pink' : 'grey'" >mdi-heart</v-icon>
-                                    </v-btn>
-                                </v-list-item-action>
-                                <v-list-item-action>
-                                    <v-btn small class="mx-2" fab color="white" @click="copyToClipboard">
-                                        <v-icon class="grey--text">mdi-share-variant</v-icon>
-                                    </v-btn>
-                                </v-list-item-action>
-                            </v-list-item>
-                            <v-divider />
-                            <div style="margin-top:50px" />
+                            <v-list :dark="darkOption">
+                                <v-list-item>
+                                    <v-list-item-content>
+                                        <v-list-item-title>
+                                            {{sub.title}}
+                                        </v-list-item-title>
+                                        <v-list-item-subtitle>
+                                            조회수 {{sub.viewCount | convertNumber}} &middot; <v-icon small :color="sub.userLikeYn ? 'pink' : 'normal'">mdi-heart</v-icon> {{sub.likeCount | convertNumber}}
+                                        </v-list-item-subtitle>
+                                        <v-list-item-subtitle>
+                                        #
+                                            <v-chip                                            
+                                                :color="`primary lighten-4`"                                            
+                                                class="ma-1"
+                                                v-for="(tag,index) in sub.tagName ? sub.tagName.split(',') : ''"   
+                                                :key="index+'_tag'"
+                                                small
+                                                label
+                                                @click="move(`/search?keyword=${tag}`)"
+                                            >  
+                                                <span style="color:black">
+                                                    {{tag}}
+                                                </span>
+                                            </v-chip>                                                                                                   
+                                        </v-list-item-subtitle>
+                                        <v-list-item-subtitle>
+                                            <v-avatar
+                                                    class="profile"
+                                                    size=20
+                                                >
+                                                    <v-img 
+                                                        :src="`http://i3a101.p.ssafy.io/images/${sub.profile}`"
+                                                    ></v-img>
+                                            </v-avatar>
+                                            <span style="margin-left:5px;font-size:12px">{{sub.nickname}}</span>
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                    <v-list-item-action>
+                                        <v-btn small class="mx-2" fab light color="white" @click="asynClickLike()" :loading="btnLoading">
+                                            <v-icon :color="sub.userLikeYn ? 'pink' : 'grey'" >mdi-heart</v-icon>
+                                        </v-btn>
+                                    </v-list-item-action>
+                                    <v-list-item-action>
+                                        <v-btn small class="mx-2" fab color="white" @click="copyToClipboard">
+                                            <v-icon class="grey--text">mdi-share-variant</v-icon>
+                                        </v-btn>
+                                    </v-list-item-action>
+                                </v-list-item>
+                                <v-divider />
+                                <div style="margin-top:50px" />                                                 
+                            </v-list>
+                        </div>
+
+
+                        <v-list :style="{'background-color': (darkOption ? '#1e1e1e' : '#FFFFFF')}">
                             <v-list-item>
                                 <div class="wiki-paragraph" v-html="sub.wikiContentHtml" v-if="sub.wikiContentHtml"/>
-                                <div class="wiki-paragraph" v-else>
-                                    등록된 설명이 없습니다!
+                                <div class="wiki-paragraph" v-else style="width:100%;" >
+                                    <v-container fluid style="width:100%;">         
+                                        <v-row>
+                                            <v-col cols="12">
+                                                <v-row
+                                                    align="start"
+                                                    justify="center"
+                                                >                                    
+                                                    <v-icon style="font-size:120px;"  :style="{'color': (darkOption ? '#d4d4d4' : 'rgba(0, 0, 0, 0.54)')}" > mdi-emoticon-cry-outline </v-icon>                                
+                                                </v-row>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row>
+                                            <v-col cols="12">
+                                                <v-row
+                                                    align="end"
+                                                    justify="center"
+                                                >       
+                                                    <div style="font-size:20px"> 위키 문서가 비어있습니다 :( </div>    
+                                                </v-row>
+                                            </v-col>
+                                        </v-row>
+                                    </v-container>
                                 </div>
 
 
                             </v-list-item>
-                            <div style="height:100px;"></div>                            
+                            <div style="height:100px;"></div>       
                         </v-list>
                         
                     </div>
@@ -452,6 +479,8 @@ export default {
 
             btnLoading: false,
             snackbar: false,
+
+            boardRefresh: false,
         }
     },
     watch: {
@@ -473,7 +502,11 @@ export default {
                 history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}&subId=${this.subId}&subHisId=${this.subHisId}&boardId=${this.boardId}`);
             }else {
                 history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}&subId=${this.subId}&subHisId=${this.subHisId}`);
-            }            
+            }   
+            
+            if(this.tabs == 2){
+                this.boardRefresh = !this.boardRefresh;
+            }
         },
         sub() {
             var videoPlayer = document.getElementById('videoFrame');
@@ -482,6 +515,7 @@ export default {
                     <video
                         class="video-js vjs-default-skin vjs-big-play-centered"
                         controls
+                        ${this.autoPlay ? 'autoplay' : ''}                        
                         data-setup='{}'
                         style="width:100%;min-height:500px;"   
                         poster="http://i3a101.p.ssafy.io/images/${this.sub.thumbnailUrl}"

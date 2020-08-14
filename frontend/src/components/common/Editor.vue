@@ -1,6 +1,7 @@
 <template>
     <v-layout id="main" style="width:100%;">      
         <div id="editorFrame" :class="{focused : isFocus}">
+            {{hideTab}}
             <ul v-show="hideTab==null" :class="{focused : isFocus}">
                 <li>
                     <button :class="{active : isActive}" @click="isActive = true">
@@ -22,6 +23,7 @@
                                 class="toolbar" 
                                 @click="clickToolbar(item.message)" 
                                 :style="{'font-size' : item.size}"
+                                light
                             >
                                 {{item.icon}}
                             </v-icon>
