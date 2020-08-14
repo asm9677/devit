@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ssafy.devit.model.CommonResponse;
 import com.ssafy.devit.model.lecture.ChangeHistoryResponse;
 import com.ssafy.devit.model.lecture.LectureOneResponse;
+import com.ssafy.devit.model.lecture.LectureSubOneResponse;
 import com.ssafy.devit.model.lecture.RequestHistoryResponse;
 import com.ssafy.devit.model.request.HistoryLikeRequest;
 import com.ssafy.devit.model.request.LectureAuthRequest;
@@ -61,7 +62,8 @@ public class LectureController {
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.CREATED);
 		} catch (Exception e) {
 			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			log.info(">> Error : createLecture <<");
 			log.info(e.getMessage().toString());
 		}
@@ -76,14 +78,7 @@ public class LectureController {
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		try {
-			UserAuthDetails user = null;
-			try {
-				user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			} catch (Exception e) {
-				user = new UserAuthDetails();
-				user.setUserId(0);
-			}
-			result.result = lectureService.getLectures(user.getUserId(), startPage, type);
+			result.result = lectureService.getLectures(startPage, type);
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
@@ -123,14 +118,7 @@ public class LectureController {
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		try {
-			UserAuthDetails user = null;
-			try {
-				user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			} catch (Exception e) {
-				user = new UserAuthDetails();
-				user.setUserId(0);
-			}
-			result.result = lectureService.getLectureBylectureId(lectureId, user.getUserId());
+			result.result = lectureService.getLectureBylectureId(lectureId);
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
@@ -158,7 +146,8 @@ public class LectureController {
 			log.info(">> Error : updateLectureLike <<");
 			log.info(e.getMessage().toString());
 			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -179,7 +168,8 @@ public class LectureController {
 			log.info(">> Error : updateHistoryLike <<");
 			log.info(e.getMessage().toString());
 			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -200,7 +190,8 @@ public class LectureController {
 			log.info(">> Error : updateLectureLike <<");
 			log.info(e.getMessage().toString());
 			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -221,7 +212,8 @@ public class LectureController {
 			log.info(">> Error : updateContentLecture <<");
 			log.info(e.getMessage().toString());
 			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -242,7 +234,8 @@ public class LectureController {
 			log.info(">> Error : selectRoleUsersByLectureId <<");
 			log.info(e.getMessage().toString());
 			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -263,7 +256,8 @@ public class LectureController {
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			log.info(">> Error : updateLectureAuth <<");
 			log.info(e.getMessage().toString());
 		}
@@ -287,7 +281,7 @@ public class LectureController {
 		} catch (Exception e) {
 			result.msg = "fail";
 			result.result = "공동 관리자를 삭제할 권한이 없습니다";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			log.info(">> Error : removeLectureAuth <<");
 			log.info(e.getMessage().toString());
 		}
@@ -310,11 +304,13 @@ public class LectureController {
 			log.info(">> Error : createSubLectures <<");
 			log.info(e.getMessage().toString());
 			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
 
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = LectureSubOneResponse.class) })
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
 	@ApiOperation(value = "목차 상세정보 가져오기")
@@ -331,7 +327,7 @@ public class LectureController {
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			log.info(">> Error : getSubLecture <<");
 			log.info(e.getMessage().toString());
 		}
@@ -351,7 +347,7 @@ public class LectureController {
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			log.info(">> Error : getSubsLectureIndex <<");
 			log.info(e.getMessage().toString());
 		}
@@ -375,7 +371,8 @@ public class LectureController {
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			log.info(">> Error : registrySubHistory <<");
 			log.info(e.getMessage().toString());
 		}
@@ -404,6 +401,7 @@ public class LectureController {
 		return response;
 	}
 
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = LectureSubOneResponse.class) })
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
 	@ApiOperation(value = "같은종류 다른 강의  상세정보 들고오기")
@@ -419,7 +417,8 @@ public class LectureController {
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			log.info(">> Error : getTheOtherSubLecture <<");
 			log.info(e.getMessage().toString());
 		}
@@ -444,7 +443,8 @@ public class LectureController {
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			result.msg = "fail";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			log.info(">> Error : getRequestHistory <<");
 			log.info(e.getMessage().toString());
 		}
@@ -479,7 +479,7 @@ public class LectureController {
 		}
 		return response;
 	}
-	
+
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = ChangeHistoryResponse.class) })
 	@ApiOperation(value = "변경 사항 이력 가져오기")
 	@GetMapping("/historys/{lectureId}")

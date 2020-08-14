@@ -1,6 +1,5 @@
 package com.ssafy.devit.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +39,13 @@ public class LectureServiceImpl implements LectureService {
 		lectureRepository.insertCommonId(common);
 
 		// 사용자 id 가져오기
-		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			throw new Exception("프로젝트를 생성할 권한이 없습니다");
+		}
+		
 		// DAO에게 넘겨줄 DTO 생성
 		LectureOneResponse lectureOneResponse = new LectureOneResponse();
 		lectureOneResponse.setUserId(user.getUserId());
@@ -55,19 +59,38 @@ public class LectureServiceImpl implements LectureService {
 
 	@Override
 	public void updateFoundationLecture(LectureRequest lecture) throws Exception {
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			throw new Exception("프로젝트를 수정할 권한이 없습니다");
+		}
 		lectureRepository.updateFoundationLecture(lecture);
 		lectureRepository.insertTags(lecture.getCommonId(), lecture.getTags());
 	}
 
 	@Override
 	public void updateContentLecture(LectureRequest lecture) throws Exception {
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			throw new Exception("프로젝트를 수정할 권한이 없습니다");
+		}
 		lectureRepository.updateContentLecture(lecture);
 	}
 
-	@Override
-	public List<LecturesResponse> getLectures(long userId, int startPage, int type) throws Exception {
+	@Override // 대표 프로젝트 리스트 가져오기
+	public List<LecturesResponse> getLectures(int startPage, int type) throws Exception {
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			user = new UserAuthDetails();
+			user.setUserId(0);
+		}
 		startPage = (startPage - 1) * 20;
-		return lectureRepository.selectLectures(userId, startPage, type);
+		return lectureRepository.selectLectures(user.getUserId(), startPage, type);
 	}
 
 	@Override
@@ -75,16 +98,27 @@ public class LectureServiceImpl implements LectureService {
 		return lectureRepository.selectTags();
 	}
 
-	@Override
-	public LectureOneResponse getLectureBylectureId(long lectureId, long userId) throws Exception {
+	@Override // 대표 프로젝트 상세 정보
+	public LectureOneResponse getLectureBylectureId(long lectureId) throws Exception {
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			user = new UserAuthDetails();
+			user.setUserId(0);
+		}
 		lectureRepository.updateLectureViewCount(lectureId);
-		return lectureRepository.selectLectureByLectureId(lectureId, userId);
+		return lectureRepository.selectLectureByLectureId(lectureId, user.getUserId());
 	}
 
 	@Override
 	public void updateLikeLectureByUserId(long lectureId) throws Exception {
-		// 사용자 id 가져오기
-		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			throw new Exception("로그인이 필요합니다");
+		}
 		LikeDTO dto = lectureRepository.checkLikeLectureByUserId(user.getUserId(), lectureId);
 		if (dto.getLikeCount() > 0) {
 			// 좋아요를 누른 적이 있다면
@@ -98,8 +132,12 @@ public class LectureServiceImpl implements LectureService {
 
 	@Override
 	public void updateLikeHistoryByUserId(HistoryLikeRequest request) throws Exception {
-		// 사용자 id 가져오기
-		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			throw new Exception("로그인이 필요합니다");
+		}
 		LikeDTO dto = lectureRepository.checkLikeHistoryByUserId(user.getUserId(), request.getLectureId(),
 				request.getSubId(), request.getSubHisId());
 		if (dto.getLikeCount() > 0) {
@@ -122,6 +160,12 @@ public class LectureServiceImpl implements LectureService {
 
 	@Override
 	public List<LectureRoleUsersResponse> selectRoleUsersByLectureId(long lectureId) throws Exception {
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			throw new Exception("로그인이 필요합니다");
+		}
 		return lectureRepository.selectRoleUsersByLectureId(lectureId);
 	}
 
@@ -129,7 +173,12 @@ public class LectureServiceImpl implements LectureService {
 	@Override
 	public int createSubLectures(List<LectureSubsRequest> lectures) throws Exception {
 		int count = 0;
-		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			throw new Exception("소강의를 생성할 권한이 없습니다");
+		}
 		for (LectureSubsRequest lecture : lectures) {
 			lecture.setUserId(user.getUserId());
 			if (lecture.getSubId() == 0) {
@@ -153,7 +202,13 @@ public class LectureServiceImpl implements LectureService {
 
 	@Override
 	public LectureSubOneResponse getOneSubLecture(long lectureId, int order) throws Exception {
-		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			user = new UserAuthDetails();
+			user.setUserId(0);
+		}
 		LectureSubsRequest request = new LectureSubsRequest();
 		request.setLectureId(lectureId);
 		request.setOrder(order);
@@ -168,18 +223,29 @@ public class LectureServiceImpl implements LectureService {
 
 	@Override
 	public void registrySubHistory(LectureSubHistoryRequest lecture) throws Exception {
-		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			throw new Exception("요청할 권한이 없습니다. 로그인이 필요합니다.");
+		}
 		lecture.setUserId(user.getUserId());
 		lectureRepository.insertSubHistory(lecture);
 	}
-	
+
 	@Override
-	public void uploadNoticeAuth(LectureSubHistoryRequest lecture) throws Exception{
+	public void uploadNoticeAuth(LectureSubHistoryRequest lecture) throws Exception {
 		lectureRepository.uploadNoticeAuth(lecture);
 	}
 
 	@Override
 	public void updateLectureAuth(List<LectureAuthRequest> auths) throws Exception {
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			throw new Exception("로그인이 필요합니다");
+		}
 		for (LectureAuthRequest auth : auths) {
 			if (auth.getAuthId() == 0) { // 서버에 등록되어있지 않은 사람
 				lectureRepository.insertLectureAuth(auth);
@@ -191,63 +257,92 @@ public class LectureServiceImpl implements LectureService {
 
 	@Override
 	public List<TheOhterSubLectureResponse> getTheOtherSubLectures(long subId) throws Exception {
-		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			user = new UserAuthDetails();
+			user.setUserId(0);
+		}
 		return lectureRepository.selectTheOtherSubLectures(subId, user.getUserId());
 	}
 
 	@Override
 	public void deleteLectureAuth(long authId) throws Exception {
-		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			throw new Exception("로그인이 필요합니다");
+		}
 		lectureRepository.deleteLectureAuth(authId);
 	}
 
 	@Override
 	public LectureSubOneResponse getOneOtherSubLecture(LectureSubOtherRequest request) throws Exception {
-		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		return lectureRepository.selectOneOtherSubLecture(user.getUserId(), request.getLectureId(), request.getSubId(), request.getSubHisId());
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			user = new UserAuthDetails();
+			user.setUserId(0);
+		}
+		return lectureRepository.selectOneOtherSubLecture(user.getUserId(), request.getLectureId(), request.getSubId(),
+				request.getSubHisId());
 	}
 
 	@Override
-	public List<RequestHistoryResponse> getRequestLecturesList(long lectureId, int startPage, String req, String acceptType) throws Exception {
+	public List<RequestHistoryResponse> getRequestLecturesList(long lectureId, int startPage, String req,
+			String acceptType) throws Exception {
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			throw new Exception("요청 리스트를 볼 권한이 없습니다");
+		}
 		return lectureRepository.selectRequestLecturesList(lectureId, startPage, req.split(","), acceptType);
 	}
 
 	@Override
 	public void updateRequestLecture(long subId, long subHisId, String type, String lwType) throws Exception {
-		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			throw new Exception("요청 리스트를 처리할 권한이 없습니다");
+		}
 		lectureRepository.updateRequestLecture(subId, subHisId, type, lwType);
 	}
-	
+
 	@Override
-	public void uploadNoticeUser(long subHisId) throws Exception{
+	public void uploadNoticeUser(long subHisId) throws Exception {
 		lectureRepository.uploadNoticeUser(subHisId);
-	}	
+	}
 
 	@Override
 	public List<LecturesResponse> myLikeLectureList(long startPage, long itemsperpage) throws Exception {
-		
+
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
-		startPage = (startPage-1) * itemsperpage;
+
+		startPage = (startPage - 1) * itemsperpage;
 		return lectureRepository.myLikeLectureList(user.getUserId(), startPage, itemsperpage);
 	}
-	
+
 	@Override
 	public List<TheOhterSubLectureResponse> myLikeVideoList(long startPage, long itemsperpage) throws Exception {
-		
+
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
-		startPage = (startPage-1) * itemsperpage;
+
+		startPage = (startPage - 1) * itemsperpage;
 		return lectureRepository.myLikeVideoList(user.getUserId(), startPage, itemsperpage);
 	}
-	
-	
+
 	@Override
 	public List<LecturesResponse> myMngLectureList(long startPage, long itemsperpage) throws Exception {
-		
+
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
-		startPage = (startPage-1) * itemsperpage;
+
+		startPage = (startPage - 1) * itemsperpage;
 		return lectureRepository.myMngLectureList(user.getUserId(), startPage, itemsperpage);
 	}
 
@@ -255,9 +350,9 @@ public class LectureServiceImpl implements LectureService {
 	public List<ChangeHistoryResponse> getChangeHistoryList(long lectureId) throws Exception {
 		return lectureRepository.selectChangeHistoryList(lectureId);
 	}
-	
+
 	@Override
-	public String checkUserManageAuth(long lectureId) throws Exception{
+	public String checkUserManageAuth(long lectureId) throws Exception {
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return lectureRepository.checkUserManageAuth(user.getUserId(), lectureId);
 	}
@@ -268,14 +363,13 @@ public class LectureServiceImpl implements LectureService {
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		lectureRepository.deleteLecture(user.getUserId(), lectureId);
 	}
-	
-	@Override
-	public List<RequestHistoryResponse> myReqList(long startPage, long itemsperpage) throws Exception{
 
-		
+	@Override
+	public List<RequestHistoryResponse> myReqList(long startPage, long itemsperpage) throws Exception {
+
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
-		startPage = (startPage-1) * itemsperpage;
+
+		startPage = (startPage - 1) * itemsperpage;
 		return lectureRepository.myReqList(user.getUserId(), startPage, itemsperpage);
 	};
 }

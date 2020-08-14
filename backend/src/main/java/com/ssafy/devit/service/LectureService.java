@@ -23,11 +23,11 @@ import com.ssafy.devit.model.request.LectureSubsRequest;
 public interface LectureService {
 	public LectureOneResponse createDummyLecture() throws Exception;
 
-	public List<LecturesResponse> getLectures(long userId, int startPage, int type) throws Exception;
+	public List<LecturesResponse> getLectures(int startPage, int type) throws Exception;
 
 	public List<TagResponse> getTags() throws Exception;
 	
-	public LectureOneResponse getLectureBylectureId(long lectureId, long userId) throws Exception;
+	public LectureOneResponse getLectureBylectureId(long lectureId) throws Exception;
 	
 	public void updateFoundationLecture(LectureRequest lecture) throws Exception;
 	
