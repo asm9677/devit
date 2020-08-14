@@ -286,10 +286,10 @@
                                     </v-btn>
                                     <v-tabs :background-color="darkOption ? '#373838' : '#88CBF8'">                                
                                     </v-tabs>
-                                    <v-btn>
+                                    <v-btn v-show="order != 1" @click="prevLecture">
                                         <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-skip-previous</v-icon>
                                     </v-btn>
-                                    <v-btn>
+                                    <v-btn v-show="order != sub.lectureCount" @click="nextLecture">
                                         <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-skip-next</v-icon>
                                     </v-btn>
                                     
@@ -370,7 +370,7 @@
 
                         <v-list :style="{'background-color': (darkOption ? '#1e1e1e' : '#FFFFFF')}">
                             <v-list-item>
-                                <div class="wiki-paragraph" v-html="sub.wikiContentHtml" v-if="sub.wikiContentHtml"/>
+                                <div class="wiki-paragraph" v-html="parse(sub.wikiContentHtml)" v-if="sub.wikiContentHtml" style="width:100%" />
                                 <div class="wiki-paragraph" v-else style="width:100%;" >
                                     <v-container fluid style="width:100%;">         
                                         <v-row>
@@ -423,7 +423,7 @@
                     </v-btn>
                 </template>
             </v-snackbar>
-            <Contribute :dialog="dialog" :darkOption="darkOption" :lectureId="lectureId" :subId="subId" @closeDialog="dialog=false;" style="z-index:12345;"></Contribute>
+            <Contribute :dialog="dialog" :darkOption="darkOption" :lectureId="lectureId" :subId="subId" :wiki="sub.wikiContentHtml" @closeDialog="dialog=false;" style="z-index:12345;"></Contribute>
         </v-layout>
     </div>
 </template>
@@ -437,6 +437,7 @@ import AnotherVideo from "@/components/lecture/view/AnotherVideo.vue"
 import QuestionBoard from "@/components/lecture/view/QuestionBoard.vue"
 import QuestionBoardDetail from "@/components/lecture/view/QuestionBoardDetail.vue"
 import Contribute from "@/components/lecture/view/Contribute.vue"
+import parse from "@/lib/markdown/ParseMd.js";
 
 export default {
     components: {
@@ -559,7 +560,7 @@ export default {
             this.autoPlay= this.autoPlay == 'true';
     },
     mounted() {
-  
+        
         if(this.subHisId) {
             this.loadSub();     
         }else {
@@ -584,20 +585,27 @@ export default {
         window.removeEventListener('resize', this.handleResize);
     },
     methods: {
+        parse,
+        prevLecture(){
+            this.move(`/lecture/player/index/${this.lectureId}?order=${parseInt(this.order)-1}`)
+        },
+        nextLecture(){
+            this.move(`/lecture/player/index/${this.lectureId}?order=${parseInt(this.order)+1}`)
+        },        
         loadMain() {
             http.axios.get(`/api/v1/lectures/sub/${this.lectureId}?order=${this.order}`).then(({data}) => {
                 if(data.result) {                    
                     this.sub = data.result;
                     this.subId = this.sub.subId;
-                    this.subHisId = this.sub.subHisId;
+                    this.subHisId = this.sub.subHisId;                    
                 }else{
-                    // alert("존재하지 않는 강의 입니다.");
-                    // this.move("/")
+                    alert("존재하지 않는 강의 입니다.");
+                    this.move(`/lecture/detail/${this.lectureId}`)                    
                 }
             }).finally( () => {
-                var myPlayer = document.getElementById('livestation-player');
-            $('#livestation-player').html(`<source src="http://i3a101.p.ssafy.io/images/${this.sub.playerUrl}">`)
-            $('#livestation-player').attr('poster',`http://i3a101.p.ssafy.io/images/${this.sub.thumbnailUrl}`)
+                // var myPlayer = document.getElementById('livestation-player');
+                // $('#livestation-player').html(`<source src="http://i3a101.p.ssafy.io/images/${this.sub.playerUrl}">`)
+                // $('#livestation-player').attr('poster',`http://i3a101.p.ssafy.io/images/${this.sub.thumbnailUrl}`)
             })  
         },
         loadSub() {
@@ -606,12 +614,13 @@ export default {
                     this.sub = data.result;
                     console.dir(data.result);
                 }else{
-                    console.dir(data);
+                    alert("존재하지 않는 강의 입니다.");
+                    this.move(`/lecture/detail/${this.lectureId}`)                    
                 }
             }).finally( () => {
-                var myPlayer = document.getElementById('livestation-player');
-            $('#livestation-player').html(`<source src="http://i3a101.p.ssafy.io/images/${this.sub.playerUrl}">`)
-            $('#livestation-player').attr('poster',`http://i3a101.p.ssafy.io/images/${this.sub.thumbnailUrl}`)
+                // var myPlayer = document.getElementById('livestation-player');
+                // $('#livestation-player').html(`<source src="http://i3a101.p.ssafy.io/images/${this.sub.playerUrl}">`)
+                // $('#livestation-player').attr('poster',`http://i3a101.p.ssafy.io/images/${this.sub.thumbnailUrl}`)
             }) 
         },
         handleResize() {

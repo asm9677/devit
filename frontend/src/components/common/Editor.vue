@@ -35,7 +35,7 @@
             </ul>            
             <!-- <div id="editor" contenteditable v-show="isActive" @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress"></div> -->
             <textarea id="editor" v-show="isActive" @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress" :value="value" :style="{'height' : (height ? height+'px' : 'auto')}" />
-            <div id="view" v-show="!isActive" v-html="parseContent"> </div>
+            <div id="view" v-show="!isActive" :style="{'height' : (height ? height+'px' : 'auto')}" v-html="parseContent"> </div>
         </div>
     </v-layout>
 </template>
