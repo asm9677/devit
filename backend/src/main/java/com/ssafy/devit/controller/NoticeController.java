@@ -24,6 +24,7 @@ import com.ssafy.devit.model.notice.Notice;
 import com.ssafy.devit.model.notice.NoticeResponse;
 import com.ssafy.devit.model.request.BoardUpdateRequest;
 import com.ssafy.devit.model.user.User;
+import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.service.NoticeService;
 import com.ssafy.devit.service.UserService;
 
@@ -48,17 +49,17 @@ public class NoticeController {
 	
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
-	@GetMapping("notice/{userId}")
+	@GetMapping("/notice/getInfo")
 	@ApiOperation(value = "알림 조회")
-	public ResponseEntity<CommonResponse> info() throws Exception {
+	public ResponseEntity<CommonResponse> getNoticeInfo() throws Exception {
 		log.info(">> notice info <<");
 		// PathVariable로 bid를 받아서 해당 게시글을 조회한다.
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		
-		try {
-			User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
+		try {			
+			UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			
 			result.msg = "success";
 			result.result = noticeService.getNotice(user.getUserId());
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
@@ -74,7 +75,7 @@ public class NoticeController {
 
 	@ApiImplicitParams({
 		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
-	@PutMapping("/notice")
+	@PutMapping("/notice/setRead")
 	@ApiOperation(value = "알림 읽음 처리")
 	public ResponseEntity<CommonResponse> setNoticeRead(@RequestParam("notice_id") long noticeId) throws Exception{
 		log.info(">> noticeUpdate <<");
@@ -83,11 +84,11 @@ public class NoticeController {
 		final CommonResponse result = new CommonResponse();
 		
 		try {
-			User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
-			noticeService.setNoticeRead(noticeId);
-			result.msg = "success";
+			UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			
+			System.out.println("set Notice Read");
+			noticeService.setNoticeRead(noticeId);
+			result.msg = "success";			
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
