@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -178,7 +179,7 @@ public class MailController {
 
 	@PostMapping("/confirm/auth")
 	@ApiOperation(value = "회원가입을 위한 이메일 인증")
-	public ResponseEntity<CommonResponse> confirmAuthUser(@Valid SignUpRequest request) {
+	public ResponseEntity<CommonResponse> confirmAuthUser(@RequestBody @Valid SignUpRequest request) {
 		log.info(">> Load : confirmAuthUser <<");
 		final CommonResponse result = new CommonResponse();
 		ResponseEntity<CommonResponse> response = null;
