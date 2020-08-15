@@ -17,6 +17,9 @@
                 <v-icon>mdi-chevron-up</v-icon>
             </v-btn>
         </v-fab-transition>
+        <v-overlay :value="$router.app.$store.state.loading" opacity="0">
+            <v-progress-circular indeterminate color="primary lighten-4" size="64"></v-progress-circular>
+        </v-overlay>
     </div>
 </template>
 
@@ -26,7 +29,7 @@ import eventBus from "@/lib/EventBus.js"
 export default {
     watch:{
         $route(){
-            this.goto(0)
+            window.scrollTo(0, 0)
         }
     },
     data(){
@@ -50,7 +53,7 @@ export default {
         handleScroll(){
             this.button = window.scrollY > 40
         },
-        goto(target,speed){
+        goto(target){
             this.$vuetify.goTo(target, {
                 duration: 300,
                 offset: 0,

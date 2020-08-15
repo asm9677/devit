@@ -35,6 +35,14 @@
             </ul>            
             <!-- <div id="editor" contenteditable v-show="isActive" @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress"></div> -->
             <textarea id="editor" v-show="isActive" @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress" :value="value" :style="{'height' : (height ? height+'px' : 'auto')}" />
+            <div class="full_screen" v-show="isFullScreen">
+                <div>
+                    <textarea id="full_screen_editor" v-show="isActive" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress" :value="value" placeholder="Write Here..."> </textarea>
+                </div>
+                <div style="position:fixed; top:10px; right:10px; z-index:2000; cursor:pointer;" @click="isFullScreen=false">
+                    <v-icon style="font-size:48px;">mdi-close</v-icon>
+                </div>
+            </div>
             <div id="view" v-show="!isActive" :style="{'height' : (height ? height+'px' : 'auto')}" v-html="parseContent"> </div>
         </div>
     </v-layout>
@@ -58,6 +66,7 @@ export default {
         return {
             isFocus: false,
             isActive: true,
+            isFullScreen: false,
             parseContent: '',
             content: '',
             toolbar: [
@@ -153,6 +162,7 @@ export default {
                     selectionText = `[${selectionText}](url)`
                     break;
                 case 'fullscreen':
+                    this.isFullScreen = true;
                     break;
             }            
             document.execCommand('insertText', false, selectionText)
@@ -243,10 +253,10 @@ export default {
             //code
             md = md.replace(/[\`]{3}([^\`]+)[\`]{3}/g, '<pre>$1</pre>');
             
-            //p
-            // md = md.replace(/^\s*(\n)?(.+)/gm, function(m){
-            //     return  /\<(\/)?(h\d|ul|ol|li|blockquote|pre|img)/.test(m) ? m : '<p>'+m+'</p>';
-            // });
+            //br
+            md = md.replace(/^\s*(\n)?(.+)/gm, function(m){
+                return  /\<(\/)?(h\d|ul|ol|li|blockquote|pre)/.test(m) ? m : m+'<br>';
+            });
 
             //hr
             md = md.replace(/[\-]{3}/g, '<hr />');
@@ -286,14 +296,7 @@ export default {
         max-width: 100%; 
         height: auto;
     }
-    #editor{
-        line-height: 18px;
-        margin-top:15px;
-        font-size: 13px;
-        width:100%;
-        overflow-y:auto;
-        resize: none;
-    }
+    
 
     #view{
         margin-top:15px;
@@ -349,7 +352,7 @@ export default {
         padding:10px;
         margin:3px;
     }
-
+    
     #editorFrame.focused {
         color:#2e2e2e;
         background-color:#fff;
@@ -358,5 +361,42 @@ export default {
         padding:10px;
         margin:3px;
         box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+    }
+
+    #editor{
+        line-height: 18px;
+        margin-top:15px;
+        font-size: 13px;
+        width:100%;
+        overflow-y:auto;
+        resize: none;
+    }
+
+    .full_screen {
+        background-color: #fff;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 1031;        
+    }
+
+    #full_screen_editor{
+        border: 0;
+        box-shadow: none;
+        border-radius: 0;
+        color: #000;
+        font-size: 20px;
+        line-height: 26px;
+        padding: 30px;
+        display: block;
+        outline: none;
+        resize: none;
+        height: 100vh;
+        max-height: calc(100vh - 10px);
+        max-width: 900px;
+        width:67%;
+        margin: 0 auto 10px;
     }
 </style>

@@ -28,69 +28,73 @@
                     
                     <v-flex xs12 sm12 md8 lg8 xl8 style="margin-left:0px;" v-if="items.length ">                         
                             <v-list style="padding:10px 0px;" dense>
-                                <v-list-item>
-                                    요청 목록
-                                </v-list-item>  
                                 <template v-for="(item,index) in items">
                                     <v-divider :key="`${index}_divider`"/>
-                                    <v-list-item :key="`${index}_memberList`" link @click="curItem=item">
+                                    <div class="day_header" :key="`${index}_listHeader`" v-if="!item.subHisId">
+                                        <span class="day">{{item}}</span>
+                                    </div>
+                                    <v-list-item :key="`${index}_memberList`" link @click="curItem=item; initDetail(item)" v-else>
+                                        <v-list-item-avatar size="30">
+                                            <v-icon color="" v-if="item.reqType == 'video'">
+                                                mdi-play-circle-outline
+                                            </v-icon>
+                                            <v-icon color="" v-else-if="item.reqType == 'wiki'">
+                                                mdi-script-text-outline
+                                            </v-icon>
+                                        </v-list-item-avatar>
                                         <v-list-item-avatar size="30">
                                             <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                            
                                         </v-list-item-avatar>
-                                        <v-list-item-content>
+                                        <v-list-item-content style="margin-left:10px;">
                                             <v-list-item-title>
                                                 <b>{{item.subTitle}}</b>&nbsp;      
                                             </v-list-item-title>                                               
                                             <v-list-item-subtitle >
-                                                <span> {{item.nickname}} {{item.created | diffDate}}</span>
+                                                <span> {{item.nickname}} <span style="font-size:10px"> {{item.created | diffDate}} </span></span>
                                             </v-list-item-subtitle>                                                
                                         </v-list-item-content>
                                         
                                         <v-list-item-action>
-                                            <v-icon color="green" v-if="item.acceptYn=='Y'">
+                                            <v-icon color="green" v-if="item.mainId">
                                                 mdi-check-circle-outline
                                             </v-icon>
-                                            <v-icon color="red" v-else-if="item.acceptYn=='N'">
+                                            <!-- <v-icon color="red" v-else-if="item.acceptYn=='N'">
                                                 mdi-close-circle-outline
-                                            </v-icon>
-                                        </v-list-item-action>
-                                        <v-list-item-action>
-                                            <v-icon v-if="item.reqType == 'video'">
-                                                mdi-play-circle-outline
-                                            </v-icon>
-                                            <v-icon v-else-if="item.reqType == 'wiki'">
-                                                mdi-script-text-outline
-                                            </v-icon>
+                                            </v-icon> -->
                                         </v-list-item-action>
                                     </v-list-item>                                    
                                 </template>
                             </v-list>    
                     </v-flex>                    
-                    <v-flex v-show="option"  md4 lg4 xl4  v-if="items.length "> 
-                        <v-list style="position: sticky; top:60px;" dense>
+                    <v-flex v-show="option && curItem.reqType"  md4 lg4 xl4> 
+                        <v-list style="position: sticky; top:60px; " dense>
                             <div style="
                                     width:100%; 
-                                    height:30em;    
+                                    height:600px;
+                                    overflow-y:auto;
                                     padding:30px 50px;
                                     padding-right:10px;
                                 " 
                                 v-if="curItem"
                             >           
                                 <div v-if="curItem.reqType == 'video'">
-                                    {{curItem.subTitle}} - {{curItem.hisTitle}}<br>
+                                    {{curItem.subTitle}} <br>
                                     <v-avatar size=20>
                                         <v-img :src="'http://i3a101.p.ssafy.io/images/' + curItem.profile"></v-img>
                                     </v-avatar> 
                                     <span> {{curItem.nickname}} {{curItem.created | diffDate}} </span>
                                 </div>
-                                <div v-else style="overflow: hidden; height:85%;">                                    
-                                    {{curItem.subtitle}}<br>
+                                <div v-show="curItem.reqType != 'video'">                                 
+                                    {{curItem.subTitle}}<br>
                                     <v-avatar size=20>
                                         <v-img :src="'http://i3a101.p.ssafy.io/images/' + curItem.profile"></v-img>
                                     </v-avatar> 
                                     <span> {{curItem.nickname}} {{curItem.created | diffDate}} </span><p />
                                     <v-list-item-content>
-                                    <span v-html="curItem.wikiContentHtml"> </span>                                        
+                                    <div id="oneResult">
+                                        <span class="diff"> </span>                                        
+                                    </div>
                                     </v-list-item-content>
                                 </div>
                                 <div  style="
@@ -101,49 +105,85 @@
                                     -webkit-box-align: center;
                                     align-items: center;
                                     margin:30px 0px;
-                                ">                              
-                                
-                                        <v-img v-if="curItem.reqType == 'video'" :src="'http://i3a101.p.ssafy.io/images/' + (curItem ? curItem.thumbnailUrl : '')">
-                                            <template v-slot:placeholder>
-                                                <v-row
-                                                class="fill-height ma-0"
-                                                align="center"
-                                                justify="center"
-                                                >
-                                                <v-progress-circular indeterminate color="grey lighten-5"></v-progress-circular>
-                                                </v-row>
-                                            </template>
-                                        </v-img>
+                                ">          
+                                        <div id="videoFrame4" v-if="curItem.reqType == 'video'">
+                                            <video
+                                                class="video-js vjs-default-skin vjs-big-play-centered"
+                                                controls                      
+                                                data-setup='{}'
+                                                style="position: relative; height: 0; overflow: hidden; width: 100%; height: auto;"                       
+                                                :poster="`http://i3a101.p.ssafy.io/images/${curItem.thumbnailUrl}`"
+                                            >
+                                                <source :src="`http://i3a101.p.ssafy.io/images/${curItem.playerUrl}`"> </source>
+                                            </video>
+                                        </div>
                                 </div>     
-                                <v-btn color="primary" block depressed style="margin:10px 0px;" @click="requestProcess(curItem,'Y')">적용</v-btn>  
-                                <v-btn color="primary" block depressed style="margin:10px 0px;" @click="requestProcess(curItem,'N')">취소</v-btn>  
-                                <v-btn color="primary" block depressed style="margin:10px 0px;">상세보기</v-btn>  
+                                <v-btn color="primary" block depressed style="margin:10px 0px;" @click="requestProcess(curItem,'Y')">적용하기</v-btn>  
+                                <!-- <v-btn color="primary" block depressed style="margin:10px 0px;" @click="requestProcess(curItem,'N')">거절</v-btn>   -->
+                                <v-btn color="primary" block depressed style="margin:10px 0px;" @click="initPreview(curItem)">상세보기</v-btn>  
+                                <v-dialog v-model="preview" hide-overlay max-width="768"> 
+                                    <div id="videoFrame3" v-if="curItem.reqType == 'video'">
+                                        <video
+                                            class="video-js vjs-default-skin vjs-big-play-centered"
+                                            controls                      
+                                            data-setup='{}'
+                                            style="position: relative; height: 0; overflow: hidden; width: 768px; height: auto; max-height:500px"                       
+                                            :poster="`http://i3a101.p.ssafy.io/images/${curItem.thumbnailUrl}`"
+                                        >
+                                            <source :src="`http://i3a101.p.ssafy.io/images/${curItem.playerUrl}`"> </source>
+                                        </video>
+                                    </div>
+                                    <div class="wiki-paragraph" v-else v-html="parse(curItem.wikiContentHtml)" style="background-color: #ffffff;">
+                                        
+                                    </div>
+                                </v-dialog>
                             </div>
                         </v-list>
                     </v-flex>
                 </v-layout>
+                
         </v-card>
   </div>
 </template>
 
 <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+
+
 <script>
 import http from "@/util/http_common.js"
 import axios from "axios"
 import store from "@/store/index.js"
+import parse from "@/lib/markdown/ParseMd.js";
+
+
+
 export default {
     props: ['option'],
     watch: {
+        curItem() {
+            if(this.curItem.reqType == 'wiki') {               
+                $("#oneResult").prettyTextDiff({
+                    originalContent: this.curItem.indexWikiContentHtml ? this.curItem.indexWikiContentHtml : ' ',
+                    changedContent: this.curItem.wikiContentHtml ? this.curItem.wikiContentHtml : ' ',
+                    diffContainer: ".diff"                    
+                });
+            }
+        }
     },
     data() {
         return {
             lectureId: 0,
             page:0,
 
-            items: [],
-            curItem: null,
+            items: [],            
+            curItem: {
 
-            height: 500,
+            },
+            prevCreated: '',
+
+            height:600,
+            preview: false,
+            
         }
     },
     filters: {
@@ -178,13 +218,65 @@ export default {
         this.lectureId = this.$route.params.id;
         this.initRequestList();
     },
+    mounted(){
+        window.addEventListener('resize', this.handleRequestResize);
+    },
+    beforeDestroy(){
+        window.removeEventListener('resize', this.handleRequestResize);
+    },
     methods: {
+        parse,
+        handleRequestResize() {            
+            this.height = $('body').height() - 60;
+        },
+        initPreview(item) {
+            this.preview=true;
+            $('#videoFrame3').html(
+                `
+                    <video
+                        class="video-js vjs-default-skin vjs-big-play-centered"
+                        controls                      
+                        data-setup='{}'
+                        style="position: relative; height: 0; overflow: hidden; width: 100%; height: auto; max-height:500px;"   
+                        poster="http://i3a101.p.ssafy.io/images/${item.thumbnailUrl}"
+                    >
+                        <source src="http://i3a101.p.ssafy.io/images/${item.playerUrl}"> </source>
+                    </video>
+                `
+            )
+        },
+        initDetail(item) {
+            $('#videoFrame4').html(
+                `
+                    <video
+                        class="video-js vjs-default-skin vjs-big-play-centered"
+                        controls                      
+                        data-setup='{}'
+                        style="position: relative; height: 0; overflow: hidden; width: 100%; height: auto;"   
+                        poster="http://i3a101.p.ssafy.io/images/${item.thumbnailUrl}"
+                    >
+                        <source src="http://i3a101.p.ssafy.io/images/${item.playerUrl}"> </source>
+                    </video>
+                `
+            )
+        },
         initRequestList() {
+            
+            this.$router.app.$store.commit('startLoading')
             http.axios.get(`/api/v1/lectures/historys?acceptType=all&lectureId=${this.lectureId}&reqType=video,wiki&startPage=${this.page}`)
                 .then(({data}) => {
-                        this.items = data.result;
-                        console.dir(this.items)
-                    })
+                    for(let i in data.result){
+                        if(this.prevCreated != this.$moment(data.result[i].created).format('DD MMM, YYYY')){
+                            this.prevCreated = this.$moment(data.result[i].created).format('DD MMM, YYYY');
+                            this.items.push(this.prevCreated);
+                            console.log(this.prevCreated, i)
+                        }
+                            
+                        this.items.push(data.result[i]);
+                    }
+                }).finally(() => {
+                    this.$router.app.$store.commit('endLoading')
+                })
         },
         requestProcess(item, type){
             http.axios.put(`/api/v1/lectures/historys?subId=${item.subId}&subHisId=${item.subHisId}&type=${type}&reqType=${item.reqType}`).then(({data}) => {
@@ -221,5 +313,23 @@ export default {
 
     span{
         font-size:11px;
+    }
+    
+    .day_header{
+        padding: 5px 10px;
+        background-color: #fafafa;
+        font-size: 14px;
+    }
+
+    .day{ 
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-size: 14px;
+        font-weight: 400;
+
+        line-height: 1.5;
+        color: #212529;
+        text-align: left;
+        background-color: #fff; 
     }
 </style>

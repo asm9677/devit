@@ -15,16 +15,16 @@
                                                             <v-list class="nomargin nopadding">
                                                                 <v-list-item class="" :key="`${index}_dragItem`">
                                                                     <v-list-item-content class="nomargin nopadding" style="margin-right:10px;">
-                                                                        <v-card :key="`${index}_list`" style="margin: 5px 0px; border:1px solid #4CAF50; cursor:pointer"  outlined>
+                                                                        <v-card class="chapter" :key="`${index}_list`"  outlined>
                                                                             <v-list-item style="">                           
                                                                                 <v-list-item-content>                                                                                    
                                                                                     <v-list-item-title>
                                                                                         {{item.title}} 
                                                                                         <div style="float:right">
-                                                                                            <v-icon :color="item.videoYn ? 'primary lighten-1' : 'error darken-1'" v-show="!item.videoYn">
+                                                                                            <v-icon color="primary lighten-1" v-show="item.videoYn">
                                                                                                 mdi-play-circle-outline
                                                                                             </v-icon>    
-                                                                                            <v-icon style="margin-left:5px;" :color="item.wikiYn ? 'primary lighten-1' : 'error darken-1'" v-show="!item.wikiYn">
+                                                                                            <v-icon style="margin-left:5px;" color="primary lighten-1" v-show="item.wikiYn">
                                                                                                 mdi-script-text-outline
                                                                                             </v-icon>                                                                                     
                                                                                         </div>
@@ -372,4 +372,15 @@ export default {
         /* font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; */
         /* font-size:12px; */
     } 
+
+    .chapter {
+        margin: 5px 0px; 
+        border:1px solid rgba(0, 0, 0, 0.44); 
+        cursor:pointer;
+    }
+
+    .chapter:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 3px 8px 0 rgba(0,0,0,.08), 0 0 1px 0 rgba(0,0,0,.44);
+    }
 </style>

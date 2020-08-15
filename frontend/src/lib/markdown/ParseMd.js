@@ -41,6 +41,11 @@ export default function(md){
     //     return  /\<(\/)?(h\d|ul|ol|li|blockquote|pre|img)/.test(m) ? m : '<p>'+m+'</p>';
     // });
 
+    //br
+    md = md.replace(/^\s*(\n)?(.+)/gm, function(m){
+        return  /\<(\/)?(h\d|ul|ol|li|blockquote|pre)/.test(m) ? m : m+'<br>';
+    });
+
     //hr
     md = md.replace(/[\-]{3}/g, '<hr />');
 
