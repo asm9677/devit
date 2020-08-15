@@ -225,4 +225,27 @@ public class UserController {
 		}
 		return response;
 	}
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@PutMapping("/withdraw")
+	@ApiOperation(value = "회원 탈퇴")
+	public ResponseEntity<CommonResponse> userWithdraw() {
+		log.info(">> Load : userWithdraw <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			// 사용자 id 가져오기
+			UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			userService.userWithdraw(user.getUserId());
+			
+		} catch (Exception e) {
+			result.msg = "fail";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+			log.info(">> Error : userWithdraw <<");
+			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
 }

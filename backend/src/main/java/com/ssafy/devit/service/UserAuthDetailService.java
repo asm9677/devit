@@ -56,4 +56,12 @@ public class UserAuthDetailService implements UserDetailsService{
 		}
 		return userRepository.findRoles(userId);
 	}
+	
+	// 이메일로 사용자 활성화 여부 가져오기
+	public String getUserActiveByEmail(String email) throws Exception{
+		if(email.equals("")) {
+			throw new Exception("이메일은 비어있을 수 없습니다");
+		}
+		return userRepository.findUserActiveByEmail(email);
+	}
 }
