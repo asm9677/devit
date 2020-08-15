@@ -34,18 +34,37 @@ public class RequestHistoryResponse {
 	private String wikiContentHtml;
 	@ApiModelProperty(example = "1")
 	private long subHisId;
+	private String indexWikiContent;
+	private String indexWikiContentHtml;
 	private boolean mainId;
-
+	
 	public RequestHistoryResponse() {
 
 	}
 
+	public String getIndexWikiContent() {
+		return indexWikiContent;
+	}
+
+	
 	public boolean isMainId() {
 		return mainId;
 	}
 
 	public void setMainId(boolean mainId) {
 		this.mainId = mainId;
+	}
+
+	public void setIndexWikiContent(String indexWikiContent) {
+		this.indexWikiContent = indexWikiContent;
+	}
+
+	public String getIndexWikiContentHtml() {
+		return indexWikiContentHtml;
+	}
+
+	public void setIndexWikiContentHtml(String indexWikiContentHtml) {
+		this.indexWikiContentHtml = indexWikiContentHtml;
 	}
 
 	public String getLectureThumbnailUrl() {
