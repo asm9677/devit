@@ -34,19 +34,19 @@ public class RequestHistoryResponse {
 	private String wikiContentHtml;
 	@ApiModelProperty(example = "1")
 	private long subHisId;
-	private String RequestHistoryResponse;
+	private String indexWikiContent;
 	private String indexWikiContentHtml;
 
 	public RequestHistoryResponse() {
 
 	}
 
-	public String getRequestHistoryResponse() {
-		return RequestHistoryResponse;
+	public String getIndexWikiContent() {
+		return indexWikiContent;
 	}
 
-	public void setRequestHistoryResponse(String requestHistoryResponse) {
-		RequestHistoryResponse = requestHistoryResponse;
+	public void setIndexWikiContent(String indexWikiContent) {
+		this.indexWikiContent = indexWikiContent;
 	}
 
 	public String getIndexWikiContentHtml() {
