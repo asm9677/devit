@@ -522,13 +522,17 @@
 	<select id="selectRequestLecturesList" resultType="RequestHistoryResponse">
 	  SELECT u.profile, u.nickname, lsh.created, lsi.title subTitle, lsi.sub_id subId, lsh.accept_yn acceptYn,
 			 lsh.req_type reqType, lsh.thumbnail_url thumbnailUrl, lsh.title hisTitle, lsh.player_url playerUrl,
-             lsh.play_time playTime, lsh.wiki_content wikiContent, lsh.wiki_content_html wikiContentHtml, lsh.sub_his_id subHisId
+             lsh.play_time playTime, lsh.wiki_content wikiContent, lsh.wiki_content_html wikiContentHtml, lsh.sub_his_id subHisId,
+             lsh2.wiki_content indexWikiContent,
+             lsh2.wiki_content_html indexWikiContentHtml
 		FROM lecture_sub_history lsh
 	         LEFT OUTER JOIN user u
 			   ON u.user_id = lsh.user_id
 			 LEFT OUTER JOIN lecture_sub_index lsi
 	           ON lsi.lecture_id = lsh.lecture_id
 			  AND lsi.sub_id = lsh.sub_id
+             LEFT OUTER JOIN lecture_sub_history lsh2
+              ON lsh2.sub_his_id = lsi.wiki_id AND lsh2.req_type = 'wiki'
 	   WHERE 1=1 AND lsh.lecture_id = #{lectureId}
 	   		 <if test="reqType != 0">
 	   		 	AND lsh.req_type IN

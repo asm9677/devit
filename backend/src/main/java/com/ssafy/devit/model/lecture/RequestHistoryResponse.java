@@ -34,9 +34,27 @@ public class RequestHistoryResponse {
 	private String wikiContentHtml;
 	@ApiModelProperty(example = "1")
 	private long subHisId;
+	private String RequestHistoryResponse;
+	private String indexWikiContentHtml;
 
 	public RequestHistoryResponse() {
 
+	}
+
+	public String getRequestHistoryResponse() {
+		return RequestHistoryResponse;
+	}
+
+	public void setRequestHistoryResponse(String requestHistoryResponse) {
+		RequestHistoryResponse = requestHistoryResponse;
+	}
+
+	public String getIndexWikiContentHtml() {
+		return indexWikiContentHtml;
+	}
+
+	public void setIndexWikiContentHtml(String indexWikiContentHtml) {
+		this.indexWikiContentHtml = indexWikiContentHtml;
 	}
 
 	public String getLectureThumbnailUrl() {
@@ -170,11 +188,10 @@ public class RequestHistoryResponse {
 	@Override
 	public String toString() {
 		return "RequestHistoryResponse [lectureThumbnailUrl=" + lectureThumbnailUrl + "lectureTitle=" + lectureTitle
-				+ ", profile=" + profile + ", nickname=" + nickname + ", created=" + created
-				+ ", subTitle=" + subTitle + ", subId=" + subId + ", acceptYn=" + acceptYn + ", reqType=" + reqType
-				+ ", thumbnailUrl=" + thumbnailUrl + ", hisTitle=" + hisTitle + ", playerUrl=" + playerUrl
-				+ ", playTime=" + playTime + ", wikiContent=" + wikiContent + ", wikiContentHtml=" + wikiContentHtml
-				+ "]";
+				+ ", profile=" + profile + ", nickname=" + nickname + ", created=" + created + ", subTitle=" + subTitle
+				+ ", subId=" + subId + ", acceptYn=" + acceptYn + ", reqType=" + reqType + ", thumbnailUrl="
+				+ thumbnailUrl + ", hisTitle=" + hisTitle + ", playerUrl=" + playerUrl + ", playTime=" + playTime
+				+ ", wikiContent=" + wikiContent + ", wikiContentHtml=" + wikiContentHtml + "]";
 	}
 
 }
