@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: sessionStorage.getItem('token'),
-    email: sessionStorage.getItem('email')
+    email: sessionStorage.getItem('email'),
+    loading: 0,
   },
   mutations: {
     login(state, payload) {
@@ -20,6 +21,13 @@ export default new Vuex.Store({
       sessionStorage.setItem('email', '')
       state.token = '';
       state.emial = '';
+    },
+    startLoading(state) {
+      state.loading += 1;
+    },
+    endLoading(state) {
+      if(state.loading > 0)
+        state.loading -= 1;
     }
   },
   actions: {

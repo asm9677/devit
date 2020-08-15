@@ -82,7 +82,6 @@ export default {
         color: #7f8fa4;
         font-size: inherit;
         padding: 8px 24px;
-        margin: 16px 0;
         border-left: 3px solid #eaeaea;
     }
 
@@ -93,7 +92,7 @@ export default {
     pre {
         font-family: "Menlo", "DejaVu Sans Mono", "Liberation Mono", "Consolas", "Ubuntu Mono", "Courier New", "andale mono", "lucida console", monospace;
         display: block;
-        padding: 8px 12px 0px 8px;
+        padding: 18px 12px 0px 12px;
         margin: 8px 0px ;
         font-size: 13px;
         word-break: break-all;
@@ -111,5 +110,14 @@ export default {
     img {
         max-width:100%;
         height:auto;
+    }
+
+    ins{
+        color: rgb(76, 175, 80);
+        text-decoration: none;
+    }
+
+    .diff del {
+        color:red;
     }
 </style>

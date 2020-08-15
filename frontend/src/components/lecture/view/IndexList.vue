@@ -3,7 +3,7 @@
         <v-list :dark="darkOption" style="width:100%">
             <v-list-item>
                 <v-list-item-content>
-                    프로그래밍 시작하기 : 파이썬 입문
+                    {{chapter[order-1].title}}
                     <v-list-item-subtitle>
                         {{order}}강 / {{totalCount}}강
                     </v-list-item-subtitle>  

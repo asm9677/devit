@@ -6,10 +6,20 @@
             <v-card tile flat style="margin-left:10px; margin-top:20px;cursor:pointer;">
                 <v-img 
                     :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
-                    :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                    lazy-src="@/assets/images/empty.png"
                     aspect-ratio="1.7"
                     @click="move(`/lecture/detail/${item.lectureId}`)"
-                ></v-img>
+                >
+                    <template v-slot:placeholder>
+                        <v-row
+                        class="fill-height ma-0"
+                        align="center"
+                        justify="center"
+                        >
+                            <v-progress-circular indeterminate color="primary lighten-4"></v-progress-circular>
+                        </v-row>
+                    </template>
+                </v-img>
                 
                     
                 <!-- <v-card-actions> -->
@@ -53,10 +63,8 @@
                                             <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
 
                                     </v-list>   
-                <!-- </v-card-actions> -->
-                
-            </v-card>
-        
+                <!-- </v-card-actions> -->                
+            </v-card>            
       </v-flex>
     </v-layout>
   </div>
@@ -74,7 +82,7 @@ export default {
             ],
             level: this.$route.query.level,
             page: 1,
-            loading: false,
+            offset: 0,
         }
     },
     filters: {
@@ -101,13 +109,13 @@ export default {
         },
     },
     created(){        
-        this.loading = true;
+        this.$router.app.$store.commit('startLoading')
         http.axios.get(`/api/v1/lectures?page=${this.page}&type=${this.level}`).then(({data}) => {
             this.page++;
             this.items = data.result;
             console.dir(data.result)
         }).finally(() => {
-            this.loading = false;
+            this.$router.app.$store.commit('endLoading')
         })
 
         document.addEventListener('scroll', this.handleScroll);
@@ -117,9 +125,14 @@ export default {
     },
     methods: {
         handleScroll(){
-            if($(document).scrollTop() + $(document)[0].scrollingElement.clientHeight + 100 >= $(document).height()){
-                if(!this.loading){
-                    this.loading = true;
+            if($(document).scrollTop() + $(document)[0].scrollingElement.clientHeight + 10 >= $(document).height()){
+                if(this.offset >= $(document).scrollTop()) {
+                    this.offset = $(document).scrollTop();
+                    return;
+                }
+                this.offset = $(document).scrollTop();
+                if(!this.$router.app.$store.state.loading){
+                    this.$router.app.$store.commit('startLoading', true)
                     http.axios.get(`/api/v1/lectures?page=${this.page}&type=${this.level}`)
                         .then(({data}) => {
                             this.page++;
@@ -127,23 +140,10 @@ export default {
                             for(let i in data.result)
                                 this.items.push(data.result[i]);
                         }).finally(() => {
-                            this.loading = false;
+                            this.$router.app.$store.commit('endLoading', false)
                         })
                 }
             }          
-        },
-        addItem(i){
-            this.items.push({
-                "lectureId": i,
-                "title": '다 같이 배우는 파이썬',
-                "thumbnailUrl": `https://picsum.photos/500/300?image=${i*5}`,
-                "nickname": "미용쓰기",
-                "lectureCount": 20,
-                "viewCount": 9900000,
-                "likeCount": 999,
-                "tagName": 'python,프로그래밍 언어,GUI',
-                "userLikeYn": i%3 == 0
-            })
         },
         move(url){            
             this.$router.push(url)

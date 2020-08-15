@@ -7,25 +7,35 @@
                 background-color="transparent"
                 slider-color="primary"
                 slider-size=4
-                style="position:sticky; top:5px; z-index:9;"
+                style="position:sticky; top:5px; z-index:9; max-width:500px;"
                 ref="menu"
-                show-arrows
+                show-arrows                
             >
-                <v-tab @click="goto('#introduce')"><span style="font-size:16px;">소개</span></v-tab>
+                <v-tab @click="goto('#introduce')"><span style="font-size:16px;" >소개</span></v-tab>
                 <v-tab @click="goto('#curriculum')"><span style="font-size:16px">교육 과정</span></v-tab>
                 <v-tab @click="goto('#changes')"><span style="font-size:16px">변경 사항</span></v-tab>
                 <v-tab @click="goto('#helped')"><span style="font-size:16px">도움주신 분들</span></v-tab>
-                
-            </v-tabs>   
+            </v-tabs>  
         <v-card tile flat>
                 <v-layout wrap ref="main">
                     <v-flex xs12 sm12 md8 lg8 xl8 ref="left" style="margin-left:0px; padding:20px;">       
                         
                             <v-img 
                                 :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                                lazy-src="@/assets/images/empty.png"
                                 aspect-ratio="1.77"
                                 contain
-                            ></v-img>                            
+                            >
+                                <template v-slot:placeholder>
+                                    <v-row
+                                    class="fill-height ma-0"
+                                    align="center"
+                                    justify="center"
+                                    >
+                                        <v-progress-circular indeterminate color="primary lighten-4"></v-progress-circular>
+                                    </v-row>
+                                </template>
+                            </v-img>                            
                         
 
                         <div v-show="!option" style="width:100%;">
@@ -86,7 +96,7 @@
                                             @click="move(`/lecture/player/index/${lectureId}?order=${index+1}`)"
                                         >
                                             <v-list-item-avatar>
-                                                <v-icon color="primary lighten-2">
+                                                <v-icon :color="item.videoYn ? 'primary' : 'error darken-1'">
                                                     mdi-play-circle-outline
                                                 </v-icon>
                                             </v-list-item-avatar>
@@ -247,9 +257,6 @@
                 </v-btn>
             </template>
         </v-snackbar>
-        <v-overlay :value="mainLoading" opacity=0>
-            <v-progress-circular indeterminate color="primary lighten-4" size="64"></v-progress-circular>
-        </v-overlay>
       </v-container>
   </div>
 </template>
@@ -336,7 +343,6 @@ export default {
 
             menuHeight: 0,
 
-            mainLoading: true,
             btnLoading: false,
 
             chapter: [],
@@ -350,13 +356,15 @@ export default {
     },
     created(){               
         this.lectureId = this.$route.params.id;
+
+        this.$router.app.$store.commit('startLoading')
         http.axios.get(`/api/v1/lectures/${this.$route.params.id}`).then(({data}) => {
             this.item = data.result;
             console.dir(this.item)
         }).catch((error) => {
             
         }).finally(() => {
-            this.mainLoading = false;
+            this.$router.app.$store.commit('endLoading')
         })
         this.getIndexList();
         this.getHistoryList();
@@ -422,6 +430,7 @@ export default {
             this.$router.push(url);
         },
         getIndexList() {
+            this.$router.app.$store.commit('startLoading')
             http.axios.get(`/api/v1/lectures/subs/${this.lectureId}`).then(({data}) => {
                 this.chapter = [];
                 console.dir(data)
@@ -437,9 +446,12 @@ export default {
                         "playTime": data.result[i].playTime,                        
                     })
                 }
+            }).finally(() => {
+                this.$router.app.$store.commit('endLoading')
             })
         },
         getHistoryList() {
+            this.$router.app.$store.commit('startLoading')
             http.axios.get(`/api/v1/lectures/historys/${this.lectureId}`).then(({data}) => {
                 this.history = [];
                 this.expand_history = [];
@@ -452,11 +464,16 @@ export default {
                             this.expand_history.push(data.result[i])
                     }
                 }
+            }).finally(() => {
+                this.$router.app.$store.commit('endLoading')
             })
         },
         getAdminList(){
+            this.$router.app.$store.commit('startLoading')
             http.axios.get(`/api/v1/lectures/auth/${this.lectureId}`).then(({data}) => {
                 this.admin = data.result;
+            }).finally(() => {
+                this.$router.app.$store.commit('endLoading')
             });
         }
         

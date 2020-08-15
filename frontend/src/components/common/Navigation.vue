@@ -26,11 +26,11 @@
             :v-model="item.active"
             :prepend-icon="item.icon"            
             no-action
-            color="white"
+            v-show="item.title!='마이페이지' || $router.app.$store.state.token"
           >
             <template v-slot:activator>
               <v-list-item-content>
-                <v-list-item-title v-text="item.title" color="white"></v-list-item-title>
+                <v-list-item-title v-text="item.title"></v-list-item-title>
               </v-list-item-content>
             </template>
 
@@ -130,6 +130,17 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+  .v-application .primary--text {
+    color: #ffffff !important;
+    caret-color: #ffffff !important;
+  }
 
+  .v-list-item__title {
+    color:#FFFFFFBF;
+  }
+
+  .v-list-item__title:hover {
+    color:#FFFFFF !important;
+  }
 </style>
