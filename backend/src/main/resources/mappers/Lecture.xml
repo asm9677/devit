@@ -698,6 +698,7 @@
     <select id="myMngLectureList" resultType="LecturesResponse">
 		 SELECT l.lecture_id lectureId,
 			    l.title,
+			    l.content,
 			    l.user_id userId,
 			    l.common_id commonId,
 			    l.view_count viewCount,

@@ -7,6 +7,25 @@
                     <div style="width:100%; margin-bottom:30px;"></div>
 
                     <v-list>
+                        <div style="border-bottom:1px solid #c8c8c8; border-top:1px solid #c8c8c8;">
+                            <v-list-item style="width:100%;">
+                                <v-list-item-content>
+                                    <div style="">이미지</div>
+                                </v-list-item-content>
+                                <v-list-item-content>
+                                    <div style="">프로젝트 명</div>
+                                </v-list-item-content>
+                                <v-list-item-content>
+                                    <div style="text-align:right;">강의수</div>
+                                </v-list-item-content>
+                                <v-list-item-content>
+                                    <div style="text-align:right;">조회수</div>
+                                </v-list-item-content>
+                                <v-list-item-content>
+                                    <div style=""></div>
+                                </v-list-item-content>
+                            </v-list-item>
+                        </div>
                         <div
                             class=""
                             style="width:100%; border-bottom:1px solid #c8c8c8; cursor:pointer;"
@@ -25,7 +44,9 @@
                                     </div>
                                 </v-list-item-content>
                                 <v-list-item-content @click="move(`/lecture/detail/${item.lectureId}`)">
-                                    <div style="width:500px;">{{item.title}}</div>
+                                    <!-- <div>{{item.title}}</div> -->
+                                    <v-list-item-title v-text="item.title"></v-list-item-title>
+                                    <v-list-item-subtitle v-text="item.content"></v-list-item-subtitle>
                                 </v-list-item-content>
                                 <v-list-item-content @click="move(`/lecture/detail/${item.lectureId}`)">
                                     <div style="text-align:right; width:50px;">{{item.lectureCount}}</div>
