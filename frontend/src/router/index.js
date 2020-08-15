@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Main from '@/components/common/Main.vue'
 import Join from '@/components/user/Join.vue'
 import UserModify from '@/components/user/Modify.vue'
+import EmailCertify from '@/components/user/EmailCertify.vue'
 
 import Board from '@/components/board/Board.vue'
 import BoardDetail from '@/components/board/BoardDetail.vue'
@@ -43,6 +44,11 @@ const routes = [
     path: '/user/modify',
     name: 'UserModify',
     component: UserModify
+  },
+  {
+    path: '/user/emailcertify',
+    name: 'EmailCertify',
+    component: EmailCertify
   },
   {
     path: '/board',
