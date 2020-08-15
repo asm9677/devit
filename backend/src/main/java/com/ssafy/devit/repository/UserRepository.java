@@ -48,4 +48,6 @@ public interface UserRepository {
 	
 	//회원 탈퇴
 	public void userWithdraw(long userId) throws Exception;
+	
+	public String findUserActiveByEmail(String email) throws Exception;
 }

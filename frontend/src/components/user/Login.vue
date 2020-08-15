@@ -33,6 +33,9 @@
                 </div>
                 <!-- hover underline 추가예정 -->
             <!--</v-card>-->
+            <v-snackbar v-model="errorSnackbar" timeout="1500" color="error">
+                {{errorMsg}}
+            </v-snackbar>
             </v-container>
         </v-flex>
         </v-layout>
@@ -56,6 +59,8 @@ export default {
             email: '',
             password: '',
             loading: false,
+            errorMsg: "",
+            errorSnackbar: false,
         }
     },
     created(){
@@ -63,7 +68,15 @@ export default {
             http.axios.post('/api/v1/account/login', {
                 email: email,
                 password: password
-            }).then(({data}) => {                
+            }).then(({data}) => {  
+
+                if(data.msg=="fail"){
+
+                    this.errorMsg = data.result;
+                    this.errorSnackbar = true;
+                    return;
+                }
+
                 store.commit('login', {token: data.result, email: email})
                 this.$emit('closeDialog');
                 location.reload(true);
@@ -78,6 +91,12 @@ export default {
                         email: email,
                         password: password
                     }).then(({data}) => {
+                        if(data.msg=="fail"){
+
+                            this.errorMsg = data.result;
+                            this.errorSnackbar = true;
+                            return;
+                        }
                         store.commit('login', {token: data.result, email: email})      
                         this.$emit('closeDialog');
                         location.reload(true);
@@ -98,8 +117,16 @@ export default {
                 email: this.email,
                 password: this.password
             }).then(({data}) => {
+                if(data.msg=="fail"){
+
+                    this.errorMsg = data.result;
+                    this.errorSnackbar = true;
+                    return;
+                }
+
                 store.commit('login', {token: data.result, email: this.email});
                 this.$emit('closeDialog');
+
                 location.reload(true);
             }).finally(() => {
                 this.loading = false;

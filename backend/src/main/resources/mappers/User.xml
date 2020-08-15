@@ -131,4 +131,13 @@
 		WHERE
 		    user_id = #{userId};
 	</update>
+	
+	
+	<!-- 사용자 Email로  활성화 여부 -->
+	<select id="findUserByEmail" resultType="String">
+		SELECT 
+		    u.active
+		FROM user u
+		WHERE email = #{email};
+	</select>
 </mapper>
