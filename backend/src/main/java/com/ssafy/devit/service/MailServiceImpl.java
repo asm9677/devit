@@ -54,9 +54,11 @@ public class MailServiceImpl implements MailService { // to MailRepository
 		
 		String email_from = "i3a101.devit.io@gmail.com";
 		String subject = "[데빗업:DEVITUP] " + request.getNickname() + "님의 회원가입 인증 메일입니다.";		
-		String text = "<h1>회원가입 이메일 인증 발송</h1><br><hr><br>";
-		text += "데빗업:DEVITUP 회원가입을 축하드립니다.<br>인증링크를 클릭해주세요.";
-		text += "<a href='i3a101.p.ssafy.io:8080/api/v1/mail/confirm/auth?e=" + encodedEmail + "&p=" + encodedPassword + "&n=" + encodedNickname +"'> 인증하기 </a>";
+		String text = "<a href='i3a101.p.ssafy.io:8080/api/v1/mail/confirm/auth?e=" + encodedEmail + "&p=" + encodedPassword + "&n=" + encodedNickname +"'> 인증하기 </a>"
+				+ "test";
+//				"<h1>회원가입 이메일 인증 발송</h1><br><hr><br>";
+//		text += "데빗업:DEVITUP 회원가입을 축하드립니다.<br>인증링크를 클릭해주세요.";
+//		text += 
 		
 		sendMail(email_from, request.getEmail(), subject, text);
 	}
