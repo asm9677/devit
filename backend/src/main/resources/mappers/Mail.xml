@@ -21,6 +21,10 @@
 		WHERE email = #{email}
 	</select>
 	
+	<select id="setUserCodeDefault" resultType="Integer">
+		UPDATE user SET code = 0 WHERE email = #{email}
+	</select>
+	
 	<select id="checkEmailConfirm" resultType="Integer">
 		SELECT count(*) FROM user
 		WHERE email = #{email} AND email_confirm = 'Y'
