@@ -118,7 +118,7 @@ public class MailServiceImpl implements MailService { // to MailRepository
 		String email_from = "i3a101.devit.io@gmail.com";
 		String subject = "[DevIT] 비밀번호 찾기 확인 메일입니다.";		
 		String text = "링크를 클릭하면  본 계정의 인증이 완료됩니다.<br /><br />";
-		text += "<a href='i3a101.p.ssafy.io:8080/api/v1/mail/confirm/auth?e=" + email + "&p=" + password + "&n=" + nickname +"'> 비밀번호 변경 </a>";
+		text += "<a href='i3a101.p.ssafy.io:8080/api/v1/mail/confirm/auth?e=" + email + "&p=" + password + "&n=" + nickname +"'> 계정인증 완료 </a>";
 		
 		sendMail(email_from, request.getEmail(), subject, text);
 	}
