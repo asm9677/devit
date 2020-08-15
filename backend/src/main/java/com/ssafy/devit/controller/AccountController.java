@@ -95,7 +95,7 @@ public class AccountController {
 
 	@PostMapping("/signup")
 	@ApiOperation(value = "가입하기")
-	public ResponseEntity<CommonResponse> signUp(@Valid SignUpRequest request) {
+	public ResponseEntity<CommonResponse> signUp(@RequestBody @Valid SignUpRequest request) {
 		log.info(">> Load : signUp <<");
 		final CommonResponse result = new CommonResponse();
 		ResponseEntity<CommonResponse> response = null;
