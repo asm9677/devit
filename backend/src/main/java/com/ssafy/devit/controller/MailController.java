@@ -178,6 +178,7 @@ public class MailController {
 			if(Integer.parseInt(code) == mailService.getUserCode(email)) {
 				mailService.updatePasswordRandom(email);
 				mailService.setUserCodeDefault(email);
+				
 				result.msg = "success";
 				result.result = "성공적으로 비밀번호가 변경 되었습니다.";				
 			}else {								
