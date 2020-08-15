@@ -360,11 +360,14 @@
                     http
                     .axios
                     .put('/api/v1/users/withdraw', {
-                        
+
                     })
                     .then(({data}) => {
+                        
+                        store.commit('logout')
                         alert("탈퇴가 완료되었습니다.");
-                        this.move('/');
+                        location.reload(true);
+                        //this.move('/');
                     })
                 }
             },
