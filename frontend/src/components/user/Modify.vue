@@ -100,6 +100,17 @@
                                     </v-btn>
                                 </v-list-item>
                             </v-list>
+                            
+                            <v-list style="padding:20px 100px;">
+                                <v-list-item>
+                                    <v-list-item-title>회원 탈퇴</v-list-item-title>
+                                </v-list-item>
+                                <v-list-item>
+                                        <v-btn depressed="depressed" color="error" @click="withdraw()">
+                                            회원 탈퇴
+                                        </v-btn>
+                                </v-list-item>
+                            </v-list>
                         </v-card>
                     </div>
                 </v-flex>
@@ -343,7 +354,23 @@
                             }
                         })
                 }
-            }
+            },
+            withdraw(){
+                if(confirm("회원 탈퇴 시 동일한 계정으로 재가입이 불가합니다.\n탈퇴하시겠습니까?")){
+                    http
+                    .axios
+                    .put('/api/v1/users/withdraw', {
+                        
+                    })
+                    .then(({data}) => {
+                        alert("탈퇴가 완료되었습니다.");
+                        this.move('/');
+                    })
+                }
+            },
+            move(path){
+                this.$router.push(path).catch(()=>{location.reload(true);});            
+            },
         }
     }
 </script>
