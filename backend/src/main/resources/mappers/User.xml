@@ -122,4 +122,13 @@
   		  from dual;
 	</select>
 	
+	
+	<!-- 회원 탈퇴 -->
+	<update id="userWithdraw">
+		UPDATE user 
+		SET 
+		    active_yn = 'N'
+		WHERE
+		    user_id = #{userId};
+	</update>
 </mapper>

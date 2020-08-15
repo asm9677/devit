@@ -45,4 +45,7 @@ public interface UserRepository {
 	public String getUserPasswordByUserId(long userId) throws Exception;
 
 	public String getUserIsAdmin(long userId) throws Exception;
+	
+	//회원 탈퇴
+	public void userWithdraw(long userId) throws Exception;
 }

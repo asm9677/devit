@@ -26,4 +26,6 @@ public interface UserService {
 	public String getUserPasswordByUserId(long userId) throws Exception;
 
 	public String getUserIsAdmin(long userId) throws Exception;
+	
+	public void userWithdraw(long userId) throws Exception;
 }
