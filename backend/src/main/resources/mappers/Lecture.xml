@@ -312,6 +312,7 @@
 		ON
 		u.user_id = la.user_id AND
 		lecture_id = #{lectureId} and la.delete_yn = 'N'
+		where u.active = 'Y'
 	</select>
 	
 	<!-- 목차 상세 정보 가져오기 -->
@@ -698,6 +699,7 @@
     <select id="myMngLectureList" resultType="LecturesResponse">
 		 SELECT l.lecture_id lectureId,
 			    l.title,
+			    l.content,
 			    l.user_id userId,
 			    l.common_id commonId,
 			    l.view_count viewCount,

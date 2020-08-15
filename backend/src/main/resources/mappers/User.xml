@@ -122,4 +122,22 @@
   		  from dual;
 	</select>
 	
+	
+	<!-- 회원 탈퇴 -->
+	<update id="userWithdraw">
+		UPDATE user 
+		SET 
+		    active = 'N'
+		WHERE
+		    user_id = #{userId};
+	</update>
+	
+	
+	<!-- 사용자 Email로  활성화 여부 -->
+	<select id="findUserActiveByEmail" resultType="String">
+		SELECT 
+		    u.active
+		FROM user u
+		WHERE email = #{email};
+	</select>
 </mapper>

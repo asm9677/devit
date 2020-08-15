@@ -5,6 +5,7 @@ public class LecturesResponse {
 	private long commonId;
 	private long userId;
 	private String title;
+	private String content;
 	private String thumbnailUrl;
 	private String nickname;
 	private String profile;
@@ -18,7 +19,7 @@ public class LecturesResponse {
 
 	}
 
-	public LecturesResponse(long lectureId, long commonId, long userId, String title, String thumbnailUrl,
+	public LecturesResponse(long lectureId, long commonId, long userId, String title, String content, String thumbnailUrl,
 			String nickname, String profile, int lectureCount, int viewCount, int likeCount, String tagName,
 			boolean userLikeYn) {
 		super();
@@ -26,6 +27,7 @@ public class LecturesResponse {
 		this.commonId = commonId;
 		this.userId = userId;
 		this.title = title;
+		this.content = content;
 		this.thumbnailUrl = thumbnailUrl;
 		this.nickname = nickname;
 		this.profile = profile;
@@ -74,6 +76,14 @@ public class LecturesResponse {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
 	}
 
 	public String getThumbnailUrl() {

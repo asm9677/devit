@@ -63,8 +63,12 @@ public class AccountController {
 				// 비밀번호 매칭
 				if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 					result.msg = "fail";
-					result.result = "비밀번호가 일치 하지 않습니다";
-					response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+					result.result = "비밀번호가 일치하지 않습니다.";
+					response = new ResponseEntity<>(result, HttpStatus.OK);
+				} else if("N".equals(userAuthDetailService.getUserActiveByEmail(request.getEmail()))){
+					result.msg = "fail";
+					result.result = "이미 탈퇴한 계정입니다.";
+					response = new ResponseEntity<>(result, HttpStatus.OK);
 				} else {
 //					LoginResponse loginResponse = new LoginResponse();
 //					loginResponse.setToken(jwtTokenProvider.createToken(String.valueOf(user.getUserId()),
@@ -78,10 +82,10 @@ public class AccountController {
 							userAuthDetailService.getRoles(user.getUserId()));
 					response = new ResponseEntity<>(result, HttpStatus.OK);
 				}
-			} else {
+			}else {
 				result.msg = "fail";
-				result.result = "이메일 또는 비밀번호가 틀렸습니다";
-				response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+				result.result = "이메일 또는 비밀번호가 틀렸습니다.";
+				response = new ResponseEntity<>(result, HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			log.info(">> Error : login <<");
