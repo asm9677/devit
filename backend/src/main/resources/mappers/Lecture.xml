@@ -312,6 +312,7 @@
 		ON
 		u.user_id = la.user_id AND
 		lecture_id = #{lectureId} and la.delete_yn = 'N'
+		where u.active = 'Y'
 	</select>
 	
 	<!-- 목차 상세 정보 가져오기 -->

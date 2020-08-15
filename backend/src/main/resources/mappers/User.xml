@@ -127,7 +127,7 @@
 	<update id="userWithdraw">
 		UPDATE user 
 		SET 
-		    active_yn = 'N'
+		    active = 'N'
 		WHERE
 		    user_id = #{userId};
 	</update>
