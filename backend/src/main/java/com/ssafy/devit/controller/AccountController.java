@@ -64,7 +64,7 @@ public class AccountController {
 				if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
 					result.msg = "fail";
 					result.result = "비밀번호가 일치 하지 않습니다";
-					response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+					response = new ResponseEntity<>(result, HttpStatus.OK);
 				} else {
 //					LoginResponse loginResponse = new LoginResponse();
 //					loginResponse.setToken(jwtTokenProvider.createToken(String.valueOf(user.getUserId()),
@@ -81,7 +81,7 @@ public class AccountController {
 			} else {
 				result.msg = "fail";
 				result.result = "이메일 또는 비밀번호가 틀렸습니다";
-				response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+				response = new ResponseEntity<>(result, HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			log.info(">> Error : login <<");
