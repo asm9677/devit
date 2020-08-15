@@ -134,7 +134,7 @@
 	
 	
 	<!-- 사용자 Email로  활성화 여부 -->
-	<select id="findUserByEmail" resultType="String">
+	<select id="findUserActiveByEmail" resultType="String">
 		SELECT 
 		    u.active
 		FROM user u
