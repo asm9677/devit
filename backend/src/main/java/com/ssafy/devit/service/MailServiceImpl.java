@@ -39,6 +39,12 @@ public class MailServiceImpl implements MailService { // to MailRepository
 		return mailRepository.getUserCode(email);
 	}
 	
+	@Override	
+	// user테이블의 code 리턴
+	public void setUserCodeDefault(String email) throws Exception{		
+		mailRepository.setUserCodeDefault(email);
+	}
+	
 	// 링크 클릭하면 회원가입이 완료되는 메일
 	@Override
 	public void sendConfirmEmail(SignUpRequest request) throws Exception{

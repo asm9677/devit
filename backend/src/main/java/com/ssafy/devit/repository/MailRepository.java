@@ -12,6 +12,8 @@ public interface MailRepository { // to Mail.xml
 	
 	public int getUserCode(@Param("email") String email) throws Exception;
 	
+	public void setUserCodeDefault(@Param("email") String email) throws Exception;
+	
 	public void updatePasswordRandom(@Param("email") String email, @Param("password") String password) throws Exception;
 		
 	public int checkEmailConfirm(@Param("email") String email) throws Exception;
