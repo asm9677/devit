@@ -524,9 +524,9 @@
 			 lsh.req_type reqType, lsh.thumbnail_url thumbnailUrl, lsh.title hisTitle, lsh.player_url playerUrl,
              lsh.play_time playTime, lsh.wiki_content wikiContent, lsh.wiki_content_html wikiContentHtml, lsh.sub_his_id subHisId,
              lsh2.wiki_content indexWikiContent,
-             lsh2.wiki_content_html indexWikiContentHtml
+             lsh2.wiki_content_html indexWikiContentHtml,
              CASE
-		        WHEN lsh.sub_his_id = lsi.wiki_id or lsh.sub_his_id = lsi_video_id THEN TRUE
+		        WHEN lsh.sub_his_id = lsi.wiki_id or lsh.sub_his_id = lsi.video_id THEN TRUE
 		        ELSE FALSE
 	    	 END AS mainId
 		FROM lecture_sub_history lsh
