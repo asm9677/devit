@@ -428,8 +428,7 @@
 	
 	<!-- 같은 종류의 다른 동영상 -->
 	<select id="selectTheOtherSubLectures" resultType="TheOhterSubLectureResponse">
-		SELECT 
-		    lsi.lecture_id lectureId,
+	 SELECT lsi.lecture_id lectureId,
 		    lsi.sub_id subId,
             lsh.sub_his_id subHisId,
             lsi.order,
@@ -441,37 +440,55 @@
 		    lsh.thumbnail_url thumbnailUrl,
             (SELECT nickname FROM user WHERE user_id = lsh.user_id) nickname,
             (SELECT profile FROM user WHERE user_id = lsh.user_id) profile,
-		    CASE
-		        WHEN
-		            EXISTS( SELECT 
-		                    1
-		                FROM
-		                    lecture_sub_his_like
-		                WHERE
-		                    like_flag = 'Y' AND user_id = #{userId}
-		                        AND lecture_id = lsh.lecture_id
-		                        AND sub_id = lsh.sub_id
-		                        AND sub_his_id = lsh.sub_his_id)
-		        THEN
-		            TRUE
+		    CASE WHEN EXISTS( SELECT 1 FROM lecture_sub_his_like
+		                	   WHERE like_flag = 'Y' 
+		                	     AND user_id = #{userId}
+		                         AND lecture_id = lsh.lecture_id
+		                         AND sub_id = lsh.sub_id
+		                         AND sub_his_id = lsh.sub_his_id)
+		        THEN TRUE
 		        ELSE FALSE
-		    END userLikeYn
-		FROM
-		    lecture_sub_index lsi
-		        LEFT OUTER JOIN
-		    lecture_sub_history lsh ON lsi.lecture_id = lsh.lecture_id
-		        AND lsi.sub_id = lsh.sub_id
-		        AND lsh.req_type = 'video'
-		        LEFT OUTER JOIN
-		    (SELECT 
-		        COUNT(1) like_count, lecture_id, sub_id, sub_his_id
-		    FROM
-		        lecture_sub_his_like lshl
-		    GROUP BY sub_id , sub_his_id) lg ON lsh.lecture_id = lg.lecture_id
-		        AND lsh.sub_id = lg.sub_id
-		        AND lsh.sub_his_id = lg.sub_his_id
-		WHERE
-		    lsi.sub_id = #{subId} AND player_url IS NOT NULL;
+		    END userLikeYn,
+            case when lsi.video_id = lsh.sub_his_id then 2 else 1 end as isMain
+	   FROM lecture_sub_index lsi
+		    LEFT OUTER JOIN
+		    lecture_sub_history lsh 
+		    ON 
+		    lsi.lecture_id = lsh.lecture_id AND 
+		    lsi.sub_id = lsh.sub_id AND 
+		    lsh.req_type = 'video'
+		    LEFT OUTER JOIN
+		    (
+		     SELECT COUNT(1) like_count, 
+		     	    lecture_id, 
+		     	    sub_id, 
+		     	    sub_his_id
+		       FROM lecture_sub_his_like lshl
+			  where like_flag = 'Y'
+		   GROUP BY sub_id , sub_his_id
+            ) lg 
+            ON 
+            lsh.lecture_id = lg.lecture_id AND 
+            lsh.sub_id = lg.sub_id AND 
+            lsh.sub_his_id = lg.sub_his_id
+		    LEFT OUTER JOIN
+			(
+			 SELECT COUNT(1) like_count, 
+					lecture_id, 
+					sub_id, 
+					sub_his_id
+			   FROM lecture_sub_his_like lshl
+			  WHERE modified between DATE_ADD(now(), INTERVAL -7 DAY) and now()
+		   GROUP BY sub_id, sub_his_id
+			 ) lg_due
+             ON 
+             lsh.lecture_id = lg_due.lecture_id AND 
+             lsh.sub_id = lg_due.sub_id AND 
+             lsh.sub_his_id = lg_due.sub_his_id
+	   WHERE lsi.sub_id = #{subId} 
+         AND player_url IS NOT NULL
+    order by isMain desc, IFNULL(lg_due.like_count, 0) desc, viewCount desc;
+          
 	</select>
 	
 	<!-- 같은 종류 다른 영상 눌렀을 경우 상세 정보 -->
