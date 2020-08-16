@@ -67,7 +67,6 @@ public class NoticeController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			result.msg = "fail to getNotice";
-			System.out.println("fail to get data");
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 		} 
 		return response;
@@ -86,7 +85,6 @@ public class NoticeController {
 		try {
 			UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			
-			System.out.println("set Notice Read");
 			noticeService.setNoticeRead(noticeId);
 			result.msg = "success";			
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
@@ -94,7 +92,6 @@ public class NoticeController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			result.msg = "fail to setNotice";
-			System.out.println("fail to set data");
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 		} 
 		return response;

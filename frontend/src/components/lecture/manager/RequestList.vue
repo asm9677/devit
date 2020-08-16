@@ -269,7 +269,6 @@ export default {
                         if(this.prevCreated != this.$moment(data.result[i].created).format('DD MMM, YYYY')){
                             this.prevCreated = this.$moment(data.result[i].created).format('DD MMM, YYYY');
                             this.items.push(this.prevCreated);
-                            console.log(this.prevCreated, i)
                         }
                             
                         this.items.push(data.result[i]);

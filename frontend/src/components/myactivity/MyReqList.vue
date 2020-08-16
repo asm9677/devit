@@ -161,7 +161,6 @@
                 .then(({data}) => {
                     this.page++;
                     this.items = data.result;
-                    console.log(this.items)
                 })
                 . finally(() => {
                     this.loading = false;
