@@ -849,6 +849,7 @@
 	         lsh.lecture_id = l.lecture_id
 	   WHERE 1=1 
 	     AND lsh.user_id = #{userId}
+	     and lsh.req_type in ('video', 'wiki')
 	ORDER BY lsh.created DESC
 	   LIMIT #{startPage}, #{itemsperpage};
 	</select>
