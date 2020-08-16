@@ -35,6 +35,7 @@
                                     <v-list-item>
                                         <span style="width:80px">게시판</span>
                                         <v-select
+                                            readonly="true"
                                             style="max-width:200px;"
                                             v-model="boardType"
                                             :items="boardtypeitems"

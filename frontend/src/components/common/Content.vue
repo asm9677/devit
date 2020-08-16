@@ -17,8 +17,8 @@
                 <v-icon>mdi-chevron-up</v-icon>
             </v-btn>
         </v-fab-transition>
-        <v-overlay :value="$router.app.$store.state.loading" opacity="0">
-            <v-progress-circular indeterminate color="primary lighten-4" size="64"></v-progress-circular>
+        <v-overlay :value="$router.app.$store.state.loading" opacity="0" style="z-index:9999;">
+            <v-progress-circular  indeterminate color="primary lighten-4" width="10" size="128"></v-progress-circular>
         </v-overlay>
     </div>
 </template>

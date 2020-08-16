@@ -1,5 +1,5 @@
 <template>
-    <div style="; margin-top:20px;">
+    <div style="margin-top:20px;">
         <v-card tile="tile" flat="flat">
             <v-layout wrap="wrap">
                 <div
