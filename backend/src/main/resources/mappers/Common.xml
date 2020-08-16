@@ -117,6 +117,7 @@
 						   lshw.sub_id = lsi.sub_id AND
 							lsi.wiki_id = lshw.sub_his_id
 						 WHERE 1 = 1 -- 아래 부분 반복문 필요
+						 		AND lsi.order != 0
 						 		<foreach collection="searchText" item="text" index="index">
 					 				AND (lsi.title LIKE CONCAT('%', #{text},'%') OR
 										 lshw.wiki_content LIKE CONCAT('%', #{text},'%') OR
