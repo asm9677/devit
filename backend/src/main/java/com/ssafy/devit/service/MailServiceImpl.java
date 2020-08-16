@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.devit.model.request.SignUpRequest;
-import com.ssafy.devit.repository.MailRepository;
+import com.ssafy.devit.repository.MailRepository;ff
 
 @Service
 public class MailServiceImpl implements MailService { // to MailRepository
