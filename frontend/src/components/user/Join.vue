@@ -122,6 +122,7 @@
 
 <script>
 import http from "@/util/http_common.js"
+import eventBus from "@/lib/EventBus.js"
 
 export default {
     data() {
@@ -200,6 +201,7 @@ export default {
             }).catch((error) => {
                 console.dir(error)
             })*/
+            this.$router.app.$store.commit('startLoading')
             http.axios.post("/api/v1/mail/confirm/auth", {
                 nickname: this.nickname,
                 email: this.email,
@@ -212,6 +214,8 @@ export default {
                 console.dir(error)
                 this.errorMsg = '메일 발송에 실패했습니다. 이메일을 확인해 주세요.';
                 this.errorSnackbar = true;
+            }).finally(() => {
+                this.$router.app.$store.commit('endLoading')
             })
         },
         vaildPassword(){

@@ -133,8 +133,34 @@
                                             <source :src="`http://i3a101.p.ssafy.io/images/${curItem.playerUrl}`"> </source>
                                         </video>
                                     </div>
-                                    <div class="wiki-paragraph" v-else v-html="parse(curItem.wikiContentHtml)" style="background-color: #ffffff;">
-                                        
+                                    
+                                    <div class="wiki-paragraph" v-else style="background-color: #ffffff;">
+                                        <!-- {{curItem.wikiContentHtml}} -->
+                                        <div v-if="curItem.wikiContentHtml" v-html="parse(curItem.wikiContentHtml)" style="min-height:300px"/>
+                                        <div v-else>
+                                            <v-container fluid style="width:100%;">         
+                                                <v-row>
+                                                    <v-col cols="12">
+                                                        <v-row
+                                                            align="start"
+                                                            justify="center"
+                                                        >                                    
+                                                            <v-icon style="font-size:120px; color:rgba(0, 0, 0, 0.54)"> mdi-emoticon-cry-outline </v-icon>                                
+                                                        </v-row>
+                                                    </v-col>
+                                                </v-row>
+                                                <v-row>
+                                                    <v-col cols="12">
+                                                        <v-row
+                                                            align="end"
+                                                            justify="center"
+                                                        >       
+                                                            <div style="font-size:20px"> 위키 문서가 비어있습니다 :( </div>    
+                                                        </v-row>
+                                                    </v-col>
+                                                </v-row>
+                                            </v-container>
+                                        </div>
                                     </div>
                                 </v-dialog>
                             </div>
@@ -173,7 +199,7 @@ export default {
     data() {
         return {
             lectureId: 0,
-            page:0,
+            page:1,
 
             items: [],            
             curItem: {
@@ -183,7 +209,7 @@ export default {
 
             height:600,
             preview: false,
-            
+            offset:0,
         }
     },
     filters: {
@@ -220,12 +246,27 @@ export default {
     },
     mounted(){
         window.addEventListener('resize', this.handleRequestResize);
+        document.addEventListener('scroll', this.requestScroll);
     },
     beforeDestroy(){
         window.removeEventListener('resize', this.handleRequestResize);
+        document.removeEventListener('scroll', this.requestScroll);
     },
     methods: {
         parse,
+        requestScroll() {
+            if($(document).scrollTop() < this.offset){                
+                this.offset = $(document).scrollTop();
+                return;
+            }
+            this.offset = $(document).scrollTop();
+
+            if($(document).scrollTop() + $(document)[0].scrollingElement.clientHeight + 10 >= $(document).height()){
+                if(!this.$router.app.$store.state.loading)
+                    this.initRequestList();
+            }          
+        
+        },
         handleRequestResize() {            
             this.height = $('body').height() - 60;
         },
@@ -261,17 +302,19 @@ export default {
             )
         },
         initRequestList() {
-            
             this.$router.app.$store.commit('startLoading')
             http.axios.get(`/api/v1/lectures/historys?acceptType=all&lectureId=${this.lectureId}&reqType=video,wiki&startPage=${this.page}`)
                 .then(({data}) => {
                     for(let i in data.result){
-                        if(this.prevCreated != this.$moment(data.result[i].created).format('DD MMM, YYYY')){
-                            this.prevCreated = this.$moment(data.result[i].created).format('DD MMM, YYYY');
+                        if(this.prevCreated != this.$moment(data.result[i].created).format('DD MMMM, YYYY')){
+                            this.prevCreated = this.$moment(data.result[i].created).format('DD MMMM, YYYY');
                             this.items.push(this.prevCreated);
                         }
                             
                         this.items.push(data.result[i]);
+                    }
+                    if(data.result.length) {
+                        this.page++;
                     }
                 }).finally(() => {
                     this.$router.app.$store.commit('endLoading')
@@ -281,6 +324,8 @@ export default {
             http.axios.put(`/api/v1/lectures/historys?subId=${item.subId}&subHisId=${item.subHisId}&type=${type}&reqType=${item.reqType}`).then(({data}) => {
                 console.dir(data)
             }).finally(() => {
+                this.items = []
+                this.page = 1;
                 this.initRequestList();
             })
         }
