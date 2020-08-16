@@ -14,6 +14,7 @@ public class LecturesResponse {
 	private int likeCount;
 	private String tagName;
 	private boolean userLikeYn;
+	private String isOwner;
 
 	public LecturesResponse() {
 
@@ -147,7 +148,15 @@ public class LecturesResponse {
 		return "LecturesResponse [lectureId=" + lectureId + ", commonId=" + commonId + ", userId=" + userId + ", title="
 				+ title + ", thumbnailUrl=" + thumbnailUrl + ", nickname=" + nickname + ", lectureCount=" + lectureCount
 				+ ", viewCount=" + viewCount + ", likeCount=" + likeCount + ", tagName=" + tagName + ", userLikeYn="
-				+ userLikeYn + "]";
+				+ userLikeYn + ", isOwner=" + isOwner + "]";
+	}
+
+	public String getIsOwner() {
+		return isOwner;
+	}
+
+	public void setIsOwner(String isOwner) {
+		this.isOwner = isOwner;
 	}
 
 }
