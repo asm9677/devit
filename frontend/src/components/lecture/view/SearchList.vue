@@ -368,10 +368,10 @@ export default {
     div.chips{
         display: inline-block;
         background-color:#ededed; 
-        border-radius: 5px;
+        border-radius: 3px;
         padding: 5px 0px;
         padding-left: 5px;
-        margin:10px;
+        margin:4px;
         font-size:12px;
         opacity: 0.6;
     }
@@ -384,8 +384,8 @@ export default {
         height:100%;
         width:100%;
         background-color:#cdcdcd;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
         padding: 5px;
     }
 
