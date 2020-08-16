@@ -1,5 +1,5 @@
 <template>
-    <div style="" ref="empty">        
+    <div id="mainContent" style="" ref="empty">        
         <router-view :key="$route.fullPath"></router-view>
         <v-fab-transition>
             <v-btn
@@ -25,11 +25,13 @@
 
 <script>
 import eventBus from "@/lib/EventBus.js"
+import http from "@/util/http_common.js"
 
 export default {
     watch:{
-        $route(){
+        $route(val){
             window.scrollTo(0, 0)
+            this.getNoticeCount();
         }
     },
     data(){
@@ -38,6 +40,8 @@ export default {
         }
     },
     created(){
+        window.onload = this.getNoticeCount;
+
         eventBus.$on("modifyNavForHeader", (width) => {
             this.$refs.empty.style.marginLeft = width + "px";
         });
@@ -50,6 +54,14 @@ export default {
         document.removeEventListener("scroll", this.handleScroll)
     },
     methods:{
+        getNoticeCount() {
+            if(this.$router.app.$store.state.token) {
+                http.axios.get('/api/v1/notice/getInfoCnt').then(({data}) => {
+                    if(data.msg == 'success')
+                        eventBus.$emit('setNotice', parseInt(data.result));
+                })
+            }
+        },
         handleScroll(){
             this.button = window.scrollY > 40
         },
