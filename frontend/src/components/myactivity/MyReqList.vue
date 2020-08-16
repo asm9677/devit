@@ -250,6 +250,7 @@
         },
         methods: {
                 
+            parse,
             initRequestList() {
                 this.$router.app.$store.commit('startLoading')
                 http.axios.get(`/api/v1/myReqList?page=${this.page}&itemsperpage=${this.itemsperpage}`)
