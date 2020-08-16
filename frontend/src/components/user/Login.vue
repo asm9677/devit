@@ -39,9 +39,6 @@
             </v-container>
         </v-flex>
         </v-layout>
-        <v-overlay :value="loading" opacity=0>
-            <v-progress-circular indeterminate color="primary lighten-4" size="64"></v-progress-circular>
-        </v-overlay>
     </v-container>
     </div>
     
@@ -58,7 +55,6 @@ export default {
         return {
             email: '',
             password: '',
-            loading: false,
             errorMsg: "",
             errorSnackbar: false,
         }
@@ -104,14 +100,12 @@ export default {
                     })
                 })
             }).finally(() => {
-                this.loading = false;
                 this.$router.app.$store.commit('endLoading');
             })
         })
     },
     methods:{
         forKakaoLogin(){
-            this.loading = true;
             KaKaoLogin.loginWithKakao();
         },
         login(){
@@ -132,8 +126,7 @@ export default {
 
                 location.reload(true);
             }).finally(() => {
-                this.loading = false;
-                //this.$router.app.$store.commit('endLoading');
+                this.$router.app.$store.commit('endLoading');
             })
         },
         moveJoin(){
