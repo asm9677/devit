@@ -72,8 +72,10 @@ public class BoardController {
 			result.result = board.getBoardId();
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "권한 오류";
+			log.info(">> boardUpLoad Error <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -88,15 +90,9 @@ public class BoardController {
 		BoardResponse boardResponse = null;
 		try {
 			
-			UserAuthDetails user = null;
-			try {
-				user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			} catch (Exception e) {
-				user = new UserAuthDetails();
-				user.setUserId(0);
-			}
+			
 
-			boardResponse = boardService.info(bid, user.getUserId());
+			boardResponse = boardService.info(bid);
 			
 			if(boardResponse != null) {
 				result.msg = "success";
@@ -107,8 +103,10 @@ public class BoardController {
 				response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "권한 오류";
+			log.info(">> boardinfo Error <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} // bid에 해당하는 게시글을 조회한다.
 		return response;
 	}
@@ -127,8 +125,10 @@ public class BoardController {
 			boardService.delete(bid);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "오류";
+			log.info(">> delete Error <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -144,15 +144,7 @@ public class BoardController {
 		//Board board = null;
 		BoardResponse boardResponse = null;
 		try {
-			UserAuthDetails user = null;
-			try {
-				user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			} catch (Exception e) {
-				user = new UserAuthDetails();
-				user.setUserId(0);
-			}
-
-			boardResponse = boardService.info(request.getBoardId(), user.getUserId());
+			boardResponse = boardService.info(request.getBoardId());
 			if(boardResponse != null) {
 				boardResponse.setBoardTitle(request.getBoardTitle());
 				boardResponse.setBoardContent(request.getBoardContent());
@@ -167,7 +159,9 @@ public class BoardController {
 				response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			result.msg = "fail";
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			e.printStackTrace();
 		}
 		return response;
@@ -188,8 +182,10 @@ public class BoardController {
 			result.result = boardService.listinfo(startPage, type, itemsperpage, searchselect, searchtxt);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "오류";
+			log.info(">> listinfo Error <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -216,8 +212,10 @@ public class BoardController {
 			result.result = boardWithLectureRequest.getBoardId();
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "권한 오류";
+			log.info(">> createBoardWithLecture Error <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}	
@@ -234,8 +232,10 @@ public class BoardController {
 			result.result = boardService.lectureQnaList(lectureId, subId);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "에러";
+			log.info(">> lectureQnaList Error <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}

@@ -72,8 +72,10 @@ public class MyActivityController {
 			result.result = lectureService.myMngLectureList(startPage, itemsperpage);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "에러";
+			log.info(">> Error : myMngLectureList <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -95,8 +97,10 @@ public class MyActivityController {
 			result.result = boardService.myBoardList(startPage, itemsperpage);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "에러";
+			log.info(">> Error : myBoardList <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -118,8 +122,10 @@ public class MyActivityController {
 			result.result = boardService.myReplyList(startPage, itemsperpage);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "에러";
+			log.info(">> Error : myReplyList <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -141,8 +147,10 @@ public class MyActivityController {
 			result.result = lectureService.myLikeLectureList(startPage, itemsperpage);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "에러";
+			log.info(">> Error : myLikeLectureList <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -164,8 +172,10 @@ public class MyActivityController {
 			result.result = lectureService.myLikeVideoList(startPage, itemsperpage);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "에러";
+			log.info(">> Error : myLikeVideoList <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -196,8 +206,7 @@ public class MyActivityController {
 			}
 			
 		} catch (Exception e) {
-			log.info(">> Error : updateLectureLike <<");
-			log.info(e.getMessage().toString());
+			log.info(">> Error : deleteLecture <<");
 			result.msg = "fail";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 		}
@@ -222,8 +231,10 @@ public class MyActivityController {
 			result.result = lectureService.myReqList(startPage, itemsperpage);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "에러";
+			log.info(">> Error : myReqList <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}

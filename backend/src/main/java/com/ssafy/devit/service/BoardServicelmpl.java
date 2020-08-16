@@ -32,11 +32,18 @@ public class BoardServicelmpl implements BoardService {
 	}
 	
 	@Override
-	public BoardResponse info(long bid, long userId) throws Exception {
+	public BoardResponse info(long bid) throws Exception {
 		if(bid < 1) {
 			throw new Exception("잘못된 boardId가 나왔습니다.");
 		}
-		return boardRepository.info(bid, userId);
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			user = new UserAuthDetails();
+			user.setUserId(0);
+		}
+		return boardRepository.info(bid, user.getUserId());
 	}
 	
 	@Override

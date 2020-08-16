@@ -1,10 +1,6 @@
 package com.ssafy.devit.model.request;
 
-import java.util.Collection;
 import java.util.Date;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 public class BoardRequest {
 
