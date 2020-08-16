@@ -109,7 +109,7 @@
                     </v-list-item>
                 </template>
                 <v-list-item>
-                    <v-textarea dense outlined auto-grow placeholder="답글을 입력해보세요!" color="success" hide-details style="margin:10px 0px" v-model="replyContent"></v-textarea>                          
+                    <v-textarea dense outlined auto-grow placeholder="답글을 입력해보세요!" color="success" hide-details style="margin:10px 0px" v-model="replyContent" @focus="checkSession()"></v-textarea>                          
                 </v-list-item>
                 <v-list-item>
                     <v-list-item-content /> 
@@ -126,6 +126,7 @@
 
 <script>
 import http from "@/util/http_common.js"
+import eventBus from "@/lib/EventBus.js"
 export default {
     props: ['darkOption', 'tabs', 'boardId' , 'refresh'],
     data() {
@@ -160,6 +161,13 @@ export default {
         window.removeEventListener('resize', this.detailBoardResize)
     },
     methods:{
+        checkSession() {
+            if(this.$router.app.$store.state.token){
+
+            }else{
+                eventBus.$emit('doLogin');
+            }
+        },
         detailBoardResize() {      
             if(this.tabs == 4)      
                 this.questionHeight = $('body').height()-$('#pos').offset().top
