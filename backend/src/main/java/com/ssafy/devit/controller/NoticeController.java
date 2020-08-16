@@ -64,8 +64,7 @@ public class NoticeController {
 			result.result = noticeService.getNotice(user.getUserId());
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.info(">> setNoticeRead <<");
 			result.msg = "fail to getNotice";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 		} 
@@ -89,8 +88,7 @@ public class NoticeController {
 			result.msg = "success";			
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.info(">> setNoticeRead <<");
 			result.msg = "fail to setNotice";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 		} 

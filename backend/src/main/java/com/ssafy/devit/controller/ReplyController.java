@@ -51,13 +51,13 @@ public class ReplyController {
 	@ApiOperation(value = "댓글 등록")
 	public ResponseEntity<CommonResponse> upload(@RequestBody ReplyUploadRequest request) throws Exception {
 		log.info(">> Reply UpLoad <<");
-		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		final CommonResponse result = new CommonResponse();
 		ResponseEntity<CommonResponse> response = null;
-		Reply reply = null;
-		reply = new Reply(request.getBoardId(), user.getUserId(), request.getReplyContent(),
-				request.getParentReplyId());
 		try {
+			UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			Reply reply = null;
+			reply = new Reply(request.getBoardId(), user.getUserId(), request.getReplyContent(),
+					request.getParentReplyId());
 			replyService.upload(reply);
 			// bid에 해당하는 게시글을 조회한다.
 			log.info("boardId :" + reply.getBoardReplyId());
@@ -67,8 +67,10 @@ public class ReplyController {
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.info(">> upload <<");
+			result.msg = "fail";
+			result.result = "권한 오류";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -85,8 +87,7 @@ public class ReplyController {
 			result.result = replyService.info(boardId);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.info(">> info <<");
 			result.msg = "not found";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 		} // bid에 해당하는 게시글을 조회한다.
@@ -107,8 +108,9 @@ public class ReplyController {
 			replyService.delete(reply_id);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			//
-			e.printStackTrace();
+			log.info(">> delete <<");
+			result.msg = "not found";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 		}
 		return response;
 	}
@@ -128,6 +130,7 @@ public class ReplyController {
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
 			// Service, DAO 에서 에러 발생 하면 나오는 곳
+			log.info(">> update <<");
 			result.msg = "error";
 			result.result = e.getMessage().toString();
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
