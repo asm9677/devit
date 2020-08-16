@@ -54,11 +54,9 @@ public class MailServiceImpl implements MailService { // to MailRepository
 		
 		String email_from = "i3a101.devit.io@gmail.com";
 		String subject = "[데빗업:DEVITUP] " + request.getNickname() + "님의 회원가입 인증 메일입니다.";		
-		String text = "<a href='i3a101.p.ssafy.io:8080/api/v1/mail/confirm/auth?e=" + encodedEmail + "&p=" + encodedPassword + "&n=" + encodedNickname +"'> 인증하기 </a>"
-				+ "test";
-//				"<h1>회원가입 이메일 인증 발송</h1><br><hr><br>";
-//		text += "데빗업:DEVITUP 회원가입을 축하드립니다.<br>인증링크를 클릭해주세요.";
-//		text += 
+		String text = "DEVITUP에 가입해주셔서 감사합니다!<br>아래의 링크를 클릭하면 회원가입이 완료됩니다.<br>"; 
+		text += "<h3><a href='http://i3a101.p.ssafy.io:8080/api/v1/mail/confirm/auth?e=" 
+		+ encodedEmail + "&p=" + encodedPassword + "&n=" + encodedNickname + "'> 회원가입 </a></h3>";
 		
 		sendMail(email_from, request.getEmail(), subject, text);
 	}
@@ -76,7 +74,7 @@ public class MailServiceImpl implements MailService { // to MailRepository
 		String text = "<h1>비밀번호 변경 메일 발송</h1><br><hr><br>";
 		text += "해당 계정으로 비밀번호 찾기 요청이 발생하였습니다.<br />본인이 요청한 것이 맞다면 아래 링크를 클릭해주세요.<br />"
 				+ "링크를 클릭하면 비밀번호가 변경됩니다.<br />변경된 비밀번호는 메일로 발송됩니다.<br /><br />";
-		text += "<h3><a href='i3a101.p.ssafy.io:8080/api/v1/mail/password?e=" + encodedEmail + "&c=" + encodedCode + "'> 비밀번호 변경하기 </a></h3>";
+		text += "<h3><a href='http://i3a101.p.ssafy.io:8080/api/v1/mail/password?e=" + encodedEmail + "&c=" + encodedCode + "'> 비밀번호 변경하기 </a></h3>";
 		
 		sendMail(email_from, email_to, subject, text);
 	}
