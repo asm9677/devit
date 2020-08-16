@@ -190,14 +190,19 @@ public class MyActivityController {
 		final CommonResponse result = new CommonResponse();
 		try {
 
-			// 사용자 id 가져오기
-			String isManager = lectureService.checkUserManageAuth(request.getLectureId());
+			//프로젝트 Owner 여부 가져오기
+			String isOwner = lectureService.checkUserManageAuth(request.getLectureId());
+			String hasSubHistory = lectureService.checkHasSubHistory(request.getLectureId());
 			
-			if("N".equals(isManager)) {
+			if("N".equals(isOwner)) {
 
 				result.msg = "noauth";
 				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 				
+			}else if("Y".equals(hasSubHistory)){
+
+				result.msg = "hashistory";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			}else {
 
 				lectureService.deleteLecture(request.getLectureId());

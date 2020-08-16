@@ -721,7 +721,11 @@
 			    CASE
 			        WHEN exists (select 1 from lecture_like where lecture_id = l.lecture_id and user_id = #{userId}) THEN FALSE
 			        ELSE TRUE
-			    END AS userLikeYn
+			    END AS userLikeYn,
+			    CASE
+			    	WHEN la.lecture_role = 'Owner' THEN 'Y'
+			    	ELSE 'N'
+			    END AS isOwner
 		   FROM lecture l
 			    INNER JOIN
 			    user u 
@@ -752,7 +756,7 @@
 			     l.common_id = lt.common_id
 			     INNER JOIN
 			     (
-			     SELECT lecture_id, modified
+			     SELECT lecture_id, modified, lecture_role
 			       FROM lecture_auth
 			      WHERE user_id = #{userId} 
 			        AND delete_yn = 'N'
@@ -793,12 +797,21 @@
 		  ORDER BY modified DESC;
       </select>
       
-      <!-- 프로젝트 관리 권한 여부 조회 -->
+      <!-- 프로젝트 소유 권한 여부 조회 -->
       <select id="checkUserManageAuth" resultType="String">
-      		select case when exists(select 1 from lecture_auth where user_id = #{userId} and lecture_id = #{lectureId} and delete_yn = 'N')
+      		select case when exists(select 1 from lecture_auth where user_id = #{userId} and lecture_id = #{lectureId} and delete_yn = 'N' and lecture_role = 'Owner')
       		            then 'Y'
       		            else 'N'
-      		            end as isManager
+      		            end as isOwner
+      		  from dual;
+      </select>
+      
+      <!-- 프로젝트 강의 존재 여부 조회 -->
+      <select id="checkHasSubHistory" resultType="String">
+      		select case when exists(select 1 from lecture_sub_history where lecture_id = #{lectureId})
+      		            then 'Y'
+      		            else 'N'
+      		            end as hasSubHistory
       		  from dual;
       </select>
 	
