@@ -50,9 +50,61 @@
                         <font :color="hover ? 'primary' : 'gray'" size="2">프로젝트 생성</font>                        
                     </v-btn>
                 </v-hover>
-                <v-btn icon>
-                    <v-icon color="primary"> mdi-bell-outline </v-icon>
-                </v-btn>
+
+                <v-menu left bottom offsetY>
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn 
+                            icon
+                            v-bind="attrs"
+                            v-on="on"
+                        >
+                            <v-icon color="primary"> mdi-bell-outline </v-icon>
+                        </v-btn>
+                    </template>
+                    <v-list class="notice_list" outlined dense>
+                        <v-list-item>
+                            <v-list-item-title>전체 {{notices.length}}</v-list-item-title>
+                        </v-list-item>
+                        <template v-for="(notice,i) in notices">
+                            <v-divider :key="`${i}_divider`" />
+                            <v-list-item :key="`${i}_notice`">
+                                <v-list-item-avatar size="30">
+                                    <v-img
+                                        :src="'http://i3a101.p.ssafy.io/images/' + notice.profile"
+                                    >
+                                    </v-img>
+                                </v-list-item-avatar>
+                                <v-list-item-content v-if="notice.noticeType == 1">
+                                    <v-list-item-title> 새로운 전체 공지가 있습니다. </v-list-item-title>
+                                    <v-list-item-subtitle> {{notice.boardTitle}} </v-list-item-subtitle>
+                                    <v-list-item-subtitle> {{notice.nickname}} &middot; {{notice.created}} </v-list-item-subtitle>
+                                </v-list-item-content>
+                                <v-list-item-content v-else-if="notice.noticeType == 2">
+                                    <v-list-item-title> {{notice.boardTitle}} </v-list-item-title>
+                                    <v-list-item-subtitle> {{notice.replyContent}} </v-list-item-subtitle>
+                                    <v-list-item-subtitle> {{notice.nickname}} &middot; {{notice.created}} </v-list-item-subtitle>
+                                </v-list-item-content>
+                                <v-list-item-content v-else-if="notice.noticeType == 3">
+                                    <v-list-item-title> {{notice.lectureTitle}} </v-list-item-title>
+                                    <v-list-item-subtitle> {{notice.subIndexTitle}}에 {{notice.reqType == 'wiki' ? '위키 수정 요청' : '강의 영상 업로드'}} </v-list-item-subtitle>
+                                    <v-list-item-subtitle> {{notice.nickname}} &middot; {{notice.created}} </v-list-item-subtitle>
+                                </v-list-item-content>
+                                <v-list-item-content v-else-if="notice.noticeType == 4">
+                                    <v-list-item-title> {{notice.lectureTitle}} </v-list-item-title>
+                                    <v-list-item-subtitle> {{notice.subIndexTitle}}에 {{notice.reqType == 'wiki' ? '위키 수정 요청' : '강의 영상 업로드'}} </v-list-item-subtitle>
+                                    <v-list-item-subtitle> 수락 &middot; {{notice.created}} </v-list-item-subtitle>
+                                </v-list-item-content>
+                                <v-list-item-action>
+                                    <v-icon>
+                                        mdi-close
+                                    </v-icon>
+                                </v-list-item-action>
+                            </v-list-item>
+                        </template>
+                    </v-list>
+                </v-menu>
+
+                
                  
                 <v-menu
                     left
@@ -70,7 +122,7 @@
                         </v-btn>
                     </template>
             
-                    <v-list flat tile>
+                    <v-list flat tile outlined style="padding:0px;">
                         <v-list-item @click="userModify">
                             <v-list-item-icon>
                                 <v-icon>mdi-account</v-icon>
@@ -161,6 +213,8 @@ export default {
             return store.state.token;
         }
     },
+    filters: {
+    },
     data() {
         return {
             search: false,
@@ -170,6 +224,48 @@ export default {
             tempDialog: false,
             snackbar: false,
             msg: '',
+
+            notices: [
+                {
+                    noticeType: 1,
+                    reqType: 'wiki',
+                    profile:'defaultUser.png',
+                    nickname: '미용쓰기',
+                    boardTitle: '1',
+                    replyContent: '2',
+                    created: '3',
+                    subIndexTitle: '4',
+                },{
+                    noticeType: 2,
+                    reqType: 'wiki',
+                    profile:'defaultUser.png',
+                    nickname: '미용쓰기',
+                    boardTitle: '1',
+                    replyContent: '2',
+                    created: '3',
+                    subIndexTitle: '4',
+                },{
+                    noticeType: 3,
+                    reqType: 'wiki',
+                    profile:'defaultUser.png',
+                    nickname: '미용쓰기',
+                    lectureTitle: '5',
+                    boardTitle: '1',
+                    replyContent: '2',
+                    created: '3',
+                    subIndexTitle: '4',
+                },{
+                    noticeType: 4,
+                    reqType: 'wiki',
+                    profile:'defaultUser.png',
+                    nickname: '미용쓰기',
+                    lectureTitle: '5',
+                    boardTitle: '1',
+                    replyContent: '2',
+                    created: '3',
+                    subIndexTitle: '4',
+                },
+            ],
         }
     },
     methods: {
@@ -226,6 +322,20 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     
+    .v-menu__content  {
+        box-shadow: none;
+        overflow-y: visible;
+        overflow-x: visible;
+        contain: none;
+    }
+
+    .notice_list {
+        border-radius:3px; 
+        width: 400px;
+        max-height:350px;
+        overflow-y:auto;
+        padding:0px;
+    }
 </style>

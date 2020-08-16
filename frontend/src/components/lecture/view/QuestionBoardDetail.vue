@@ -22,8 +22,8 @@
                             {{item.boardModified | moment('YYYY.MM.DD. HH:mm')}} 조회 {{item.boardCount}}
                         </v-list-item-subtitle>
                     </v-list-item-content>
-                    <v-list-item-action>
-                        <v-menu bottom left >
+                    <v-list-item-action v-if="item.isMine == 'Y'">
+                        <v-menu bottom left>
                             <template v-slot:activator="{ on, attrs }">
                             <v-btn
                                 :dark="darkOption"
@@ -127,6 +127,7 @@
 <script>
 import http from "@/util/http_common.js"
 import eventBus from "@/lib/EventBus.js"
+
 export default {
     props: ['darkOption', 'tabs', 'boardId' , 'refresh'],
     data() {

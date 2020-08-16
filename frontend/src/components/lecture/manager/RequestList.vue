@@ -194,6 +194,11 @@ export default {
                     diffContainer: ".diff"                    
                 });
             }
+        },
+        preview() {
+            if(this.preview == false) {
+                $('#videoFrame3').html(' ')
+            }
         }
     },
     data() {
