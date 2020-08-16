@@ -91,7 +91,7 @@
                             v-bind="attrs"
                             v-on="on" 
                             link             
-                            @click="dialog=true"
+                            @click="clickContribute()"
                         >
                              
                             <v-list-item-icon>
@@ -423,7 +423,7 @@
                     </v-btn>
                 </template>
             </v-snackbar>
-            <Contribute :dialog="dialog" :darkOption="darkOption" :lectureId="lectureId" :subId="subId" :wiki="sub.wikiContentHtml" @closeDialog="dialog=false;" style="z-index:12345;"></Contribute>
+            <Contribute :dialog="dialog" :darkOption="darkOption" :lectureId="lectureId" :subId="subId" :wiki="sub.wikiContentHtml" @closeDialog="dialog=false;" style="z-index:9000;"></Contribute>
         </v-layout>
     </div>
 </template>
@@ -438,6 +438,7 @@ import QuestionBoard from "@/components/lecture/view/QuestionBoard.vue"
 import QuestionBoardDetail from "@/components/lecture/view/QuestionBoardDetail.vue"
 import Contribute from "@/components/lecture/view/Contribute.vue"
 import parse from "@/lib/markdown/ParseMd.js";
+import eventBus from "@/lib/EventBus.js";
 
 export default {
     components: {
@@ -586,6 +587,13 @@ export default {
     },
     methods: {
         parse,
+        clickContribute() {
+            if(this.$router.app.$store.state.token){    
+                this.dialog=true
+            }else{
+                eventBus.$emit('doLogin');
+            }
+        },
         prevLecture(){
             this.move(`/lecture/player/index/${this.lectureId}?order=${parseInt(this.order)-1}`)
         },

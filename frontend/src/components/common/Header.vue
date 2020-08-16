@@ -105,6 +105,7 @@
                     <v-dialog
                         v-model="dialog"
                         max-width="350"
+                        style="z-index:10000;"
                     >
                     <v-card tile>
                         <Login @closeDialog="dialog = false"></Login>
