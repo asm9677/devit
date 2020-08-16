@@ -10,15 +10,17 @@ public class BoardWithLectureRequest {
 	private long userId;
 	private String boardTitle;
 	private String boardContent;
+	private String boardContentHtml;
 	
 	public BoardWithLectureRequest() {}
 	
-	public BoardWithLectureRequest(long lectureId, long subId, long userId, String boardTitle, String boardContent) {
+	public BoardWithLectureRequest(long lectureId, long subId, long userId, String boardTitle, String boardContent, String boardContentHtml) {
 		this.lectureId = lectureId;
 		this.subId = subId;
 		this.userId = userId;
 		this.boardTitle = boardTitle;
 		this.boardContent = boardContent;
+		this.boardContentHtml = boardContentHtml;
 	}
 	
 	public long getBoardId() {
@@ -59,6 +61,14 @@ public class BoardWithLectureRequest {
 
 	public void setBoardContent(String boardContent) {
 		this.boardContent = boardContent;
+	}
+
+	public String getBoardContentHtml() {
+		return boardContentHtml;
+	}
+
+	public void setBoardContentHtml(String boardContentHtml) {
+		this.boardContentHtml = boardContentHtml;
 	}
 
 }
