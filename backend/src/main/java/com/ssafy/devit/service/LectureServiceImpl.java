@@ -294,6 +294,7 @@ public class LectureServiceImpl implements LectureService {
 		} catch (Exception e) {
 			throw new Exception("요청 리스트를 볼 권한이 없습니다");
 		}
+		startPage = (startPage - 1) * 20;
 		return lectureRepository.selectRequestLecturesList(lectureId, startPage, req.split(","), acceptType);
 	}
 
