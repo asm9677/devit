@@ -7,28 +7,146 @@ public class NoticeResponse {
 	private long noticeType;
 	private long userId;
 	private String noticeYn;
+	private String readYn;
+	private Date createdDate;
 	private long boardId;
 	private long boardReplyId;
-	private long subHisId;
+	private long boardType;
+	private String boardTitle;
+	private String boardContent;
+	private String replyContent;
 	private long lectureId;
 	private long subId;
-	private Date createdDate;
+	private long subHisId;
+	private String lectureTitle;
+	private String subIndexTitle;
+	private String reqType;
+	private long createUserId;
+	private String createUserNickname;
 	
 	public NoticeResponse() {}
 	
-	public NoticeResponse(long noticeId, long noticeType, long userId, String noticeYn, long boardId,
-			long boardReplyId, long subHisId, long lectureId, long subId, Date createdDate){
-		this.noticeId=noticeId;
-		this.noticeType = noticeType;
-		this.userId= userId;
-		this.noticeYn= noticeYn;
-		this.boardId = boardId;
-		this.boardReplyId = boardReplyId;
-		this.subHisId = subHisId;
-		this.lectureId = lectureId;
-		this.subId = subId;
-		this.createdDate = createdDate;
+	
+
+	public String getReadYn() {
+		return readYn;
 	}
+
+
+
+	public void setReadYn(String readYn) {
+		this.readYn = readYn;
+	}
+
+
+
+	public long getBoardType() {
+		return boardType;
+	}
+
+
+
+	public void setBoardType(long boardType) {
+		this.boardType = boardType;
+	}
+
+
+
+	public String getBoardTitle() {
+		return boardTitle;
+	}
+
+
+
+	public void setBoardTitle(String boardTitle) {
+		this.boardTitle = boardTitle;
+	}
+
+
+
+	public String getBoardContent() {
+		return boardContent;
+	}
+
+
+
+	public void setBoardContent(String boardContent) {
+		this.boardContent = boardContent;
+	}
+
+
+
+	public String getReplyContent() {
+		return replyContent;
+	}
+
+
+
+	public void setReplyContent(String replyContent) {
+		this.replyContent = replyContent;
+	}
+
+
+
+	public String getLectureTitle() {
+		return lectureTitle;
+	}
+
+
+
+	public void setLectureTitle(String lectureTitle) {
+		this.lectureTitle = lectureTitle;
+	}
+
+
+
+	public String getSubIndexTitle() {
+		return subIndexTitle;
+	}
+
+
+
+	public void setSubIndexTitle(String subIndexTitle) {
+		this.subIndexTitle = subIndexTitle;
+	}
+
+
+
+	public String getReqType() {
+		return reqType;
+	}
+
+
+
+	public void setReqType(String reqType) {
+		this.reqType = reqType;
+	}
+
+
+
+	public long getCreateUserId() {
+		return createUserId;
+	}
+
+
+
+	public void setCreateUserId(long createUserId) {
+		this.createUserId = createUserId;
+	}
+
+
+
+	public String getCreateUserNickname() {
+		return createUserNickname;
+	}
+
+
+
+	public void setCreateUserNickname(String createUserNickname) {
+		this.createUserNickname = createUserNickname;
+	}
+
+
 
 	////////////////////////////////////////////////////////
 	public long getNoticeId() {
