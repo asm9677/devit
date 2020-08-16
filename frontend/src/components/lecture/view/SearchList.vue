@@ -269,7 +269,8 @@ export default {
     },
     methods: {
         handleResize() {
-            this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
+            if(this.$refs.main && this.$refs.left)  
+                this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
             if(this.$refs.img0){
                 this.height = this.$refs.img0[0].$el.offsetHeight - this.$refs.content0[0].$el.offsetHeight-25
                 if(this.height < 0)

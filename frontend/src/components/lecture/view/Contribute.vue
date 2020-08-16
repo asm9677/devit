@@ -166,7 +166,7 @@
         >
             {{msg}}
         </v-snackbar>
-        <v-dialog v-model="preview" hide-overlay max-width="768"> 
+        <v-dialog v-model="preview" hide-overlay max-width="868"> 
             <div id="videoFrame2" v-show="!tabs">
                 <video
                     class="video-js vjs-default-skin vjs-big-play-centered"
@@ -177,8 +177,32 @@
                     <!-- <source :src="`http://i3a101.p.ssafy.io/images/${playerUrl}`"> </source> -->
                 </video>
             </div>
-            <div class="wiki-paragraph" v-show="tabs" v-html="parse(content)" style="background-color: #ffffff;">
-                
+            <div class="wiki-paragraph" v-show="tabs" style="background-color: #ffffff;">
+                <div v-if="content" v-html="parse(content)" style="min-height:300px"/>
+                <div v-else>
+                    <v-container fluid style="width:100%;">         
+                                        <v-row>
+                                            <v-col cols="12">
+                                                <v-row
+                                                    align="start"
+                                                    justify="center"
+                                                >                                    
+                                                    <v-icon style="font-size:120px;"  :style="{'color': (darkOption ? '#d4d4d4' : 'rgba(0, 0, 0, 0.54)')}" > mdi-emoticon-cry-outline </v-icon>                                
+                                                </v-row>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row>
+                                            <v-col cols="12">
+                                                <v-row
+                                                    align="end"
+                                                    justify="center"
+                                                >       
+                                                    <div style="font-size:20px"> 위키 문서가 비어있습니다 :( </div>    
+                                                </v-row>
+                                            </v-col>
+                                        </v-row>
+                                    </v-container>
+                </div>
             </div>
         </v-dialog>
     </v-dialog>
