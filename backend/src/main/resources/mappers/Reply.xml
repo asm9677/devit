@@ -41,20 +41,42 @@
 		
 	<!--  댓글 조회 -->
 	<select id="info" resultType="ReplyResponse">
-		select br.board_reply_id as boardReplyId,
+	 select a.boardReplyId,
+			a.boardId,
+			a.userId,
+			a.userName,
+			a.profile,
+			a.replyContent,
+			a.replyCreated,
+			a.replyModified,
+			a.parentReplyId,
+			a.deleteYn,
+			a.hasChild,
+			a.isMine
+       from (
+		 select br.board_reply_id as boardReplyId,
 				br.board_id as boardId,
-				br.user_id as userId,
-				u.nickname as userName,
-				u.profile as profile,
-				br.reply_content as replyContent,
-				br.reply_created as replyCreated,
-				br.reply_modified as replyModified,
+				if(br.delete_yn='Y', 0, br.user_id) as userId,
+				if(br.delete_yn='Y', '-', u.nickname) as userName,
+				if(br.delete_yn='Y', '', u.profile) as profile,
+				if(br.delete_yn='Y', '삭제된 댓글입니다.', br.reply_content) as replyContent,
+				if(br.delete_yn='Y', null, br.reply_created) as replyCreated,
+				if(br.delete_yn='Y', null, br.reply_modified) as replyModified,
 				br.parent_reply_id as parentReplyId,
 				br.delete_yn as deleteYn,
+                case when exists (select 1 from board_reply where parent_reply_id = br.board_reply_id and delete_yn = 'N') then 'Y'
+                     else 'N'
+				end as hasChild,
 				if(br.user_id = #{userId}, 'Y', 'N') as isMine
 		from board_reply br
-		left outer join user u on br.user_id = u.user_id
-		where br.board_id = #{bid} and br.delete_yn = 'N'
-        order by if(parent_reply_id = 0, board_reply_id, parent_reply_id), board_reply_id;
+		     left outer join 
+             user u 
+             on 
+             br.user_id = u.user_id
+	   where br.board_id = #{bid}
+			) a
+	   where 1=1
+         and (a.deleteYn = 'N' or a.hasChild = 'Y')
+	order by if(a.parentReplyId = 0, a.boardReplyId, a.parentReplyId), a.boardReplyId;
 	</select>
 </mapper>
