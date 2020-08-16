@@ -160,7 +160,6 @@
                         this.pageCnt = data
                             .result[0]
                             .pageCnt;
-                        console.log("data.result", data.result)
                     })
                     .catch((error) => {
                         console.dir(error)

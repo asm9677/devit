@@ -204,7 +204,6 @@
                     })
                     .then(({data}) => {
                         this.item.profile = data.result;
-                        console.log(data.result);
 
                         http
                             .axios

@@ -100,12 +100,10 @@ public class BoardController {
 			
 			if(boardResponse != null) {
 				result.msg = "success";
-				System.out.println(boardResponse.getBoardTitle());
 				result.result = boardResponse;
 				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			} else {
 				result.msg = "not found";
-				System.out.println("Not Found");
 				response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
@@ -166,7 +164,6 @@ public class BoardController {
 				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			} else {
 				result.msg = "not found";
-				System.out.println("Not Found");
 				response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {

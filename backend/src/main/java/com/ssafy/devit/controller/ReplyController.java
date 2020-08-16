@@ -88,7 +88,6 @@ public class ReplyController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			result.msg = "not found";
-			System.out.println("Not Found");
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 		} // bid에 해당하는 게시글을 조회한다.
 		return response;

@@ -46,7 +46,6 @@ public class FilesController {
 			result.msg = "success";
 			response = new ResponseEntity<>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			System.out.println(e.getMessage().toString());
 			result.msg = "fail";
 			response = new ResponseEntity<>(result, HttpStatus.EXPECTATION_FAILED);
 		}

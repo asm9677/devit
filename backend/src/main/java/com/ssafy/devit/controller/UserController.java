@@ -45,7 +45,6 @@ public class UserController {
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		System.out.println(user);
 		try {
 			result.result = userService.getUsers();
 			result.msg = "success";

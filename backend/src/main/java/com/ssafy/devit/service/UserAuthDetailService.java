@@ -23,7 +23,6 @@ public class UserAuthDetailService implements UserDetailsService{
 		try {
 			userDetails =  userRepository.findUserByUserId(Long.parseLong(userId));
 		} catch (Exception e) {
-			System.out.println(e.getMessage().toString());
 			throw new UsernameNotFoundException("사용자를 찾을 수 없습니다");
 		}
 		return userDetails;
