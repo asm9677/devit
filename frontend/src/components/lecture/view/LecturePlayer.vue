@@ -116,7 +116,7 @@
                                     </v-list-item-title>                                                            
                                 </v-list-item-content>
                                 <v-list-item-action @click="closeList">
-                                    <v-icon>
+                                    <v-icon style="cursor:pointer">
                                         mdi-close
                                     </v-icon>
                                 </v-list-item-action>
@@ -134,7 +134,7 @@
                                     </v-list-item-title>                        
                                 </v-list-item-content>
                                 <v-list-item-action @click="closeList">
-                                    <v-icon>
+                                    <v-icon style="cursor:pointer">
                                         mdi-close
                                     </v-icon>
                                 </v-list-item-action>
@@ -156,7 +156,7 @@
                                     </v-list-item-title>                        
                                 </v-list-item-content>
                                 <v-list-item-action @click="closeList">
-                                    <v-icon>
+                                    <v-icon style="cursor:pointer">
                                         mdi-close
                                     </v-icon>
                                 </v-list-item-action>
@@ -181,7 +181,7 @@
                                     </v-list-item-title>                                                            
                                 </v-list-item-content>
                                 <v-list-item-action @click="closeList">
-                                    <v-icon>
+                                    <v-icon style="cursor:pointer">
                                         mdi-close
                                     </v-icon>
                                 </v-list-item-action>
@@ -243,7 +243,7 @@
                         <v-list :dark="darkOption">
                             <v-list-item>
                                 <v-list-item-avatar @click="tabs=2">
-                                    <v-icon>
+                                    <v-icon style="cursor:pointer">
                                         mdi-arrow-left
                                     </v-icon>
                                 </v-list-item-avatar>
@@ -253,7 +253,7 @@
                                     </v-list-item-title>                        
                                 </v-list-item-content>
                                 <v-list-item-action @click="closeList">
-                                    <v-icon>
+                                    <v-icon style="cursor:pointer">
                                         mdi-close
                                     </v-icon>
                                 </v-list-item-action>
