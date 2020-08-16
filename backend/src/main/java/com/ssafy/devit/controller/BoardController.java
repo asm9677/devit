@@ -57,12 +57,13 @@ public class BoardController {
 	@ApiOperation(value = "게시물 등록")
 	public ResponseEntity<CommonResponse> upload(@RequestBody BoardUploadRequest request) throws Exception{
 		log.info(">> boardUpLoad <<");
-		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		final CommonResponse result = new CommonResponse();
 		ResponseEntity<CommonResponse> response = null;
-		BoardRequest board = null;
-		board = new BoardRequest(user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardType(), request.getBoardCount());
 		try {
+			UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			BoardRequest board = null;
+			board = new BoardRequest(user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardType(), request.getBoardCount());
+
 			boardService.upload(board);
 			 // bid에 해당하는 게시글을 조회한다.
 			if(board.getBoardType() == 1) { // 공지사항 알림
@@ -196,16 +197,18 @@ public class BoardController {
 	@ApiOperation(value = "강의 관련 질문 게시물 등록")
 	public ResponseEntity<CommonResponse> createBoardWithLecture(@RequestBody BoardWithLectureRequest request) throws Exception{
 		log.info(">> createBoardWithLecture <<");
-		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
 		final CommonResponse result = new CommonResponse();
 		
 		ResponseEntity<CommonResponse> response = null;
-		BoardWithLectureRequest boardWithLectureRequest = null;
-		
-//		boardWithLectureRequest = new BoardWithLectureRequest(request.getLectureId(), request.getSubId(), user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardType(), request.getBoardCount());
-		boardWithLectureRequest = new BoardWithLectureRequest(request.getLectureId(), request.getSubId(), user.getUserId(), request.getBoardTitle(), request.getBoardContent());
 		
 		try {
+			UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			BoardWithLectureRequest boardWithLectureRequest = null;
+			
+//			boardWithLectureRequest = new BoardWithLectureRequest(request.getLectureId(), request.getSubId(), user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardType(), request.getBoardCount());
+			boardWithLectureRequest = new BoardWithLectureRequest(request.getLectureId(), request.getSubId(), user.getUserId(), request.getBoardTitle(), request.getBoardContent());
+			
 			boardService.createBoardWithLecture(boardWithLectureRequest);
 			 // bid에 해당하는 게시글을 조회한다.
 			result.msg = "success";
