@@ -23,7 +23,7 @@ public class NoticeResponse {
 	private String reqType;
 	private long createUserId;
 	private String createUserNickname;
-	private String createUserProfile;
+	private String profile;
 	
 	public NoticeResponse() {}
 	
@@ -222,14 +222,17 @@ public class NoticeResponse {
 
 
 
-	public String getCreateUserProfile() {
-		return createUserProfile;
+	public String getProfile() {
+		return profile;
 	}
 
 
 
-	public void setCreateUserProfile(String createUserProfile) {
-		this.createUserProfile = createUserProfile;
+	public void setProfile(String profile) {
+		this.profile = profile;
 	}
+
+
+
 
 }

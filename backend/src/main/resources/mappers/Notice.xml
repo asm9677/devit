@@ -37,9 +37,10 @@
 			end as createUserNickname,
             case when a.notice_type in (1) then (select profile from user where user_id = b.user_id)
 				 when a.notice_type in (2) then (select profile from user where user_id = r.user_id)
-				 when a.notice_type in (3, 4) then l.createUserProfile
+				 when a.notice_type in (3) then l.createUserProfile
+				 when a.notice_type in (4) then l.thumbnail_url
                  else ''
-			end as createUserProfile
+			end as profile
 	   from notice a
             left outer join
             board b
@@ -56,6 +57,7 @@
 					lsi.sub_id,
 					lsh.sub_his_id,
 					l.title as lectureTitle,
+					l.thumbnail_url,
 					lsi.title as subIndexTitle,
                     lsh.req_type,
                     lsh.user_id as createUserId,
