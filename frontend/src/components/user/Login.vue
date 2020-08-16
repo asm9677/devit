@@ -65,6 +65,7 @@ export default {
     },
     created(){
         eventBus.$on('socialLogin', (email, nickname, password) => {
+            this.$router.app.$store.commit('startLoading');
             http.axios.post('/api/v1/account/login', {
                 email: email,
                 password: password
@@ -104,6 +105,7 @@ export default {
                 })
             }).finally(() => {
                 this.loading = false;
+                this.$router.app.$store.commit('endLoading');
             })
         })
     },
@@ -113,6 +115,7 @@ export default {
             KaKaoLogin.loginWithKakao();
         },
         login(){
+            this.$router.app.$store.commit('startLoading');
             http.axios.post("/api/v1/account/login", {
                 email: this.email,
                 password: this.password
@@ -130,6 +133,7 @@ export default {
                 location.reload(true);
             }).finally(() => {
                 this.loading = false;
+                //this.$router.app.$store.commit('endLoading');
             })
         },
         moveJoin(){

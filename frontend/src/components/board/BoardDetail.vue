@@ -129,6 +129,7 @@
                                         <v-spacer></v-spacer>
                                         <v-hover v-slot:default="{ hover }">
                                             <v-btn
+                                                v-if="replyItem.parentReplyId == 0"
                                                 depressed="depressed"
                                                 text="text"
                                                 small="small"
@@ -138,7 +139,7 @@
                                         </v-hover>
                                         <v-hover v-slot:default="{ hover }">
                                             <v-btn
-                                                v-show="replyItem.isMine == 'Y'"
+                                                v-if="replyItem.isMine == 'Y'"
                                                 depressed="depressed"
                                                 text="text"
                                                 small="small"
@@ -148,7 +149,7 @@
                                         </v-hover>
                                         <v-hover v-slot:default="{ hover }">
                                             <v-btn
-                                                v-show="replyItem.isMine == 'Y'"
+                                                v-if="replyItem.isMine == 'Y'"
                                                 depressed="depressed"
                                                 text="text"
                                                 small="small"
@@ -258,77 +259,83 @@
 
             },
             createRereply(item) {
+                if(this.$router.app.$store.state.token){
+                    if (item.replyText == "") {
+                        alert("댓글을 입력하세요");
+                        return;
+                    }
 
-                if (item.replyText == "") {
-                    alert("댓글을 입력하세요");
-                    return;
+                    if (item.showType == "modify") {
+                        http
+                            .axios
+                            .put("/api/v1/reply", {
+                                boardId: this.$route.query.boardId,
+                                boardReplyId: item.boardReplyId,
+                                parentReplyId: 0,
+                                replyContent: item.replyText
+                            })
+                            .then(({data}) => {
+                                this.text = "댓글이 등록되었습니다.";
+                                this.snackbar = true;
+                                item.replyText = "";
+                                this.showBoardDetail();
+
+                            })
+                            .catch((error) => {
+                                console.dir(error)
+                            })
+
+                    } else if (item.showType == "rereply") {
+                        http
+                            .axios
+                            .post("/api/v1/reply", {
+                                boardId: this.$route.query.boardId,
+                                parentReplyId: item.boardReplyId,
+                                replyContent: item.replyText
+                            })
+                            .then(({data}) => {
+                                this.text = "댓글이 등록되었습니다.";
+                                this.snackbar = true;
+                                item.replyText = "";
+                                this.showBoardDetail();
+
+                            })
+                            .catch((error) => {
+                                console.dir(error)
+                            })
+                    }
+                }else{
+                    eventBus.$emit('doLogin');
                 }
+            },
+            createReply() {
 
-                if (item.showType == "modify") {
-                    http
-                        .axios
-                        .put("/api/v1/reply", {
-                            boardId: this.$route.query.boardId,
-                            boardReplyId: item.boardReplyId,
-                            parentReplyId: 0,
-                            replyContent: item.replyText
-                        })
-                        .then(({data}) => {
-                            this.text = "댓글이 등록되었습니다.";
-                            this.snackbar = true;
-                            item.replyText = "";
-                            this.showBoardDetail();
-
-                        })
-                        .catch((error) => {
-                            console.dir(error)
-                        })
-
-                } else if (item.showType == "rereply") {
+                if(this.$router.app.$store.state.token){
+                    if (this.replyText == "") {
+                        alert("댓글을 입력하세요");
+                        return;
+                    }
                     http
                         .axios
                         .post("/api/v1/reply", {
                             boardId: this.$route.query.boardId,
-                            parentReplyId: item.boardReplyId,
-                            replyContent: item.replyText
+                            parentReplyId: 0,
+                            replyContent: this.replyText
                         })
                         .then(({data}) => {
                             this.text = "댓글이 등록되었습니다.";
                             this.snackbar = true;
-                            item.replyText = "";
+                            this.replyText = "";
                             this.showBoardDetail();
 
                         })
                         .catch((error) => {
                             console.dir(error)
                         })
+                }else{
+                    eventBus.$emit('doLogin');
                 }
-
             },
-            createReply() {
-
-                if (this.replyText == "") {
-                    alert("댓글을 입력하세요");
-                    return;
-                }
-                http
-                    .axios
-                    .post("/api/v1/reply", {
-                        boardId: this.$route.query.boardId,
-                        parentReplyId: 0,
-                        replyContent: this.replyText
-                    })
-                    .then(({data}) => {
-                        this.text = "댓글이 등록되었습니다.";
-                        this.snackbar = true;
-                        this.replyText = "";
-                        this.showBoardDetail();
-
-                    })
-                    .catch((error) => {
-                        console.dir(error)
-                    })
-                },
             showBoardDetail() {
 
                 http
