@@ -23,6 +23,7 @@ public class NoticeResponse {
 	private String reqType;
 	private long createUserId;
 	private String createUserNickname;
+	private String createUserProfile;
 	
 	public NoticeResponse() {}
 	
@@ -218,4 +219,17 @@ public class NoticeResponse {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
+
+
+
+	public String getCreateUserProfile() {
+		return createUserProfile;
+	}
+
+
+
+	public void setCreateUserProfile(String createUserProfile) {
+		this.createUserProfile = createUserProfile;
+	}
+
 }

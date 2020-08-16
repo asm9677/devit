@@ -187,10 +187,58 @@ public class NoticeController {
 			result.msg = "fail";
 			result.result = "알림을 삭제할 권한이 없습니다";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
-			log.info(">> Error : removeLectureAuth <<");
+			log.info(">> Error : removeNoticeAll <<");
 //			log.info(e.getMessage().toString());
 		}
 		return response;
 	}
-	
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "알람 개별 삭제")
+	@DeleteMapping("/notice/each")
+	public ResponseEntity<CommonResponse> removeNoticeEach(@RequestParam("notice_id") long noticeId) {
+		log.info(">> Load : removeNotice <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			noticeService.removeNoticeEach(noticeId);
+			result.msg = "success";
+			result.result = "성공적으로 삭제되었습니다.";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			result.result = "알림을 삭제할 권한이 없습니다";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			log.info(">> Error : removeNotice <<");
+//			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
+
+
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@ApiOperation(value = "읽은 알람 삭제")
+	@DeleteMapping("/notice/read")
+	public ResponseEntity<CommonResponse> removeNoticeRead() {
+		log.info(">> Load : removeNoticeRead <<");
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+
+		try {
+			noticeService.removeNoticeRead();
+			result.msg = "success";
+			result.result = "성공적으로 삭제되었습니다.";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			result.result = "알림을 삭제할 권한이 없습니다";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			log.info(">> Error : removeNoticeRead <<");
+//			log.info(e.getMessage().toString());
+		}
+		return response;
+	}
 }
