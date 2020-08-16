@@ -122,7 +122,7 @@
                                 <!-- <v-btn color="primary" block depressed style="margin:10px 0px;" @click="requestProcess(curItem,'N')">거절</v-btn>   -->
                                 <v-btn color="primary" block depressed style="margin:10px 0px;" @click="initPreview(curItem)">상세보기</v-btn>  
                                 <v-dialog v-model="preview" hide-overlay max-width="768"> 
-                                    <div id="videoFrame3" v-if="curItem.reqType == 'video'">
+                                    <div id="videoFrame3" v-show="curItem.reqType=='video'">
                                         <video
                                             class="video-js vjs-default-skin vjs-big-play-centered"
                                             controls                      
@@ -133,9 +133,7 @@
                                             <source :src="`http://i3a101.p.ssafy.io/images/${curItem.playerUrl}`"> </source>
                                         </video>
                                     </div>
-                                    
-                                    <div class="wiki-paragraph" v-else style="background-color: #ffffff;">
-                                        <!-- {{curItem.wikiContentHtml}} -->
+                                    <div class="wiki-paragraph" v-show="curItem.reqType=='wiki'" style="background-color: #ffffff;">
                                         <div v-if="curItem.wikiContentHtml" v-html="parse(curItem.wikiContentHtml)" style="min-height:300px"/>
                                         <div v-else>
                                             <v-container fluid style="width:100%;">         
@@ -196,9 +194,9 @@ export default {
             }
         },
         preview() {
-            if(this.preview == false) {
-                $('#videoFrame3').html(' ')
-            }
+            // if(this.preview == false) {
+            //     $('#videoFrame3').html(' ')
+            // }
         }
     },
     data() {

@@ -107,7 +107,7 @@
         <v-list>
         <v-list-item style="margin-top:15px;">        
             <v-list-item-content>
-                <v-btn outlined color="error" max-width="80" @click="closeDialog()">
+                <v-btn outlined color="error" max-width="80" @click="$emit('closeDialog')">
                     취소
                 </v-btn>
             </v-list-item-content>
@@ -166,9 +166,9 @@
         >
             {{msg}}
         </v-snackbar>
-        <v-dialog v-model="preview" hide-overlay max-width="868"> 
-            <div id="videoFrame2" v-show="!tabs">
-                <video
+        <v-dialog v-model="preview" hide-overlay max-width="768" > 
+            <div id="videoFrame2" v-show="!tabs" >
+                <video 
                     class="video-js vjs-default-skin vjs-big-play-centered"
                     controls                      
                     data-setup='{}'
@@ -177,32 +177,8 @@
                     <!-- <source :src="`http://i3a101.p.ssafy.io/images/${playerUrl}`"> </source> -->
                 </video>
             </div>
-            <div class="wiki-paragraph" v-show="tabs" style="background-color: #ffffff;">
-                <div v-if="content" v-html="parse(content)" style="min-height:300px"/>
-                <div v-else>
-                    <v-container fluid style="width:100%;">         
-                                        <v-row>
-                                            <v-col cols="12">
-                                                <v-row
-                                                    align="start"
-                                                    justify="center"
-                                                >                                    
-                                                    <v-icon style="font-size:120px;"  :style="{'color': (darkOption ? '#d4d4d4' : 'rgba(0, 0, 0, 0.54)')}" > mdi-emoticon-cry-outline </v-icon>                                
-                                                </v-row>
-                                            </v-col>
-                                        </v-row>
-                                        <v-row>
-                                            <v-col cols="12">
-                                                <v-row
-                                                    align="end"
-                                                    justify="center"
-                                                >       
-                                                    <div style="font-size:20px"> 위키 문서가 비어있습니다 :( </div>    
-                                                </v-row>
-                                            </v-col>
-                                        </v-row>
-                                    </v-container>
-                </div>
+            <div class="wiki-paragraph" v-show="tabs" v-html="parse(content)" style="background-color: #ffffff;">
+                
             </div>
         </v-dialog>
     </v-dialog>
@@ -222,7 +198,7 @@ export default {
     watch: {
         dialog() {
             if(this.dialog == false)
-                this.closeDialog();
+                this.$emit('closeDialog')
         },
         wiki() {
             this.content = this.wiki;
@@ -266,7 +242,6 @@ export default {
                     </video>
                 `
             )
-
         },
         clickVideo(){
             $("#file").click();
@@ -352,9 +327,9 @@ export default {
                 "wikiContentHtml": this.content,
             }).then(({data}) => {
                 console.dir(data)
+                this.$emit('closeDialog');
                 this.snackbar = true;
                 this.msg = '정상적으로 요청되었습니다.';
-                this.closeDialog(true);
             })
         },
         updatePercentCompleted(progressEvent){
@@ -377,15 +352,15 @@ export default {
                 http.axios.post('/api/v1/lectures/sub/history', {
                     "lectureId": this.lectureId,
                     "subId": this.subId,
-                    "reqType": "video", 
+                    "reqType": "video",
                     "playTime": this.playTime,
                     "playerUrl": this.playerUrl,
                     "thumbnailUrl": this.thumbnailUrl,
                     "title": this.title,
                 }).then(({data}) => {
+                    this.$emit('closeDialog');
                     this.snackbar = true;
                     this.msg = '정상적으로 요청되었습니다.';
-                    this.closeDialog(true);
                 })
             }
         },
@@ -400,31 +375,6 @@ export default {
         setPlayTime(duration){
             duration = parseInt(duration);
             this.playTime = parseInt(duration / 60) + ":" + (duration % 60);
-        },
-
-        closeDialog(flag) {
-            if(flag == true){
-                var self = this;
-                this.$router.app.$store.commit('startLoading')
-
-                setTimeout(() => {
-                    self.$router.app.$store.commit('endLoading')
-                    self.$emit('closeDialog');
-                },1000)
-            }else{
-                this.$emit('closeDialog');
-            }
-
-            this.playTime = '';
-            this.playerUrl = '';
-            this.thumbnailUrl = '';
-            this.title = '';
-
-            this.step = 1,
-            this.percentCompleted = 0,
-            this.content = this.wiki;
-
-            
         }
     }
 }
