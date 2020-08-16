@@ -21,5 +21,9 @@ public interface NoticeRepository { // to Notice.xml
 
 	public void removeNoticeAll(long userId) throws Exception;
 
+	public void removeNoticeEach(long noticeId) throws Exception;
+	
+	public void removeNoticeRead(long userId) throws Exception;
+
 	public NoticeDetailResponse getNoticeDetailInfo(@Param("noticeId") long noticeId) throws Exception;
 }

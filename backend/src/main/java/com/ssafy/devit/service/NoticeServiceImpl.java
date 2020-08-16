@@ -83,4 +83,28 @@ public class NoticeServiceImpl implements NoticeService { // to NoticeRepository
 		
 		noticeRepository.removeNoticeAll(user.getUserId());
 	};
+	
+	public void removeNoticeEach(long notice_id) throws Exception {
+		UserAuthDetails user = null;
+		
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			throw new Exception("로그인이 필요합니다");
+		}
+		
+		noticeRepository.removeNoticeEach(notice_id);
+	};
+	
+	public void removeNoticeRead() throws Exception {
+		UserAuthDetails user = null;
+		
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			throw new Exception("로그인이 필요합니다");
+		}
+		
+		noticeRepository.removeNoticeRead(user.getUserId());
+	};
 }

@@ -22,4 +22,8 @@ public interface NoticeService { // to NoticeServiceImpl
 	public NoticeDetailResponse getNoticeDetailInfo(long notice_id) throws Exception;
 	
 	public void removeNoticeAll() throws Exception;
+	
+	public void removeNoticeEach(long notice_id) throws Exception;
+	
+	public void removeNoticeRead() throws Exception;
 }
