@@ -118,7 +118,7 @@ export default {
                     return;
                 }
 
-                store.commit('login', {token: data.result.token, email: email, profile: data.result.profile})
+                store.commit('login', {token: data.result.token, email: this.email, profile: data.result.profile})
                 this.$emit('closeDialog');
 
                 location.reload(true);
