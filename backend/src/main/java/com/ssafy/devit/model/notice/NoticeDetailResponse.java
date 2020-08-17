@@ -14,6 +14,8 @@ public class NoticeDetailResponse {
 	private long lectureId;
 	private long subId;
 	private Date createdDate;
+	private long boardType;
+	private int indexOrder;
 	
 	public NoticeDetailResponse() {}
 	
@@ -99,4 +101,25 @@ public class NoticeDetailResponse {
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
 	}
+
+
+	public long getBoardType() {
+		return boardType;
+	}
+
+
+	public void setBoardType(long boardType) {
+		this.boardType = boardType;
+	}
+
+
+	public int getIndexOrder() {
+		return indexOrder;
+	}
+
+
+	public void setIndexOrder(int indexOrder) {
+		this.indexOrder = indexOrder;
+	}
+
 }
