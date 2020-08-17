@@ -1,5 +1,9 @@
+# DB 생성
 CREATE DATABASE IF NOT EXISTS devit;
 
+
+
+# DB 사용
 USE devit;
 
 
@@ -15,63 +19,47 @@ CREATE TABLE `user` (
   `deleted` datetime DEFAULT NULL COMMENT '삭제일',
   `email_confirm` varchar(1) NOT NULL DEFAULT 'N' COMMENT '이메일 인증 확인 여부',
   `code` varchar(45) DEFAULT NULL,
-  `profile` varchar(200) DEFAULT NULL,
+  `profile` varchar(200) DEFAULT 'defaultUser.png',
   PRIMARY KEY (`user_id`),
   UNIQUE KEY `nickname_UNIQUE` (`nickname`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
-
-# temp data 삽입
-INSERT INTO `user` (`nickname`, `email`, `password`) VALUES ('admin', 'admin@admin.com', '{bcrypt}$2a$10$pcUo/H7ABf42BYF9QTTf0uq.cIV0d8Hu4Bnhh0JxAksWlVdz42m4e');
-INSERT INTO `user` (`nickname`, `email`, `password`) VALUES ('test', 'test@test.com', '{bcrypt}$2a$10$8mVudpzSB9T8lP/Up3zxDekuNI0zEjAt4FnQdV0wXvtHj5qwOR.lK');
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 # user_roles 테이블 생성
 CREATE TABLE `user_role` (
   `user_id` int(11) NOT NULL,
   `user_role` varchar(45) DEFAULT NULL,
   KEY `uid_idx` (`user_id`),
-  CONSTRAINT `uid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `uid` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 # temp data 삽입
-INSERT INTO `user_role` (`user_id`, `user_role`) VALUES((SELECT `user_id` FROM `user` WHERE nickname='admin'), 'ROLE_ADMIN');
-INSERT INTO `user_role` (`user_id`, `user_role`) VALUES((SELECT `user_id` FROM `user` WHERE nickname='test'), 'ROLE_USER');
+INSERT INTO `user` (`nickname`, `email`, `password`) VALUES ('DEVIT-관리자', 'i3a101.devit.io@gmail.com', '{bcrypt}$2a$10$3WhBtFfHMLa2PLFby2uWMOGXXJ.NLLsqge9wJptlcvg1ZS.5xnwmK');
+INSERT INTO `user_role` (`user_id`, `user_role`) VALUES((SELECT `user_id` FROM `user` WHERE nickname='DEVIT-관리자'), 'ROLE_ADMIN');
 
 
 
 # board 테이블 삽입
-CREATE TABLE board (
-  board_id int(11) NOT NULL AUTO_INCREMENT,
-  user_id int(11) NOT NULL,
-  title varchar(300) NOT NULL,
-  content text NOT NULL,
-  content_html text NOT NULL,
-  type int(11) NOT NULL,
-  count int(11) NOT NULL DEFAULT '0',
-  created datetime DEFAULT CURRENT_TIMESTAMP,
-  modified datetime DEFAULT NULL,
-  delete_yn varchar(1) DEFAULT 'N',
-  lecture_id int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
-  sub_id int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
-  sub_his_id int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
-  PRIMARY KEY (board_id),
-  KEY uidd_idx (user_id),
-  CONSTRAINT board_uid_fk FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=176 DEFAULT CHARSET=utf8;
-
-CREATE TABLE `board_like` (
-  `board_like_id` int(11) NOT NULL,
-  `board_id` int(11) NOT NULL,
+CREATE TABLE `board` (
+  `board_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `like_created` datetime DEFAULT CURRENT_TIMESTAMP,
-  `like_flag` varchar(1) DEFAULT 'Y',
-  PRIMARY KEY (`board_like_id`),
-  KEY `board_like_bid_fk_idx` (`board_id`),
-  KEY `user_uid_fk_idx` (`user_id`),
-  CONSTRAINT `board_like_bid_fk` FOREIGN KEY (`board_id`) REFERENCES `board` (`board_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `user_uid_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `title` varchar(300) NOT NULL,
+  `content` text,
+  `content_html` text,
+  `type` int(11) NOT NULL,
+  `count` int(11) NOT NULL DEFAULT '0',
+  `created` datetime DEFAULT CURRENT_TIMESTAMP,
+  `modified` datetime DEFAULT NULL,
+  `delete_yn` varchar(1) DEFAULT 'N',
+  `lecture_id` int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
+  `sub_id` int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
+  `sub_his_id` int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
+  PRIMARY KEY (`board_id`),
+  KEY `uidd_idx` (`user_id`),
+  CONSTRAINT `board_uid_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+# board_reply 테이블 삽입
 CREATE TABLE `board_reply` (
   `board_reply_id` int(11) NOT NULL AUTO_INCREMENT,
   `board_id` int(11) NOT NULL,
@@ -86,15 +74,15 @@ CREATE TABLE `board_reply` (
   KEY `board_reply_uid_fk_idx` (`user_id`),
   CONSTRAINT `board_reply_bid_fk` FOREIGN KEY (`board_id`) REFERENCES `board` (`board_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `board_reply_uid_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
 
-# lecture
+# lecture 관련 테이블 삽입
 CREATE TABLE `lecture_common` (
   `common_id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`common_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `lecture` (
   `lecture_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -114,7 +102,7 @@ CREATE TABLE `lecture` (
   KEY `lecture_uid_fk_idx` (`user_id`),
   CONSTRAINT `lecture_cid_fk` FOREIGN KEY (`common_id`) REFERENCES `lecture_common` (`common_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lecture_uid_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=88 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `lecture_auth` (
   `auth_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '권한 id',
@@ -129,7 +117,7 @@ CREATE TABLE `lecture_auth` (
   KEY `lecture_auth_lid_fk` (`lecture_id`),
   CONSTRAINT `lecture_auth_lid_fk` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`lecture_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lecture_auth_uid_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `lecture_sub_index` (
   `sub_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '소분류 테이블 자동 증가 id',
@@ -141,7 +129,7 @@ CREATE TABLE `lecture_sub_index` (
   `order` int(11) DEFAULT '1' COMMENT '소분류 순서',
   `video_id` int(11) DEFAULT NULL COMMENT 'lecture_sub_history로 부터 반영되어 보여질 동영상을 포함하고 있는 lectrue_sub_history.sub_his_id',
   `wiki_id` int(11) DEFAULT NULL COMMENT 'lecture_sub_history로 부터 반영되어 보여질 wiki를 포함하고 있는 lectrue_sub_history.sub_his_id',
-  `view_count` int(11) DEFAULT '0' COMMENT '조회수',
+  `view_count` int(11) DEFAULT NULL COMMENT '조회수',
   `created` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '생성일',
   `modified` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '수정일',
   PRIMARY KEY (`sub_id`),
@@ -154,7 +142,7 @@ CREATE TABLE `lecture_sub_index` (
   CONSTRAINT `lecture_sub_index_lecture_id_fk` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`lecture_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lecture_sub_index_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lecture_sub_modifier_fk` FOREIGN KEY (`modifier`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `lecture_sub_history` (
   `sub_his_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '강의 참여 요청 이력 테이블 PK',
@@ -164,7 +152,7 @@ CREATE TABLE `lecture_sub_history` (
   `modifier` int(11) NOT NULL COMMENT '수정한 사람',
   `created` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '생성일자',
   `modified` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '수정일자',
-  `title` varchar(300) DEFAULT NULL COMMENT '강의 또는 위키 요청 리퀘스트에 해당하는 제목',
+  `title` varchar(300) DEFAULT NULL,
   `thumbnail_url` varchar(300) DEFAULT NULL,
   `play_time` varchar(45) DEFAULT NULL,
   `player_url` varchar(300) DEFAULT NULL COMMENT '동영상 강의 URL',
@@ -175,7 +163,7 @@ CREATE TABLE `lecture_sub_history` (
   `accept_yn` varchar(1) DEFAULT NULL COMMENT '요청을 받아들일지 거절할지 여부',
   `delete_yn` varchar(1) NOT NULL DEFAULT 'N' COMMENT 'accept_yn 여부와 상관 없이 부적절한 동영상일 경우 목록에서 보이지 않도록...',
   PRIMARY KEY (`sub_his_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COMMENT='강의 참여 요청 이력 테이블';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='강의 참여 요청 이력 테이블';
 
 CREATE TABLE `lecture_sub_his_like` (
   `sub_his_like_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'lecture_sub_his_like의 PK',
@@ -187,7 +175,7 @@ CREATE TABLE `lecture_sub_his_like` (
   `created` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '생성일자',
   `modified` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '수정일자',
   PRIMARY KEY (`sub_his_like_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='lecture_sub_history에 존재하는 동영상들에 대한 좋아요 관리 테이블';
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='lecture_sub_history에 존재하는 동영상들에 대한 좋아요 관리 테이블';
 
 CREATE TABLE `lecture_tag` (
   `tag_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -196,7 +184,7 @@ CREATE TABLE `lecture_tag` (
   PRIMARY KEY (`tag_id`),
   KEY `lecture_tag_cid_fk_idx` (`common_id`),
   CONSTRAINT `lecture_tag_cid_fk` FOREIGN KEY (`common_id`) REFERENCES `lecture_common` (`common_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `lecture_like` (
   `like_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -210,20 +198,23 @@ CREATE TABLE `lecture_like` (
   KEY `lecture_like_lecture_id_fk_idx` (`lecture_id`),
   CONSTRAINT `lecture_like_lecture_id_fk` FOREIGN KEY (`lecture_id`) REFERENCES `lecture` (`lecture_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `lecture_like_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE notice (
-  notice_id int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
-  noticec_type int(11) NOT NULL COMMENT '1 : 공지사항\\n2 : 내 게시글에 대한 댓글\\n3 : 내 강의에 들어온 요청\\n4 : 내 요청에 대한 응답',
-  user_id int(11) NOT NULL COMMENT '알림을 보낼 user의 id',
-  notice_yn varchar(1) DEFAULT 'N' COMMENT 'N : 알림 해줘야해\\nY : 알림 완료',
-  board_id int(11) DEFAULT NULL COMMENT '댓글이나 공지사항이면, 그 게시글의 id\n아니면 0?',
-  board_reply_id int(11) DEFAULT NULL COMMENT '내 게시글에 달린 댓글의 id',
-  sub_his_id int(11) DEFAULT NULL COMMENT 'lecture_sub_history',
-  lecture_id int(11) DEFAULT NULL COMMENT 'lecture_sub_history',
-  sub_id int(11) DEFAULT NULL COMMENT 'lecture_sub_history',
-  created_date datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (notice_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='about notice';
+
+# notice 테이블 삽입
+CREATE TABLE `notice` (
+  `notice_id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'PK',
+  `notice_type` int(11) NOT NULL COMMENT '1 : 공지사항\\\\n2 : 내 게시글에 대한 댓글\\\\n3 : 내 강의에 들어온 요청\\\\n4 : 내 요청에 대한 응답',
+  `user_id` int(11) NOT NULL COMMENT '알림을 보낼 user의 id',
+  `notice_yn` varchar(1) DEFAULT 'N' COMMENT 'N : 알림 해줘야해\\nY : 알림 완료',
+  `read_yn` varchar(1) DEFAULT 'N',
+  `board_id` int(11) DEFAULT NULL COMMENT '댓글이나 공지사항이면, 그 게시글의 id\n아니면 0?',
+  `board_reply_id` int(11) DEFAULT NULL COMMENT '내 게시글에 달린 댓글의 id',
+  `sub_his_id` int(11) DEFAULT NULL COMMENT 'lecture_sub_history',
+  `lecture_id` int(11) DEFAULT NULL COMMENT 'lecture_sub_history',
+  `sub_id` int(11) DEFAULT NULL COMMENT 'lecture_sub_history',
+  `created_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`notice_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='about notice';
 
