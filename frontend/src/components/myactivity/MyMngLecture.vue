@@ -66,7 +66,8 @@
                                         small="small"
                                         text="text"
                                         color="error"
-                                        @click="remove(`${item.lectureId}`)">삭제하기</v-btn>
+                                        @click="remove(`${item.lectureId}`)"
+                                        v-if="item.isOwner=='Y'">삭제하기</v-btn>
                                 </v-list-item-content>
                             </v-list-item>
                         </div>
@@ -174,7 +175,11 @@
                             if (data.msg == "noauth") {
                                 this.errorMsg = "프로젝트 관리 권한이 없습니다.";
                                 this.errorSnackbar = true;
-                            } else {
+                            } else if(data.msg == "hashistory"){
+                                
+                                this.errorMsg = "강의에 요청 건이 존재하여 삭제할 수 없습니다.";
+                                this.errorSnackbar = true;
+                            }else {
 
                                 this.msg = "삭제되었습니다.";
                                 this.snackbar = true;

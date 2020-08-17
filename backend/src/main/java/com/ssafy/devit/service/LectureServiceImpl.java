@@ -351,6 +351,12 @@ public class LectureServiceImpl implements LectureService {
 		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		return lectureRepository.checkUserManageAuth(user.getUserId(), lectureId);
 	}
+	
+	@Override
+	public String checkHasSubHistory(long lectureId) throws Exception {
+//		UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return lectureRepository.checkHasSubHistory(lectureId);
+	}
 
 	@Override
 	public void deleteLecture(long lectureId) throws Exception {

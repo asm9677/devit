@@ -8,6 +8,7 @@ public class BoardRequest {
 	private long userId;
 	private String boardTitle;
 	private String boardContent;
+	private String boardContentHtml;
 	private long boardType;
 	private Date boardCreated;
 	private long boardCount;
@@ -17,10 +18,11 @@ public class BoardRequest {
 
 	}
 
-	public BoardRequest(long userId, String boardTitle, String boardContent, long boardType, long boardCount) {
+	public BoardRequest(long userId, String boardTitle, String boardContent, String boardContentHtml, long boardType, long boardCount) {
 		this.userId = userId;
 		this.boardTitle = boardTitle;
 		this.boardContent = boardContent;
+		this.boardContentHtml = boardContentHtml;
 		this.boardType = boardType;
 		this.boardCount = boardCount;
 	}
@@ -47,6 +49,14 @@ public class BoardRequest {
 
 	public void setBoardContent(String boardContent) {
 		this.boardContent = boardContent;
+	}
+
+	public String getBoardContentHtml() {
+		return boardContentHtml;
+	}
+
+	public void setBoardContentHtml(String boardContentHtml) {
+		this.boardContentHtml = boardContentHtml;
 	}
 
 	public long getBoardType() {

@@ -1,5 +1,5 @@
 <template>
-    <div style="; margin-top:20px;">
+    <div style="margin-top:20px;">
         <v-card tile="tile" flat="flat">
             <v-layout wrap="wrap">
                 <div
@@ -68,7 +68,7 @@
             }
         },
         data() {
-            return {page: 1, pageCnt: 0, itemsPerPage: 4, items: [{}]}
+            return {page: 1, pageCnt: 0, itemsPerPage: 6, items: [{}]}
         },
         watch: {
             page() {

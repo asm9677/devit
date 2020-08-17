@@ -1,7 +1,7 @@
 <template>
     <v-layout wrap ref="main">
         <v-spacer></v-spacer>
-        <v-btn v-if="!isWrite" light color="success" outlined @click="isWrite=true; title=''; content=''">
+        <v-btn v-if="!isWrite" light color="success" outlined @click="clickQuestionButton()">
             질문하기
         </v-btn>
         <v-list v-else style="width:100%;" :dark="darkOption" >
@@ -78,7 +78,7 @@
 <script>
 import http from "@/util/http_common.js"
 import Editor from "@/components/common/Editor.vue"
-
+import eventBus from "@/lib/EventBus.js"
 export default {
     components: {
         Editor,
@@ -117,12 +117,21 @@ export default {
         window.removeEventListener('resize', this.questionBoardResize())
     },
     methods:{
+        clickQuestionButton() {
+            if(this.$router.app.$store.state.token){        
+                this.isWrite=true;
+                this.title=''; 
+                this.content='';
+            }else{
+                eventBus.$emit('doLogin');
+            }
+        },
         questionBoardResize() {
             this.questionHeight = $('body').height()-$('#question').offset().top
         },
         initBoard() {
             http.axios.get(`/api/v1/board/lecture?lectureId=${this.lectureId}&subId=${this.subId}`).then(({data}) => {
-                console.dir(data)
+                
                 this.items = data.result;
             })
         },

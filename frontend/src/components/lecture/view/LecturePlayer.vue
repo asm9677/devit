@@ -91,7 +91,7 @@
                             v-bind="attrs"
                             v-on="on" 
                             link             
-                            @click="dialog=true"
+                            @click="clickContribute()"
                         >
                              
                             <v-list-item-icon>
@@ -116,7 +116,7 @@
                                     </v-list-item-title>                                                            
                                 </v-list-item-content>
                                 <v-list-item-action @click="closeList">
-                                    <v-icon>
+                                    <v-icon style="cursor:pointer">
                                         mdi-close
                                     </v-icon>
                                 </v-list-item-action>
@@ -134,7 +134,7 @@
                                     </v-list-item-title>                        
                                 </v-list-item-content>
                                 <v-list-item-action @click="closeList">
-                                    <v-icon>
+                                    <v-icon style="cursor:pointer">
                                         mdi-close
                                     </v-icon>
                                 </v-list-item-action>
@@ -156,7 +156,7 @@
                                     </v-list-item-title>                        
                                 </v-list-item-content>
                                 <v-list-item-action @click="closeList">
-                                    <v-icon>
+                                    <v-icon style="cursor:pointer">
                                         mdi-close
                                     </v-icon>
                                 </v-list-item-action>
@@ -181,7 +181,7 @@
                                     </v-list-item-title>                                                            
                                 </v-list-item-content>
                                 <v-list-item-action @click="closeList">
-                                    <v-icon>
+                                    <v-icon style="cursor:pointer">
                                         mdi-close
                                     </v-icon>
                                 </v-list-item-action>
@@ -243,7 +243,7 @@
                         <v-list :dark="darkOption">
                             <v-list-item>
                                 <v-list-item-avatar @click="tabs=2">
-                                    <v-icon>
+                                    <v-icon style="cursor:pointer">
                                         mdi-arrow-left
                                     </v-icon>
                                 </v-list-item-avatar>
@@ -253,7 +253,7 @@
                                     </v-list-item-title>                        
                                 </v-list-item-content>
                                 <v-list-item-action @click="closeList">
-                                    <v-icon>
+                                    <v-icon style="cursor:pointer">
                                         mdi-close
                                     </v-icon>
                                 </v-list-item-action>
@@ -423,7 +423,7 @@
                     </v-btn>
                 </template>
             </v-snackbar>
-            <Contribute :dialog="dialog" :darkOption="darkOption" :lectureId="lectureId" :subId="subId" :wiki="sub.wikiContentHtml" @closeDialog="dialog=false;" style="z-index:12345;"></Contribute>
+            <Contribute :dialog="dialog" :darkOption="darkOption" :lectureId="lectureId" :subId="subId" :wiki="sub.wikiContentHtml" @closeDialog="dialog=false;" style="z-index:9000;"></Contribute>
         </v-layout>
     </div>
 </template>
@@ -438,6 +438,7 @@ import QuestionBoard from "@/components/lecture/view/QuestionBoard.vue"
 import QuestionBoardDetail from "@/components/lecture/view/QuestionBoardDetail.vue"
 import Contribute from "@/components/lecture/view/Contribute.vue"
 import parse from "@/lib/markdown/ParseMd.js";
+import eventBus from "@/lib/EventBus.js";
 
 export default {
     components: {
@@ -534,7 +535,6 @@ export default {
         },
     },
     created(){    
-        console.dir(this.tabName[-1])
         this.lectureId = this.$route.params.id;
         this.order = this.$route.query.order;
         this.tabs = this.tabName.indexOf(this.$route.params.tabName);             
@@ -586,6 +586,13 @@ export default {
     },
     methods: {
         parse,
+        clickContribute() {
+            if(this.$router.app.$store.state.token){    
+                this.dialog=true
+            }else{
+                eventBus.$emit('doLogin');
+            }
+        },
         prevLecture(){
             this.move(`/lecture/player/index/${this.lectureId}?order=${parseInt(this.order)-1}`)
         },
@@ -612,7 +619,6 @@ export default {
             http.axios.get(`/api/v1/lectures/sub/history?lectureId=${this.lectureId}&subId=${this.subId}&subHisId=${this.subHisId}`).then(({data}) => {
                 if(data.result) {                    
                     this.sub = data.result;
-                    console.dir(data.result);
                 }else{
                     alert("존재하지 않는 강의 입니다.");
                     this.move(`/lecture/detail/${this.lectureId}`)                    

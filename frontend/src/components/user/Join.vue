@@ -10,21 +10,12 @@
                             placeholder="닉네임"
                             prepend-icon="mdi-account"
                             v-model="nickname"
+                            :success-messages="!nickerror ? nick_text : false"
+                            :error-messages="nickerror ? nick_text : false"
                             @blur="vaildNickname"
                             @focus="nickfocus"
-                        ></v-text-field>
-                        <div>
-                            <span v-if="this.nickname != '' && !this.nickerror" style="float:left; color:green; font-size:12px; margin:0 0 0 30px;">
-                                {{nick_text}}
-                            </span>
-                            <span v-else-if="this.nickname != '' && this.nickerror" style="float:left; color:red; font-size:12px; margin:0 0 0 30px;">
-                                {{nick_text}}
-                            </span>
-                            
-                            <!-- <v-btn color="primary" style="width:15%; float:right" depressed large @click="vaildNickname">
-                                중복확인
-                            </v-btn> -->
-                        </div>
+                        >
+                        </v-text-field>
                     </td>
                 </tr>
                 <tr>
@@ -33,58 +24,28 @@
                             placeholder="이메일"
                             prepend-icon="mdi-email"
                             v-model="email"
+
+                            :success-messages="!emailerror ? email_text : false"
+                            :error-messages="emailerror ? email_text : false"
+
                             @blur="vaildEmail"
                             @focus="emailfocus"
                         ></v-text-field>
-                        <div>
-                            <span v-if="this.email != '' && !this.emailerror" style="float:left; color:green; font-size:12px; margin:0 0 0 30px;">
-                                {{email_text}}
-                            </span>
-                            <span v-else-if="this.email != '' && this.emailerror" style="float:left; color:red; font-size:12px; margin:0 0 0 30px;">
-                                {{email_text}}
-                            </span>
-                            
-                            <!-- <v-btn color="primary" style="width:20%; float:right" depressed large @click="vaildEmail">
-                                이메일 인증
-                            </v-btn> -->
-                        </div>
                     </td>
                 </tr>
-                <!-- <tr width="100%" style="background-color='red'">
-                    <td>
-                        <v-expand-y-transition>
-                            <v-card v-show="check" tile flat>
-                                <v-text-field
-                                    placeholder="인증코드"
-                                    prepend-icon="mdi-key-variant"
-                                    v-model="code"
-                                ></v-text-field>
-                            </v-card>                
-                        </v-expand-y-transition>
-                    </td>
-                    <td width="30%">
-                        <v-btn @click="check= true" depressed outlined rounded style="width:20%" v-text="check ? '인증코드 확인' : '인증코드 전송'"></v-btn>
-                    </td>
-                </tr> -->
                 <tr>
                     <td>
                         <v-text-field
                             placeholder="비밀번호"
                             prepend-icon="mdi-lock"
                             v-model="password"
-                            clearable
+
+                            :success-messages="!pwerror ? pw_text : false"
+                            :error-messages="pwerror ? pw_text : false"
+
                             type="password"
-                            @blur="vaildPassword"
-                            @keyup="validRePassword"
+                            @keyup="vaildPassword(); validRePassword()"
                         ></v-text-field>
-                        <div>
-                            <span v-if="this.password != '' && !this.pwerror" style="float:left; color:green; font-size:12px; margin:0 0 0 30px;">
-                                {{pw_text}}
-                            </span>
-                            <span v-else-if="this.password != '' && this.pwerror" style="float:left; color:red; font-size:12px; margin:0 0 0 30px;">
-                                {{pw_text}}
-                            </span>
-                        </div>
                     </td>
                 </tr>
                 <tr>
@@ -93,23 +54,18 @@
                             placeholder="비밀번호 재확인"
                             prepend-icon="mdi-lock"
                             v-model="re_password"
-                            clearable
+                            :success-messages="!repwerror ? repw_text : false"
+                            :error-messages="repwerror ? repw_text : false"
                             type="password"
-                            @keyup="validRePassword"
+                            @keyup="validRePassword()"  
                         ></v-text-field>
-                        <div>
-                            <span v-if="this.re_password != '' && !this.repwerror" style="float:left; color:green; font-size:12px; margin:0 0 0 30px;">
-                                {{repw_text}}
-                            </span>
-                            <span v-else-if="this.re_password != '' && this.repwerror" style="float:left; color:red; font-size:12px; margin:0 0 0 30px;">
-                                {{repw_text}}
-                            </span>
-                        </div>
                     </td>
                 </tr>
             </table>
 
-            <v-btn color="normal" style="margin-top:50px; width:100%" depressed large @click="signup">
+            <v-btn color="primary" style="margin-top:50px; width:100%" depressed large @click="signup" outlined
+                :disabled="nickerror || emailerror || pwerror || repwerror ||  !nick_text || !email_text ||  !pw_text || !repw_text"
+            >
                 다음
             </v-btn>
         </v-card >     
@@ -122,6 +78,7 @@
 
 <script>
 import http from "@/util/http_common.js"
+import eventBus from "@/lib/EventBus.js"
 
 export default {
     data() {
@@ -146,19 +103,6 @@ export default {
             email_text: '',
             pw_text: '',
             repw_text: '',
-            rules: {
-                required: value => !!value || '입력해주세요.',
-                counter20: value => value.length <= 20 || '20자 이하로 입력해주세요.',
-                counter8: value => value.length >= 8 || '특수문자를 포함해 8자 이상이어야 합니다.',
-                email: value => {
-                    const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                    return pattern.test(value) || '이메일 형식이 맞지 않습니다.'
-                },
-                nicknameDupl: !this.isNicknameDupl || '이미 사용중인 닉네임입니다.',
-                /*nicknameDupl: value=> {
-                    return this.vaildNickname2(value) || '이미 사용중인 닉네임입니다.'
-                }*/
-            },
         }
     },
 
@@ -200,6 +144,7 @@ export default {
             }).catch((error) => {
                 console.dir(error)
             })*/
+            this.$router.app.$store.commit('startLoading')
             http.axios.post("/api/v1/mail/confirm/auth", {
                 nickname: this.nickname,
                 email: this.email,
@@ -212,6 +157,8 @@ export default {
                 console.dir(error)
                 this.errorMsg = '메일 발송에 실패했습니다. 이메일을 확인해 주세요.';
                 this.errorSnackbar = true;
+            }).finally(() => {
+                this.$router.app.$store.commit('endLoading')
             })
         },
         vaildPassword(){
@@ -272,20 +219,20 @@ export default {
                 this.email_text = "이메일 형식이 맞지 않습니다.";
                 return;
             }
-
-            this.email_text = '';
+            this.email_text = '사용가능한 이메일입니다.'
             this.emailerror = false;
-            /*http.axios.get(`/api/v1/mail/sendMailToConfirm?email_to=${this.email}`)
+            http.axios.get(`/api/v1/users/email/${this.email}`)
             .then(({data}) => {
+                this.email_text = data.result;
                 if(data.msg == "success"){
-                    this.email_text = data.result;
                     this.emailerror = false;
+                }else if(data.msg == "duplicate") {
+                    this.emailerror = true;
                 }
             }).catch((error) => {
-                // 에러 반환
-                this.email_text = "계정 인증 메일 발송 실패";
+                this.email_text = "통신에 문제가 생겼습니다.";
                 this.emailerror = true;
-            })*/
+            })
         },
         nickfocus(){
             this.nick_text = '';
@@ -297,6 +244,5 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
 </style>

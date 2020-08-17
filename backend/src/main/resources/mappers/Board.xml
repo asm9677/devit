@@ -7,8 +7,8 @@
 	<!-- 게시글 업로드 -->
 		<!-- <insert id="upload"> -->
 		<insert id="upload" useGeneratedKeys="true" keyProperty="boardId">
-			insert into board(user_id, title, content, type, count, modified) 
-			values(#{userId}, #{boardTitle}, #{boardContent}, #{boardType}, #{boardCount}, now())
+			insert into board(user_id, title, content, content_html, type, count, modified) 
+			values(#{userId}, #{boardTitle}, #{boardContent}, #{boardContentHtml}, #{boardType}, #{boardCount}, now())
 		</insert>
 		
 	<!-- 알림 업로드 -->
@@ -37,6 +37,7 @@
          		b.profile as profile, 
          		a.title as boardTitle, 
          		a.content as boardContent, 
+         		a.content_html as boardContentHtml, 
          		a.type as boardType, 
          		a.created as boardCreated, 
          		a.count as boardCount, 
@@ -60,7 +61,12 @@
 	<!--  게시글 수정 -->
 		<update id="update">
 			update board
-			set title = #{Board.boardTitle}, content = #{Board.boardContent}, type = #{Board.boardType}, count = #{Board.boardCount}, modified = now()
+			set title = #{Board.boardTitle}, 
+				content = #{Board.boardContent}, 
+				content_html = #{Board.boardContentHtml}, 
+				type = #{Board.boardType}, 
+				count = #{Board.boardCount}, 
+				modified = now()
 			where board_id = #{bid}
 		</update>
 		
@@ -149,8 +155,8 @@
       
       	<!-- 강의 관련 질문 게시글 업로드 -->
 		<insert id="createBoardWithLecture" useGeneratedKeys="true" keyProperty="boardId">
-			insert into board(user_id, title, content, type, count, modified, lecture_id, sub_id) 
-			values(#{userId}, #{boardTitle}, #{boardContent}, 3, 0, now(), #{lectureId}, #{subId})
+			insert into board(user_id, title, content, content_html, type, count, modified, lecture_id, sub_id) 
+			values(#{userId}, #{boardTitle}, #{boardContent}, #{boardContentHtml}, 3, 0, now(), #{lectureId}, #{subId})
 		</insert>
 		
 			

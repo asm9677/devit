@@ -1,13 +1,5 @@
 <template>
     <div id="app">
-
-        <!-- <div> <video id="livestation-player" class="video-js vjs-big-play-button
-        vjs-big-play-centered" controls preload="auto" data-setup='{}'> <source
-        src="./example2.mp4" type="video/mp4"></source> </video> </div> <div> <video
-        id="livestation-player" class="video-js vjs-default-skin" controls
-        preload="auto" data-setup='{}'> <source src="./example3.mp4"
-        type="video/mp4"></source> </video> </div> -->
-
         <v-container fluid="fluid" grid-list-xl="grid-list-xl" class="devit_status">
             <v-layout row="row" justify-center="justify-center" style="margin:auto 0">
                 <v-flex class="status_wrap" xs2="xs2" style="min-width:200px">

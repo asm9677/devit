@@ -9,7 +9,7 @@
                 <v-form>
                     <v-text-field prepend-icon="mdi-account" name="Email" label="Email" v-model="email"></v-text-field>
                     <v-text-field prepend-icon="mdi-lock" name="Password" label="Password" type="password" v-model="password" @keydown.enter="login"></v-text-field>
-                    <v-checkbox label="자동 로그인" dense style="margin:0px"></v-checkbox>
+                    <v-checkbox label="자동 로그인" dense style="margin:0px" @change="autoLogin"></v-checkbox>
                     <v-card-actions>
                     <v-btn primary large block color="primary" @click="login" style="margin-bottom:18px">Login</v-btn>
                     </v-card-actions>                
@@ -25,8 +25,6 @@
                         </div>
                     </div>
 
-                    <a href="#">아이디 찾기</a>
-                    <span class="bar" aria-hidden="true">|</span>
                     <a href="#">비밀번호 찾기</a>
                     <span class="bar" aria-hidden="true">|</span>
                     <a href="#" @click="moveJoin">회원가입</a>                 
@@ -39,9 +37,6 @@
             </v-container>
         </v-flex>
         </v-layout>
-        <v-overlay :value="loading" opacity=0>
-            <v-progress-circular indeterminate color="primary lighten-4" size="64"></v-progress-circular>
-        </v-overlay>
     </v-container>
     </div>
     
@@ -58,26 +53,25 @@ export default {
         return {
             email: '',
             password: '',
-            loading: false,
             errorMsg: "",
             errorSnackbar: false,
         }
     },
     created(){
         eventBus.$on('socialLogin', (email, nickname, password) => {
+            this.$router.app.$store.commit('startLoading');
             http.axios.post('/api/v1/account/login', {
                 email: email,
                 password: password
             }).then(({data}) => {  
 
                 if(data.msg=="fail"){
-
                     this.errorMsg = data.result;
                     this.errorSnackbar = true;
                     return;
                 }
 
-                store.commit('login', {token: data.result, email: email})
+                store.commit('login', {token: data.result.token, email: email, profile: data.result.profile})
                 this.$emit('closeDialog');
                 location.reload(true);
             }).catch((error) => {
@@ -97,22 +91,22 @@ export default {
                             this.errorSnackbar = true;
                             return;
                         }
-                        store.commit('login', {token: data.result, email: email})      
+                store.commit('login', {token: data.result.token, email: email, profile: data.result.profile})
                         this.$emit('closeDialog');
                         location.reload(true);
                     })
                 })
             }).finally(() => {
-                this.loading = false;
+                this.$router.app.$store.commit('endLoading');
             })
         })
     },
     methods:{
         forKakaoLogin(){
-            this.loading = true;
             KaKaoLogin.loginWithKakao();
         },
         login(){
+            this.$router.app.$store.commit('startLoading');
             http.axios.post("/api/v1/account/login", {
                 email: this.email,
                 password: this.password
@@ -124,13 +118,16 @@ export default {
                     return;
                 }
 
-                store.commit('login', {token: data.result, email: this.email});
+                store.commit('login', {token: data.result.token, email: this.email, profile: data.result.profile})
                 this.$emit('closeDialog');
 
                 location.reload(true);
             }).finally(() => {
-                this.loading = false;
+                this.$router.app.$store.commit('endLoading');
             })
+        },
+        autoLogin(e) {
+            localStorage.setItem('autoLogin', e.toString())
         },
         moveJoin(){
             this.$router.push('/join')

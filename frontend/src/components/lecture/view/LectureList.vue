@@ -7,7 +7,7 @@
                 <v-img 
                     :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                     lazy-src="@/assets/images/empty.png"
-                    aspect-ratio="1.7"
+                    aspect-ratio="1.77"
                     @click="move(`/lecture/detail/${item.lectureId}`)"
                 >
                     <template v-slot:placeholder>
@@ -113,7 +113,6 @@ export default {
         http.axios.get(`/api/v1/lectures?page=${this.page}&type=${this.level}`).then(({data}) => {
             this.page++;
             this.items = data.result;
-            console.dir(data.result)
         }).finally(() => {
             this.$router.app.$store.commit('endLoading')
         })

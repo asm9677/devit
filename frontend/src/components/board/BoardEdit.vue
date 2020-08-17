@@ -35,6 +35,7 @@
                                     <v-list-item>
                                         <span style="width:80px">게시판</span>
                                         <v-select
+                                            readonly
                                             style="max-width:200px;"
                                             v-model="boardType"
                                             :items="boardtypeitems"
@@ -49,12 +50,15 @@
 
                             <v-list-item>
                                 <v-list-item-title>
-                                    <div>
+                                    <!-- <div>
                                         <v-textarea
                                             v-model="boardContent"
                                             no-resize="no-resize"
                                             outlined="outlined"
                                             rows="10"></v-textarea>
+                                    </div> -->
+                                    <div style="margin-top:15px;">
+                                        <editor v-model="content" height="450"> </editor>
                                     </div>
                                 </v-list-item-title>
                             </v-list-item>
@@ -75,7 +79,13 @@
 <script>
     import http from "@/util/http_common.js"
     import store from "@/store/index.js" 
+    import Editor from "@/components/common/Editor.vue"
+    import parse from "@/lib/markdown/ParseMd.js";
+
     export default {
+        components: {
+            Editor,
+        },
         name: 'app',
         data() {
             return {
@@ -108,7 +118,8 @@
                 comment_count: null,
                 //boardType: '0',
                 snackbar: false,
-                text: ""
+                text: "",
+                content:""
             }
         },
         created(){
@@ -129,7 +140,8 @@
                         //this.boardType = data.result.boardType,
                         this.boardId = data.result.boardId,
                         this.boardTitle = data.result.boardTitle,
-                        this.boardContent = data.result.boardContent,                        
+                        //this.boardContent = data.result.boardContent,         
+                        this.content = data.result.boardContent,                        
                         this.boardType = this.boardtypeitems[data.result.boardType-1];
                         // this.boardType = data.result.boardType,
                         
@@ -140,17 +152,21 @@
                 }else if(edittype == "temp"){                    
                     var item = this.$route.params.item;
                     this.boardTitle = item.boardTitle;
-                    this.boardContent = item.boardContent;
+                    //this.boardContent = item.boardContent;
+                    this.content = item.boardContent;
                     this.boardType = this.boardtypeitems[(Number)(item.boardType)-1];
 
                 }
         },
         methods: {
+            parse,
             saveTemp() {
                 var date = new Date();
                 var jsonData = {
                     boardTitle: this.boardTitle,
-                    boardContent: this.boardContent,
+                    //boardContent: this.boardContent,
+                    boardContent: this.content,
+                    boardContentHtml: this.content,
                     boardType: this.boardType.type,
                     createDate: date
                 };
@@ -173,7 +189,9 @@
                         .axios
                         .post("/api/v1/board", {
                             boardTitle: this.boardTitle,
-                            boardContent: this.boardContent,
+                            //boardContent: this.boardContent,
+                            boardContent: this.content,
+                            boardContentHtml: this.content,
                             boardType: this.boardType.type,
                             boardCreated: "",
                             boardCount: "",
@@ -208,7 +226,9 @@
                         .put("/api/v1/board", {
                             boardId: this.$route.query.boardId,
                             boardTitle: this.boardTitle,
-                            boardContent: this.boardContent,
+                            //boardContent: this.boardContent,
+                            boardContent: this.content,
+                            boardContentHtml: this.content,
                             boardType: this.boardType.type,
                             //boardCreated: "",
                             boardCount: "",

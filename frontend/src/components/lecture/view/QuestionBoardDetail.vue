@@ -22,8 +22,8 @@
                             {{item.boardModified | moment('YYYY.MM.DD. HH:mm')}} 조회 {{item.boardCount}}
                         </v-list-item-subtitle>
                     </v-list-item-content>
-                    <v-list-item-action>
-                        <v-menu bottom left >
+                    <v-list-item-action v-if="item.isMine == 'Y'">
+                        <v-menu bottom left>
                             <template v-slot:activator="{ on, attrs }">
                             <v-btn
                                 :dark="darkOption"
@@ -109,7 +109,7 @@
                     </v-list-item>
                 </template>
                 <v-list-item>
-                    <v-textarea dense outlined auto-grow placeholder="답글을 입력해보세요!" color="success" hide-details style="margin:10px 0px" v-model="replyContent"></v-textarea>                          
+                    <v-textarea dense outlined auto-grow placeholder="답글을 입력해보세요!" color="success" hide-details style="margin:10px 0px" v-model="replyContent" @focus="checkSession()"></v-textarea>                          
                 </v-list-item>
                 <v-list-item>
                     <v-list-item-content /> 
@@ -126,6 +126,8 @@
 
 <script>
 import http from "@/util/http_common.js"
+import eventBus from "@/lib/EventBus.js"
+
 export default {
     props: ['darkOption', 'tabs', 'boardId' , 'refresh'],
     data() {
@@ -148,11 +150,9 @@ export default {
         }
     },
     created(){
-        console.dir('created')
         this.initBoard()       
     },
     mounted() {
-        console.dir('mounted')
         this.detailBoardResize()
         window.addEventListener('resize', this.detailBoardResize)
     },
@@ -160,6 +160,13 @@ export default {
         window.removeEventListener('resize', this.detailBoardResize)
     },
     methods:{
+        checkSession() {
+            if(this.$router.app.$store.state.token){
+
+            }else{
+                eventBus.$emit('doLogin');
+            }
+        },
         detailBoardResize() {      
             if(this.tabs == 4)      
                 this.questionHeight = $('body').height()-$('#pos').offset().top
@@ -178,11 +185,9 @@ export default {
         },
         initBoard(){
             http.axios.get(`/api/v1/board/${this.boardId}`).then(({data}) => {
-                console.dir(data.result)
                 this.item = data.result
             })
             http.axios.get(`/api/v1/reply/${this.boardId}`).then(({data}) => {
-                console.dir(data.result)
                 this.reply = data.result
             }) 
         },

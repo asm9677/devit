@@ -245,7 +245,6 @@ export default {
         }
     },
     created(){
-        console.dir('hello')
         this.keyword = this.$route.query.keyword;   
         if(typeof this.keyword == 'string') {
             this.keyword = [this.keyword]
@@ -269,7 +268,8 @@ export default {
     },
     methods: {
         handleResize() {
-            this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
+            if(this.$refs.main && this.$refs.left)  
+                this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
             if(this.$refs.img0){
                 this.height = this.$refs.img0[0].$el.offsetHeight - this.$refs.content0[0].$el.offsetHeight-25
                 if(this.height < 0)
@@ -314,7 +314,6 @@ export default {
             }
             http.axios.get(request).then(({data}) => {
                 this.wiki = [];
-                console.dir(data)
                 if(data.result[0]) {
                     this.wiki = data.result.slice(0,5);
                     this.totalWiki = data.result[0].totalCount;
@@ -367,10 +366,10 @@ export default {
     div.chips{
         display: inline-block;
         background-color:#ededed; 
-        border-radius: 5px;
+        border-radius: 3px;
         padding: 5px 0px;
         padding-left: 5px;
-        margin:10px;
+        margin:4px;
         font-size:12px;
         opacity: 0.6;
     }
@@ -383,8 +382,8 @@ export default {
         height:100%;
         width:100%;
         background-color:#cdcdcd;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
         padding: 5px;
     }
 

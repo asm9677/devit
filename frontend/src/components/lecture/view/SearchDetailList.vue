@@ -11,13 +11,26 @@
                             tile
                         >
                             <v-img 
+                                v-if="item.thumbnailUrl"
                                 :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                                 aspect-ratio="1.7"
                                 :ref="'img'+i"
                                 min-height="100"
                                 min-width="170"
                                 style="border-radius:5px;"
-                            ></v-img>
+                            >
+
+                                <template v-slot:placeholder>
+                                    <v-row
+                                    class="fill-height ma-0"
+                                    align="center"
+                                    justify="center"
+                                    >
+                                        <v-progress-circular indeterminate color="primary lighten-4"></v-progress-circular>
+                                    </v-row>
+                                </template>
+                            
+                            </v-img>
                         </v-avatar>
                     </div>
                 </v-col>
@@ -70,9 +83,6 @@
                 </v-col>
             </v-row>
             <v-divider :key="i + '_divider1'"></v-divider>
-            <v-overlay :value="loading" opacity=0>
-                <v-progress-circular indeterminate color="primary lighten-4" size="64"></v-progress-circular>
-            </v-overlay>
         </v-container>
     </div>
 </template>
@@ -80,6 +90,8 @@
 <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
 <script>
 import http from "@/util/http_common.js"
+import eventBus from "@/lib/EventBus.js"
+
 export default {
     props:['type'],
     filters: {
@@ -111,7 +123,6 @@ export default {
             total: 0,
             scrollPos: 0,
             height:20,
-            loading: false,
         }
     },
     created(){
@@ -145,12 +156,13 @@ export default {
             this.scrollPos = $(document).scrollTop();
 
             if($(document).scrollTop() + $(document)[0].scrollingElement.clientHeight + 100 >= $(document).height()){
-                if(!this.loading)
+                if(!this.$router.app.$store.state.loading)
                     this.search(this.type);
             }          
         },
         handleResize2() {
-            this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
+            if(this.$refs.main && this.$refs.left)  
+                this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
             if(this.$refs.img0){
                 this.height = this.$refs.img0[0].$el.offsetHeight - this.$refs.content0[0].$el.offsetHeight-25
                 if(this.height < 0)
@@ -165,7 +177,7 @@ export default {
             })
         },    
         search(type){
-            this.loading=true;
+            this.$router.app.$store.commit('startLoading')
             let request = '';
             if(type == 1) {
                 request = `/api/v1/commons/search/indexs?startPage=${this.page}`
@@ -183,10 +195,11 @@ export default {
                     for(let i in data.result)
                         this.items.push(data.result[i])
                     this.total = data.result[0].totalCount;
-                    console.dir(this.items)
+                }else{
+                    // console.dir
                 }
             }).finally(() => {
-                this.loading=false;
+                this.$router.app.$store.commit('endLoading')
             })
         },
         move(url){

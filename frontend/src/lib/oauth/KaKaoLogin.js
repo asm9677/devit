@@ -12,7 +12,6 @@ export default {
                 Kakao.API.request({
                   url: '/v2/user/me',
                   success: function(res) {
-                    console.dir(res)
                     eventBus.$emit('socialLogin', res.kakao_account.email, res.kakao_account.profile.nickname, res.id);
                   },
                   fail: function(error) {
