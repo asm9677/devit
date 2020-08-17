@@ -197,6 +197,33 @@ public class UserController {
 		return response;
 	}
 	
+	@GetMapping("/email/{email}")
+	@ApiOperation(value = "이메일 중복 체크")
+	public ResponseEntity<CommonResponse> checkForEmail(@PathVariable String email) {
+		log.info(">> Load : checkForEmail <<");
+		final CommonResponse result = new CommonResponse();
+		ResponseEntity<CommonResponse> response = null;
+
+		try {
+			if (userService.getUserByEmail(email) == null) {
+				result.msg = "success";
+				result.result = "가입 가능한 이메일입니다";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.CREATED);
+			} else {
+				result.msg = "duplicate";
+				result.result = "이미 가입된 계정입니다";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			log.debug(">> Error : checkForNickName <<");
+			log.debug(e.getMessage().toString());
+			result.msg = "fail";
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+	
 	@GetMapping("/user/isadmin")
 	@ApiOperation(value = "유저 admin 여부")
 	public ResponseEntity<CommonResponse> getUserIsAdmin() {

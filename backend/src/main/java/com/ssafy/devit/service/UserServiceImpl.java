@@ -70,6 +70,14 @@ public class UserServiceImpl implements UserService {
 		}
 		return userRepository.findUserByNickname(nickname);
 	}
+	
+	@Override
+	public User getUserByEmail(String email) throws Exception {
+		if (email.equals("")) {
+			throw new Exception("Email의 값이 비어있습니다.");
+		}
+		return userRepository.findUserByEmailAddress(email);
+	}
 
 	@Override
 	public List<UserResponse> getUsersByLikeSearchText(String search, long lectureId) throws Exception {
