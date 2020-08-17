@@ -113,7 +113,6 @@ export default {
         http.axios.get(`/api/v1/lectures?page=${this.page}&type=${this.level}`).then(({data}) => {
             this.page++;
             this.items = data.result;
-            console.dir(data.result)
         }).finally(() => {
             this.$router.app.$store.commit('endLoading')
         })

@@ -82,7 +82,7 @@ export default {
             }
         },
         content() {
-            console.dir(this.content)
+            
         }
     },
     data() {
@@ -113,7 +113,6 @@ export default {
         getIntroPage(){
             http.axios.get(`/api/v1/lectures/${this.lectureId}`).then(({data}) => {
                 if(data.msg == 'success') {
-                    console.dir(data)
                     this.content = data.result.content;
                     this.commonId = data.result.commonId;
                 }

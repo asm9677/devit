@@ -274,10 +274,8 @@ export default {
                     var key = setInterval(() => {
                         if(myPlayer.duration()){
                             setPlayTime(myPlayer.duration())
-                            console.dir(myPlayer.duration())
                             clearInterval(key);
                         }else{
-                            console.dir('zz')
                         }
                     }, 100)
                 });
@@ -318,7 +316,6 @@ export default {
         },
 
         requestWiki(){
-            console.dir
             http.axios.post('/api/v1/lectures/sub/history', {
                 "lectureId": this.lectureId,
                 "subId": this.subId,
@@ -326,7 +323,6 @@ export default {
                 "wikiContent": this.content,
                 "wikiContentHtml": this.content,
             }).then(({data}) => {
-                console.dir(data)
                 this.$emit('closeDialog');
                 this.snackbar = true;
                 this.msg = '정상적으로 요청되었습니다.';

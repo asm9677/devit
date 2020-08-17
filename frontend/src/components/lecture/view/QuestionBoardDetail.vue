@@ -150,11 +150,9 @@ export default {
         }
     },
     created(){
-        console.dir('created')
         this.initBoard()       
     },
     mounted() {
-        console.dir('mounted')
         this.detailBoardResize()
         window.addEventListener('resize', this.detailBoardResize)
     },
@@ -187,11 +185,9 @@ export default {
         },
         initBoard(){
             http.axios.get(`/api/v1/board/${this.boardId}`).then(({data}) => {
-                console.dir(data.result)
                 this.item = data.result
             })
             http.axios.get(`/api/v1/reply/${this.boardId}`).then(({data}) => {
-                console.dir(data.result)
                 this.reply = data.result
             }) 
         },

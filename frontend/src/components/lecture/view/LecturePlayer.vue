@@ -535,7 +535,6 @@ export default {
         },
     },
     created(){    
-        console.dir(this.tabName[-1])
         this.lectureId = this.$route.params.id;
         this.order = this.$route.query.order;
         this.tabs = this.tabName.indexOf(this.$route.params.tabName);             
@@ -620,7 +619,6 @@ export default {
             http.axios.get(`/api/v1/lectures/sub/history?lectureId=${this.lectureId}&subId=${this.subId}&subHisId=${this.subHisId}`).then(({data}) => {
                 if(data.result) {                    
                     this.sub = data.result;
-                    console.dir(data.result);
                 }else{
                     alert("존재하지 않는 강의 입니다.");
                     this.move(`/lecture/detail/${this.lectureId}`)                    

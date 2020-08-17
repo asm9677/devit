@@ -228,7 +228,6 @@ export default {
         changeImg(e){	
             var frm = new FormData();
             frm.append("file", document.getElementById("file").files[0]);
-            console.dir(document.getElementById("file").files[0])
             
             axios.post('http://i3a101.p.ssafy.io:8080/api/v1/file/upload', frm, {
                 headers: {
@@ -276,7 +275,6 @@ export default {
         getDefaultPage(){
             http.axios.get(`/api/v1/lectures/${this.lectureId}`).then(({data}) => {
                 if(data.msg == 'success') {
-                    console.dir(data)
                     this.title = data.result.title;
                     this.thumbnailUrl = data.result.thumbnailUrl;                    
                     this.type = data.result.type;

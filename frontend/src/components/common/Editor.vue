@@ -59,7 +59,7 @@ export default {
             }
         },        
         hideTab(){
-            console.dir(this.hideTab)
+            
         }
     },
     data() {

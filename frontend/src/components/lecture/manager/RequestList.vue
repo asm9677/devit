@@ -326,7 +326,6 @@ export default {
                         }
                         this.items.push(data.result[i]);
                     }
-                    console.dir(this.items)
                     if(data.result.length) {
                         this.page++;
                     }
@@ -336,7 +335,6 @@ export default {
         },
         requestProcess(item, type){
             http.axios.put(`/api/v1/lectures/historys?subId=${item.subId}&subHisId=${item.subHisId}&type=${type}&reqType=${item.reqType}`).then(({data}) => {
-                console.dir(data)
             }).finally(() => {
                 this.items = []
                 this.page = 1;
