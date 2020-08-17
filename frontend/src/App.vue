@@ -24,6 +24,10 @@ export default {
 
     }
   },
+
+  created() {
+      console.dir(localStorage.getItem('autoLogin'))
+  },
   
   methods: {
     
@@ -98,7 +102,7 @@ export default {
         word-break: break-all;
         word-wrap: break-word;
         color: #2e2e2e;
-        background-color: #fafafa;
+        background-color: #e1e1e1;
         border: 1px solid #e5e5e5;
         border-radius: 2px;
     }
