@@ -75,10 +75,10 @@
 
                             <v-list dense="dense">
 
-                                <v-list-item class="board_content">
+                                <!-- <v-list-item class="board_content">
                                     {{ item.boardContent }}
-                                </v-list-item>
-
+                                </v-list-item> -->
+                                <div class="board_content" v-html="parse(item.boardContent)"></div>
                             </v-list>
                         </div>
 
@@ -127,36 +127,38 @@
                                             </v-list-item>
                                         </v-list-item-content>
                                         <v-spacer></v-spacer>
-                                        <v-hover v-slot:default="{ hover }">
-                                            <v-btn
-                                                v-if="replyItem.parentReplyId == 0"
-                                                depressed="depressed"
-                                                text="text"
-                                                small="small"
-                                                @click="showRereply('rereply', replyItem)">
-                                                <font :color="hover ? '' : 'gray'" size="2">{{replyItem.showType == 'rereply' && replyItem.isShow ? '답글 접기' : '답글'}}</font>
-                                            </v-btn>
-                                        </v-hover>
-                                        <v-hover v-slot:default="{ hover }">
-                                            <v-btn
-                                                v-if="replyItem.isMine == 'Y'"
-                                                depressed="depressed"
-                                                text="text"
-                                                small="small"
-                                                @click="showRereply('modify', replyItem)">
-                                                <font :color="hover ? '' : 'gray'" size="2">수정</font>
-                                            </v-btn>
-                                        </v-hover>
-                                        <v-hover v-slot:default="{ hover }">
-                                            <v-btn
-                                                v-if="replyItem.isMine == 'Y'"
-                                                depressed="depressed"
-                                                text="text"
-                                                small="small"
-                                                @click="deleteReply(replyItem.boardReplyId)">
-                                                <font :color="hover ? '' : 'gray'" size="2">삭제</font>
-                                            </v-btn>
-                                        </v-hover>
+                                        <div v-if="replyItem.deleteYn == 'N'">
+                                            <v-hover v-slot:default="{ hover }">
+                                                <v-btn
+                                                    v-if="replyItem.parentReplyId == 0"
+                                                    depressed="depressed"
+                                                    text="text"
+                                                    small="small"
+                                                    @click="showRereply('rereply', replyItem)">
+                                                    <font :color="hover ? '' : 'gray'" size="2">{{replyItem.showType == 'rereply' && replyItem.isShow ? '답글 접기' : '답글'}}</font>
+                                                </v-btn>
+                                            </v-hover>
+                                            <v-hover v-slot:default="{ hover }">
+                                                <v-btn
+                                                    v-if="replyItem.isMine == 'Y'"
+                                                    depressed="depressed"
+                                                    text="text"
+                                                    small="small"
+                                                    @click="showRereply('modify', replyItem)">
+                                                    <font :color="hover ? '' : 'gray'" size="2">수정</font>
+                                                </v-btn>
+                                            </v-hover>
+                                            <v-hover v-slot:default="{ hover }">
+                                                <v-btn
+                                                    v-if="replyItem.isMine == 'Y'"
+                                                    depressed="depressed"
+                                                    text="text"
+                                                    small="small"
+                                                    @click="deleteReply(replyItem.boardReplyId)">
+                                                    <font :color="hover ? '' : 'gray'" size="2">삭제</font>
+                                                </v-btn>
+                                            </v-hover>
+                                        </div>
                                     </v-list-item>
                                     <v-list-item class="comment_content">{{ replyItem.replyContent }}</v-list-item>
                                     <v-list-item v-if="replyItem.isShow">
@@ -199,6 +201,7 @@
 <script>
     import http from "@/util/http_common.js"
     import eventBus from "@/lib/EventBus.js"
+    import parse from "@/lib/markdown/ParseMd.js";
 
     export default {
         name: 'app',
@@ -243,6 +246,7 @@
             this.showBoardDetail();
         },
         methods: {
+            parse,
             showRereply(type, item) {
 
                 if (type == "rereply") {
@@ -343,7 +347,6 @@
                     .get("/api/v1/board/" + this.$route.query.boardId, {})
                     .then(({data}) => {
                         this.item = data.result;
-
                         if (this.item.isMine == 'Y') { //수정/삭제 버튼
                             this.isBtnShow = true;
                         } else {

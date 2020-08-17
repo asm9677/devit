@@ -9,6 +9,7 @@ public class BoardResponse {
 	private String profile;
 	private String boardTitle;
 	private String boardContent;
+	private String boardContentHtml;
 	private long boardType;
 	private Date boardCreated;
 	private Date boardModified;
@@ -22,26 +23,6 @@ public class BoardResponse {
 	
 	public BoardResponse() {}
 	
-	public BoardResponse(long boardId, long userId, String nickName, String profile, String boardTitle, String boardContent, 
-			long boardType, Date boardCreated, Date boardModified, long boardCount, long replyCount, String isMine, long pageCnt,
-			long lectureId, long subId, long boardReplyId){
-		this.boardId = boardId;
-		this.userId = userId;
-		this.userName = nickName;
-		this.profile = profile;
-		this.boardTitle = boardTitle;
-		this.boardContent = boardContent;
-		this.boardType = boardType;
-		this.boardCreated = boardCreated;
-		this.boardModified = boardModified;
-		this.boardCount = boardCount;
-		this.isMine = isMine;
-		this.pageCnt = pageCnt;
-		this.lectureId = lectureId;
-		this.subId = subId;
-		this.boardReplyId = boardReplyId;
-	}
-
 	public String getUserName() {
 		return userName;
 	}
@@ -178,6 +159,14 @@ public class BoardResponse {
 
 	public void setBoardReplyId(long boardReplyId) {
 		this.boardReplyId = boardReplyId;
+	}
+
+	public String getBoardContentHtml() {
+		return boardContentHtml;
+	}
+
+	public void setBoardContentHtml(String boardContentHtml) {
+		this.boardContentHtml = boardContentHtml;
 	}
 	
 }

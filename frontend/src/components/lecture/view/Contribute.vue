@@ -107,7 +107,7 @@
         <v-list>
         <v-list-item style="margin-top:15px;">        
             <v-list-item-content>
-                <v-btn outlined color="error" max-width="80" @click="closeDialog()">
+                <v-btn outlined color="error" max-width="80" @click="$emit('closeDialog')">
                     취소
                 </v-btn>
             </v-list-item-content>
@@ -166,9 +166,9 @@
         >
             {{msg}}
         </v-snackbar>
-        <v-dialog v-model="preview" hide-overlay max-width="768"> 
-            <div id="videoFrame2" v-show="!tabs">
-                <video
+        <v-dialog v-model="preview" hide-overlay max-width="768" > 
+            <div id="videoFrame2" v-show="!tabs" >
+                <video 
                     class="video-js vjs-default-skin vjs-big-play-centered"
                     controls                      
                     data-setup='{}'
@@ -198,7 +198,7 @@ export default {
     watch: {
         dialog() {
             if(this.dialog == false)
-                this.closeDialog();
+                this.$emit('closeDialog')
         },
         wiki() {
             this.content = this.wiki;
@@ -242,7 +242,6 @@ export default {
                     </video>
                 `
             )
-
         },
         clickVideo(){
             $("#file").click();
@@ -328,9 +327,9 @@ export default {
                 "wikiContentHtml": this.content,
             }).then(({data}) => {
                 console.dir(data)
+                this.$emit('closeDialog');
                 this.snackbar = true;
                 this.msg = '정상적으로 요청되었습니다.';
-                this.closeDialog(true);
             })
         },
         updatePercentCompleted(progressEvent){
@@ -353,15 +352,15 @@ export default {
                 http.axios.post('/api/v1/lectures/sub/history', {
                     "lectureId": this.lectureId,
                     "subId": this.subId,
-                    "reqType": "video", 
+                    "reqType": "video",
                     "playTime": this.playTime,
                     "playerUrl": this.playerUrl,
                     "thumbnailUrl": this.thumbnailUrl,
                     "title": this.title,
                 }).then(({data}) => {
+                    this.$emit('closeDialog');
                     this.snackbar = true;
                     this.msg = '정상적으로 요청되었습니다.';
-                    this.closeDialog(true);
                 })
             }
         },
@@ -376,31 +375,6 @@ export default {
         setPlayTime(duration){
             duration = parseInt(duration);
             this.playTime = parseInt(duration / 60) + ":" + (duration % 60);
-        },
-
-        closeDialog(flag) {
-            if(flag == true){
-                var self = this;
-                this.$router.app.$store.commit('startLoading')
-
-                setTimeout(() => {
-                    self.$router.app.$store.commit('endLoading')
-                    self.$emit('closeDialog');
-                },1000)
-            }else{
-                this.$emit('closeDialog');
-            }
-
-            this.playTime = '';
-            this.playerUrl = '';
-            this.thumbnailUrl = '';
-            this.title = '';
-
-            this.step = 1,
-            this.percentCompleted = 0,
-            this.content = this.wiki;
-
-            
         }
     }
 }

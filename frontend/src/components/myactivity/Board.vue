@@ -68,7 +68,7 @@
             }
         },
         data() {
-            return {page: 1, pageCnt: 0, itemsPerPage: 4, items: [{}]}
+            return {page: 1, pageCnt: 0, itemsPerPage: 6, items: [{}]}
         },
         watch: {
             page() {

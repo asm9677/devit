@@ -24,6 +24,10 @@ export default {
 
     }
   },
+
+  created() {
+      console.dir(localStorage.getItem('autoLogin'))
+  },
   
   methods: {
     
@@ -98,7 +102,7 @@ export default {
         word-break: break-all;
         word-wrap: break-word;
         color: #2e2e2e;
-        background-color: #fafafa;
+        background-color: #e1e1e1;
         border: 1px solid #e5e5e5;
         border-radius: 2px;
     }
@@ -119,5 +123,16 @@ export default {
 
     .diff del {
         color:red;
+    }
+
+    .v-dialog {
+        border-radius: 4px;
+        margin: 24px;
+        overflow-y: auto;
+        pointer-events: auto;
+        transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        width: 100%;
+        z-index: inherit;
+        box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
     }
 </style>

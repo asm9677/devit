@@ -62,7 +62,7 @@ public class BoardController {
 		try {
 			UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			BoardRequest board = null;
-			board = new BoardRequest(user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardType(), request.getBoardCount());
+			board = new BoardRequest(user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardContentHtml(), request.getBoardType(), request.getBoardCount());
 
 			boardService.upload(board);
 			 // bid에 해당하는 게시글을 조회한다.
@@ -207,7 +207,7 @@ public class BoardController {
 			BoardWithLectureRequest boardWithLectureRequest = null;
 			
 //			boardWithLectureRequest = new BoardWithLectureRequest(request.getLectureId(), request.getSubId(), user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardType(), request.getBoardCount());
-			boardWithLectureRequest = new BoardWithLectureRequest(request.getLectureId(), request.getSubId(), user.getUserId(), request.getBoardTitle(), request.getBoardContent());
+			boardWithLectureRequest = new BoardWithLectureRequest(request.getLectureId(), request.getSubId(), user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardContentHtml());
 			
 			boardService.createBoardWithLecture(boardWithLectureRequest);
 			 // bid에 해당하는 게시글을 조회한다.
