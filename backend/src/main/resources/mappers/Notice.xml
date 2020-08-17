@@ -79,7 +79,7 @@
             a.sub_id = l.sub_id and 
             a.sub_his_id = l.sub_his_id 
 	  where a.user_id = #{userId}
-   order by IF(a.read_yn, 'N', 1, 2), a.created_date desc;
+   order by IF(a.read_yn = 'N', 1, 2), a.created_date desc;
 	</select>
 	
 	<!-- 하나의 알람에 대한 조회 -->
