@@ -69,7 +69,7 @@
 	<select id="findUserByEmailAddress" resultType="User">
 		select user_id as userId, nickname, email, password, active, created, deleted
 		from user
-		where upper(nickname) = upper(#{email})
+		where upper(email) = upper(#{email})
 	</select>
 	
 
