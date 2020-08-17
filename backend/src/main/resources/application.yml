@@ -8,7 +8,7 @@ spring:
   profiles: deploy
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://172.23.0.1:3306/devit?allowMultiQueries=true
+    url: jdbc:mysql://172.28.0.1:3306/devit?allowMultiQueries=true
     username: root
     password: devit
   devtools:
