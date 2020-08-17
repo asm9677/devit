@@ -9,7 +9,7 @@
                 <v-form>
                     <v-text-field prepend-icon="mdi-account" name="Email" label="Email" v-model="email"></v-text-field>
                     <v-text-field prepend-icon="mdi-lock" name="Password" label="Password" type="password" v-model="password" @keydown.enter="login"></v-text-field>
-                    <v-checkbox label="자동 로그인" dense style="margin:0px"></v-checkbox>
+                    <v-checkbox label="자동 로그인" dense style="margin:0px" @change="autoLogin"></v-checkbox>
                     <v-card-actions>
                     <v-btn primary large block color="primary" @click="login" style="margin-bottom:18px">Login</v-btn>
                     </v-card-actions>                
@@ -126,6 +126,9 @@ export default {
             }).finally(() => {
                 this.$router.app.$store.commit('endLoading');
             })
+        },
+        autoLogin(e) {
+            localStorage.setItem('autoLogin', e.toString())
         },
         moveJoin(){
             this.$router.push('/join')

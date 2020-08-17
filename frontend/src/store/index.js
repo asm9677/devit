@@ -5,20 +5,27 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    token: sessionStorage.getItem('token'),
-    email: sessionStorage.getItem('email'),
+    token: localStorage.getItem('token') ? localStorage.getItem('token') : sessionStorage.getItem('token'),
+    email: localStorage.getItem('email') ? localStorage.getItem('email') : sessionStorage.getItem('email'),
     loading: 0,
   },
   mutations: {
     login(state, payload) {
+      if(localStorage.getItem('autoLogin') == 'true') {
+        localStorage.setItem('token', payload.token)        
+        localStorage.setItem('email', payload.email)
+      }
       sessionStorage.setItem('token', payload.token)
       sessionStorage.setItem('email', payload.email)
       state.token = payload.token;
       state.email = payload.email;
     },
     logout(state) {
+      localStorage.setItem('autoLogin', 'false')
+      localStorage.setItem('token', '')        
+      localStorage.setItem('email', '')
       sessionStorage.setItem('token', '')
-      sessionStorage.setItem('email', '')
+      sessionStorage.setItem('email', '')      
       state.token = '';
       state.emial = '';
     },

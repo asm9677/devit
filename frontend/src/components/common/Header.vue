@@ -125,7 +125,7 @@
                             </v-list-item>
                         </template>
                         <template v-if="!notices.length">                        
-                            <v-divider :key="`${i}_divider`" />
+                            <v-divider />
                             <v-container fluid >         
                                 <v-row>
                                     <v-col cols="12">

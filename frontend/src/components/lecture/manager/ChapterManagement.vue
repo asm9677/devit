@@ -375,7 +375,7 @@ export default {
 
     .chapter {
         margin: 5px 0px; 
-        border:1px solid rgba(0, 0, 0, 0.44); 
+        border:3px solid rgba(0, 0, 0, 0.34); 
         cursor:pointer;
     }
 

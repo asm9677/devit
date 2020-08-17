@@ -69,13 +69,14 @@
                     </v-flex>                    
                     <v-flex v-show="option && curItem.reqType"  md4 lg4 xl4> 
                         <v-list style="position: sticky; top:60px; " dense>
+                            <div id="pos" style="height:0px" />
                             <div style="
                                     width:100%; 
-                                    height:600px;
                                     overflow-y:auto;
                                     padding:30px 50px;
                                     padding-right:10px;
                                 " 
+                                :style="{'height' : height + 'px'}"
                                 v-if="curItem"
                             >           
                                 <div v-if="curItem.reqType == 'video'">
@@ -213,7 +214,8 @@ export default {
             },
             prevCreated: '',
 
-            height:600,
+            height:700,
+            pos:0,
             preview: false,
             offset:0,
         }
@@ -251,6 +253,7 @@ export default {
         this.initRequestList();
     },
     mounted(){
+        this.handleRequestResize();
         window.addEventListener('resize', this.handleRequestResize);
         document.addEventListener('scroll', this.requestScroll);
     },
@@ -274,7 +277,7 @@ export default {
         
         },
         handleRequestResize() {            
-            this.height = $('body').height() - 60;
+            this.height = window.innerHeight - 160;
         },
         initPreview(item) {
             this.preview=true;            
