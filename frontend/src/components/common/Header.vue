@@ -373,7 +373,6 @@ export default {
 
         getNoticeList() {
             http.axios.get('/api/v1/notice/getList').then(({data}) => {
-                console.dir(data.result)
                 this.notices = data.result;
                 this.totalNotice = 0;
             })
@@ -381,7 +380,6 @@ export default {
 
         readNotice(notice) {
             http.axios.get(`/api/v1/notice/${notice.noticeId}`).then(({data}) => {
-                console.dir(data)
                 if(data.result.noticeType == 1) {
                     this.move(`/board/detail?boardtype=1&boardId=${data.result.boardId}`)
                 }else if(data.result.noticeType == 2) {

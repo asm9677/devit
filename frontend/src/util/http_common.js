@@ -17,7 +17,6 @@ export default new Vue({
        return store.state.token;
     },
     axios() {
-      console.dir(this.token)
       return axios.create({
         baseURL: "http://i3a101.p.ssafy.io:8080",
         headers: {

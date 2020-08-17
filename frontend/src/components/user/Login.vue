@@ -66,13 +66,12 @@ export default {
             }).then(({data}) => {  
 
                 if(data.msg=="fail"){
-
                     this.errorMsg = data.result;
                     this.errorSnackbar = true;
                     return;
                 }
 
-                store.commit('login', {token: data.result, email: email})
+                store.commit('login', {token: data.result.token, email: email, profile: data.result.profile})
                 this.$emit('closeDialog');
                 location.reload(true);
             }).catch((error) => {
@@ -92,7 +91,7 @@ export default {
                             this.errorSnackbar = true;
                             return;
                         }
-                        store.commit('login', {token: data.result, email: email})      
+                store.commit('login', {token: data.result.token, email: email, profile: data.result.profile})
                         this.$emit('closeDialog');
                         location.reload(true);
                     })
@@ -119,7 +118,7 @@ export default {
                     return;
                 }
 
-                store.commit('login', {token: data.result, email: this.email});
+                store.commit('login', {token: data.result.token, email: email, profile: data.result.profile})
                 this.$emit('closeDialog');
 
                 location.reload(true);

@@ -283,7 +283,6 @@ export default {
                 })
         },        
         invite(){
-            console.dir(this.selectPermission)
             var request = []
             for(let i in this.inviteMember){
                 request.push({
@@ -294,7 +293,6 @@ export default {
                 })
             }
             http.axios.put(`/api/v1/lectures/auth`, request).then(({data}) => {
-                console.dir(data);
             })
 
             this.inviteMember = []
@@ -309,7 +307,6 @@ export default {
             http.axios.delete(`/api/v1/lectures/auth/${item.authId}`, {
                 "userId": item.userId,
             }).then(({data}) => {
-                console.dir(data);
             }).finally(() => {                
                 if(item.email == this.$router.app.$store.state.email)
                     this.$router.push('/lecture/detail/${this.lectureId}')
@@ -333,7 +330,6 @@ export default {
                     "userId": this.userId   
                 }
             ]).then(({data}) => {
-                console.dir(data);
             }).catch((error) => {
                 console.dir(error)
             }).finally(() => {

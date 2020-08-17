@@ -127,10 +127,8 @@
             },
 
             getList() {
-                console.dir(this.subId)
                 http.axios.get(`/api/v1/lectures/sub/history/${this.subId}`).then(({data}) => {
                     this.items = data.result;
-                    console.dir(data)
                 })
             }
         }

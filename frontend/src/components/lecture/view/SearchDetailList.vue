@@ -20,15 +20,15 @@
                                 style="border-radius:5px;"
                             >
 
-                            <template v-slot:placeholder>
-                                <v-row
-                                class="fill-height ma-0"
-                                align="center"
-                                justify="center"
-                                >
-                                    <v-progress-circular indeterminate color="primary lighten-4"></v-progress-circular>
-                                </v-row>
-                            </template>
+                                <template v-slot:placeholder>
+                                    <v-row
+                                    class="fill-height ma-0"
+                                    align="center"
+                                    justify="center"
+                                    >
+                                        <v-progress-circular indeterminate color="primary lighten-4"></v-progress-circular>
+                                    </v-row>
+                                </template>
                             
                             </v-img>
                         </v-avatar>
@@ -156,7 +156,6 @@ export default {
             this.scrollPos = $(document).scrollTop();
 
             if($(document).scrollTop() + $(document)[0].scrollingElement.clientHeight + 100 >= $(document).height()){
-                console.dir(this.page)
                 if(!this.$router.app.$store.state.loading)
                     this.search(this.type);
             }          
@@ -196,7 +195,6 @@ export default {
                     for(let i in data.result)
                         this.items.push(data.result[i])
                     this.total = data.result[0].totalCount;
-                    console.dir(this.items)
                 }else{
                     // console.dir
                 }

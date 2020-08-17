@@ -245,7 +245,6 @@ export default {
         }
     },
     created(){
-        console.dir('hello')
         this.keyword = this.$route.query.keyword;   
         if(typeof this.keyword == 'string') {
             this.keyword = [this.keyword]
@@ -315,7 +314,6 @@ export default {
             }
             http.axios.get(request).then(({data}) => {
                 this.wiki = [];
-                console.dir(data)
                 if(data.result[0]) {
                     this.wiki = data.result.slice(0,5);
                     this.totalWiki = data.result[0].totalCount;

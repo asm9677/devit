@@ -360,7 +360,6 @@ export default {
         this.$router.app.$store.commit('startLoading')
         http.axios.get(`/api/v1/lectures/${this.$route.params.id}`).then(({data}) => {
             this.item = data.result;
-            console.dir(this.item)
         }).catch((error) => {
             
         }).finally(() => {
@@ -433,7 +432,6 @@ export default {
             this.$router.app.$store.commit('startLoading')
             http.axios.get(`/api/v1/lectures/subs/${this.lectureId}`).then(({data}) => {
                 this.chapter = [];
-                console.dir(data)
                 for(let i in data.result){                    
                     this.chapter.push({
                         "commonId": data.result[i].commonId,
@@ -455,7 +453,6 @@ export default {
             http.axios.get(`/api/v1/lectures/historys/${this.lectureId}`).then(({data}) => {
                 this.history = [];
                 this.expand_history = [];
-                console.dir(data.result)
                 for(let i in data.result){         
                     if(data.result[i].acceptYn){
                         if(this.history.length < 5)
