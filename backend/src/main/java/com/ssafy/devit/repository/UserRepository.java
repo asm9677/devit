@@ -35,6 +35,8 @@ public interface UserRepository {
 
 	public User findUserByNickname(String nickname) throws Exception;
 
+	public User findUserByEmailAddress(String email) throws Exception;
+
 	public void insertRole(@Param("userId") long userId, @Param("role") String role) throws Exception;
 	
 	public List<UserResponse> findUsersByLikeSearchText(@Param("search") String search, @Param("lectureId") long lectureId) throws Exception;
