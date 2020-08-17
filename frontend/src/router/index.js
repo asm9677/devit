@@ -9,6 +9,7 @@ import Board from '@/components/board/Board.vue'
 import BoardDetail from '@/components/board/BoardDetail.vue'
 import BoardEdit from '@/components/board/BoardEdit.vue'
 import TempBoard from "@/components/board/TempBoard.vue";
+import InvalidBoard from '@/components/board/InvalidBoard.vue'
 
 import LectureList from '@/components/lecture/view/LectureList.vue'
 import LectureManagement from '@/components/lecture/manager/LectureManagement.vue'
@@ -64,6 +65,11 @@ const routes = [
     path: '/board/edit',
     name: 'BoardEdit',
     component: BoardEdit
+  },
+  {
+    path: '/board/invalid',
+    name: 'InvalidBoard',
+    component: InvalidBoard
   },
   {
     path: '/lecture',
