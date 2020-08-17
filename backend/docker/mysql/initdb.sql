@@ -40,23 +40,24 @@ INSERT INTO `user_role` (`user_id`, `user_role`) VALUES((SELECT `user_id` FROM `
 
 
 # board 테이블 삽입
-CREATE TABLE `board` (
-  `board_id` int(11) NOT NULL AUTO_INCREMENT,
-  `user_id` int(11) NOT NULL,
-  `title` varchar(300) NOT NULL,
-  `content` text NOT NULL,
-  `type` int(11) NOT NULL,
-  `count` int(11) NOT NULL DEFAULT '0',
-  `created` datetime DEFAULT CURRENT_TIMESTAMP,
-  `modified` datetime DEFAULT NULL,
-  `delete_yn` varchar(45) DEFAULT 'N',
-  `lecture_id` int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
-  `sub_id` int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
-  `sub_his_id` int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
-  PRIMARY KEY (`board_id`),
-  KEY `uidd_idx` (`user_id`),
-  CONSTRAINT `board_uid_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=utf8;
+CREATE TABLE board (
+  board_id int(11) NOT NULL AUTO_INCREMENT,
+  user_id int(11) NOT NULL,
+  title varchar(300) NOT NULL,
+  content text NOT NULL,
+  content_html text NOT NULL,
+  type int(11) NOT NULL,
+  count int(11) NOT NULL DEFAULT '0',
+  created datetime DEFAULT CURRENT_TIMESTAMP,
+  modified datetime DEFAULT NULL,
+  delete_yn varchar(1) DEFAULT 'N',
+  lecture_id int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
+  sub_id int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
+  sub_his_id int(11) DEFAULT NULL COMMENT '강의와 연관된 질문일 경우 키값',
+  PRIMARY KEY (board_id),
+  KEY uidd_idx (user_id),
+  CONSTRAINT board_uid_fk FOREIGN KEY (user_id) REFERENCES user (user_id) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=176 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `board_like` (
   `board_like_id` int(11) NOT NULL,
