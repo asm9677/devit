@@ -184,7 +184,9 @@
                             v-bind="attrs"
                             v-on="on"
                         >
-                            <v-icon color="primary">mdi-account-circle</v-icon>
+                            <v-avatar size=30>
+                                <v-img :src="`http://i3a101.p.ssafy.io/images/${$router.app.$store.state.profile}`" />
+                            </v-avatar>
                         </v-btn>
                     </template>
             
@@ -194,7 +196,7 @@
                                 <v-icon>mdi-account</v-icon>
                             </v-list-item-icon>
                             <v-list-item-content>
-                                <v-list-item-title>내 정보</v-list-item-title>
+                                <v-list-item-title>마이 페이지</v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
                         <v-list-item @click="logout">
