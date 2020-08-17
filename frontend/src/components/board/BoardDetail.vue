@@ -347,6 +347,7 @@
                     .get("/api/v1/board/" + this.$route.query.boardId, {})
                     .then(({data}) => {
                         this.item = data.result;
+                        console.log("data.result", data.result);
                         if (this.item.isMine == 'Y') { //수정/삭제 버튼
                             this.isBtnShow = true;
                         } else {
@@ -405,10 +406,15 @@
                             })
                         })
                     .catch((error) => {
+
                         console.dir(error)
+                        this.move('/board/invalid?type='+this.$route.query.boardtype);
                     })
                 },
-
+            
+            move(path){
+                this.$router.push(path).catch(()=>{location.reload(true);});            
+            },
             modifyBoard() {
                 if (this.$router.app.$store.state.token) {
                     var boardId = this.$route.query.boardId;
