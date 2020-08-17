@@ -384,14 +384,13 @@ export default {
                 if(data.result.noticeType == 1) {
                     this.move(`/board/detail?boardtype=1&boardId=${data.result.boardId}`)
                 }else if(data.result.noticeType == 2) {
-                    this.move(`/board/detail?boardtype=0&boardId=${data.result.boardId}`)
+                    this.move(`/board/detail?boardtype=${data.result.boardType}&boardId=${data.result.boardId}`)
                 }else if(data.result.noticeType == 3) {
                     this.move(`/lecture/management/request/${data.result.lectureId}`)
                 }else if(data.result.noticeType == 4) {
-                    this.move(`/lecture/player/undefined/${data.result.lectureId}?&subId=${data.result.subId}&subHisId=${data.result.subHisId}`)
+                    this.move(`/lecture/player/undefined/${data.result.lectureId}?&order=${data.result.order}&subId=${data.result.subId}&subHisId=${data.result.subHisId}`)
                 }
 
-                
                 this.getNoticeList();
             })
         },

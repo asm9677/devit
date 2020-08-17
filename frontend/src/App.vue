@@ -26,7 +26,9 @@ export default {
   },
 
   created() {
-      console.dir(localStorage.getItem('autoLogin'))
+      document.addEventListener('beforeunload', () =>{
+          alert('zz')
+      })
   },
   
   methods: {
