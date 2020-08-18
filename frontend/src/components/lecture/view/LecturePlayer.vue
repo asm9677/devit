@@ -471,13 +471,13 @@ export default {
 
             darkOption: false,
             theme:'',
-            autoPlay: true,
+            autoPlay: false,
             height:500,
 
             navWidth:0,
             listWidth:400,
             videoWidth:500,
-            list: true,
+            list: false,
 
             myPlayer: null,
 
@@ -640,10 +640,10 @@ export default {
                 // $('#livestation-player').attr('poster',`http://i3a101.p.ssafy.io/images/${this.sub.thumbnailUrl}`)
             }) 
         },
-        handleResize() {
+        handleResize() {            
             this.navWidth = this.$refs.nav.miniVariantWidth;            
             this.videoWidth = document.body.scrollWidth - this.listWidth - this.navWidth;
-            if(!this.$router.app.$store.state.smallMode)
+            if(this.$router.app.$store.state.smallMode)
                 this.videoWidth = document.body.scrollWidth;
             this.height = this.$refs.video.clientHeight;
         },   

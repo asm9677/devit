@@ -22,9 +22,9 @@ export default function(md){
 
     
     md = md.replace(/^.*(youtu\.?be(\.com)?\/)((((watch\?)?(time\_continue\=([0-9]+))?.+v\=)?([a-zA-Z0-9_-]+))(\?t\=([0-9a-zA-Z]+))?)/gi, 
-    '<iframe width="560" height="315" src="https://www.youtube.com/embed/$9" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen> </iframe>')
+    '<iframe src="https://www.youtube.com/embed/$9" frameborder="0" allow="accelerometer; encrypted-media; gyroscope; picture-in-picture" allowfullscreen> </iframe>')
 https://vimeo.com/321466973
-    md = md.replace(/https?:\/\/(www\.)?vimeo.com\/([A-Za-z0-9]+)/g, `<iframe width="640" height="360" src="https://player.vimeo.com/video/$2" frameborder="0" allow="fullscreen" allowfullscreen></iframe>`);
+    md = md.replace(/https?:\/\/(www\.)?vimeo.com\/([A-Za-z0-9]+)/g, `<iframe src="https://player.vimeo.com/video/$2" frameborder="0" allow="fullscreen" allowfullscreen></iframe>`);
     
     //links    
     md = md.replace(/[\[]{1}([^\]]+)[\]]{1}[\(]{1}([^\)\"]+)(\"(.+)\")?[\)]{1}/g, '<a href="$2" title="$4">$1</a>');
