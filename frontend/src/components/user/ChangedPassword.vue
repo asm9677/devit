@@ -6,7 +6,7 @@
             <div style="font-size:20px; text-align:center;">
                 변경된 비밀번호를 이메일로 전송했습니다. 
                 <br>
-                전송된 이메일을 확인하여 비밀번호를 확인해주세요.
+                전송된 이메일을 확인하여 새로운 비밀번호로 로그인해주세요.
             </div>
             <v-btn color="normal" style="margin-top:50px; width:100%" depressed large @click="move('/')">
                 메인으로
