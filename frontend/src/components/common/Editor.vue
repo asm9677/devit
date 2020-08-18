@@ -34,7 +34,7 @@
                 </li>
             </ul>            
             <!-- <div id="editor" contenteditable v-show="isActive" @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress"></div> -->
-            <textarea id="editor" v-show="isActive && !isFullScreen" @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress" :value="value" :style="{'height' : (height ? height+'px' : 'auto')}" />
+            <textarea id="editor" v-show="isActive && !isFullScreen" @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress" :value="value" :style="{'height' : (height ? height+'px' : 'auto')}" @change="changeText" />
             <div class="full_screen" v-show="isFullScreen">
                 <div>
                     <textarea id="full_screen_editor" v-show="isActive" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress" :value="value" placeholder="Write Here..."> </textarea>
@@ -127,6 +127,9 @@ export default {
     },
     methods: {
         parse,
+        changeText(e){
+            this.$router.app.$store.commit('setChange', true);            
+        },
         clickToolbar(msg){
             var selectionText = "";
             if (document.getSelection) {

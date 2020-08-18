@@ -131,7 +131,8 @@ export default {
             }).then(({data}) => {
                 this.snackbar = true;
                 this.msg = '저장되었습니다.';
-                this.color = "success"
+                this.color = "success";
+                this.$router.app.$store.commit('setChange', false);            
             })
         }
         

@@ -7,7 +7,7 @@
             <v-img src="@/assets/logo.png" max-width="250px" style="margin:0px auto"></v-img>
             <!--<v-card flat>-->
                 <v-form>
-                    <v-text-field prepend-icon="mdi-account" name="Email" label="Email" v-model="email"></v-text-field>
+                    <v-text-field autofocus prepend-icon="mdi-account" name="Email" label="Email" v-model="email"></v-text-field>
                     <v-text-field prepend-icon="mdi-lock" name="Password" label="Password" type="password" v-model="password" @keydown.enter="login"></v-text-field>                    
                     <v-card-actions>
                     <v-btn primary large block color="primary" @click="login" style="margin-bottom:18px">Login</v-btn>
@@ -19,9 +19,9 @@
                     <div class="add-option">
                         <div class="wrap" style="margin-bottom:10px;">
                             <p>다른 서비스로 로그인</p>
-                            <a class="_kakao _serviceIcon" title="kakao" href="#" @click="forKakaoLogin"></a>
-                            <a class="_naver _serviceIcon" title="naver" href="#" @click="forKakaoLogin"></a>
-                            <a class="_github _serviceIcon" title="github" href="#" @click="forKakaoLogin"></a>
+                            <a class="_kakao _serviceIcon" title="kakao" href="#" @mouseover="switchButton" @click="forKakaoLogin"></a>
+                            <a class="_naver _serviceIcon" title="naver" href="#" @mouseover="switchButton" @click="forKakaoLogin"></a>
+                            <a class="_github _serviceIcon" title="github" href="#" @mouseover="switchButton" @click="forKakaoLogin"></a>
                         </div>
                         <a href="#">비밀번호 찾기</a> <span class="bar" aria-hidden="true">|</span> <a href="#" @click="moveJoin">회원가입</a>     
                     </div>            
@@ -95,7 +95,7 @@ export default {
         })
     },
     methods:{
-        forKakaoLogin(e){
+        switchButton(e) {
             var kakaoIcon = $('._kakao');            
             var className = e.target.classList;
             for(let i=0; i < e.target.classList.length; i++)
@@ -110,7 +110,8 @@ export default {
                 targetIcon.addClass('_kakao');
                 targetIcon.removeClass(className);
             }
-
+        },
+        forKakaoLogin(){            
             KaKaoLogin.loginWithKakao();
         },
         login(){
