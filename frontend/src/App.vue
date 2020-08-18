@@ -98,7 +98,7 @@ export default {
     pre {
         font-family: "Menlo", "DejaVu Sans Mono", "Liberation Mono", "Consolas", "Ubuntu Mono", "Courier New", "andale mono", "lucida console", monospace;
         display: block;
-        padding: 18px 12px 0px 12px;
+        padding: 5px 12px 5px 12px;
         margin: 8px 0px ;
         font-size: 13px;
         word-break: break-all;

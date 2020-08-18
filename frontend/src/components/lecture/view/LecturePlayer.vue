@@ -9,6 +9,7 @@
             permanent
             style="background-image: linear-gradient(-45deg, rgba(0, 160, 255, 0.86), rgb(0, 72, 162)); min-height:100%; z-index:101"
             ref="nav"
+            v-show="!$router.app.$store.state.smallMode"
         >
           <v-list
             nav
@@ -279,7 +280,8 @@
                 <v-layout style="position:fixed; z-index:99; bottom:0px; left:0px;" :style="{'width': videoWidth + 'px'}">               
                                 <v-bottom-navigation
                                     absolute 
-                                    :background-color="darkOption ? '#373838' : '#88CBF8'"                                
+                                    :background-color="darkOption ? '#373838' : '#88CBF8'"           
+                                    style="z-index:10000"                     
                                 >
                                     <v-btn @click="move(`/lecture/detail/${$route.params.id}`)">
                                         <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-exit-to-app mdi-rotate-180</v-icon>
@@ -501,9 +503,18 @@ export default {
         },
         tabs() {
             if(this.tabs == 4) {
-                history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}&subId=${this.subId}&subHisId=${this.subHisId}&boardId=${this.boardId}`);
+                if(this.subId)
+                    history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}&subId=${this.subId}&subHisId=${this.subHisId}&boardId=${this.boardId}`);
+                else
+                    history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}&boardId=${this.boardId}`);
+
+                    
             }else {
-                history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}&subId=${this.subId}&subHisId=${this.subHisId}`);
+                if(this.subId)
+                    history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}&subId=${this.subId}&subHisId=${this.subHisId}`);
+                else
+                    history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}`);
+
             }   
             
             if(this.tabs == 2){
@@ -594,10 +605,10 @@ export default {
             }
         },
         prevLecture(){
-            this.move(`/lecture/player/index/${this.lectureId}?order=${parseInt(this.order)-1}`)
+            this.move(`/lecture/player/${this.$route.params.tabName}/${this.lectureId}?order=${parseInt(this.order)-1}`)
         },
         nextLecture(){
-            this.move(`/lecture/player/index/${this.lectureId}?order=${parseInt(this.order)+1}`)
+            this.move(`/lecture/player/${this.$route.params.tabName}/${this.lectureId}?order=${parseInt(this.order)+1}`)
         },        
         loadMain() {
             http.axios.get(`/api/v1/lectures/sub/${this.lectureId}?order=${this.order}`).then(({data}) => {

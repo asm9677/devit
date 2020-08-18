@@ -8,7 +8,7 @@
         >
             <div ref="empty"></div>
             <v-slide-x-transition>
-                <v-card  v-show="logo" flat tile>
+                <v-card  v-show="logo && !$router.app.$store.state.smallMode" flat tile>
                     <v-img src="@/assets/logo.png" style="cursor:pointer" max-width="150px" @click="move('/')"></v-img>
                 </v-card>
             </v-slide-x-transition>
@@ -39,19 +39,19 @@
             <v-btn icon @click="keywordSearch" ref="searchBtn">
                 <v-icon  ref="searchIcon"> mdi-magnify </v-icon>
             </v-btn>
-            <span style="margin-left:50px;"></span>
+            <span style="margin-left:50px;" v-show="!$router.app.$store.state.smallMode"></span>
             
             
             <div v-show="token">
                 <v-hover
                     v-slot:default="{ hover }"                    
                 >
-                    <v-btn depressed text small @click="$router.app.$store.state.token ? createProject() : dialog = true">                        
+                    <v-btn depressed text small @click="$router.app.$store.state.token ? createProject() : dialog = true" v-show="!$router.app.$store.state.smallMode">                        
                         <font :color="hover ? 'primary' : 'gray'" size="2">프로젝트 생성</font>                        
                     </v-btn>
                 </v-hover>
 
-                <v-menu left bottom offsetY>
+                <v-menu left bottom offsetY v-if="!$router.app.$store.state.smallMode">
                     <template v-slot:activator="{ on, attrs }">
                         <v-badge
                             color="error"
@@ -232,8 +232,8 @@
                     </v-card>
                     </v-dialog>                    
 
-                    <span style="margin-left:10px;"></span>                
-                    <v-btn depressed color="primary" outlined @click="move('/join')">회원가입</v-btn>                
+                    <span style="margin-left:10px;" v-show="!$router.app.$store.state.smallMode"></span>                
+                    <v-btn depressed color="primary" outlined @click="move('/join')" v-show="!$router.app.$store.state.smallMode">회원가입</v-btn>                
             </div>            
         </v-app-bar>
         <v-snackbar 
@@ -261,12 +261,15 @@ export default {
        TempBoard
     },
     created(){
+        
         eventBus.$on('setNotice', (cnt) => {
             this.totalNotice = cnt;
         });
 
         eventBus.$on("modifyNavForHeader", (width) => {
-            this.$refs.empty.style.marginLeft = width + 20 + "px";
+            if(!this.$router.app.$store.state.smallMode) {
+                this.$refs.empty.style.marginLeft = width + 20 + "px";
+            }
         });
 
         eventBus.$on("displayLogo", (logo) => {
@@ -276,9 +279,15 @@ export default {
         eventBus.$on("doLogin", () => {
             this.dialog = true;
         })
+
+        this.handleHeader();
+        window.addEventListener('resize', this.handleHeader)
     },
     mounted(){
         eventBus.$emit("updateHeader", this.$refs.header.computedHeight);
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.handleHeader)
     },
     computed:{
         token() {
@@ -321,9 +330,13 @@ export default {
 
             totalNotice: 0,
             notices: [],
+
         }
     },
     methods: {        
+        handleHeader() {
+            this.$router.app.$store.commit('setDisplayMode', window.innerWidth < 960);
+        },
         keywordSearch(){
             if(this.search){
                 this.$router.push(`/search?keyword=${this.keyword}`).catch(()=>{location.reload(true);});
