@@ -28,6 +28,7 @@ import com.ssafy.devit.model.request.SignUpRequest;
 import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.service.MailService;
 import com.ssafy.devit.service.UserAuthDetailService;
+import com.ssafy.devit.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -47,6 +48,9 @@ public class MailController {
 	
 	@Autowired // 회원 관리
 	UserAuthDetailService userAuthDetailService;
+
+	@Autowired
+	UserService userService;
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -147,10 +151,18 @@ public class MailController {
 		final CommonResponse result = new CommonResponse();
 
 		try {
-			mailService.sendPasswordFindConfirmEmail(email_to);
-			result.msg = "success";
-			result.result = "성공적으로 비밀번호 변경 확인 메일이 보내졌습니다.";
-			response = new ResponseEntity<>(result, HttpStatus.OK);
+			if (userService.getUserByEmail(email_to) == null) {
+				result.msg = "notexist";
+				result.result = "가입되지 않은 이메일입니다";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			}else {
+				
+				mailService.sendPasswordFindConfirmEmail(email_to);
+				result.msg = "success";
+				result.result = "성공적으로 비밀번호 변경 확인 메일이 보내졌습니다.";
+				response = new ResponseEntity<>(result, HttpStatus.OK);
+			}
+			
 		} catch (Exception e) {
 			log.info(">> Error : passwordConfirmMail <<");
 			log.info(e.getMessage().toString());
@@ -192,7 +204,7 @@ public class MailController {
 			result.result = "비밀번호 변경 실패.";			
 		}
 		
-		return "redirect:http://i3a101.p.ssafy.io/";
+		return "redirect:http://i3a101.p.ssafy.io/changedpw";
 	}
 
 	

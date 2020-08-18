@@ -23,7 +23,7 @@
                             <a class="_naver _serviceIcon" title="naver" href="#" @mouseover="switchButton" @click="forKakaoLogin"></a>
                             <a class="_github _serviceIcon" title="github" href="#" @mouseover="switchButton" @click="forKakaoLogin"></a>
                         </div>
-                        <a href="#">비밀번호 찾기</a> <span class="bar" aria-hidden="true">|</span> <a href="#" @click="moveJoin">회원가입</a>     
+                        <a href="#" @click="findPW">비밀번호 찾기</a> <span class="bar" aria-hidden="true">|</span> <a href="#" @click="moveJoin">회원가입</a>     
                     </div>            
                 </div>
 
@@ -140,6 +140,10 @@ export default {
         },
         moveJoin(){
             this.$router.push('/join')
+            this.$emit('closeDialog');
+        },
+        findPW(){
+            this.$router.push('/findpw')
             this.$emit('closeDialog');
         },
     }

@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Main from '@/components/common/Main.vue'
 import Join from '@/components/user/Join.vue'
+import FindPassword from '@/components/user/FindPassword.vue'
+import ChangedPassword from '@/components/user/ChangedPassword.vue'
 import UserModify from '@/components/user/Modify.vue'
 import EmailCertify from '@/components/user/EmailCertify.vue'
 
@@ -40,6 +42,16 @@ const routes = [
     path: '/join',
     name: 'Join',
     component: Join
+  },  
+  {
+    path: '/findpw',
+    name: 'FindPassword',
+    component: FindPassword
+  },
+  {
+    path: '/changedpw',
+    name: 'ChangedPassword',
+    component: ChangedPassword
   },
   {
     path: '/user/modify',
