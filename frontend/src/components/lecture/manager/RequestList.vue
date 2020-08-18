@@ -136,7 +136,7 @@
                                             <source :src="`${curItem.playerUrl} ? http://i3a101.p.ssafy.io/images/${curItem.playerUrl} : ''`"> </source>
                                         </video> -->
                                     </div>
-                                    <div class="wiki-paragraph" v-show="curItem.reqType=='wiki'" style="background-color: #ffffff;">
+                                    <div class="wiki-paragraph" v-show="curItem.reqType=='wiki'" style="background-color: #ffffff; padding:10px;">
                                         <div v-if="curItem.wikiContentHtml" v-html="parse(curItem.wikiContentHtml)" style="min-height:300px"/>
                                         <div v-else>
                                             <v-container fluid style="width:100%;">         
