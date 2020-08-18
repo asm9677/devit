@@ -549,7 +549,8 @@ export default {
     created(){    
         this.lectureId = this.$route.params.id;
         this.order = this.$route.query.order;
-        this.tabs = this.tabName.indexOf(this.$route.params.tabName);             
+        this.tabs = this.tabName.indexOf(this.$route.params.tabName);        
+        this.list = this.tabs != -1
         this.menu = this.tabs;
         if(this.menu == 4) {
             this.menu = 2;
