@@ -134,6 +134,11 @@
     import axios from "axios"
     import store from "@/store/index.js"
 
+    $(window).on("beforeunload", function() {
+        return "내용을 잃어버릴 수도 있습니다. 그래도 나가시겠습니까?";
+    });
+    
+
     export default {
         data() {
             return {
@@ -193,7 +198,7 @@
             changeImg(e) {
                 var frm = new FormData();
                 frm.append("file", document.getElementById("file").files[0]);
-
+                this.$router.app.$store.commit('startLoading');
                 axios
                     .post('http://i3a101.p.ssafy.io:8080/api/v1/file/upload', frm, {
                         headers: {
@@ -220,8 +225,9 @@
                     })
                     .catch((error) => {
                         console.dir(error)
+                    }).finally(() => {
+                        this.$router.app.$store.commit('endLoading');
                     })
-                    . finally(() => {})
                 this.$refs.file.value = ''
             },
             deleteImg() {
