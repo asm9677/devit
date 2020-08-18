@@ -10,6 +10,7 @@
                             tile
                         >                        
                             <v-img 
+                                v-if="item.thumbnailUrl"
                                 :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                                 aspect-ratio="1.7"
                                 :ref="'img'+i"

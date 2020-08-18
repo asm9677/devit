@@ -5,10 +5,11 @@
       <v-flex v-for="(item,i) in items" :key="`4${i}`" xs12 sm6 md4 lg3 xl2 >        
             <v-card tile flat style="margin-left:10px; margin-top:20px;cursor:pointer;">
                 <v-img 
+                    v-if="item.thumbnailUrl"
                     :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                     lazy-src="@/assets/images/empty.png"
+                    position="left center"
                     contain
-                    position="left top"
                     aspect-ratio="1.77"
                     @click="move(`/lecture/detail/${item.lectureId}`)"
                 >
@@ -59,6 +60,7 @@
                                                 size=20
                                             >
                                                 <v-img 
+                                                    v-if="item.profile"
                                                     :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
                                                 ></v-img>
                                             </v-avatar>

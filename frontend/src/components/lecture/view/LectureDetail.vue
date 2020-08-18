@@ -22,9 +22,11 @@
                     <v-flex xs12 sm12 md8 lg8 xl8 ref="left" style="margin-left:0px; padding:20px;">       
                         
                             <v-img 
+                                v-if="item.thumbnailUrl"
                                 :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                                 lazy-src="@/assets/images/empty.png"
                                 aspect-ratio="1.77"
+                                position="left center"
                                 contain
                             >
                                 <template v-slot:placeholder>
@@ -63,6 +65,7 @@
                                     size=30
                                 >
                                     <v-img 
+                                        v-if="item.thumbnailUrl"
                                         :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                                     ></v-img>
                                 </v-avatar>
@@ -120,7 +123,7 @@
                                         <v-divider :key="`${index}_divider`"/>
                                         <v-list-item :key="`${index}_history`">
                                             <v-list-item-avatar>
-                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                                <v-img v-if="item.profile" :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                                             </v-list-item-avatar>
                                             <v-list-item-content>
                                                 <v-list-item-title>
@@ -145,7 +148,7 @@
                                         <v-divider :key="`${index}_divider2`"/>
                                         <v-list-item :key="`${index}_expand_history`">
                                             <v-list-item-avatar>
-                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                                <v-img v-if="item.profile" :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                                             </v-list-item-avatar>
                                             <v-list-item-content>
                                                 <v-list-item-title>
@@ -172,7 +175,7 @@
                                         <v-divider :key="`${index}_divider`"/>
                                         <v-list-item :key="`${index}_memberList`">
                                             <v-list-item-avatar>
-                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                                <v-img v-if="item.profile" :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                                             </v-list-item-avatar>
                                             <v-list-item-content>
                                                 <v-list-item-title>
@@ -229,6 +232,7 @@
                                                 size=30
                                             >
                                                 <v-img 
+                                                    v-if="item.profile"
                                                     :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
                                                 ></v-img>
                                         </v-avatar>

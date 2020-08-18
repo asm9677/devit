@@ -46,7 +46,7 @@
                                                             <v-avatar
                                                                 class="profile"                                                    
                                                             >
-                                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                                                <v-img v-if="item.profile" :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                                                             </v-avatar>
                                                             {{item.text }}
                                                             <v-icon small right @click="parent.selectItem(item)">mdi-close</v-icon>
@@ -55,7 +55,7 @@
                                                 </template>
                                                 <template v-slot:item="{ index, item }">                                                
                                                     <v-list-item-avatar>
-                                                        <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                                        <v-img v-if="item.profile" :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                                                     </v-list-item-avatar>
                                                     <v-list-item-content>
                                                         <v-list-item-title v-html="item.text"></v-list-item-title>
@@ -100,7 +100,7 @@
                                         <v-divider :key="`${index}_divider`"/>
                                         <v-list-item :key="`${index}_memberList`">
                                             <v-list-item-avatar>
-                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                                <v-img v-if="item.profile" :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                                             </v-list-item-avatar>
                                             <v-list-item-content>
                                                 <v-list-item-title>

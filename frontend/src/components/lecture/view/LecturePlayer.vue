@@ -347,6 +347,7 @@
                                                     size=20
                                                 >
                                                     <v-img 
+                                                        v-if="sub.profile"
                                                         :src="`http://i3a101.p.ssafy.io/images/${sub.profile}`"
                                                     ></v-img>
                                             </v-avatar>
@@ -642,9 +643,10 @@ export default {
         },
         handleResize() {
             this.navWidth = this.$refs.nav.miniVariantWidth;            
-            this.videoWidth = document.body.scrollWidth - this.listWidth - this.navWidth;
-            if(!this.$router.app.$store.state.smallMode)
-                this.videoWidth = document.body.scrollWidth;
+            this.videoWidth = window.innerWidth - this.listWidth - this.navWidth;
+            if(this.$router.app.$store.state.smallMode){                
+                this.videoWidth = window.innerWidth;
+            }
             this.height = this.$refs.video.clientHeight;
         },   
 

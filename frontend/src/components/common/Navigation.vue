@@ -17,7 +17,7 @@
         >
         <v-list-item>
             <v-list-item-icon>              
-                <v-icon @click="fixedNav">{{expandOnHover ? 'mdi-sort-variant' : 'mdi-menu'}}</v-icon>              
+                <v-icon @click="!$router.app.$store.state.smallMode ? fixedNav() : true">{{expandOnHover && !$router.app.$store.state.smallMode ? 'mdi-sort-variant' : 'mdi-menu'}}</v-icon>              
             </v-list-item-icon>
           </v-list-item>
           <v-list-group

@@ -269,6 +269,8 @@ export default {
         eventBus.$on("modifyNavForHeader", (width) => {
             if(!this.$router.app.$store.state.smallMode) {
                 this.$refs.empty.style.marginLeft = width + 20 + "px";
+            }else{
+                this.$refs.empty.style.marginLeft = 56 + "px";
             }
         });
 
@@ -335,7 +337,6 @@ export default {
     },
     methods: {        
         handleHeader() {
-            console.dir(window.innerWidth)
             this.$router.app.$store.commit('setDisplayMode', window.innerWidth < 960);
         },
         keywordSearch(){
@@ -396,7 +397,6 @@ export default {
 
         readNotice(notice) {
             http.axios.get(`/api/v1/notice/${notice.noticeId}`).then(({data}) => {
-                console.dir(notice)
                 if(data.result.noticeType == 1) {
                     this.move(`/board/detail?boardtype=1&boardId=${data.result.boardId}`)
                 }else if(data.result.noticeType == 2) {
