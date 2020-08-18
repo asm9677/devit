@@ -70,6 +70,9 @@ import http from "@/util/http_common.js"
 import axios from "axios"
 import store from "@/store/index.js"
 import Editor from "@/components/common/Editor.vue"
+import convertHTML from "@/lib/markdown/ConvertHTML.js";
+import parse from "@/lib/markdown/ParseMd.js";
+
 export default {
     components: {
         Editor,
@@ -101,6 +104,8 @@ export default {
         this.getIntroPage();
     },
     methods: {
+        parse,
+        convertHTML,
         ValidationForm(){
             if(!this.content){          
                 this.msg = "내용을 입력해주세요!";

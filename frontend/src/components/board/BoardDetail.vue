@@ -78,7 +78,7 @@
                                 <!-- <v-list-item class="board_content">
                                     {{ item.boardContent }}
                                 </v-list-item> -->
-                                <div class="board_content" v-html="parse(item.boardContent)"></div>
+                                <div class="board_content" v-html="parse(item.boardContentHtml)"></div>
                             </v-list>
                         </div>
 

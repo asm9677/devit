@@ -84,6 +84,7 @@
     import store from "@/store/index.js" 
     import Editor from "@/components/common/Editor.vue"
     import parse from "@/lib/markdown/ParseMd.js";
+    import convertHTML from "@/lib/markdown/ConvertHTML.js";
 
     export default {
         components: {
@@ -146,7 +147,7 @@
                         this.boardId = data.result.boardId,
                         this.boardTitle = data.result.boardTitle,
                         //this.boardContent = data.result.boardContent,         
-                        this.content = data.result.boardContent,                        
+                        this.content = data.result.boardContentHtml,                        
                         this.boardType = this.boardtypeitems[data.result.boardType-1];
                         // this.boardType = data.result.boardType,
                         
@@ -165,13 +166,13 @@
         },
         methods: {
             parse,
+            convertHTML,
             saveTemp() {
                 var date = new Date();
                 var jsonData = {
                     boardTitle: this.boardTitle,
                     //boardContent: this.boardContent,
                     boardContent: this.content,
-                    boardContentHtml: this.content,
                     boardType: this.boardType.type,
                     createDate: date
                 };
@@ -195,7 +196,7 @@
                         .post("/api/v1/board", {
                             boardTitle: this.boardTitle,
                             //boardContent: this.boardContent,
-                            boardContent: this.content,
+                            boardContent: this.convertHTML(this.parse(this.content)),
                             boardContentHtml: this.content,
                             boardType: this.boardType.type,
                             boardCreated: "",
@@ -241,7 +242,7 @@
                             boardId: this.$route.query.boardId,
                             boardTitle: this.boardTitle,
                             //boardContent: this.boardContent,
-                            boardContent: this.content,
+                            boardContent: this.convertHTML(this.parse(this.content)),
                             boardContentHtml: this.content,
                             boardType: this.boardType.type,
                             //boardCreated: "",
