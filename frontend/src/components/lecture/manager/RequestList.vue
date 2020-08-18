@@ -119,9 +119,9 @@
                                             </video> -->
                                         </div>
                                 </div>     
-                                <v-btn color="primary" block depressed style="margin:10px 0px;" @click="requestProcess(curItem,'Y')">적용하기</v-btn>  
+                                <v-btn color="primary" block outlined depressed style="margin:10px 0px;" @click="requestProcess(curItem,'Y')">적용하기</v-btn>  
                                 <!-- <v-btn color="primary" block depressed style="margin:10px 0px;" @click="requestProcess(curItem,'N')">거절</v-btn>   -->
-                                <v-btn color="primary" block depressed style="margin:10px 0px;" @click="initPreview(curItem)">상세보기</v-btn>  
+                                <v-btn color="primary" block outlined depressed style="margin:10px 0px;" @click="initPreview(curItem)">상세보기</v-btn>  
                                 <v-dialog v-model="preview" hide-overlay max-width="768"> 
                                     <div id="zz" />
                             

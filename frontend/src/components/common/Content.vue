@@ -40,7 +40,7 @@ export default {
             isChange: false,
         }
     },
-    created(){        
+    created(){     
         var self = this
         this.$router.beforeEach(function (to, from, next) {
             if(self.$router.app.$store.state.isChange){
@@ -53,6 +53,19 @@ export default {
                 next();
             }        
         });
+
+        history.pushState(null, null, location.href);
+        window.onpopstate = function(event) {
+            if(self.$router.app.$store.state.isChange){
+                if(confirm('변경사항이 적용되지 않았습니다. 페이지를 이동하시겠습니까?')){                   
+                    self.$router.app.$store.commit('setChange', false);
+                    next();
+                }
+            }else{
+                next();
+            }    
+        };
+
         window.onload = this.getNoticeCount;
 
         eventBus.$on("modifyNavForHeader", (width) => {
@@ -72,6 +85,7 @@ export default {
         
     },
     beforeDestroy(){
+        
         document.removeEventListener("scroll", this.handleScroll)
     },
     methods:{

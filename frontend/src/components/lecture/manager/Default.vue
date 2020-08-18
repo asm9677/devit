@@ -179,7 +179,7 @@
                             <v-list style="padding:20px 100px;">
                                 <v-layout>
                                     <v-spacer></v-spacer>
-                                    <v-btn  color="success" outlined @click="ValidationForm">
+                                    <v-btn  color="primary" outlined @click="ValidationForm">
                                         저장하기
                                     </v-btn>    
                                     <div style="margin-right:5px"></div>

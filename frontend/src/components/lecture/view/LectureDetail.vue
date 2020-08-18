@@ -15,7 +15,7 @@
                 <v-tab @click="goto('#introduce')"><span style="font-size:16px;" >소개</span></v-tab>
                 <v-tab @click="goto('#curriculum')"><span style="font-size:16px">교육 과정</span></v-tab>
                 <v-tab @click="goto('#changes')"><span style="font-size:16px">변경 사항</span></v-tab>
-                <v-tab @click="goto('#helped')"><span style="font-size:16px">도움주신 분들</span></v-tab>
+                <v-tab @click="goto('#helped')"><span style="font-size:16px">공동 관리자</span></v-tab>
             </v-tabs>  
         <v-card tile flat>
                 <v-layout wrap ref="main">
@@ -88,10 +88,12 @@
 
                         <div id="introduce" style="margin-top:40px;">
                             <h3>프로젝트 소개</h3>    
+                            <v-divider style="margin-top:20px"/>
                             <div class="content" v-html="parse(item.content)" />                                
                         </div>
                         <div id="curriculum" style="margin-top:40px;">
                             <h3>교육 과정</h3>      
+                            <v-divider style="margin-top:20px"/>
                                 <div class="content">
                                     <v-list style="font-size:14px">
                                         <v-list-item 
@@ -168,7 +170,7 @@
                             </div>                              
                         </div>
                         <div id="helped" style="margin-top:40px;">
-                            <h3>도움주신 분들</h3>  
+                            <h3>공동 관리자</h3>  
                             <div class="content">
                                 <v-list style="padding:0px;">        
                                     <template v-for="(item,index) in admin">

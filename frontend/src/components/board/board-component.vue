@@ -1,12 +1,12 @@
 <template>
-    <v-container fluid="fluid">
+    <v-container fluid="fluid" style="padding:12px 0px;">
         <div style="width:100%">
             <v-btn
                 v-if="isAdmin"
                 @click="newBoard()"
                 depressed="depressed"
                 outlined="outlined"
-                style="float:right;margin-right:20px;">글쓰기</v-btn>
+                style="float:right; margin-right:12px;">글쓰기</v-btn>
         </div>
         <div v-if="items.length > 0">
             <v-data-iterator
@@ -64,9 +64,8 @@
                 </v-row>
             </v-container>
         </div>
-        <div v-else>
-            <v-container fluid style="width:100%;">         
-                <v-row>
+        <div v-else style="width:100%;">                    
+                <v-row style="width:100%;">
                     <v-col cols="12">
                         <v-row align="start" justify="center">                                    
                             <v-icon style="font-size:150px; color:rgba(0, 0, 0, 0.54); margin:30px 0 20px 0"> mdi-emoticon-cry-outline </v-icon>                               
@@ -75,8 +74,7 @@
                             <div style="font-size:20px; margin-bottom:20px;"> 게시글이 존재하지 않습니다 :( </div>    
                         </v-row>
                     </v-col>
-                </v-row>
-            </v-container>
+                </v-row>            
         </div>
 
         <v-container>

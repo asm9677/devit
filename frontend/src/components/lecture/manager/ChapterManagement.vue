@@ -284,7 +284,8 @@ export default {
             }                        
             
             this.removeChapter = []
-            http.axios.post('/api/v1/lectures/sub', request).then(({data}) => {
+            http.axios.post('/api/v1/lectures/sub', request).then(({data}) => {                
+                this.$router.app.$store.commit('setChange', false); 
             }).finally(() => {
                 this.getIndexList();
                 this.snackbar = true;
@@ -322,6 +323,7 @@ export default {
                 this.dialog=false;
                 if(this.curIndex != -1)
                     this.chapter.splice(this.curIndex, 0, this.curItem);
+                this.$router.app.$store.commit('setChange', true); 
             }
         }
     }
