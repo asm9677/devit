@@ -63,15 +63,28 @@ public class BoardController {
 			UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			BoardRequest board = null;
 			board = new BoardRequest(user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardContentHtml(), request.getBoardType(), request.getBoardCount());
-
-			boardService.upload(board);
-			 // bid에 해당하는 게시글을 조회한다.
-			if(board.getBoardType() == 1) { // 공지사항 알림
-				boardService.uploadNotice(board.getBoardId());
+			
+			String isAdmin = "Y";
+			if(board.getBoardType() == 1) { //공지사항에 글 작성할 경우 권한 체크
+				isAdmin = userService.getUserIsAdmin(user.getUserId());
 			}
-			result.msg = "success";
-			result.result = board.getBoardId();
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			if("N".equals(isAdmin)) {
+				result.msg = "noauth";
+				result.result = "글쓰기 권한이 없습니다.";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			}else {
+				
+				boardService.upload(board);
+				// bid에 해당하는 게시글을 조회한다.
+				if(board.getBoardType() == 1) { // 공지사항 알림
+					boardService.uploadNotice(board.getBoardId());
+				}
+				result.msg = "success";
+				result.result = board.getBoardId();
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			}
+		
+
 		} catch (Exception e) {
 			result.msg = "fail";
 			result.result = "권한 오류";
@@ -122,9 +135,21 @@ public class BoardController {
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		try {
-			result.msg = "success";
-			boardService.delete(bid);
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+
+			UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			String isAdmin = "Y";
+			if(boardService.getBoardTypeById(bid) == 1) { //공지사항에 글 작성할 경우 권한 체크
+				isAdmin = userService.getUserIsAdmin(user.getUserId());
+			}
+			if("N".equals(isAdmin)) {
+				result.msg = "noauth";
+				result.result = "삭제 권한이 없습니다.";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			}else {
+				result.msg = "success";
+				boardService.delete(bid);
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			}
 		} catch (Exception e) {
 			result.msg = "fail";
 			result.result = "오류";
@@ -146,15 +171,29 @@ public class BoardController {
 		BoardResponse boardResponse = null;
 		try {
 			boardResponse = boardService.info(request.getBoardId());
+			
 			if(boardResponse != null) {
+				
 				boardResponse.setBoardTitle(request.getBoardTitle());
 				boardResponse.setBoardContent(request.getBoardContent());
 				boardResponse.setBoardType(request.getBoardType());
 				boardResponse.setBoardCount(request.getBoardCount());
-				boardService.update(boardResponse, request.getBoardId());
-				result.msg = "Success";
-				result.result = request.getBoardId();
-				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+				
+				UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				String isAdmin = "Y";
+				if(boardResponse.getBoardType() == 1) { //공지사항에 글 작성할 경우 권한 체크
+					isAdmin = userService.getUserIsAdmin(user.getUserId());
+				}
+				if("N".equals(isAdmin)) {
+					result.msg = "noauth";
+					result.result = "수정 권한이 없습니다.";
+					response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+				}else {
+					boardService.update(boardResponse, request.getBoardId());
+					result.msg = "Success";
+					result.result = request.getBoardId();
+					response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+				}
 			} else {
 				result.msg = "not found";
 				response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
@@ -162,7 +201,7 @@ public class BoardController {
 		} catch (Exception e) {
 			result.msg = "fail";
 			result.result = e.getMessage().toString();
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 			e.printStackTrace();
 		}
 		return response;

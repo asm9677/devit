@@ -72,6 +72,9 @@
                     <v-btn text="text" v-bind="attrs" color="success" @click="snackbar = false">닫기</v-btn>
                 </template>
             </v-snackbar>
+            <v-snackbar v-model="errorSnackbar" timeout="1500" color="error">
+                {{errorMsg}}
+            </v-snackbar>
         </v-container>
     </div>
 </template>
@@ -119,6 +122,8 @@
                 //boardType: '0',
                 snackbar: false,
                 text: "",
+                errorSnackbar: false,
+                errorMsg:"",
                 content:""
             }
         },
@@ -198,7 +203,15 @@
                             boardModified: ""
                         })
                         .then(({data}) => {
-                            this
+
+                            if(data.msg == "noauth"){
+
+                                this.errorMsg = '글쓰기 권한이 없습니다.';
+                                this.errorSnackbar = true;
+
+                            }else{
+
+                                this
                                 .$router
                                 .push({
                                     name: 'BoardDetail',
@@ -211,6 +224,7 @@
                                         'boardId': data.result, //data.boardId
                                     }
                                 });
+                            }
                             
                             
 
@@ -234,19 +248,25 @@
                             boardCount: "",
                             boardModified: ""
                         })
-                        .then(({data}) => {                          
-                            this
-                                .$router
-                                .push({path:'/board/detail', 
-                                    params:{
-                                        "showMsg": true,
-                                        "msgText": "수정이 완료되었습니다."
-                                        },
-                                        query:{
-                                    "boardtype": this.boardType.type,
-                                    "boardId": data.result,/*data.boardId*/
-                                }});
+                        .then(({data}) => {   
+                            if(data.msg == "noauth"){
 
+                                this.errorMsg = '수정 권한이 없습니다.';
+                                this.errorSnackbar = true;
+                                
+                            }else{                       
+                                this
+                                    .$router
+                                    .push({path:'/board/detail', 
+                                        params:{
+                                            "showMsg": true,
+                                            "msgText": "수정이 완료되었습니다."
+                                            },
+                                            query:{
+                                        "boardtype": this.boardType.type,
+                                        "boardId": data.result,/*data.boardId*/
+                                    }});
+                            }
                         })
                         .catch((error) => {
                             console.dir(error)

@@ -194,6 +194,9 @@
                     <v-btn text="text" v-bind="attrs" color="success" @click="snackbar = false">닫기</v-btn>
                 </template>
             </v-snackbar>
+            <v-snackbar v-model="errorSnackbar" timeout="1500" color="error">
+                {{errorMsg}}
+            </v-snackbar>
         </v-container>
     </div>
 </template>
@@ -232,7 +235,9 @@
                     }*/],
                 isShow: [],
                 snackbar: false,
-                text: ""
+                text: "",
+                errorSnackbar:false,
+                errorMsg:"",
             }
         },
         mounted() {
@@ -444,14 +449,21 @@
                                 email: this.email,
                                 password: this.password*/
                             })
-                            .then(({data}) => {
-                                //alert("삭제가 완료되었습니다."); data;
-                                this.text = "삭제가 완료되었습니다.";
-                                this.snackbar = true;
-                                /*this
-                                    .$router
-                                    .push("/board?type="+boardType);*/
-                                this.goToList();
+                            .then(({data}) => {   
+                                if(data.msg == "noauth"){
+
+                                    this.errorMsg = '삭제 권한이 없습니다.';
+                                    this.errorSnackbar = true;
+                                    
+                                }else{        
+                                    //alert("삭제가 완료되었습니다."); data;
+                                    this.text = "삭제가 완료되었습니다.";
+                                    this.snackbar = true;
+                                    /*this
+                                        .$router
+                                        .push("/board?type="+boardType);*/
+                                    this.goToList();
+                                }
                             })
                             .catch((error) => {
                                 console.dir(error)
