@@ -68,6 +68,7 @@
 		        user_id = #{userId} AND like_flag = 'Y') lk ON lk.lecture_id = l.lecture_id
 		WHERE
 		    l.type = #{type}
+		  and l.deleted_flag = 'N'
 		GROUP BY l.lecture_id
 		ORDER BY l.lecture_id
 		LIMIT #{startPage}, 20;
