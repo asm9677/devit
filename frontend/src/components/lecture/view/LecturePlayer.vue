@@ -277,22 +277,22 @@
         
 
             <div style="position:absolute; top:0px; left:0px; width:100%; height:100%; z-index:10; ">            
-                <v-layout style="position:fixed; z-index:99; bottom:0px; left:0px;" :style="{'width': videoWidth + 'px'}">               
+                <v-layout style="position:fixed; z-index:10000; bottom:0px; left:0px;" :style="{'width': videoWidth + 'px'}">               
                                 <v-bottom-navigation
                                     absolute 
-                                    :background-color="darkOption ? '#373838' : '#88CBF8'"           
-                                    style="z-index:10000"                     
+                                    :background-color="darkOption ? '#373838' : '#FFFFFF'"           
+                                    style="z-index:10000; box-shadow:none; border:1px solid #d4d4d4"                     
                                 >
                                     <v-btn @click="move(`/lecture/detail/${$route.params.id}`)">
-                                        <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-exit-to-app mdi-rotate-180</v-icon>
+                                        <v-icon :color="darkOption ? '#d4d4d4' : 'primary'" large>mdi-exit-to-app mdi-rotate-180</v-icon>
                                     </v-btn>
-                                    <v-tabs :background-color="darkOption ? '#373838' : '#88CBF8'">                                
+                                    <v-tabs :background-color="darkOption ? '#373838' : '#FFFFFF'">                                
                                     </v-tabs>
                                     <v-btn v-show="order != 1" @click="prevLecture">
-                                        <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-skip-previous</v-icon>
+                                        <v-icon :color="darkOption ? '#d4d4d4' : 'primary'" style="font-size:40px;">mdi-skip-previous</v-icon>
                                     </v-btn>
                                     <v-btn v-show="order != sub.lectureCount" @click="nextLecture">
-                                        <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-skip-next</v-icon>
+                                        <v-icon :color="darkOption ? '#d4d4d4' : 'primary'" style="font-size:40px;">mdi-skip-next</v-icon>
                                     </v-btn>
                                     
                                 </v-bottom-navigation>
