@@ -134,11 +134,6 @@
     import axios from "axios"
     import store from "@/store/index.js"
 
-    $(window).on("beforeunload", function() {
-        return "내용을 잃어버릴 수도 있습니다. 그래도 나가시겠습니까?";
-    });
-    
-
     export default {
         data() {
             return {
