@@ -10,6 +10,7 @@
                 style="position:sticky; top:5px; z-index:9; max-width:500px;"
                 ref="menu"
                 show-arrows                
+                v-show="!$router.app.$store.state.smallMode"
             >
                 <v-tab @click="goto('#introduce')"><span style="font-size:16px;" >소개</span></v-tab>
                 <v-tab @click="goto('#curriculum')"><span style="font-size:16px">교육 과정</span></v-tab>
@@ -77,7 +78,7 @@
                             </div>
                             <div style="margin-bottom:20px; clear:both;" /> 
                             
-                            <v-btn depressed dark color="primary" large block>
+                            <v-btn depressed dark color="primary" large block @click="move(`/lecture/player/undefined/${$route.params.id}?order=1`)">
                                 <span style="font-size:20px;">수강하기</span>
                             </v-btn>
                         </div>

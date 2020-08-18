@@ -8,6 +8,7 @@ export default new Vuex.Store({
     token: localStorage.getItem('token') ? localStorage.getItem('token') : sessionStorage.getItem('token'),
     email: localStorage.getItem('email') ? localStorage.getItem('email') : sessionStorage.getItem('email'),
     profile: localStorage.getItem('profile') ? localStorage.getItem('profile') : sessionStorage.getItem('profile'),
+    smallMode: false,
     loading: 0,
   },
   mutations: {
@@ -42,6 +43,9 @@ export default new Vuex.Store({
     endLoading(state) {
       if(state.loading > 0)
         state.loading -= 1;
+    },
+    setDisplayMode(state, payload) {
+      state.smallMode = payload
     }
   },
   actions: {
