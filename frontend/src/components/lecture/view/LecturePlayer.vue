@@ -641,8 +641,10 @@ export default {
             }) 
         },
         handleResize() {
-            this.navWidth = this.$refs.nav.miniVariantWidth;
+            this.navWidth = this.$refs.nav.miniVariantWidth;            
             this.videoWidth = document.body.scrollWidth - this.listWidth - this.navWidth;
+            if(!this.$router.app.$store.state.smallMode)
+                this.videoWidth = document.body.scrollWidth;
             this.height = this.$refs.video.clientHeight;
         },   
 
