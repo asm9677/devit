@@ -615,9 +615,7 @@ export default {
                 if(data.result) {                    
                     this.sub = data.result;
                     this.subId = this.sub.subId;
-                    this.subHisId = this.sub.subHisId;               
-                    console.dir($('test').parseHTML())     
-                    console.dir('zz')
+                    this.subHisId = this.sub.subHisId;     
                 }else{
                     alert("존재하지 않는 강의 입니다.");
                     this.move(`/lecture/detail/${this.lectureId}`)                    

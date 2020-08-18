@@ -335,6 +335,7 @@ export default {
     },
     methods: {        
         handleHeader() {
+            console.dir(window.innerWidth)
             this.$router.app.$store.commit('setDisplayMode', window.innerWidth < 960);
         },
         keywordSearch(){
