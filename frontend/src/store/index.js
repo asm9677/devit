@@ -10,6 +10,7 @@ export default new Vuex.Store({
     profile: localStorage.getItem('profile') ? localStorage.getItem('profile') : sessionStorage.getItem('profile'),
     smallMode: false,
     loading: 0,
+    isChange: false,
   },
   mutations: {
     login(state, payload) {
@@ -46,7 +47,10 @@ export default new Vuex.Store({
     },
     setDisplayMode(state, payload) {
       state.smallMode = payload
-    }
+    },
+    setChange(state, payload) {
+      state.isChange = payload
+    },
   },
   actions: {
     

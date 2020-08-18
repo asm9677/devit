@@ -86,6 +86,17 @@ export default {
             ],
           },
           {
+            icon: 'mdi-book-open-page-variant',
+            title: '스터디',
+            active: true,
+            items: [
+              { title: '프로그래밍', active: false, path: '/lecture?level=101' },
+              { title: '알고리즘', active: false, path: '/lecture?level=102' },
+              { title: '자격증', active: false, path: '/lecture?level=103' },
+              { title: '기타', active: false, path: '/lecture?level=104' },
+            ],
+          },
+          {
             icon: 'mdi-account',
             title: '마이페이지',
             active: true,
