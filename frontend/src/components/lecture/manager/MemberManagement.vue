@@ -304,37 +304,48 @@ export default {
                 this.msg = 'Owner 권한을 위임한 후에 시도하시길 바랍니다.'
                 return;
             }
-            http.axios.delete(`/api/v1/lectures/auth/${item.authId}`, {
-                "userId": item.userId,
-            }).then(({data}) => {
-            }).finally(() => {                
-                if(item.email == this.$router.app.$store.state.email)
-                    this.$router.push('/lecture/detail/${this.lectureId}')
-                else
-                    this.memberSearch()                
-            })
+
+            var exitMsg = '이 프로젝트 관리자 목록에서 나가시겠습니까?';
+            if(this.isOwner){
+                exitMsg = '이 멤버를 관리자 목록에서 삭제하시겠습니까?';
+            }
+            if(confirm(exitMsg)){
+                http.axios.delete(`/api/v1/lectures/auth/${item.authId}`, {
+                    "userId": item.userId,
+                }).then(({data}) => {
+                }).finally(() => {                
+                    if(item.email == this.$router.app.$store.state.email)
+                        this.$router.push('/lecture/detail/${this.lectureId}')
+                    else
+                        this.memberSearch()                
+                })
+
+            }
 
         },
         changeOwner(item){
-            http.axios.put(`/api/v1/lectures/auth`, [
-                {
-                    "authId":item.authId,
-                    "lectureId":this.lectureId,
-                    "lectureRole": "Owner",
-                    "userId": item.userId,     
-                },
-                {
-                    "authId":this.authId,
-                    "lectureId":this.lectureId,
-                    "lectureRole": "Maintainer",
-                    "userId": this.userId   
-                }
-            ]).then(({data}) => {
-            }).catch((error) => {
-                console.dir(error)
-            }).finally(() => {
-                this.memberSearch()
-            })
+            if(confirm('Owner 권한을 위임하시겠습니까?')){
+
+                http.axios.put(`/api/v1/lectures/auth`, [
+                    {
+                        "authId":item.authId,
+                        "lectureId":this.lectureId,
+                        "lectureRole": "Owner",
+                        "userId": item.userId,     
+                    },
+                    {
+                        "authId":this.authId,
+                        "lectureId":this.lectureId,
+                        "lectureRole": "Maintainer",
+                        "userId": this.userId   
+                    }
+                ]).then(({data}) => {
+                }).catch((error) => {
+                    console.dir(error)
+                }).finally(() => {
+                    this.memberSearch()
+                })
+            }
 
 
         }
