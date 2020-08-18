@@ -2,7 +2,7 @@
     <div style="margin-top:20px;">
         <v-card tile="tile" flat="flat">
             <v-layout wrap="wrap">
-                <div
+                <div v-if="items.length > 0"
                     ref="question"
                     :style="{'height': questionHeight+'px'}"
                     style="width:100%; overflow-y:auto; margin-top:0px;">
@@ -43,6 +43,20 @@
                         <v-row justify="center">
                             <v-col cols="8">
                                 <v-pagination v-model="page" class="my-4" :length="pageCnt"></v-pagination>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </div>
+                <div v-else>
+                    <v-container fluid style="width:100%;">         
+                        <v-row>
+                            <v-col cols="12">
+                                <v-row align="start" justify="center">                                    
+                                    <v-icon style="font-size:150px; color:rgba(0, 0, 0, 0.54); margin:30px 0 20px 0"> mdi-emoticon-cry-outline </v-icon>                               
+                                </v-row>
+                                <v-row align="start" justify="center">       
+                                    <div style="font-size:20px; margin-bottom:20px;"> 게시글이 존재하지 않습니다 :( </div>    
+                                </v-row>
                             </v-col>
                         </v-row>
                     </v-container>
