@@ -7,6 +7,8 @@
                 <v-img 
                     :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                     lazy-src="@/assets/images/empty.png"
+                    contain
+                    position="left top"
                     aspect-ratio="1.77"
                     @click="move(`/lecture/detail/${item.lectureId}`)"
                 >
@@ -25,8 +27,8 @@
                 <!-- <v-card-actions> -->
                                     <v-list>
                                             <div @click="move(`/lecture/detail/${item.lectureId}`)">
-                                            <v-list-item-title>
-                                                <h3>{{item.title}}</h3>
+                                            <v-list-item-title style="font-size: 1.17em; font-weight: bold;">
+                                                {{item.title}}
                                             </v-list-item-title>
                                             <v-list-item-subtitle>
                                                 조회수 {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}

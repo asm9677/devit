@@ -370,7 +370,7 @@
 
                         <v-list :style="{'background-color': (darkOption ? '#1e1e1e' : '#FFFFFF')}">
                             <v-list-item>
-                                <div class="wiki-paragraph" v-html="parse(sub.wikiContentHtml)" v-if="sub.wikiContentHtml" style="width:100%" />
+                                <div id="test" class="wiki-paragraph" v-html="parse(sub.wikiContentHtml)" v-if="sub.wikiContentHtml" style="width:100%" />
                                 <div class="wiki-paragraph" v-else style="width:100%;" >
                                     <v-container fluid style="width:100%;">         
                                         <v-row>
@@ -604,7 +604,9 @@ export default {
                 if(data.result) {                    
                     this.sub = data.result;
                     this.subId = this.sub.subId;
-                    this.subHisId = this.sub.subHisId;                    
+                    this.subHisId = this.sub.subHisId;               
+                    console.dir($('test').parseHTML())     
+                    console.dir('zz')
                 }else{
                     alert("존재하지 않는 강의 입니다.");
                     this.move(`/lecture/detail/${this.lectureId}`)                    
