@@ -70,10 +70,10 @@ public class MailServiceImpl implements MailService { // to MailRepository
 		String encodedCode = Base64.getEncoder().encodeToString(Integer.toString(code).getBytes());
 				
 		String email_from = "i3a101.devit.io@gmail.com";
-		String subject = "[DEVIT] 본 계정의 비밀번호 변경 요청이 발생하였습니다.";		
-		String text = "<h1>비밀번호 변경 메일 발송</h1><br><hr><br>";
-		text += "해당 계정으로 비밀번호 찾기 요청이 발생하였습니다.<br />본인이 요청한 것이 맞다면 아래 링크를 클릭해주세요.<br />"
-				+ "링크를 클릭하면 비밀번호가 변경됩니다.<br />변경된 비밀번호는 메일로 발송됩니다.<br /><br />";
+		String subject = "[DevIT] 비밀번호 변경 요청 인증 메일입니다.";		
+		String text = "<h1>비밀번호 변경 요청 인증 메일</h1><br><hr><br>";
+		text += "DevIT 비밀번호 찾기<br />아래 경로를 통해 비밀번호 변경을 진행하시기 바랍니다..<br />"
+				+ "링크를 클릭하면 새로운 임시 비밀번호가 메일로 발송됩니다.<br /><br />";
 		text += "<h3><a href='http://i3a101.p.ssafy.io:8080/api/v1/mail/password?e=" + encodedEmail + "&c=" + encodedCode + "'> 비밀번호 변경하기 </a></h3>";
 		
 		sendMail(email_from, email_to, subject, text);

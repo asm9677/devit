@@ -57,7 +57,7 @@ export default {
             
             this.$router.app.$store.commit('startLoading')
             http.axios.post("/api/v1/mail/password", {
-                email_to: this.email,
+                email: this.email,
             }).then(({data}) => {
                 if(data.msg == 'notexist'){
                     this.errorMsg = data.result;
