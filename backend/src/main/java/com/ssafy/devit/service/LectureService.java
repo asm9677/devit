@@ -102,6 +102,12 @@ public interface LectureService {
 	
 	// 나의 요청 리스트 가져오기
 	public List<RequestHistoryResponse> myReqList(long startPage, long itemsperpage) throws Exception;
+	
+	// 최근 좋아요 가장 많이 받은 프로젝트 가져오기
+	public List<LecturesResponse> bestLectureList() throws Exception;
+	
+	// 최근 좋아요 가장 많이 받은 동영상 가져오기
+	public List<TheOhterSubLectureResponse> bestVideoList() throws Exception;
 		
 		
 }

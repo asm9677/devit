@@ -373,4 +373,34 @@ public class LectureServiceImpl implements LectureService {
 		startPage = (startPage - 1) * itemsperpage;
 		return lectureRepository.myReqList(user.getUserId(), startPage, itemsperpage);
 	};
+	
+
+	// 최근 좋아요 가장 많이 받은 프로젝트 가져오기
+	@Override
+	public List<LecturesResponse> bestLectureList() throws Exception {
+		
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			user = new UserAuthDetails();
+			user.setUserId(0);
+		}
+		return lectureRepository.bestLectureList(user.getUserId());
+	}
+
+	// 최근 좋아요 가장 많이 받은 동영상 가져오기
+	@Override
+	public List<TheOhterSubLectureResponse> bestVideoList() throws Exception {
+		
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			user = new UserAuthDetails();
+			user.setUserId(0);
+		}
+		return lectureRepository.bestVideoList(user.getUserId());
+	}
+		
 }
