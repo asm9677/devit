@@ -8,7 +8,7 @@
         >
             <div ref="empty"></div>
             <v-slide-x-transition>
-                <v-card  v-show="logo" flat tile>
+                <v-card  v-show="logo && !$router.app.$store.state.smallMode" flat tile>
                     <v-img src="@/assets/logo.png" style="cursor:pointer" max-width="150px" @click="move('/')"></v-img>
                 </v-card>
             </v-slide-x-transition>
@@ -39,19 +39,19 @@
             <v-btn icon @click="keywordSearch" ref="searchBtn">
                 <v-icon  ref="searchIcon"> mdi-magnify </v-icon>
             </v-btn>
-            <span style="margin-left:50px;"></span>
+            <span style="margin-left:50px;" v-show="!$router.app.$store.state.smallMode"></span>
             
             
             <div v-show="token">
                 <v-hover
                     v-slot:default="{ hover }"                    
                 >
-                    <v-btn depressed text small @click="$router.app.$store.state.token ? createProject() : dialog = true">                        
+                    <v-btn depressed text small @click="$router.app.$store.state.token ? createProject() : dialog = true" v-show="!$router.app.$store.state.smallMode">                        
                         <font :color="hover ? 'primary' : 'gray'" size="2">프로젝트 생성</font>                        
                     </v-btn>
                 </v-hover>
 
-                <v-menu left bottom offsetY>
+                <v-menu left bottom offsetY v-if="!$router.app.$store.state.smallMode">
                     <template v-slot:activator="{ on, attrs }">
                         <v-badge
                             color="error"
@@ -184,7 +184,9 @@
                             v-bind="attrs"
                             v-on="on"
                         >
-                            <v-icon color="primary">mdi-account-circle</v-icon>
+                            <v-avatar size=30>
+                                <v-img :src="`http://i3a101.p.ssafy.io/images/${$router.app.$store.state.profile}`" />
+                            </v-avatar>
                         </v-btn>
                     </template>
             
@@ -194,7 +196,7 @@
                                 <v-icon>mdi-account</v-icon>
                             </v-list-item-icon>
                             <v-list-item-content>
-                                <v-list-item-title>내 정보</v-list-item-title>
+                                <v-list-item-title>마이 페이지</v-list-item-title>
                             </v-list-item-content>
                         </v-list-item>
                         <v-list-item @click="logout">
@@ -230,8 +232,8 @@
                     </v-card>
                     </v-dialog>                    
 
-                    <span style="margin-left:10px;"></span>                
-                    <v-btn depressed color="primary" outlined @click="move('/join')">회원가입</v-btn>                
+                    <span style="margin-left:10px;" v-show="!$router.app.$store.state.smallMode"></span>                
+                    <v-btn depressed color="primary" outlined @click="move('/join')" v-show="!$router.app.$store.state.smallMode">회원가입</v-btn>                
             </div>            
         </v-app-bar>
         <v-snackbar 
@@ -259,12 +261,17 @@ export default {
        TempBoard
     },
     created(){
+        
         eventBus.$on('setNotice', (cnt) => {
             this.totalNotice = cnt;
         });
 
         eventBus.$on("modifyNavForHeader", (width) => {
-            this.$refs.empty.style.marginLeft = width + 20 + "px";
+            if(!this.$router.app.$store.state.smallMode) {
+                this.$refs.empty.style.marginLeft = width + 20 + "px";
+            }else{
+                this.$refs.empty.style.marginLeft = 56 + "px";
+            }
         });
 
         eventBus.$on("displayLogo", (logo) => {
@@ -274,9 +281,15 @@ export default {
         eventBus.$on("doLogin", () => {
             this.dialog = true;
         })
+
+        this.handleHeader();
+        window.addEventListener('resize', this.handleHeader)
     },
     mounted(){
         eventBus.$emit("updateHeader", this.$refs.header.computedHeight);
+    },
+    beforeDestroy() {
+        window.removeEventListener('resize', this.handleHeader)
     },
     computed:{
         token() {
@@ -319,9 +332,13 @@ export default {
 
             totalNotice: 0,
             notices: [],
+
         }
     },
     methods: {        
+        handleHeader() {
+            this.$router.app.$store.commit('setDisplayMode', window.innerWidth < 960);
+        },
         keywordSearch(){
             if(this.search){
                 this.$router.push(`/search?keyword=${this.keyword}`).catch(()=>{location.reload(true);});
@@ -365,7 +382,7 @@ export default {
         },
         userModify(){
             if (this.$router.app.$store.state.token) {
-                this.$router.push('/user/modify').catch(()=>{location.reload(true);});   
+                this.$router.push('/mypage/info').catch(()=>{location.reload(true);});   
             } else {
                 eventBus.$emit('doLogin');
             }
@@ -380,7 +397,6 @@ export default {
 
         readNotice(notice) {
             http.axios.get(`/api/v1/notice/${notice.noticeId}`).then(({data}) => {
-                console.dir(notice)
                 if(data.result.noticeType == 1) {
                     this.move(`/board/detail?boardtype=1&boardId=${data.result.boardId}`)
                 }else if(data.result.noticeType == 2) {

@@ -137,13 +137,13 @@
         <v-dialog v-model="dialog" max-width="780">
             <v-card>
                 <v-card-title>
-                    제목
+                    <span class="primary--text"> 제목 </span>
                 </v-card-title>
                 <v-card-text>
                     <v-text-field v-model="title" dense ref="title" id="title"></v-text-field>
                 </v-card-text>
                 <v-card-title>
-                    검색 키워드
+                    <span class="primary--text"> 검색 키워드 </span>
                 </v-card-title>
                 <v-card-text>
                     <v-combobox 
@@ -176,11 +176,11 @@
                     
                     <v-layout>
                         <v-spacer></v-spacer>
-                        <v-btn depressed color="primary" @click="saveChapter()">
+                        <v-btn depressed outlined color="primary" @click="saveChapter()">
                             저장하기
                         </v-btn>    
                         <div style="margin-right:5px"></div>
-                        <v-btn depressed @click="dialog=false">
+                        <v-btn depressed outlined  @click="dialog=false">
                             취소하기
                         </v-btn>    
                     </v-layout>   
@@ -284,7 +284,8 @@ export default {
             }                        
             
             this.removeChapter = []
-            http.axios.post('/api/v1/lectures/sub', request).then(({data}) => {
+            http.axios.post('/api/v1/lectures/sub', request).then(({data}) => {                
+                this.$router.app.$store.commit('setChange', false); 
             }).finally(() => {
                 this.getIndexList();
                 this.snackbar = true;
@@ -322,6 +323,7 @@ export default {
                 this.dialog=false;
                 if(this.curIndex != -1)
                     this.chapter.splice(this.curIndex, 0, this.curItem);
+                this.$router.app.$store.commit('setChange', true); 
             }
         }
     }

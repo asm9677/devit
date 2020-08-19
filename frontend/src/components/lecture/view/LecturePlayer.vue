@@ -9,6 +9,7 @@
             permanent
             style="background-image: linear-gradient(-45deg, rgba(0, 160, 255, 0.86), rgb(0, 72, 162)); min-height:100%; z-index:101"
             ref="nav"
+            v-show="!$router.app.$store.state.smallMode"
         >
           <v-list
             nav
@@ -276,21 +277,23 @@
         
 
             <div style="position:absolute; top:0px; left:0px; width:100%; height:100%; z-index:10; ">            
-                <v-layout style="position:fixed; z-index:99; bottom:0px; left:0px;" :style="{'width': videoWidth + 'px'}">               
+                <v-layout style="position:fixed; z-index:10000; bottom:0px; left:0px;" :style="{'width': videoWidth + 'px'}">               
                                 <v-bottom-navigation
                                     absolute 
-                                    :background-color="darkOption ? '#373838' : '#88CBF8'"                                
+                                    :background-color="darkOption ? '#373838' : '#FFFFFF'"           
+                                    style="z-index:10000; box-shadow:none;"                     
+                                    :style="{'border' : (darkOption ? '1px solid #373838' : '1px solid #d4d4d4')}"
                                 >
                                     <v-btn @click="move(`/lecture/detail/${$route.params.id}`)">
-                                        <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-exit-to-app mdi-rotate-180</v-icon>
+                                        <v-icon :color="darkOption ? '#d4d4d4' : 'primary'" large>mdi-exit-to-app mdi-rotate-180</v-icon>
                                     </v-btn>
-                                    <v-tabs :background-color="darkOption ? '#373838' : '#88CBF8'">                                
+                                    <v-tabs :background-color="darkOption ? '#373838' : '#FFFFFF'">                                
                                     </v-tabs>
                                     <v-btn v-show="order != 1" @click="prevLecture">
-                                        <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-skip-previous</v-icon>
+                                        <v-icon :color="darkOption ? '#d4d4d4' : 'primary'" style="font-size:40px;">mdi-skip-previous</v-icon>
                                     </v-btn>
                                     <v-btn v-show="order != sub.lectureCount" @click="nextLecture">
-                                        <v-icon :color="darkOption ? '#d4d4d4' : '#2981CF'">mdi-skip-next</v-icon>
+                                        <v-icon :color="darkOption ? '#d4d4d4' : 'primary'" style="font-size:40px;">mdi-skip-next</v-icon>
                                     </v-btn>
                                     
                                 </v-bottom-navigation>
@@ -345,6 +348,7 @@
                                                     size=20
                                                 >
                                                     <v-img 
+                                                        v-if="sub.profile"
                                                         :src="`http://i3a101.p.ssafy.io/images/${sub.profile}`"
                                                     ></v-img>
                                             </v-avatar>
@@ -370,7 +374,7 @@
 
                         <v-list :style="{'background-color': (darkOption ? '#1e1e1e' : '#FFFFFF')}">
                             <v-list-item>
-                                <div class="wiki-paragraph" v-html="parse(sub.wikiContentHtml)" v-if="sub.wikiContentHtml" style="width:100%" />
+                                <div id="test" class="wiki-paragraph" v-html="parse(sub.wikiContentHtml)" v-if="sub.wikiContentHtml" style="width:100%" />
                                 <div class="wiki-paragraph" v-else style="width:100%;" >
                                     <v-container fluid style="width:100%;">         
                                         <v-row>
@@ -469,13 +473,13 @@ export default {
 
             darkOption: false,
             theme:'',
-            autoPlay: true,
+            autoPlay: false,
             height:500,
 
             navWidth:0,
             listWidth:400,
             videoWidth:500,
-            list: true,
+            list: false,
 
             myPlayer: null,
 
@@ -501,9 +505,18 @@ export default {
         },
         tabs() {
             if(this.tabs == 4) {
-                history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}&subId=${this.subId}&subHisId=${this.subHisId}&boardId=${this.boardId}`);
+                if(this.subId)
+                    history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}&subId=${this.subId}&subHisId=${this.subHisId}&boardId=${this.boardId}`);
+                else
+                    history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}&boardId=${this.boardId}`);
+
+                    
             }else {
-                history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}&subId=${this.subId}&subHisId=${this.subHisId}`);
+                if(this.subId)
+                    history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}&subId=${this.subId}&subHisId=${this.subHisId}`);
+                else
+                    history.pushState('', '', `/lecture/player/${this.tabName[this.tabs]}/${this.lectureId}?order=${this.order}`);
+
             }   
             
             if(this.tabs == 2){
@@ -537,7 +550,8 @@ export default {
     created(){    
         this.lectureId = this.$route.params.id;
         this.order = this.$route.query.order;
-        this.tabs = this.tabName.indexOf(this.$route.params.tabName);             
+        this.tabs = this.tabName.indexOf(this.$route.params.tabName);        
+        this.list = this.tabs != -1
         this.menu = this.tabs;
         if(this.menu == 4) {
             this.menu = 2;
@@ -594,17 +608,17 @@ export default {
             }
         },
         prevLecture(){
-            this.move(`/lecture/player/index/${this.lectureId}?order=${parseInt(this.order)-1}`)
+            this.move(`/lecture/player/${this.$route.params.tabName}/${this.lectureId}?order=${parseInt(this.order)-1}`)
         },
         nextLecture(){
-            this.move(`/lecture/player/index/${this.lectureId}?order=${parseInt(this.order)+1}`)
+            this.move(`/lecture/player/${this.$route.params.tabName}/${this.lectureId}?order=${parseInt(this.order)+1}`)
         },        
         loadMain() {
             http.axios.get(`/api/v1/lectures/sub/${this.lectureId}?order=${this.order}`).then(({data}) => {
                 if(data.result) {                    
                     this.sub = data.result;
                     this.subId = this.sub.subId;
-                    this.subHisId = this.sub.subHisId;                    
+                    this.subHisId = this.sub.subHisId;     
                 }else{
                     alert("존재하지 않는 강의 입니다.");
                     this.move(`/lecture/detail/${this.lectureId}`)                    
@@ -629,9 +643,12 @@ export default {
                 // $('#livestation-player').attr('poster',`http://i3a101.p.ssafy.io/images/${this.sub.thumbnailUrl}`)
             }) 
         },
-        handleResize() {
-            this.navWidth = this.$refs.nav.miniVariantWidth;
-            this.videoWidth = document.body.scrollWidth - this.listWidth - this.navWidth;
+        handleResize() {            
+            this.navWidth = this.$refs.nav.miniVariantWidth;        
+            this.videoWidth = window.innerWidth - this.listWidth - this.navWidth;
+            if(this.$router.app.$store.state.smallMode){                
+                this.videoWidth = window.innerWidth;
+            }
             this.height = this.$refs.video.clientHeight;
         },   
 

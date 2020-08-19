@@ -19,4 +19,6 @@ public interface BoardService {
 	
 	public List<BoardResponse> myBoardList(long startPage, long itemsperpage) throws Exception;
 	public List<BoardResponse> myReplyList(long startPage, long itemsperpage) throws Exception;
+	
+	public long getBoardTypeById(long boardId) throws Exception;
 }

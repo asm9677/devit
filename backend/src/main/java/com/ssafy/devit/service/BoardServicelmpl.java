@@ -111,4 +111,12 @@ public class BoardServicelmpl implements BoardService {
 		startPage = (startPage-1) * itemsperpage;
 		return boardRepository.myReplyList(user.getUserId(), startPage, itemsperpage);
 	}
+	
+	@Override
+	public long getBoardTypeById(long boardId) throws Exception{
+		if(boardId < 1) {
+			throw new Exception("잘못된 boardId가 나왔습니다.");
+		}
+		return boardRepository.getBoardTypeById(boardId);
+	}
 }

@@ -34,7 +34,13 @@
                 </li>
             </ul>            
             <!-- <div id="editor" contenteditable v-show="isActive" @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress"></div> -->
-            <textarea id="editor" v-show="isActive && !isFullScreen" @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress" :value="value" :style="{'height' : (height ? height+'px' : 'auto')}" />
+            <div v-show="isActive && !isFullScreen">
+                <textarea id="editor"  @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress" :value="value" :style="{'height' : (height ? height+'px' : 'auto')}" @change="changeText" />
+                <v-divider  style="margin-bottom:10px" />
+                <span style='font-size:14px; line-height: 16px;     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";'> <a style="cursor:text">Markdown</a> and <a style="cursor:text">tags</a> are supported </span>
+                
+
+            </div>
             <div class="full_screen" v-show="isFullScreen">
                 <div>
                     <textarea id="full_screen_editor" v-show="isActive" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress" :value="value" placeholder="Write Here..."> </textarea>
@@ -50,12 +56,13 @@
 
 <script>
 import axios from "axios";
+import parse from "@/lib/markdown/ParseMd.js";
 export default {
     props: ['value', 'height', 'hideTab'],
     watch: {
         isActive(){ 
             if(!this.isActive){                
-                this.parseContent = this.parseMd($('#editor').val());
+                this.parseContent = this.parse($('#editor').val());
             }
         },        
         hideTab(){
@@ -125,6 +132,10 @@ export default {
         }
     },
     methods: {
+        parse,
+        changeText(e){
+            this.$router.app.$store.commit('setChange', true);            
+        },
         clickToolbar(msg){
             var selectionText = "";
             if (document.getSelection) {
@@ -218,54 +229,6 @@ export default {
 
             })
         },
-        parseMd(md){
-            //blockquote
-            md = md.replace(/^\>(.+)/gm, '<blockquote>$1</blockquote>');
-            
-            //h
-            md = md.replace(/[\#]{6}(.+)/g, '<h6>$1</h6>');
-            md = md.replace(/[\#]{5}(.+)/g, '<h5>$1</h5>');
-            md = md.replace(/[\#]{4}(.+)/g, '<h4>$1</h4>');
-            md = md.replace(/[\#]{3}(.+)/g, '<h3>$1</h3>');
-            md = md.replace(/[\#]{2}(.+)/g, '<h2>$1</h2>');
-            md = md.replace(/[\#]{1}(.+)/g, '<h1>$1</h1>');
-            
-            //alt h
-            md = md.replace(/^(.+)\n\=+/gm, '<h1>$1</h1>');
-            md = md.replace(/^(.+)\n\-+/gm, '<h2>$1</h2>');
-            
-            //images
-            md = md.replace(/\!\[([^\]]+)\]\(([^\)]+)\)/g, '<img src="$2" alt="$1" />');
-            
-            //links
-            md = md.replace(/[\[]{1}([^\]]+)[\]]{1}[\(]{1}([^\)\"]+)(\"(.+)\")?[\)]{1}/g, '<a href="$2" title="$4">$1</a>');
-            
-            //font styles
-            md = md.replace(/[\*\_]{3}([^\*\_]+)[\*\_]{3}/g, '<u>$1</u>');
-            md = md.replace(/[\*\_]{2}([^\*\_]+)[\*\_]{2}/g, '<b>$1</b>');
-            md = md.replace(/[\*\_]{1}([^\*\_]+)[\*\_]{1}/g, '<i>$1</i>');
-            md = md.replace(/[\~]{2}([^\~]+)[\~]{2}/g, '<del>$1</del>');
-            
-            //pre
-            // md = md.replace(/^\s*\n\`\`\`(([^\s]+))?/gm, '<pre class="$2">');
-            // md = md.replace(/^\`\`\`\s*\n/gm, '</pre>\n\n');
-            
-            //code
-            md = md.replace(/[\`]{3}([^\`]+)[\`]{3}/g, '<pre>$1</pre>');
-            
-            //br
-            md = md.replace(/^\s*(\n)?(.+)/gm, function(m){
-                return  /\<(\/)?(h\d|ul|ol|li|blockquote|pre)/.test(m) ? m : m+'<br>';
-            });
-
-            //hr
-            md = md.replace(/[\-]{3}/g, '<hr />');
-
-            //strip p from pre
-            // md = md.replace(/(\<pre.+\>)\s*\n\<p\>(.+)\<\/p\>/gm, '$1$2');
-            
-            return md;            
-        }
     }
 }
 </script>

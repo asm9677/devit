@@ -17,7 +17,7 @@
                                 <v-list-item style="margin-top:20px;">
                                     <v-layout>
                                         <v-spacer></v-spacer>
-                                        <v-btn  color="success" outlined @click="ValidationForm">
+                                        <v-btn  color="primary" outlined @click="ValidationForm">
                                             저장하기
                                         </v-btn>    
                                         <div style="margin-right:7px"></div>
@@ -70,6 +70,9 @@ import http from "@/util/http_common.js"
 import axios from "axios"
 import store from "@/store/index.js"
 import Editor from "@/components/common/Editor.vue"
+import convertHTML from "@/lib/markdown/ConvertHTML.js";
+import parse from "@/lib/markdown/ParseMd.js";
+
 export default {
     components: {
         Editor,
@@ -101,6 +104,8 @@ export default {
         this.getIntroPage();
     },
     methods: {
+        parse,
+        convertHTML,
         ValidationForm(){
             if(!this.content){          
                 this.msg = "내용을 입력해주세요!";
@@ -126,7 +131,8 @@ export default {
             }).then(({data}) => {
                 this.snackbar = true;
                 this.msg = '저장되었습니다.';
-                this.color = "success"
+                this.color = "success";
+                this.$router.app.$store.commit('setChange', false);            
             })
         }
         

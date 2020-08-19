@@ -24,5 +24,6 @@ public interface BoardRepository {
 
 	public List<BoardResponse> myBoardList(@Param("userId") long userId, @Param("startPage") long startPage, @Param("itemsperpage") long itemsperpage) throws Exception;
 	public List<BoardResponse> myReplyList(@Param("userId") long userId, @Param("startPage") long startPage, @Param("itemsperpage") long itemsperpage) throws Exception;
-
+	
+	public long getBoardTypeById(@Param("boardId") long boardId) throws Exception;
 }

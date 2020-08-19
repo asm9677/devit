@@ -1,21 +1,12 @@
 <template>
     <div style="margin-top:20px;">
 
-        <v-container justify-center="justify-center">
+        <v-container justify-center="justify-center" style="border:1px solid rgba(0, 0, 0, 0.12)">
 
-            <v-layout wrap="wrap">
-                <v-flex
-                    xs12
-                    sm12
-                    md9
-                    lg8
-                    xl6
-                    style="margin:0 auto;">
-                    <h1
-                        class="primary--text"
-                        style="font-size:26px; font-weight:500; margin-top:15px;">회원정보 수정</h1>
+            <v-layout wrap="wrap" >
+                <v-flex style="margin:0 auto;" xs12 sm12 md9 lg8 xl6>
                     <div style="margin-top:40px;">
-                        <v-card tile="tile" flat="flat" outlined="outlined">
+                        <v-card tile="tile" flat="flat">
                             <v-list style="padding:20px 100px;">
                                 <v-list-item>
                                     <v-list-item-title>프로필 사진</v-list-item-title>

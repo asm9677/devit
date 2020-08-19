@@ -44,6 +44,7 @@
                                     size=15
                                 >
                                     <v-img 
+                                        v-if="item.profile"
                                         :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
                                     ></v-img>
                                 </v-avatar>

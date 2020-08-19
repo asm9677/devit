@@ -5,7 +5,7 @@
                     <v-flex xs12 sm12 md9 lg9 xl9 style="margin-left:0px;">                         
                             <v-list style="padding:20px 20px;">
                                 <v-list outlined style="padding-top:0px;" v-show="isOwner">                                        
-                                    <v-list-item >
+                                    <v-list-item style="background-color:#fbfbfb">
                                         <v-list-item-title>
                                             <v-list-item-title>멤버 초대</v-list-item-title> 
                                         </v-list-item-title>    
@@ -46,7 +46,7 @@
                                                             <v-avatar
                                                                 class="profile"                                                    
                                                             >
-                                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                                                <v-img v-if="item.profile" :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                                                             </v-avatar>
                                                             {{item.text }}
                                                             <v-icon small right @click="parent.selectItem(item)">mdi-close</v-icon>
@@ -55,7 +55,7 @@
                                                 </template>
                                                 <template v-slot:item="{ index, item }">                                                
                                                     <v-list-item-avatar>
-                                                        <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                                        <v-img v-if="item.profile" :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                                                     </v-list-item-avatar>
                                                     <v-list-item-content>
                                                         <v-list-item-title v-html="item.text"></v-list-item-title>
@@ -93,14 +93,14 @@
 
                                 <div style="margin-top:30px" />
                                 <v-list outlined style="padding:0px;">                                        
-                                    <v-list-item >
+                                    <v-list-item style="background-color:#fbfbfb">
                                         <v-list-item-title>멤버 목록</v-list-item-title> 
                                     </v-list-item>
                                     <template v-for="(item,index) in memberList">
                                         <v-divider :key="`${index}_divider`"/>
                                         <v-list-item :key="`${index}_memberList`">
                                             <v-list-item-avatar>
-                                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                                <v-img v-if="item.profile" :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
                                             </v-list-item-avatar>
                                             <v-list-item-content>
                                                 <v-list-item-title>
@@ -116,12 +116,12 @@
                                                             {{item.role}}
                                                         </th>
                                                         <th width="40px;">
-                                                                <v-icon color="red" v-show="!item.isMe && isOwner" @click="changeOwner(item)">
+                                                                <v-icon style="font-weight:700;" color="error" v-show="!item.isMe && isOwner" @click="changeOwner(item)">
                                                                     mdi-crown
                                                                 </v-icon>
                                                         </th>
                                                         <td width="30px;">
-                                                                <v-icon color="red" v-show="!item.isMe && isOwner" @click="exitProject(item)">
+                                                                <v-icon color="error" v-show="!item.isMe && isOwner" @click="exitProject(item)">
                                                                     mdi-trash-can-outline
                                                                 </v-icon>
                                                             
@@ -304,37 +304,48 @@ export default {
                 this.msg = 'Owner 권한을 위임한 후에 시도하시길 바랍니다.'
                 return;
             }
-            http.axios.delete(`/api/v1/lectures/auth/${item.authId}`, {
-                "userId": item.userId,
-            }).then(({data}) => {
-            }).finally(() => {                
-                if(item.email == this.$router.app.$store.state.email)
-                    this.$router.push('/lecture/detail/${this.lectureId}')
-                else
-                    this.memberSearch()                
-            })
+
+            var exitMsg = '이 프로젝트 관리자 목록에서 나가시겠습니까?';
+            if(this.isOwner){
+                exitMsg = '이 멤버를 관리자 목록에서 삭제하시겠습니까?';
+            }
+            if(confirm(exitMsg)){
+                http.axios.delete(`/api/v1/lectures/auth/${item.authId}`, {
+                    "userId": item.userId,
+                }).then(({data}) => {
+                }).finally(() => {                
+                    if(item.email == this.$router.app.$store.state.email)
+                        this.$router.push('/lecture/detail/${this.lectureId}')
+                    else
+                        this.memberSearch()                
+                })
+
+            }
 
         },
         changeOwner(item){
-            http.axios.put(`/api/v1/lectures/auth`, [
-                {
-                    "authId":item.authId,
-                    "lectureId":this.lectureId,
-                    "lectureRole": "Owner",
-                    "userId": item.userId,     
-                },
-                {
-                    "authId":this.authId,
-                    "lectureId":this.lectureId,
-                    "lectureRole": "Maintainer",
-                    "userId": this.userId   
-                }
-            ]).then(({data}) => {
-            }).catch((error) => {
-                console.dir(error)
-            }).finally(() => {
-                this.memberSearch()
-            })
+            if(confirm('Owner 권한을 위임하시겠습니까?')){
+
+                http.axios.put(`/api/v1/lectures/auth`, [
+                    {
+                        "authId":item.authId,
+                        "lectureId":this.lectureId,
+                        "lectureRole": "Owner",
+                        "userId": item.userId,     
+                    },
+                    {
+                        "authId":this.authId,
+                        "lectureId":this.lectureId,
+                        "lectureRole": "Maintainer",
+                        "userId": this.userId   
+                    }
+                ]).then(({data}) => {
+                }).catch((error) => {
+                    console.dir(error)
+                }).finally(() => {
+                    this.memberSearch()
+                })
+            }
 
 
         }

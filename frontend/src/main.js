@@ -4,8 +4,9 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify';
 import vueMoment from 'vue-moment'
+import Carousel3d from 'vue-carousel-3d';
 
-
+Vue.use(Carousel3d);
 Vue.use(vueMoment)
 Vue.config.productionTip = false
 

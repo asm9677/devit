@@ -68,6 +68,7 @@
 		        user_id = #{userId} AND like_flag = 'Y') lk ON lk.lecture_id = l.lecture_id
 		WHERE
 		    l.type = #{type}
+		  and l.deleted_flag = 'N'
 		GROUP BY l.lecture_id
 		ORDER BY l.lecture_id
 		LIMIT #{startPage}, 20;
@@ -627,11 +628,10 @@
 		    l.title,
 		    l.user_id userId,
 		    l.common_id commonId,
-		    l.view_count viewCount,
 		    l.thumbnail_Url thumbnailUrl,
 		    u.nickname,
 		    u.profile,
-		    COUNT(lsi.sub_id) lectureCount,
+		    IFNULL(lsi.cnt, 0) as lectureCount,
 		    l.view_count viewCount,
 		    IFNULL(likeCount, 0) AS likeCount,
 		    lt.tagName,
@@ -644,7 +644,12 @@
 		        INNER JOIN
 		    user u ON l.user_id = u.user_id
 		        LEFT OUTER JOIN
-		    lecture_sub_index lsi ON l.lecture_id = lsi.lecture_id
+		    (
+		     SELECT lecture_id, COUNT(1) AS cnt
+		       from lecture_sub_index lsi
+			  where lsi.order != 0
+		   group by lecture_id
+		    ) lsi ON l.lecture_id = lsi.lecture_id
 		        LEFT OUTER JOIN
 		    (SELECT 
 		        lecture_id, COUNT(1) AS likeCount
@@ -668,7 +673,7 @@
 		        user_id = #{userId} AND like_flag = 'Y') lk ON lk.lecture_id = l.lecture_id
 		WHERE
 		    1=1
-		GROUP BY l.lecture_id
+		  and l.deleted_flag = 'N'
 		ORDER BY lk.modified desc
 		LIMIT #{startPage}, #{itemsperpage};
       </select>
@@ -711,11 +716,13 @@
 		        COUNT(1) like_count, lecture_id, sub_id, sub_his_id
 		    FROM
 		        lecture_sub_his_like lshl
+			  WHERE like_flag = 'Y'
 		    GROUP BY sub_id , sub_his_id) lg ON lsh.lecture_id = lg.lecture_id
 		        AND lsh.sub_id = lg.sub_id
 		        AND lsh.sub_his_id = lg.sub_his_id
 		WHERE
 		    lsh.player_url IS NOT NULL
+	      and lsh.delete_yn = 'N'
      ORDER BY lshl.modified desc;
 	</select>
 			
@@ -883,4 +890,106 @@
 	ORDER BY lsh.created DESC
 	   LIMIT #{startPage}, #{itemsperpage};
 	</select>
+	
+	
+	<!-- 최근 좋아요 많이 받은 프로젝트 -->
+	      <select id="bestLectureList" resultType="LecturesResponse">
+	 SELECT l.lecture_id lectureId,
+			l.title,
+			l.user_id userId,
+			l.common_id commonId,
+			l.thumbnail_Url thumbnailUrl,
+			u.nickname,
+			u.profile,
+		    IFNULL(lsi.cnt, 0) as lectureCount,
+			l.view_count viewCount,
+			IFNULL(likeCount, 0) AS likeCount,
+			lt.tagName,
+			CASE
+				WHEN exists (SELECT 1 FROM lecture_like WHERE user_id = #{userId} AND like_flag = 'Y') THEN TRUE
+				ELSE FALSE
+			END AS userLikeYn
+	   FROM lecture l
+			INNER JOIN
+			user u
+			ON 
+            l.user_id = u.user_id
+			LEFT OUTER JOIN
+		    (
+		     SELECT lecture_id, COUNT(1) AS cnt
+		       from lecture_sub_index lsi
+			  where lsi.order != 0
+		   group by lecture_id
+		    ) lsi 
+            ON 
+            l.lecture_id = lsi.lecture_id
+			LEFT OUTER JOIN
+		    (
+             SELECT lecture_id, COUNT(1) AS likeCount
+			   FROM lecture_like
+			  WHERE like_flag = 'Y'
+				AND modified between DATE_ADD(now(), INTERVAL -7 DAY) and now()
+		   GROUP BY lecture_id
+			) ll 
+            ON 
+            l.lecture_id = ll.lecture_id
+		    LEFT OUTER JOIN
+		    (
+             SELECT common_id, GROUP_CONCAT(tag_name) tagName
+			   FROM lecture_tag
+		   GROUP BY common_id
+            ) lt 
+            ON 
+            l.common_id = lt.common_id
+	  WHERE 1=1
+		AND l.deleted_flag = 'N'
+   GROUP BY l.lecture_id
+   ORDER BY likeCount desc, l.lecture_id desc
+	  LIMIT 1, 6;
+      </select>
+      
+      
+	<!-- 최근 좋아요 많이 받은 동영상 -->
+	<select id="bestVideoList" resultType="TheOhterSubLectureResponse">
+	 SELECT lsi.lecture_id lectureId,
+			lsi.sub_id subId,
+			lsh.sub_his_id subHisId,
+			lsh.title,
+			lsh.player_url playerUrl,
+			lsh.play_time playTime,
+			lsh.view_count viewCount,
+			IFNULL(lg.like_count, 0) likeCount,
+			lsh.thumbnail_url thumbnailUrl,
+			(SELECT nickname FROM user WHERE user_id = lsh.user_id) nickname,
+			(SELECT profile FROM user WHERE user_id = lsh.user_id) profile,
+			CASE
+				WHEN exists (select 1 from lecture_sub_his_like where user_id = #{userId} and like_flag = 'Y') THEN TRUE
+				ELSE FALSE
+			END AS userLikeYn
+	   FROM lecture_sub_index lsi
+			INNER JOIN
+		    lecture_sub_history lsh 
+            ON 
+            lsi.lecture_id = lsh.lecture_id AND 
+            lsi.sub_id = lsh.sub_id AND 
+            lsh.req_type = 'video'
+			LEFT OUTER JOIN
+		    (
+             SELECT COUNT(1) like_count, lecture_id, sub_id, sub_his_id
+			   FROM lecture_sub_his_like lshl
+			  WHERE like_flag = 'Y'
+				AND modified between DATE_ADD(now(), INTERVAL -7 DAY) and now()
+		   GROUP BY sub_id, sub_his_id
+            ) lg 
+            ON 
+            lsh.lecture_id = lg.lecture_id AND 
+            lsh.sub_id = lg.sub_id AND 
+            lsh.sub_his_id = lg.sub_his_id
+	  WHERE lsh.player_url IS NOT NULL
+	    and lsh.delete_yn = 'N'
+   ORDER BY likeCount desc, lsh.sub_his_id desc
+	  LIMIT 1, 6;
+	</select>
+			
+		
 </mapper>

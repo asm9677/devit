@@ -1,11 +1,13 @@
 <template>
     <div style="margin:50px">
         <v-container justify-center="justify-center">
-            <v-layout row="row" wrap="wrap">
+
+            <div style="width:100%; margin:0 auto;">
+                <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">내가 좋아요한 프로젝트</span>
+            </div>
+            <div v-if="items.length > 0">
+                <v-layout row="row" wrap="wrap">
                 
-                    <div style="width:100%; margin:0 auto;">
-                        <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">내가 좋아요한 강의</span>
-                    </div>
                     <v-flex
                         v-for="(item,i) in items"
                         :key="`4${i}`"
@@ -61,8 +63,22 @@
                             </v-list>
                         </v-card>
                     </v-flex>
-                
-            </v-layout>
+                </v-layout>
+            </div>
+            <div v-else>
+                <v-container fluid style="width:100%;">         
+                    <v-row>
+                        <v-col cols="12">
+                            <v-row align="start" justify="center">                                    
+                                <v-icon style="font-size:150px; color:rgba(0, 0, 0, 0.54); margin:30px 0 20px 0"> mdi-emoticon-cry-outline </v-icon>                               
+                            </v-row>
+                            <v-row align="start" justify="center">       
+                                <div style="font-size:20px; margin-bottom:20px;"> 프로젝트가 존재하지 않습니다 :( </div>    
+                            </v-row>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </div>
         </v-container>
     </div>
 </template>

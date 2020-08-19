@@ -11,6 +11,7 @@
                 <v-list-item>
                     <v-list-item-avatar size="30" style="margin-right:10px;">
                             <v-img 
+                                v-if="item.profile"
                                 :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
                             ></v-img>
                     </v-list-item-avatar >
@@ -77,6 +78,7 @@
                     <v-list-item  :key="`${i}_reply`" three-line v-if="editReplyIdx != i">
                         <v-list-item-avatar size="30" style="margin-right:10px;">
                             <v-img 
+                                v-if="replyItem.profile"
                                 :src="'http://i3a101.p.ssafy.io/images/' + replyItem.profile"
                             ></v-img>
                         </v-list-item-avatar >

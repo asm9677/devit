@@ -1,9 +1,9 @@
 <template>
-    <div id="mainContent" style="" ref="empty">        
+    <div id="mainContent" style="width:100%" ref="empty">        
         <router-view :key="$route.fullPath"></router-view>
         <v-fab-transition>
             <v-btn
-                v-show="button"
+                v-show="button && !$router.app.$store.state.smallMode"
                 color="primary"
                 small
                 dark
@@ -12,7 +12,7 @@
                 right
                 fixed
                 @click="goto(0)"
-                style="z-index:10002"                
+                style="z-index:1234"                                
             >
                 <v-icon>mdi-chevron-up</v-icon>
             </v-btn>
@@ -37,20 +37,55 @@ export default {
     data(){
         return {
             button: false,
+            isChange: false,
         }
     },
-    created(){
+    created(){     
+        var self = this
+        this.$router.beforeEach(function (to, from, next) {
+            if(self.$router.app.$store.state.isChange){
+                if(confirm('변경사항이 적용되지 않았습니다. 페이지를 이동하시겠습니까?')){                   
+                    self.$router.app.$store.commit('setChange', false);
+                    next();
+                }
+            }else{
+                self.$router.app.$store.commit('setChange', false);
+                next();
+            }        
+        });
+
+        history.pushState(null, null, location.href);
+        window.onpopstate = function(event) {
+            if(self.$router.app.$store.state.isChange){
+                if(confirm('변경사항이 적용되지 않았습니다. 페이지를 이동하시겠습니까?')){                   
+                    self.$router.app.$store.commit('setChange', false);
+                    next();
+                }
+            }else{
+                next();
+            }    
+        };
+
         window.onload = this.getNoticeCount;
 
         eventBus.$on("modifyNavForHeader", (width) => {
-            this.$refs.empty.style.marginLeft = width + "px";
+            if(!this.$router.app.$store.state.smallMode) {
+                this.$refs.empty.style.paddingLeft = width + "px";                
+            }else{
+                this.$refs.empty.style.paddingLeft = 56 + "px";
+            }
         });
         eventBus.$on("updateHeader", (height) => {
             this.$refs.empty.style.marginTop = height + "px";
         })
+
         document.addEventListener("scroll", this.handleScroll)
     },
+    mounted() {   
+        
+    },
     beforeDestroy(){
+        
         document.removeEventListener("scroll", this.handleScroll)
     },
     methods:{
@@ -77,4 +112,5 @@ export default {
 </script>
 
 <style scoped>
+    
 </style>
