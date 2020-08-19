@@ -176,6 +176,7 @@ public class BoardController {
 				
 				boardResponse.setBoardTitle(request.getBoardTitle());
 				boardResponse.setBoardContent(request.getBoardContent());
+				boardResponse.setBoardContentHtml(request.getBoardContentHtml());
 				boardResponse.setBoardType(request.getBoardType());
 				boardResponse.setBoardCount(request.getBoardCount());
 				
