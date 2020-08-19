@@ -1,8 +1,144 @@
 <template>
     <div id="app">
+        <v-container justify-center>
+        <v-flex>
+        <v-container fluid="fluid" grid-list-xl="grid-list-xl" class="">
+            <div style="width:100%;">
+                <span style="font-size:20px; font-weight:600; color:#1976d2 !important">Weekly Best Projects</span>
+            </div>
+            <div v-if="letureItems.length > 0">
+                <v-layout row="row" wrap="wrap">
+                    <v-flex
+                        v-for="(item,i) in letureItems"
+                        :key="`4${i}`"
+                        xs12 sm6 md4 lg2 xl2>
+                        <v-card
+                            tile="tile"
+                            flat="flat"
+                            style="margin-left:10px; margin-top:20px;cursor:pointer;">
+                            <v-img
+                                :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                                :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                                aspect-ratio="1.7"
+                                @click="move(`/lecture/detail/${item.lectureId}`)"></v-img>
+
+                            <v-list>
+                                <div @click="move(`/lecture/detail/${item.lectureId}`)">
+                                    <v-list-item-title>
+                                        <h3>{{item.title}}</h3>
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        조회수
+                                        {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}
+                                    </v-list-item-subtitle>
+
+                                    <v-list-item-subtitle>
+                                        총
+                                        {{item.lectureCount}}강의
+                                    </v-list-item-subtitle>
+                                </div>
+                                <v-list-item-subtitle>
+                                    #
+                                    <v-chip
+                                        :color="`primary lighten-4`"
+                                        class="ma-1"
+                                        v-for="(tag,index) in item.tagName ? item.tagName.split(',') : ''"
+                                        :key="i+'_'+index+'_tag'"
+                                        small="small"
+                                        label="label"
+                                        @click="move(`/search?keyword=${tag}`)">
+                                        <span style="color:black">
+                                            {{tag}}
+                                        </span>
+                                    </v-chip>
+                                </v-list-item-subtitle>
+                                <v-avatar class="profile" size="20">
+                                    <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                </v-avatar>
+                                <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
+
+                            </v-list>
+                        </v-card>
+
+                    </v-flex>
+                </v-layout>
+            </div>
+            <div v-else>
+                <v-container fluid style="width:100%; padding-top:20px;">         
+                    <v-row>
+                        <v-col cols="12">
+                            <v-row align="start" justify="center">                                    
+                                <v-icon style="font-size:150px; color:rgba(0, 0, 0, 0.54); margin:30px 0 20px 0"> mdi-emoticon-cry-outline </v-icon>                               
+                            </v-row>
+                            <v-row align="start" justify="center">       
+                                <div style="font-size:20px; margin-bottom:20px;"> 프로젝트가 존재하지 않습니다 :( </div>    
+                            </v-row>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </div>
+            <div style="width:100%; border-top:1px #c8c8c8 solid; margin-top:20px; padding-top:20px;">
+                <span style="font-size:20px; font-weight:600; color:#1976d2 !important">Weekly Best Videos</span>
+            </div>
+            <div v-if="letureItems.length > 0">
+                <v-layout row="row" wrap="wrap">
+                    <v-flex
+                        v-for="(item,i) in videoItems"
+                        :key="`4${i}`"
+                        xs12 sm6 md4 lg2 xl2>
+                        
+                        <v-card
+                            tile="tile"
+                            flat="flat"
+                            style="margin-left:10px; margin-top:20px;cursor:pointer;">
+                            <v-img
+                                :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                                :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                                aspect-ratio="1.7"
+                                @click="move(`/lecture/player/undefined/${item.lectureId}?order=${item.order}&subId=${item.subId}&subHisId=${item.subHisId}`)"></v-img>
+
+                            <v-list>
+                                <div @click="move(`/lecture/player/undefined/${item.lectureId}?order=${item.order}&subId=${item.subId}&subHisId=${item.subHisId}`)">
+                                    <v-list-item-title>
+                                        <h3>{{item.title}}</h3>
+                                    </v-list-item-title>
+                                    <v-list-item-subtitle>
+                                        조회수
+                                        {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}
+                                    </v-list-item-subtitle>
+                                </div>
+                                <v-avatar class="profile" size="20">
+                                    <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                                </v-avatar>
+                                <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
+
+                            </v-list>
+                        </v-card>
+
+                    </v-flex>
+                </v-layout>
+            </div>
+            <div v-else>
+                <v-container fluid style="width:100%;">         
+                    <v-row>
+                        <v-col cols="12">
+                            <v-row align="start" justify="center">                                    
+                                <v-icon style="font-size:150px; color:rgba(0, 0, 0, 0.54); margin:30px 0 20px 0"> mdi-emoticon-cry-outline </v-icon>                               
+                            </v-row>
+                            <v-row align="start" justify="center">       
+                                <div style="font-size:20px; margin-bottom:20px;"> 동영상이 존재하지 않습니다 :( </div>    
+                            </v-row>
+                        </v-col>
+                    </v-row>
+                </v-container>
+            </div>
+        </v-container>
+
+
+
         <v-container fluid="fluid" grid-list-xl="grid-list-xl" class="devit_status">
-            <v-layout row="row" justify-center="justify-center" style="margin:auto 0">
-                <v-flex class="status_wrap" xs2="xs2" style="min-width:200px">
+            <v-layout row="row" justify-center="justify-center" style="margin:auto 0;">
+                <v-flex class="status_wrap" xs12 sm12 md3 lg3 xl3>
                     <v-layout row="row" wrap="wrap">
                         <div class="status_img">
                             <v-img src="@/assets/images/members.png" max-width="30px"></v-img>
@@ -15,8 +151,8 @@
                         </v-flex>
                     </v-layout>
                 </v-flex>
-                <span class="bar" aria-hidden="true">|</span>
-                <v-flex class="status_wrap" xs2="xs2" style="min-width:200px">
+                <span class="bar" aria-hidden="true" v-if="videoWidth>960">|</span>
+                <v-flex class="status_wrap" xs12 sm12 md3 lg3 xl3>
                     <v-layout row="row" wrap="wrap">
                         <div class="status_img">
                             <v-img src="@/assets/images/elearning.png" max-width="30px"></v-img>
@@ -29,8 +165,8 @@
                         </v-flex>
                     </v-layout>
                 </v-flex>
-                <span class="bar" aria-hidden="true">|</span>
-                <v-flex class="status_wrap" xs2="xs2" style="min-width:200px">
+                <span class="bar" aria-hidden="true" v-if="videoWidth>960">|</span>
+                <v-flex class="status_wrap" xs12 sm12 md3 lg3 xl3>
                     <v-layout row="row" wrap="wrap">
                         <div class="status_img">
                             <v-img src="@/assets/images/lecture.png" max-width="30px"></v-img>
@@ -178,7 +314,8 @@
                 </v-flex>
             </v-layout>
         </v-container>
-
+        </v-flex>
+        </v-container>
     </div>
 </template>
 <script>
@@ -187,6 +324,7 @@
     export default {
         data() {
             return {
+                letureItems: [], videoItems: [],
                 totalUsers: "",
                 totalDeviters: "",
                 totalLectures: "",
@@ -215,10 +353,77 @@
                     {
                         "nickname": ""
                     }, 
-                ]
+                ],
+            navWidth:0,
+            listWidth:400,
+            videoWidth:500,
+            list: false,
+            }
+        },
+        filters: {
+            convertView(num) {
+                if (num < 1000) {
+                    return num + '회'
+                }
+
+                if (num >= 100000000) {
+                    num /= 100000000;
+                    return parseFloat(num).toFixed(2) + '억회'
+                }
+                if (num >= 10000) {
+                    num /= 10000;
+                    return parseFloat(num).toFixed(0) + '만회'
+                }
+                if (num >= 1000) {
+                    num /= 1000;
+                    return parseFloat(num).toFixed(1) + '천회'
+                }
+            },
+            convertLike(num) {
+                return num
+                    .toString()
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
             }
         },
         created() {
+            
+           
+
+
+            },
+        mounted(){
+
+            this.getBestLectures();
+            this.getBestVideos();
+            this.getDevitStatus();
+            this.getDevitRank();
+        
+            this.handleResize()
+            window.addEventListener('resize', this.handleResize)     
+        },
+        beforeDestroy(){
+            window.removeEventListener('resize', this.handleResize);
+        },
+        methods:{
+            getBestLectures(){
+
+            http
+                .axios
+                .get(`/api/v1/commons/main/bestLectures`)
+                .then(({data}) => {
+                    this.letureItems = data.result;
+                })
+            },
+            getBestVideos(){
+                http
+                .axios
+                .get(`/api/v1/commons/main/bestVideos`)
+                .then(({data}) => {
+                    this.videoItems = data.result;
+                })
+            },
+            getDevitStatus(){
+
             http
                 .axios
                 .get(`/api/v1/commons/main/status`, {})
@@ -230,6 +435,9 @@
                 .catch((error) => {
                     console.dir(error)
                 });
+            },
+            getDevitRank(){
+
                 http
                 .axios
                 .get(`/api/v1/commons/main/rank`, {})
@@ -239,7 +447,12 @@
                 .catch((error) => {
                     console.dir(error)
                 });
-            }
+            },
+            handleResize() {                
+                this.videoWidth = window.innerWidth;
+                console.log("this.videoWidth", this.videoWidth);
+            },   
+        }
     }
 </script>
 
