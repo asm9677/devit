@@ -1,110 +1,148 @@
 <template>
     <div style="margin:20px 50px; padding:10px 60px">
+        
+        <div style="width:100%;">
+            <span style="font-size:20px; font-weight:600; color:#1976d2 !important">내가 좋아요한 프로젝트</span>
+            <span style="float:right; font-size:14px; color:#585858; cursor:pointer" @click="goToLectureList">더보기</span>
+        </div>
+        <div v-if="letureItems.length > 0">
+            <v-layout row="row" wrap="wrap">
+                <!-- <div style="width:100%; margin:0 10px;">
+                    <span style="font-size:20px; font-weight:600; color:#1976d2 !important">내가 좋아요한 프로젝트</span>
+                    <span style="float:right; font-size:14px; color:#585858; cursor:pointer" @click="goToLectureList">더보기</span>
+                </div> -->
+                <v-flex
+                    v-for="(item,i) in letureItems"
+                    :key="`4${i}`"
+                    xs12="xs12"
+                    sm6="sm6"
+                    md3="md3"
+                    lg3="lg3"
+                    xl3="xl3">
+                    <v-card
+                        tile="tile"
+                        flat="flat"
+                        style="margin-left:10px; margin-top:20px;cursor:pointer;">
+                        <v-img
+                            :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                            :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                            aspect-ratio="1.7"
+                            @click="move(`/lecture/detail/${item.lectureId}`)"></v-img>
 
-        <v-layout row="row" wrap="wrap">
-            <div style="width:100%; margin:0 10px;">
-                <span style="font-size:20px; font-weight:600; color:#1976d2 !important">내가 좋아요한 프로젝트</span>
-                <span style="float:right; font-size:14px; color:#585858; cursor:pointer" @click="goToLectureList">더보기</span>
-            </div>
-            <v-flex
-                v-for="(item,i) in letureItems"
-                :key="`4${i}`"
-                xs12="xs12"
-                sm6="sm6"
-                md3="md3"
-                lg3="lg3"
-                xl3="xl3">
-                <v-card
-                    tile="tile"
-                    flat="flat"
-                    style="margin-left:10px; margin-top:20px;cursor:pointer;">
-                    <v-img
-                        :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
-                        :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
-                        aspect-ratio="1.7"
-                        @click="move(`/lecture/detail/${item.lectureId}`)"></v-img>
+                        <v-list>
+                            <div @click="move(`/lecture/detail/${item.lectureId}`)">
+                                <v-list-item-title>
+                                    <h3>{{item.title}}</h3>
+                                </v-list-item-title>
+                                <v-list-item-subtitle>
+                                    조회수
+                                    {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}
+                                </v-list-item-subtitle>
 
-                    <v-list>
-                        <div @click="move(`/lecture/detail/${item.lectureId}`)">
-                            <v-list-item-title>
-                                <h3>{{item.title}}</h3>
-                            </v-list-item-title>
+                                <v-list-item-subtitle>
+                                    총
+                                    {{item.lectureCount}}강의
+                                </v-list-item-subtitle>
+                            </div>
                             <v-list-item-subtitle>
-                                조회수
-                                {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}
+                                #
+                                <v-chip
+                                    :color="`primary lighten-4`"
+                                    class="ma-1"
+                                    v-for="(tag,index) in item.tagName ? item.tagName.split(',') : ''"
+                                    :key="i+'_'+index+'_tag'"
+                                    small="small"
+                                    label="label"
+                                    @click="move(`/search?keyword=${tag}`)">
+                                    <span style="color:black">
+                                        {{tag}}
+                                    </span>
+                                </v-chip>
                             </v-list-item-subtitle>
+                            <v-avatar class="profile" size="20">
+                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                            </v-avatar>
+                            <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
 
-                            <v-list-item-subtitle>
-                                총
-                                {{item.lectureCount}}강의
-                            </v-list-item-subtitle>
-                        </div>
-                        <v-list-item-subtitle>
-                            #
-                            <v-chip
-                                :color="`primary lighten-4`"
-                                class="ma-1"
-                                v-for="(tag,index) in item.tagName ? item.tagName.split(',') : ''"
-                                :key="i+'_'+index+'_tag'"
-                                small="small"
-                                label="label"
-                                @click="move(`/search?keyword=${tag}`)">
-                                <span style="color:black">
-                                    {{tag}}
-                                </span>
-                            </v-chip>
-                        </v-list-item-subtitle>
-                        <v-avatar class="profile" size="20">
-                            <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
-                        </v-avatar>
-                        <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
+                        </v-list>
+                    </v-card>
 
-                    </v-list>
-                </v-card>
+                </v-flex>
+            </v-layout>
+        </div>
+        <div v-else>
+            <v-container fluid style="width:100%;">         
+                <v-row>
+                    <v-col cols="12">
+                        <v-row align="start" justify="center">                                    
+                            <v-icon style="font-size:150px; color:rgba(0, 0, 0, 0.54); margin:30px 0 20px 0"> mdi-emoticon-cry-outline </v-icon>                               
+                        </v-row>
+                        <v-row align="start" justify="center">       
+                            <div style="font-size:20px; margin-bottom:20px;"> 프로젝트가 존재하지 않습니다 :( </div>    
+                        </v-row>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </div>
+        
+        <div style="width:100%; margin-top:20px; padding-top:20px; border-top:1px #c8c8c8 solid;">
+            <span style="font-size:20px; font-weight:600; color:#1976d2 !important">내가 좋아요한 동영상</span>
+            <span style="float:right; font-size:14px; color:#585858; cursor:pointer" @click="goToVideoList">더보기</span>
+        </div>
+        <div v-if="videoItems.length > 0">
+            <v-layout row="row" wrap="wrap">
+                <v-flex
+                    v-for="(item,i) in videoItems"
+                    :key="`4${i}`"
+                    xs12="xs12"
+                    sm6="sm6"
+                    md4="md3"
+                    lg3="lg3"
+                    xl2="xl3">
+                    <v-card
+                        tile="tile"
+                        flat="flat"
+                        style="margin-left:10px; margin-top:20px;cursor:pointer;">
+                        <v-img
+                            :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                            :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                            aspect-ratio="1.7"
+                            @click="move(`/lecture/player/undefined/${item.lectureId}?order=${item.order}&subId=${item.subId}&subHisId=${item.subHisId}`)"></v-img>
 
-            </v-flex>
-            <div style="width:100%; margin:20px 10px 0 10px; padding-top:20px; border-top:1px #c8c8c8 solid;">
-                <span style="font-size:20px; font-weight:600; color:#1976d2 !important">내가 좋아요한 동영상</span>
-                <span style="float:right; font-size:14px; color:#585858; cursor:pointer" @click="goToVideoList">더보기</span>
-            </div>
-            <v-flex
-                v-for="(item,i) in videoItems"
-                :key="`4${i}`"
-                xs12="xs12"
-                sm6="sm6"
-                md4="md3"
-                lg3="lg3"
-                xl2="xl3">
-                <v-card
-                    tile="tile"
-                    flat="flat"
-                    style="margin-left:10px; margin-top:20px;cursor:pointer;">
-                    <v-img
-                        :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
-                        :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
-                        aspect-ratio="1.7"
-                        @click="move(`/lecture/player/undefined/${item.lectureId}?order=${item.order}&subId=${item.subId}&subHisId=${item.subHisId}`)"></v-img>
+                        <v-list>
+                            <div @click="move(`/lecture/player/undefined/${item.lectureId}?order=${item.order}&subId=${item.subId}&subHisId=${item.subHisId}`)">
+                                <v-list-item-title>
+                                    <h3>{{item.title}}</h3>
+                                </v-list-item-title>
+                                <v-list-item-subtitle>
+                                    조회수
+                                    {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}
+                                </v-list-item-subtitle>
+                            </div>
+                            <v-avatar class="profile" size="20">
+                                <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
+                            </v-avatar>
+                            <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
 
-                    <v-list>
-                        <div @click="move(`/lecture/player/undefined/${item.lectureId}?order=${item.order}&subId=${item.subId}&subHisId=${item.subHisId}`)">
-                            <v-list-item-title>
-                                <h3>{{item.title}}</h3>
-                            </v-list-item-title>
-                            <v-list-item-subtitle>
-                                조회수
-                                {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}
-                            </v-list-item-subtitle>
-                        </div>
-                        <v-avatar class="profile" size="20">
-                            <v-img :src="'http://i3a101.p.ssafy.io/images/' + item.profile"></v-img>
-                        </v-avatar>
-                        <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
-
-                    </v-list>
-                </v-card>
-
-            </v-flex>
-        </v-layout>
+                        </v-list>
+                    </v-card>
+                </v-flex>
+            </v-layout>
+        </div>
+        <div v-else>
+            <v-container fluid style="width:100%;">         
+                <v-row>
+                    <v-col cols="12">
+                        <v-row align="start" justify="center">                                    
+                            <v-icon style="font-size:150px; color:rgba(0, 0, 0, 0.54); margin:30px 0 20px 0"> mdi-emoticon-cry-outline </v-icon>                               
+                        </v-row>
+                        <v-row align="start" justify="center">       
+                            <div style="font-size:20px; margin-bottom:20px;"> 동영상이 존재하지 않습니다 :( </div>    
+                        </v-row>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </div>
     </div>
 </template>
 
