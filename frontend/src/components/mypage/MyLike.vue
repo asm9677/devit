@@ -1,6 +1,75 @@
 <template>
-    <div style="margin:20px 50px; padding:10px 60px">
+    <div style="margin:20px 50px; padding:10px 60px" id="like">
+        <span style="font-size:20px; font-weight:600; color:#1976d2 !important">내 프로젝트</span>
+        <carousel-3d ref="carousel" perspective="1" :space="400" :display="items.length > 5 ? 5 : items.length" controlsVisible v-if="items.length" width="400" height="340" style="background-color:#ffffff; margin:0; padding:20px; margin:10px;">
+                <slide v-for="(item, i) in items" :index="i" :key="`${i}_slide`">
+                    <v-hover>
+                        <template v-slot:default="{ hover }">
+                            <v-card
+                                class="mx-auto"
+                                width="400"
+                            >
+                                <v-img
+                                    v-if="item.thumbnailUrl"
+                                    :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                                    lazy-src="@/assets/images/empty.png"
+                                    position="center center"
+                                    height="224"
+                                >
+                                    <template v-slot:placeholder>
+                                        <v-row
+                                            class="fill-height ma-0"
+                                            align="center"
+                                            justify="center"
+                                        >
+                                            <v-progress-circular indeterminate color="primary lighten-4"></v-progress-circular>
+                                        </v-row>
+                                    </template>
+                                    <v-fade-transition>
+                                        <v-overlay
+                                            v-if="hover && $refs.carousel && $refs.carousel.currentIndex == i"
+                                            absolute
+                                            color="#000000"
+                                        >
+                                            <v-btn bottom icon style="position:absolute; right:50px; bottom:10px;" @click="move(`/lecture/management/default/${item.lectureId}`)">                        
+                                                <i class="fas fa-cog fa-lg"></i>
+                                            </v-btn>
+                                            <v-btn icon style="position:absolute; right:10px; bottom:10px;" @click="remove(item.lectureId)">
+                                                <i class="fas fa-trash fa-lg"></i>
+                                            </v-btn>
+                                        </v-overlay>
+                                    </v-fade-transition>
+                                </v-img>
         
+                                <v-card-text style="height:120px;">                        
+                                    <!-- <h3 style="margin-left:0px; color:#1e1e1e">  </h3>             -->
+                                    <v-list-item style="padding:0">                
+                                        <v-list-item-avatar style="margin-top:0px; margin-bottom:16px;">
+                                            <v-img 
+                                                v-if="item.profile"
+                                                :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
+                                            ></v-img>
+                                        </v-list-item-avatar>
+                                        <v-list-item-content style="padding-top:0;">
+                                            <v-list-item-title style="font-size:18px;">
+                                                {{item.title}}
+                                            </v-list-item-title>     
+                                            <v-list-item-subtitle>
+                                                <span style="font-size:13px">{{item.nickname}}</span>
+                                            </v-list-item-subtitle>
+                                            <v-list-item-subtitle>
+                                                <span v-for="(tag,index) in item.tagName ? item.tagName.split(',') : ''" :key="i+'_'+index+'_tag'" style="font-size:12px;">
+                                                    #{{tag}}                                                
+                                                </span>
+                                            </v-list-item-subtitle>                                       
+                                        </v-list-item-content>
+                                    </v-list-item>
+                                </v-card-text>
+                            </v-card>
+                        </template>
+                    </v-hover>
+                </slide>
+            </carousel-3d>
         <div style="width:100%;">
             <span style="font-size:20px; font-weight:600; color:#1976d2 !important">내가 좋아요한 프로젝트</span>
             <span style="float:right; font-size:14px; color:#585858; cursor:pointer" @click="goToLectureList">더보기</span>
@@ -143,6 +212,12 @@
                 </v-row>
             </v-container>
         </div>
+        <v-snackbar v-model="snackbar" timeout="1500" color="primary">
+            {{msg}}
+        </v-snackbar>
+        <v-snackbar v-model="errorSnackbar" timeout="1500" color="error">
+            {{errorMsg}}
+        </v-snackbar>
     </div>
 </template>
 
@@ -156,7 +231,20 @@
 
     export default {
         data() {
-            return {letureItems: [], videoItems: [], level: this.$route.query.level, page: 1, loading: false}
+            return {
+                letureItems: [], 
+                videoItems: [], 
+                items: [], 
+                level: this.$route.query.level, 
+                page: 1, 
+                loading: false,
+
+                errorSnackbar: false,
+                errorMsg: false,
+                
+                snackbar: false,
+                msg: '',
+            }
         },
         filters: {
             convertView(num) {
@@ -174,6 +262,7 @@
             }
         },
         mounted() {
+            this.getManagementProject();
             http
                 .axios
                 .get(`/api/v1/myLikeLecture?page=1&itemsperpage=4`)
@@ -190,6 +279,17 @@
         beforeDestroy() {
         },
         methods: {
+            getManagementProject() {
+                http.axios.get(`/api/v1/myMngLecture?page=1&itemsperpage=100`)
+                    .then(({data}) => {
+                        console.dir(data)
+                        this.items = [];
+                        for(let i in data.result) {
+                            if(data.result[i].thumbnailUrl)
+                                this.items.push(data.result[i])                                
+                        }
+                    })                
+            },
             move(url) {
                 this
                     .$router
@@ -200,9 +300,39 @@
             },
             goToVideoList(){
                 this.move('/mypage/like?search=video')
-            }
+            },
+            remove(lectureId) {
+                if (confirm("삭제하시겠습니까?")) {
+                    http
+                        .axios
+                        .put('/api/v1/deleteLecture', {"lectureId": lectureId})
+                        .then(({data}) => {
+                            if (data.msg == "noauth") {
+                                this.errorMsg = "프로젝트 관리 권한이 없습니다.";
+                                this.errorSnackbar = true;
+                            } else if(data.msg == "hashistory"){                                
+                                this.errorMsg = "강의에 요청 건이 존재하여 삭제할 수 없습니다.";
+                                this.errorSnackbar = true;
+                            }else {
+                                this.msg = "삭제되었습니다.";
+                                this.snackbar = true;
+                                location.reload(true);
+                            }
+                        })
+                        .catch((error) => {
+                            console.dir(error)
+                        })
+                    }
+            },
         }
     }
 </script>
 
-<style></style>
+<style scoped>
+    .carousel-3d-slide {
+        border:none;        
+        height:320px !important;
+        box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
+        border-radius: 4px;
+    }
+</style>

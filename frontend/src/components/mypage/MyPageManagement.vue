@@ -23,7 +23,6 @@
                     <MyLikeLecture :option='option' :tab='2' :curTab="tab" v-else-if="tab==2 && search == 'project'"> </MyLikeLecture>
                     <MyLikeVideo :option='option' :tab='2' :curTab="tab" v-else-if="tab==2 && search == 'video'"> </MyLikeVideo>
                     <MyReqList :option='option' :tab='3' :curTab="tab" v-else-if="tab==3"> </MyReqList>
-                    <MyMngLecture :option='option' :tab='3' :curTab="tab" v-else-if="tab==4"> </MyMngLecture>
                 </v-flex>       
 
                 
@@ -42,7 +41,6 @@ import MyLike from '@/components/mypage/MyLike.vue'
 import MyLikeLecture from '@/components/mypage/MyLikeLecture.vue'
 import MyLikeVideo from '@/components/mypage/MyLikeVideo.vue'
 import MyReqList from '@/components/mypage/MyReqList.vue'
-import MyMngLecture from '@/components/mypage/MyMngLecture.vue'
 
 export default {
     components: {
@@ -52,12 +50,11 @@ export default {
         MyLikeLecture,
         MyLikeVideo,
         MyReqList,
-        MyMngLecture,
     },
     data() {
         return {          
             lectureId: 0,
-            tabName: ['info','activity','like','request','management'],                    
+            tabName: ['info','activity','like','request'],                    
             tab: 0,  
             option: false,
             search: '',
@@ -74,7 +71,7 @@ export default {
                     link: 'default',
                 },
                 {
-                    title: '찜 목록',
+                    title: '보관함',
                     icon: 'mdi-circle-outline',
                     link: 'intro',
                 },
@@ -82,11 +79,6 @@ export default {
                     title: '요청 목록',
                     icon: 'mdi-circle-outline',
                     link: 'request',
-                },
-                {
-                    title: '내 프로젝트',
-                    icon: 'mdi-circle-outline',
-                    link: 'management',
                 },
             ]
         }
