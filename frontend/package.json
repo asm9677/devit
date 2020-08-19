@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "bootstrap-material-design-icons": "^2.2.0",
     "core-js": "^3.6.5",
     "html2canvas": "^1.0.0-rc.7",
     "sass-loader": "^9.0.2",

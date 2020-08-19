@@ -144,7 +144,11 @@ export default {
         height:315px; 
     }
 
-    
+    #like .v-overlay__content {     
+        height:100% !important;
+        width:100% !important;
+        position: relative;
+    }
     /* #frame {
         background-color: #FAFAFA;    
     }
