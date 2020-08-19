@@ -2,26 +2,35 @@
 
 <br>
 
+<br>
+
+
+
+
+
 
 
 ## Index
 
-1. [Team's 'DevIT' 프로젝트 참여자](#teams-devit-프로젝트-참여자)
-2. [기획 및 협업을 위한 작업물](#기획-및-협업을-위한-작업물)
-3. [Project structure](#project-structure)
-4. [Develop tools](#develop-tools)
-   - [IDE used](#ide-used)
-   - [Tool/Program used](#toolprogram-used)
-   - [Develop env/infra](#develop-envinfra)
-   - [Cooperation](#cooperation)
-   - [Library used](#library-used)
-     - [backend](#backend)
-     - [frontend](#frontend)
-5. [Project process](#project-process)
-6. [Branch strategy](#branch-strategy)
-   - [type, commit msg, issue key](#type-commit-msg-issue-key)
-   - [Detail. 규칙](#detail-규칙)
-7. [Project docs](#project-docs)
+- [DevIT Up! 참여형 강의 플랫폼](#devit-up-참여형-강의-플랫폼)
+  - [Index](#index)
+  - [Team's 'DevIT' 프로젝트 참여자](#teams-devit-프로젝트-참여자)
+  - [기획 및 협업을 위한 작업물](#기획-및-협업을-위한-작업물)
+  - [Project structure](#project-structure)
+  - [Wireframe](#wireframe)
+  - [Develop tools](#develop-tools)
+    - [IDE used](#ide-used)
+    - [Tool/Program used](#toolprogram-used)
+    - [Develop env/infra](#develop-envinfra)
+    - [Cooperation](#cooperation)
+    - [Library used](#library-used)
+        - [backend](#backend)
+        - [frontend](#frontend)
+  - [Project process](#project-process)
+  - [Branch strategy](#branch-strategy)
+    - [[type] commit msg, issue key](#type-commit-msg-issue-key)
+    - [[Detail] 규칙](#detail-규칙)
+  - [Project docs](#project-docs)
 
 <br>
 
@@ -130,6 +139,18 @@ Notion으로 오세요! [DevIT Up! - 참여형 강의 플랫폼](https://www.not
 ```
 
 <br><br>
+
+
+
+## WireframeWireframe
+
+<img src="./image/DevIT_Wireframe_Final_quarterhalf.png">
+
+<br>
+
+<br>
+
+
 
 
 
