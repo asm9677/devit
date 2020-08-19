@@ -6,7 +6,8 @@
                 @click="newBoard()"
                 depressed="depressed"
                 outlined="outlined"
-                style="float:right; margin-right:12px;">글쓰기</v-btn>
+                style="float:right; margin-right:12px;" 
+                color="normal">글쓰기</v-btn>
         </div>
         <div v-if="items.length > 0">
             <v-data-iterator

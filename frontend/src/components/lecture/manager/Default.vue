@@ -92,19 +92,19 @@
                                                     <v-radio :value="1">
                                                         <template v-slot:label>
                                                             <div><span style="color:#1976D2">초급</span> <br>
-                                                            <span class="text-caption">별다른 사전 지식 없이도 바로 시작할 수 있는 강의입니다.</span></div>
+                                                            <span class="text-caption">별다른 사전 지식 없이도 볼 수 있습니다.</span></div>
                                                         </template>
                                                     </v-radio>
                                                     <v-radio :value="2">
                                                         <template v-slot:label>
                                                             <div><span style="color:#1976D2">중급</span> <br>
-                                                            <span class="text-caption">수강을 위해 관련 분야의 기본 지식이 권장됩니다.</span></div>
+                                                            <span class="text-caption">관련 분야에 대한 기본 지식이 필요합니다.</span></div>
                                                         </template>
                                                     </v-radio>
                                                     <v-radio :value="3">
                                                         <template v-slot:label>
                                                             <div> <span style="color:#1976D2">고급</span> <br>
-                                                            <span class="text-caption">수강을 위해 관련 분야에 대한 충분한 경험이 필요합니다.</span></div>
+                                                            <span class="text-caption">관련 분야에 대한 충분한 이해가 필요합니다</span></div>
                                                         </template>
                                                     </v-radio>
                                                 </div>

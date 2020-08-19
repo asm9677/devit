@@ -5,11 +5,11 @@
 
             <v-layout wrap="wrap">
                 <v-flex
-                    xs12="xs12"
-                    sm12="sm12"
-                    md9="md9"
-                    lg9="lg9"
-                    xl9="xl9"
+                    xs12
+                    sm12
+                    md9
+                    lg8
+                    xl6
                     style="margin:0 auto;">
                     <h1
                         class="primary--text"
