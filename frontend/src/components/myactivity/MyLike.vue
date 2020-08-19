@@ -3,7 +3,7 @@
 
         <v-layout row="row" wrap="wrap">
             <div style="width:100%; margin:0 10px;">
-                <span style="font-size:20px; font-weight:600; color:#1976d2 !important">내가 좋아요한 강의</span>
+                <span style="font-size:20px; font-weight:600; color:#1976d2 !important">내가 좋아요한 프로젝트</span>
                 <span style="float:right; font-size:14px; color:#585858; cursor:pointer" @click="goToLectureList">더보기</span>
             </div>
             <v-flex

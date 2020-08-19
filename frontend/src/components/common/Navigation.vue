@@ -102,7 +102,7 @@ export default {
             active: true,
             items: [
               { title: '내가 쓴 글/댓글', active: false, path: '/myboard' },
-              { title: '내가 좋아요한 강의', active: false, path: '/mylike' },
+              { title: '좋아요 목록', active: false, path: '/mylike' },
               // { title: '수강한 강의', active: false, path: '/' },
               { title: '요청 목록', active: false, path: '/myreqlist' },
               { title: '관리중인 프로젝트', active: false, path: '/mymnglecture' },
