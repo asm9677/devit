@@ -4,13 +4,14 @@
         <v-flex>
         <v-container fluid="fluid" grid-list-xl="grid-list-xl" class="">
             <div style="width:100%;">
-                <span style="font-size:20px; font-weight:600; color:#1976d2 !important">Weekly Best Projects</span>
+                <span style="font-size:20px; font-weight:600; color:#1976d2 !important">급상승 프로젝트</span>
             </div>
             <div v-if="letureItems.length > 0">
-                <v-layout row="row" wrap="wrap">
+                <v-layout row="row" wrap="wrap" style="width:100%; margin:0;">
                     <v-flex
                         v-for="(item,i) in letureItems"
                         :key="`4${i}`"
+                        style="padding:0"
                         xs12 sm6 md4 lg2 xl2>
                         <v-card
                             tile="tile"
@@ -78,7 +79,7 @@
                 </v-container>
             </div>
             <div style="width:100%; border-top:1px #c8c8c8 solid; margin-top:20px; padding-top:20px;">
-                <span style="font-size:20px; font-weight:600; color:#1976d2 !important">Weekly Best Videos</span>
+                <span style="font-size:20px; font-weight:600; color:#1976d2 !important">인기 동영상</span>
             </div>
             <div v-if="letureItems.length > 0">
                 <v-layout row="row" wrap="wrap">
