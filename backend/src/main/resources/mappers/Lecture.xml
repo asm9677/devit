@@ -673,6 +673,7 @@
 		        user_id = #{userId} AND like_flag = 'Y') lk ON lk.lecture_id = l.lecture_id
 		WHERE
 		    1=1
+		  and l.deleted_flag = 'N'
 		ORDER BY lk.modified desc
 		LIMIT #{startPage}, #{itemsperpage};
       </select>
@@ -721,6 +722,7 @@
 		        AND lsh.sub_his_id = lg.sub_his_id
 		WHERE
 		    lsh.player_url IS NOT NULL
+	      and lsh.delete_yn = 'N'
      ORDER BY lshl.modified desc;
 	</select>
 			
@@ -940,8 +942,9 @@
             ON 
             l.common_id = lt.common_id
 	  WHERE 1=1
+		AND l.deleted_flag = 'N'
    GROUP BY l.lecture_id
-   ORDER BY likeCount desc
+   ORDER BY likeCount desc, l.lecture_id desc
 	  LIMIT 1, 6;
       </select>
       
@@ -983,7 +986,8 @@
             lsh.sub_id = lg.sub_id AND 
             lsh.sub_his_id = lg.sub_his_id
 	  WHERE lsh.player_url IS NOT NULL
-   ORDER BY likeCount desc
+	    and lsh.delete_yn = 'N'
+   ORDER BY likeCount desc, lsh.sub_his_id desc
 	  LIMIT 1, 6;
 	</select>
 			
