@@ -120,7 +120,7 @@ public class CommonController {
 	}
 	
 	@ApiOperation(value = "메인화면 최근 좋아요 많은 프로젝트 가져오기")
-	@GetMapping("/main/rank")
+	@GetMapping("/main/bestLectures")
 	public ResponseEntity<CommonResponse> getBestLectures(){
 		
 		ResponseEntity<CommonResponse> response = null;
@@ -140,7 +140,7 @@ public class CommonController {
 	}
 	
 	@ApiOperation(value = "메인화면 최근 좋아요 많은 동영상 가져오기")
-	@GetMapping("/main/rank")
+	@GetMapping("/main/bestVideos")
 	public ResponseEntity<CommonResponse> getBestVideos(){
 		
 		ResponseEntity<CommonResponse> response = null;
