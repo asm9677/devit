@@ -39,15 +39,24 @@
                 :key="subItem.title"
                 link
                 @click="changeCategory(subItem);" 
-              >
-                
+              >                
                 <v-list-item-content>
                   <v-list-item-title v-text="subItem.title"></v-list-item-title>
-                </v-list-item-content>
-                
+                </v-list-item-content>                
               </v-list-item>
-
           </v-list-group>
+          <v-list-item          
+                link
+                @click="changeCategory(myPage);" 
+              >       
+                <v-list-item-icon>
+                  <v-icon>{{myPage.icon}}</v-icon>
+
+                </v-list-item-icon>         
+                <v-list-item-content>
+                  <v-list-item-title v-text="myPage.title"></v-list-item-title>
+                </v-list-item-content>                
+              </v-list-item>
         </v-list>
       <!-- </v-img> -->
       </div>
@@ -95,20 +104,15 @@ export default {
               { title: '자격증', active: false, path: '/lecture?level=103' },
               { title: '기타', active: false, path: '/lecture?level=104' },
             ],
-          },
-          {
-            icon: 'mdi-account',
-            title: '마이페이지',
-            active: true,
-            items: [
-              { title: '내가 쓴 글/댓글', active: false, path: '/myboard' },
-              { title: '좋아요 목록', active: false, path: '/mylike' },
-              // { title: '수강한 강의', active: false, path: '/' },
-              { title: '요청 목록', active: false, path: '/myreqlist' },
-              { title: '관리중인 프로젝트', active: false, path: '/mymnglecture' },
-            ],
-          },
-        ],        
+          },          
+        ],  
+        
+        myPage: {
+          icon: 'mdi-account',
+          title: '마이페이지',
+          active: true,
+          path: '/mypage/info'
+        },
         expandOnHover: true,
       }
   },

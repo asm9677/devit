@@ -1,5 +1,5 @@
 <template>
-  <v-app >
+  <v-app id="frame">
     <Header></Header>
     <Navigation ></Navigation>
     <Content></Content>
@@ -143,4 +143,15 @@ export default {
         max-width:560px;        
         height:315px; 
     }
+
+    
+    /* #frame {
+        background-color: #FAFAFA;    
+    }
+
+    .v-list, .v-card {
+        background-color: #FAFAFA;    
+    } */
+
+    
 </style>

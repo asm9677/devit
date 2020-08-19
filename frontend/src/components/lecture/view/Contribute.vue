@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" max-width="768px" hide-overlay persistent :dark="darkOption">       
+    <v-dialog v-model="dialog" max-width="768px" persistent :dark="darkOption">       
         <v-tabs v-model="tabs" icons-and-text grow hide-slider color="success" :dark="darkOption">
             <v-tab>
                 <span>영상</span>

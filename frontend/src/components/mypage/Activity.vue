@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <v-container>
-            <v-tabs v-model="tab" color="#1976d2">                
+            <v-tabs v-model="tab" color="#1976d2" right>                
                 <!-- <v-tab
                     v-for="i in tabs"
                     :key="i"
@@ -33,8 +33,8 @@
     import eventBus from "@/lib/EventBus.js"
     //mport BoardComponent from "@/components/board/board-component.vue"
     import store from "@/store/index.js"
-    import Board from "@/components/myactivity/Board.vue"
-    import Reply from "@/components/myactivity/Reply.vue"
+    import Board from "@/components/mypage/Board.vue"
+    import Reply from "@/components/mypage/Reply.vue"
 
     export default {
         components: {

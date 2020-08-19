@@ -281,7 +281,8 @@
                                 <v-bottom-navigation
                                     absolute 
                                     :background-color="darkOption ? '#373838' : '#FFFFFF'"           
-                                    style="z-index:10000; box-shadow:none; border:1px solid #d4d4d4"                     
+                                    style="z-index:10000; box-shadow:none;"                     
+                                    :style="{'border' : (darkOption ? '1px solid #373838' : '1px solid #d4d4d4')}"
                                 >
                                     <v-btn @click="move(`/lecture/detail/${$route.params.id}`)">
                                         <v-icon :color="darkOption ? '#d4d4d4' : 'primary'" large>mdi-exit-to-app mdi-rotate-180</v-icon>

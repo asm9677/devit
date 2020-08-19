@@ -43,8 +43,8 @@
 
                         <div v-show="!option" style="width:100%;">
                             <h1> {{item.title}}</h1>        
-                            <h4>조회수 {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}</h4>
-                            <h4>총 {{item.lectureCount}}강의</h4>
+                            <h4>조회수 {{item.viewCount | convertView}}</h4>
+                            <h4>총 {{item.lectureCount}}강의&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}</h4>
                                         
                             #<v-chip                                            
                                 :color="`primary lighten-4`"                                            
@@ -52,6 +52,7 @@
                                 v-for="(tag,index) in item.tagName ? item.tagName.split(',') : ''"   
                                 :key="index"
                                 label
+                                small
                                 @click="move(`/search?keyword=${tag}`)"
                             >                                     
                                 <span style="color:black">
@@ -214,8 +215,8 @@
                                 <div style="margin:30px; width:100%;">
                                         <h1> {{item.title}}</h1>        
                                         
-                                        <h4>조회수 {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}</h4>
-                                        <h4>총 {{item.lectureCount}}강의</h4>
+                                        <h4>조회수 {{item.viewCount | convertView}}</h4>
+                                        <h4>총 {{item.lectureCount}}강의 &nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}} </h4>
                                         
                                         #<v-chip                                            
                                             :color="`primary lighten-4`"                                            
@@ -223,6 +224,7 @@
                                             v-for="(tag,index) in item.tagName ? item.tagName.split(',') : ''"   
                                             :key="index"
                                             label
+                                            small
                                             @click="move(`/search?keyword=${tag}`)"
                                         >                                     
                                             <span style="color:black">
@@ -242,7 +244,7 @@
                                         <span style="margin-left:5px;font-size:16px">{{item.nickname}}</span>
                                         <div style="margin-top:20px;" /> 
                                         <v-btn depressed outlined dark color="primary" large block @click="move(`/lecture/player/index/${$route.params.id}?order=1`)"><span style="font-size:20px;">학습하기</span></v-btn>
-                                        <v-btn v-if="item.manageYn" depressed outlined dark color="primary" large block @click="move(`/lecture/management/default/${$route.params.id}`)" style="margin-top:10px;"><span style="font-size:20px;">관리하기</span></v-btn>
+                                        <v-btn v-if="item.manageYn" color="normal" depressed outlined large block @click="move(`/lecture/management/default/${$route.params.id}`)" style="margin-top:10px;"><span style="font-size:20px;">관리하기</span></v-btn>
                                 </div>
                             </v-layout>
                         </div>

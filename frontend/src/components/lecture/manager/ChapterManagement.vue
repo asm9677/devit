@@ -137,13 +137,13 @@
         <v-dialog v-model="dialog" max-width="780">
             <v-card>
                 <v-card-title>
-                    제목
+                    <span class="primary--text"> 제목 </span>
                 </v-card-title>
                 <v-card-text>
                     <v-text-field v-model="title" dense ref="title" id="title"></v-text-field>
                 </v-card-text>
                 <v-card-title>
-                    검색 키워드
+                    <span class="primary--text"> 검색 키워드 </span>
                 </v-card-title>
                 <v-card-text>
                     <v-combobox 

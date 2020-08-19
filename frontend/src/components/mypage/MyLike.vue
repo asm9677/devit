@@ -160,22 +160,7 @@
         },
         filters: {
             convertView(num) {
-                if (num < 1000) {
-                    return num + '회'
-                }
-
-                if (num >= 100000000) {
-                    num /= 100000000;
-                    return parseFloat(num).toFixed(2) + '억회'
-                }
-                if (num >= 10000) {
-                    num /= 10000;
-                    return parseFloat(num).toFixed(0) + '만회'
-                }
-                if (num >= 1000) {
-                    num /= 1000;
-                    return parseFloat(num).toFixed(1) + '천회'
-                }
+                return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '회';
             },
             convertLike(num) {
                 return num
@@ -211,10 +196,10 @@
                     .push(url)
             },
             goToLectureList(){
-                this.move('/mylike/lecture')
+                this.move('/mypage/like?search=project')
             },
             goToVideoList(){
-                this.move('/mylike/video')
+                this.move('/mypage/like?search=video')
             }
         }
     }
