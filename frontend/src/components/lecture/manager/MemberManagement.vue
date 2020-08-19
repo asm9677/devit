@@ -5,7 +5,7 @@
                     <v-flex xs12 sm12 md9 lg9 xl9 style="margin-left:0px;">                         
                             <v-list style="padding:20px 20px;">
                                 <v-list outlined style="padding-top:0px;" v-show="isOwner">                                        
-                                    <v-list-item >
+                                    <v-list-item style="background-color:#fbfbfb">
                                         <v-list-item-title>
                                             <v-list-item-title>멤버 초대</v-list-item-title> 
                                         </v-list-item-title>    
@@ -93,7 +93,7 @@
 
                                 <div style="margin-top:30px" />
                                 <v-list outlined style="padding:0px;">                                        
-                                    <v-list-item >
+                                    <v-list-item style="background-color:#fbfbfb">
                                         <v-list-item-title>멤버 목록</v-list-item-title> 
                                     </v-list-item>
                                     <template v-for="(item,index) in memberList">
@@ -116,12 +116,12 @@
                                                             {{item.role}}
                                                         </th>
                                                         <th width="40px;">
-                                                                <v-icon color="red" v-show="!item.isMe && isOwner" @click="changeOwner(item)">
+                                                                <v-icon style="font-weight:700;" color="error" v-show="!item.isMe && isOwner" @click="changeOwner(item)">
                                                                     mdi-crown
                                                                 </v-icon>
                                                         </th>
                                                         <td width="30px;">
-                                                                <v-icon color="red" v-show="!item.isMe && isOwner" @click="exitProject(item)">
+                                                                <v-icon color="error" v-show="!item.isMe && isOwner" @click="exitProject(item)">
                                                                     mdi-trash-can-outline
                                                                 </v-icon>
                                                             

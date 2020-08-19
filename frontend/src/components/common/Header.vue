@@ -382,7 +382,7 @@ export default {
         },
         userModify(){
             if (this.$router.app.$store.state.token) {
-                this.$router.push('/user/modify').catch(()=>{location.reload(true);});   
+                this.$router.push('/mypage/info').catch(()=>{location.reload(true);});   
             } else {
                 eventBus.$emit('doLogin');
             }

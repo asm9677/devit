@@ -2,10 +2,7 @@
     <div style="margin:40px">
         <v-container justify-center="justify-center">
             <v-layout row="row" wrap="wrap">
-                    <div style="width:100%; margin:10px auto;">
-                        <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">요청 목록</span>
-                    </div>
-<v-container fluid v-show="!items.length" >         
+                <v-container fluid v-show="!items.length" >         
                         <v-row>
                             <v-col cols="12">
                                 <v-row
@@ -71,7 +68,7 @@
                             </v-list>    
                     </v-flex>                    
                     <v-flex v-show="option && curItem.reqType"  md4 lg4 xl4> 
-                        <v-list style="position: sticky; top:60px; " dense>
+                        <v-list style="position: sticky; top:60px;" dense>
                             <div id="pos" style="height:0px" />
                             <div style="
                                     width:100%; 
@@ -217,7 +214,7 @@
                 },
                 option:true,
                 prevCreated: '',
-                height:700,
+                height:500,
                 preview: false,
                 offset:0,
                 }
@@ -259,7 +256,7 @@
             }
         },
         mounted() {
-            
+            this.handleRequestResize()
             window.addEventListener('resize', this.handleRequestResize);
             document.addEventListener('scroll', this.requestScroll);
         },
@@ -348,7 +345,7 @@
             
             },
             handleRequestResize() {            
-                this.height = $('body').height() - 60;
+                this.height = $('body').height() - 260;
             },
             move(url) {
                 this
@@ -400,6 +397,5 @@
         line-height: 1.5;
         color: #212529;
         text-align: left;
-        background-color: #fff; 
     }
 </style>

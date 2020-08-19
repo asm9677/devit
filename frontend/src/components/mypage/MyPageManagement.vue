@@ -4,7 +4,7 @@
             
             <v-layout wrap ref="main">
                 <v-flex xs12 sm12 md11 lg11 xl11 ref="left"></v-flex>
-                <v-flex xs12 sm12 md4 lg4 xl4 v-show="!option" style="text-align:center;">
+                <v-flex xs12 sm12 md4 lg4 xl4 v-show="!option" style="text-align:center;">              
                     <h1 class="primary--text">{{items[tab].title}}</h1>
                 </v-flex>                  
                 
@@ -16,16 +16,14 @@
                             <span class="primary--text lighten-1">{{item.title}}</span>
                             <v-icon :color="tab==i ? 'primary' : ''" small>{{tab == i ? 'mdi-circle' : item.icon }}</v-icon>
                         </v-tab>
-                        <v-tab key="detail_tab" @click="$router.push(`/lecture/detail/${lectureId}`)">
-                            <span class="primary--text lighten-1">강의 페이지</span>                            
-                            <v-icon small>mdi-circle-outline</v-icon>
-                        </v-tab>
                     </v-tabs>           
-                    <Default :option='option' :tab='0' :curTab="tab" v-if="tab==0"> </Default>
-                    <Intro :option='option' :tab='1' :curTab="tab" v-else-if="tab==1"> </Intro>
-                    <MemberManagement :option='option' :tab='2' :curTab="tab" v-else-if="tab==2"> </MemberManagement>
-                    <RequestList :option='option' :tab='3' :curTab="tab" v-else-if="tab==3"> </RequestList>
-                    <ChapterManagement :option='option' :tab='4' :curTab="tab" v-else-if="tab==4"> </ChapterManagement>
+                    <Info :option='option' :tab='0' :curTab="tab" v-if="tab==0"> </Info>
+                    <Activity :option='option' :tab='1' :curTab="tab" v-else-if="tab==1"> </Activity>
+                    <MyLike :option='option' :tab='2' :curTab="tab" v-else-if="tab==2 && !search"> </MyLike>
+                    <MyLikeLecture :option='option' :tab='2' :curTab="tab" v-else-if="tab==2 && search == 'project'"> </MyLikeLecture>
+                    <MyLikeVideo :option='option' :tab='2' :curTab="tab" v-else-if="tab==2 && search == 'video'"> </MyLikeVideo>
+                    <MyReqList :option='option' :tab='3' :curTab="tab" v-else-if="tab==3"> </MyReqList>
+                    <MyMngLecture :option='option' :tab='3' :curTab="tab" v-else-if="tab==4"> </MyMngLecture>
                 </v-flex>       
 
                 
@@ -38,41 +36,47 @@
 <script>
 import http from "@/util/http_common.js"
 import store from "@/store/index.js"
-import Default from "@/components/lecture/manager/Default.vue"
-import Intro from "@/components/lecture/manager/Intro.vue"
-import MemberManagement from "@/components/lecture/manager/MemberManagement.vue"
-import ChapterManagement from "@/components/lecture/manager/ChapterManagement.vue"
-import RequestList from "@/components/lecture/manager/RequestList.vue"
+import Info from '@/components/mypage/Info.vue'
+import Activity from '@/components/mypage/Activity.vue'
+import MyLike from '@/components/mypage/MyLike.vue'
+import MyLikeLecture from '@/components/mypage/MyLikeLecture.vue'
+import MyLikeVideo from '@/components/mypage/MyLikeVideo.vue'
+import MyReqList from '@/components/mypage/MyReqList.vue'
+import MyMngLecture from '@/components/mypage/MyMngLecture.vue'
+
 export default {
     components: {
-        Default,
-        Intro,
-        MemberManagement,
-        RequestList,
-        ChapterManagement,
+        Info,
+        Activity,
+        MyLike,
+        MyLikeLecture,
+        MyLikeVideo,
+        MyReqList,
+        MyMngLecture,
     },
     data() {
         return {          
             lectureId: 0,
-            tabName: ['default','intro','member','request','index'],
+            tabName: ['info','activity','like','request','management'],                    
             tab: 0,  
             option: false,
+            search: '',
 
             items: [
                 {
-                    title: '기본 정보',
+                    title: '회원 정보',
                     icon: 'mdi-circle-outline',
                     link: 'default',
                 },
                 {
-                    title: '강의 설명',
+                    title: '활동 내역',
                     icon: 'mdi-circle-outline',
-                    link: 'intro',
+                    link: 'default',
                 },
                 {
-                    title: '멤버 관리',
+                    title: '찜 목록',
                     icon: 'mdi-circle-outline',
-                    link: 'member',
+                    link: 'intro',
                 },
                 {
                     title: '요청 목록',
@@ -80,9 +84,9 @@ export default {
                     link: 'request',
                 },
                 {
-                    title: '목차 관리',
+                    title: '내 프로젝트',
                     icon: 'mdi-circle-outline',
-                    link: 'index',
+                    link: 'management',
                 },
             ]
         }
@@ -90,10 +94,6 @@ export default {
     watch:{
         tab(val) {
             this.tab = this.tabName.indexOf(this.$route.params.tabName);
-
-            
-
-            // history.pushState('', '', `/lecture/management/${this.tabName[this.tab]}/${this.$route.params.id}`);
         }
     },
     created(){
@@ -107,16 +107,7 @@ export default {
             alert('잘못된 접근입니다.')
         }        
 
-        http.axios.get(`/api/v1/lectures/${this.lectureId}`).then(({data}) => {
-            if(!data.result.manageYn) {
-                this.$router.push('/')
-                alert('권한이 없습니다!')                
-            }
-        }).catch((error) => {
-            
-        }).finally(() => {
-            
-        })
+        this.search = this.$route.query.search;
     },
     mounted() {
         window.addEventListener('resize', this.handleResize)
@@ -127,7 +118,7 @@ export default {
     },
     methods: {  
         changeTab(e) {            
-            this.$router.push(`/lecture/management/${this.tabName[e]}/${this.$route.params.id}`)
+            this.$router.push(`/mypage/${this.tabName[e]}`)
             this.tab = this.tabName.indexOf(this.$route.params.tabName);
         },
         handleResize() {
@@ -147,5 +138,4 @@ export default {
         margin-top:15px;
         /* margin-bottom:30px; */
     }
-    
 </style>

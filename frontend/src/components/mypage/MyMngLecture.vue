@@ -2,8 +2,16 @@
     <div style="margin:50px">
         <v-container justify-center="justify-center">
             <v-layout row="row" wrap="wrap">
+                {{items[0]}} 
+                <carousel-3d :perspective="0" :space="400" :display="3" v-if="items.length">
+                     <slide v-for="(item, i) in items" :index="i" :key="i">
+                         <v-list>
+                             {{i}}
+                         </v-list>
+                         
+                    </slide>
+                </carousel-3d>
                 <div style="width:100%; margin:0 auto;">
-                    <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">관리중인 프로젝트</span>
                     <div style="width:100%; margin-bottom:30px;"></div>
 
                     <v-list>
@@ -92,8 +100,14 @@
 <script>
     import http from "@/util/http_common.js"
     import store from "@/store/index.js"
+    import { Carousel3d, Slide } from 'vue-carousel-3d';
+
 
     export default {
+        components: {
+            Carousel3d,
+            Slide,
+        },
         data() {
             return {
                 items: [],

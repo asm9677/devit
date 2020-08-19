@@ -156,6 +156,11 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+    .v-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 3px 8px 0 rgba(0,0,0,.08), 0 0 1px 0 rgba(0,0,0,.44);
+        cursor:pointer;
+    }
 
 </style>

@@ -3,7 +3,7 @@
         <v-container justify-center="justify-center">
 
             <div style="width:100%; margin:0 auto;">
-                <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">내가 좋아요한 강의</span>
+                <span style="font-size:26px; font-weight:600; color:#1976d2 !important;">내가 좋아요한 프로젝트</span>
             </div>
             <div v-if="items.length > 0">
                 <v-layout row="row" wrap="wrap">
