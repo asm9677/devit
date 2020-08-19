@@ -34,7 +34,13 @@
                 </li>
             </ul>            
             <!-- <div id="editor" contenteditable v-show="isActive" @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress"></div> -->
-            <textarea id="editor" v-show="isActive && !isFullScreen" @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress" :value="value" :style="{'height' : (height ? height+'px' : 'auto')}" @change="changeText" />
+            <div v-show="isActive && !isFullScreen">
+                <textarea id="editor"  @focusin="isFocus=true;" @focusout="isFocus=false;" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress" :value="value" :style="{'height' : (height ? height+'px' : 'auto')}" @change="changeText" />
+                <v-divider  style="margin-bottom:10px" />
+                <span style='font-size:14px; line-height: 16px;     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";'> <a style="cursor:text">Markdown</a> and <a style="cursor:text">tags</a> are supported </span>
+                
+
+            </div>
             <div class="full_screen" v-show="isFullScreen">
                 <div>
                     <textarea id="full_screen_editor" v-show="isActive" @paste.prevent.self="checkPaste()" @input="onInput" @keypress="checkKeypress" :value="value" placeholder="Write Here..."> </textarea>

@@ -184,6 +184,7 @@
                 }
                 jsonArray.push(jsonData);
                 localStorage.setItem(store.state.email, JSON.stringify(jsonArray));
+                this.$router.app.$store.commit('setChange', false);    
                 this.text = "임시저장 되었습니다."
                 this.snackbar = true;
             },
@@ -211,7 +212,7 @@
                                 this.errorSnackbar = true;
 
                             }else{
-
+                                this.$router.app.$store.commit('setChange', false);    
                                 this
                                 .$router
                                 .push({
@@ -225,10 +226,7 @@
                                         'boardId': data.result, //data.boardId
                                     }
                                 });
-                            }
-                            
-                            
-
+                            }                            
                         })
                         .catch((error) => {
                             console.dir(error)
@@ -256,6 +254,7 @@
                                 this.errorSnackbar = true;
                                 
                             }else{                       
+                                this.$router.app.$store.commit('setChange', false);    
                                 this
                                     .$router
                                     .push({path:'/board/detail', 

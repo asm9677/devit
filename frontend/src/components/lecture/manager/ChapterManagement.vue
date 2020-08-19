@@ -176,11 +176,11 @@
                     
                     <v-layout>
                         <v-spacer></v-spacer>
-                        <v-btn depressed color="primary" @click="saveChapter()">
+                        <v-btn depressed outlined color="primary" @click="saveChapter()">
                             저장하기
                         </v-btn>    
                         <div style="margin-right:5px"></div>
-                        <v-btn depressed @click="dialog=false">
+                        <v-btn depressed outlined  @click="dialog=false">
                             취소하기
                         </v-btn>    
                     </v-layout>   

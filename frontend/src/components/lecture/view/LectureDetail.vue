@@ -13,7 +13,7 @@
                 v-show="!$router.app.$store.state.smallMode"
             >
                 <v-tab @click="goto('#introduce')"><span style="font-size:16px;" >소개</span></v-tab>
-                <v-tab @click="goto('#curriculum')"><span style="font-size:16px">교육 과정</span></v-tab>
+                <v-tab @click="goto('#curriculum')"><span style="font-size:16px">커리큘럼</span></v-tab>
                 <v-tab @click="goto('#changes')"><span style="font-size:16px">변경 사항</span></v-tab>
                 <v-tab @click="goto('#helped')"><span style="font-size:16px">공동 관리자</span></v-tab>
             </v-tabs>  
@@ -87,13 +87,14 @@
                         </div>
 
                         <div id="introduce" style="margin-top:40px;">
-                            <h3>프로젝트 소개</h3>    
-                            <v-divider style="margin-top:20px"/>
+                            <h3 style="padding: 0px auto;">프로젝트 소개</h3>    
+                            <v-divider style="margin-top:20px" v-show="item.content" />
                             <div class="content" v-html="parse(item.content)" />                                
+                            <div v-if="!item.content" style="height:50px" />
                         </div>
                         <div id="curriculum" style="margin-top:40px;">
-                            <h3>교육 과정</h3>      
-                            <v-divider style="margin-top:20px"/>
+                            <h3>커리큘럼</h3>      
+                            <v-divider style="margin-top:20px" v-show="chapter.length" />
                                 <div class="content">
                                     <v-list style="font-size:14px">
                                         <v-list-item 
@@ -240,8 +241,8 @@
                                         </v-avatar>
                                         <span style="margin-left:5px;font-size:16px">{{item.nickname}}</span>
                                         <div style="margin-top:20px;" /> 
-                                        <v-btn depressed dark color="primary" large block @click="move(`/lecture/player/index/${$route.params.id}?order=1`)"><span style="font-size:20px;">학습하기</span></v-btn>
-                                        <v-btn v-if="item.manageYn" depressed dark color="primary" large block @click="move(`/lecture/management/default/${$route.params.id}`)" style="margin-top:10px;"><span style="font-size:20px;">관리하기</span></v-btn>
+                                        <v-btn depressed outlined dark color="primary" large block @click="move(`/lecture/player/index/${$route.params.id}?order=1`)"><span style="font-size:20px;">학습하기</span></v-btn>
+                                        <v-btn v-if="item.manageYn" depressed outlined dark color="primary" large block @click="move(`/lecture/management/default/${$route.params.id}`)" style="margin-top:10px;"><span style="font-size:20px;">관리하기</span></v-btn>
                                 </div>
                             </v-layout>
                         </div>
@@ -310,22 +311,23 @@ export default {
         },
 
         convertView(num) {
-            if(num < 1000){
-                return num + '회'
-            }
+            // if(num < 1000){
+            //     return num + '회'
+            // }
 
-            if(num >= 100000000){
-                num /= 100000000;
-                return parseFloat(num).toFixed(2) + '억회'
-            }
-            if(num >= 10000){
-                num /= 10000;
-                return parseFloat(num).toFixed(0) + '만회'
-            }
-            if(num >= 1000){
-                num /= 1000;
-                return parseFloat(num).toFixed(1) + '천회'
-            }
+            // if(num >= 100000000){
+            //     num /= 100000000;
+            //     return parseFloat(num).toFixed(2) + '억회'
+            // }
+            // if(num >= 10000){
+            //     num /= 10000;
+            //     return parseFloat(num).toFixed(0) + '만회'
+            // }
+            // if(num >= 1000){
+            //     num /= 1000;
+            //     return parseFloat(num).toFixed(1) + '천회'
+            // }
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '회';
         },
         convertLike(num){
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
