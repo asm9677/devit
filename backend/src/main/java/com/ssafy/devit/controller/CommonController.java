@@ -16,6 +16,7 @@ import com.ssafy.devit.model.common.SearchInfoIndexResponse;
 import com.ssafy.devit.model.common.SearchInfoLectureResponse;
 import com.ssafy.devit.model.request.SearchFormRequest;
 import com.ssafy.devit.service.CommonService;
+import com.ssafy.devit.service.LectureService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -32,6 +33,9 @@ public class CommonController {
 
 	@Autowired
 	CommonService commonService;
+	
+	@Autowired
+	LectureService lectureService;
 
 	@ApiOperation(value = "검색어로 프로젝트 정보들 가져오기")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = SearchInfoLectureResponse.class) })
@@ -103,6 +107,46 @@ public class CommonController {
 		final CommonResponse result = new CommonResponse();
 		try {
 			result.result = commonService.getMainRank();
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			log.info(">> Error : getMainRank <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+	
+	@ApiOperation(value = "메인화면 최근 좋아요 많은 프로젝트 가져오기")
+	@GetMapping("/main/rank")
+	public ResponseEntity<CommonResponse> getBestLectures(){
+		
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			result.result = lectureService.bestLectureList();
+			result.msg = "success";
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			log.info(">> Error : getMainRank <<");
+			log.info(e.getMessage().toString());
+			result.msg = "fail";
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+	}
+	
+	@ApiOperation(value = "메인화면 최근 좋아요 많은 동영상 가져오기")
+	@GetMapping("/main/rank")
+	public ResponseEntity<CommonResponse> getBestVideos(){
+		
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			result.result = lectureService.bestVideoList();
 			result.msg = "success";
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
