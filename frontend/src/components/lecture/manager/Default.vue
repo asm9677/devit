@@ -58,7 +58,7 @@
                             <v-list style="padding:20px 100px;">
                                 <v-list-item>
                                     <v-list-item-title>
-                                        <v-radio-group v-model="category" id="category" @change="changeForm(true)">
+                                        <v-radio-group v-model="category" id="category" @change="changeForm(true); changeCategory();">
                                             <template v-slot:label>
                                                 <div style="color:rgba(0, 0, 0, 0.87)">카테고리</div>
                                             </template>
@@ -254,9 +254,9 @@ export default {
                 this.getDefaultPage();
             }
         },
-        category() {
+        /*category() {
             this.type = this.category * 100 + 1;
-        }
+        }*/
     },
     data() {
         return {  
@@ -285,6 +285,9 @@ export default {
     },
     
     methods: {
+        changeCategory(){
+            this.type = this.category * 100 + 1;
+        },
         changeForm(flag){
             this.$router.app.$store.commit('setChange', flag);
         },
