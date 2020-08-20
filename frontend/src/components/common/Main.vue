@@ -13,7 +13,7 @@
             <v-sheet
                 :color="colors[i]"
                 height="100%"
-                style="background-color:#87ceeb26;"
+                style="background-color:rgba(135, 206, 235, 0.26);"
             >
                 <v-row
                     justify="start"
