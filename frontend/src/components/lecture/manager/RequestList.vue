@@ -319,6 +319,7 @@ export default {
             this.$router.app.$store.commit('startLoading')
             http.axios.get(`/api/v1/lectures/historys?acceptType=all&lectureId=${this.lectureId}&reqType=video,wiki&startPage=${this.page}`)
                 .then(({data}) => {
+                    console.dir(data)
                     for(let i in data.result){
                         if(this.prevCreated != this.$moment(data.result[i].created).format('DD MMMM, YYYY')){
                             this.prevCreated = this.$moment(data.result[i].created).format('DD MMMM, YYYY');

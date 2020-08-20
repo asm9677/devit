@@ -18,7 +18,7 @@
                 <v-row
                     justify="start"
                     align="center"             
-                    style="max-width:1180px; margin:0px auto; height:400px;"   
+                    style="max-width:1380px; margin:0px auto; height:400px;"   
                 >
                     <v-col :cols="6">
                         <div style="color:#333333; font-size:32px; font-weight:bold; margin-bottom: 8px;">{{ title }}</div>
@@ -36,7 +36,7 @@
             <v-layout wrap style="max-width:1380px; margin:0px auto;">
                 <v-container fluid="fluid" grid-list-xl="grid-list-xl" class="" v-if="letureItems.length > 0">
                     <div style="width:100%;">
-                        <span style="font-size:20px; font-weight:600; color:#1976d2 !important">급상승 프로젝트</span>
+                        <span style="font-size:20px; font-weight:600; color:#1976d2 !important">인기 프로젝트</span>
                     </div>
                     <div v-if="letureItems.length > 0">
                         <v-layout row="row" wrap="wrap" style="width:100%; margin:0;">
@@ -109,17 +109,18 @@
 
                             </v-flex>
                         </v-layout>
-                    </div>
-                    <v-divider style="margin:20px 0px" v-if="letureItems.length > 0" />
+                    </div>                    
+                    <div style="margin-top:100px;" />
                     <div v-if="videoItems.length > 0" >
-                        <span style="font-size:20px; font-weight:600; color:#1976d2 !important">인기 동영상</span>
+                        <span style="font-size:20px; font-weight:600; color:#1976d2 !important;">핫이슈 동영상</span>
                     </div>
                     <div v-if="videoItems.length > 0">
-                        <v-layout row="row" wrap="wrap">
+                        <v-layout row="row" wrap="wrap" style="width:100%; margin:0;">
                             <v-flex
                                 v-for="(item,i) in videoItems.slice(0, $router.app.$store.state.smallMode ? 2 : 4)"
                                 :key="`4${i}_video`"
                                 xs12 sm6 md3 lg3 xl3
+                                style="padding:0"
                             >                        
                                 <v-card
                                     tile="tile"
@@ -179,6 +180,7 @@
                         </v-container>
                     </div>
                 </v-container>
+                
 
 
 
@@ -364,6 +366,7 @@
             </v-flex> -->
             </v-layout>
         </v-container>
+
     </div>
 </template>
 <script>
@@ -383,9 +386,9 @@
                     '개발자들의 자유로운 소통 공간',
                 ],
                 contents: [
-                    '누구나 만들고 수정할 수 있는 참여형 강의 플랫폼입니다. 다른 사람의 강의에 부족한 점이 있거나 잘못된 정보가 있다면 자유롭게 추가/수정하여 강의의 품질을 높여보세요.',
-                    '아직도 강의를 처음부터 순서대로 들으시나요? 필요한 챕터만 골라서 듣고 시간을 절약해보세요. 이해가 안된다구요? 걱정하지마세요. 보충 강의도 있답니다.',
-                    '강의를 수강하며 이해가 되지 않는다면, 혹은 홀로 개발을 하다 막힌다면 바로 질문게시판에 질문을 올려보세요. 강의를 올린 사람 뿐만 아니라 다양한 분야의 베테랑 개발자님들께 답변을 받을 수 있답니다.'
+                    '누구나 만들고 수정할 수 있는 참여형 강의 플랫폼입니다. <br>다른 사람의 강의에 부족한 점이 있거나 잘못된 정보가 있다면 <br>자유롭게 추가/수정하여 강의의 품질을 높여보세요.',
+                    '아직도 강의를 처음부터 순서대로 들으시나요?<br> 필요한 챕터만 골라서 듣고 시간을 절약해보세요.<br> 이해가 안된다구요? 걱정하지마세요! 보충 강의도 있답니다.',
+                    '강의를 수강하며 이해가 되지 않는다면, 질문게시판에 질문을 올려보세요!<br> 다양한 분야의 베테랑 개발자님들께 답변을 받을 수 있답니다.'
                 ],
                 images: [
                     'main1.jpg',
