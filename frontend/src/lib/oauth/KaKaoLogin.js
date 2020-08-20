@@ -5,7 +5,7 @@ export default {
         try{
             Kakao.init('9e2c2cdb8b79cea2b27f5fec32a3cf91');
         }catch(e){
-            console.dir(e)
+            // console.dir(e)
           }
         Kakao.Auth.login({
             success: function(authObj) {
@@ -20,7 +20,7 @@ export default {
                 })
               },
             fail: function (error) {
-                console.log(error);
+                // console.log(error);
             },
         });
         

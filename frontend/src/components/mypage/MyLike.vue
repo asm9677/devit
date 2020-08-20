@@ -282,7 +282,6 @@
             getManagementProject() {
                 http.axios.get(`/api/v1/myMngLecture?page=1&itemsperpage=100`)
                     .then(({data}) => {
-                        console.dir(data)
                         this.items = [];
                         for(let i in data.result) {
                             if(data.result[i].thumbnailUrl)

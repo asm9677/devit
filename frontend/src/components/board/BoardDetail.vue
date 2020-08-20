@@ -352,7 +352,6 @@
                     .get("/api/v1/board/" + this.$route.query.boardId, {})
                     .then(({data}) => {
                         this.item = data.result;
-                        console.log("data.result", data.result);
                         if (this.item.isMine == 'Y') { //수정/삭제 버튼
                             this.isBtnShow = true;
                         } else {

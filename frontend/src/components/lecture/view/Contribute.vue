@@ -231,6 +231,7 @@ export default {
         convertHTML,        
         initPreview() {
             this.preview=true;
+            setTimeout(() => {
             $('#videoFrame2').html(
                 `
                     <video
@@ -241,9 +242,9 @@ export default {
                         poster="http://i3a101.p.ssafy.io/images/${this.thumbnailUrl}"
                     >
                         <source src="http://i3a101.p.ssafy.io/images/${this.playerUrl}"> </source>
-                    </video>
-                `
-            )
+                    </video>                    
+                `            
+            )}, 100);
         },
         clickVideo(){
             $("#file").click();
