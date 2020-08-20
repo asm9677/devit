@@ -427,7 +427,15 @@
                     </v-btn>
                 </template>
             </v-snackbar>
-            <Contribute :dialog="dialog" :darkOption="darkOption" :lectureId="lectureId" :subId="subId" :wiki="sub.wikiContentHtml" @closeDialog="dialog=false;" style="z-index:9000;"></Contribute>
+            <v-snackbar
+                v-model="isSuccess"
+                right
+                timeout="2500"
+                color="success"        
+            >
+                요청이 완료되었습니다.
+            </v-snackbar>
+            <Contribute :dialog="dialog" :darkOption="darkOption" :lectureId="lectureId" :subId="subId" :wiki="sub.wikiContentHtml" @closeDialog="dialog=false;" style="z-index:9000;" @success="isSuccess=true;"></Contribute>
         </v-layout>
     </div>
 </template>
@@ -485,6 +493,7 @@ export default {
 
             btnLoading: false,
             snackbar: false,
+            isSuccess:false,
 
             boardRefresh: false,
         }
@@ -538,8 +547,7 @@ export default {
                         <source src="http://i3a101.p.ssafy.io/images/${this.sub.playerUrl}"> </source>
                     </video>
                 `
-            )
-            
+            )            
         }
     },
     filters: {
@@ -572,6 +580,8 @@ export default {
             this.autoPlay = true;
         else
             this.autoPlay= this.autoPlay == 'true';
+
+        this.$emit('')
     },
     mounted() {
         

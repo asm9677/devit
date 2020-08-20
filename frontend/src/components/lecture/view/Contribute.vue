@@ -166,8 +166,8 @@
         >
             {{msg}}
         </v-snackbar>
-        <v-dialog v-model="preview" hide-overlay max-width="768" > 
-            <div id="videoFrame2" v-show="!tabs" >
+        <v-dialog v-model="preview" hide-overlay max-width="768"> 
+            <div id="videoFrame2" v-show="!tabs">
                 <video 
                     class="video-js vjs-default-skin vjs-big-play-centered"
                     controls                      
@@ -177,7 +177,7 @@
                     <!-- <source :src="`http://i3a101.p.ssafy.io/images/${playerUrl}`"> </source> -->
                 </video>
             </div>
-            <div class="wiki-paragraph" v-show="tabs" v-html="parse(content)" style="background-color: #ffffff;">
+            <div class="wiki-paragraph" v-show="tabs" v-html="parse(content)" style="background-color: #ffffff; padding:10px;">
                 
             </div>
         </v-dialog>
@@ -328,6 +328,8 @@ export default {
                 this.$emit('closeDialog');
                 this.snackbar = true;
                 this.msg = '정상적으로 요청되었습니다.';
+                this.$router.app.$store.commit('setChange', false);
+                this.$emit('success');
             })
         },
         updatePercentCompleted(progressEvent){
@@ -359,6 +361,8 @@ export default {
                     this.$emit('closeDialog');
                     this.snackbar = true;
                     this.msg = '정상적으로 요청되었습니다.';
+                    this.$router.app.$store.commit('setChange', false);
+                    this.$emit('success');
                 })
             }
         },

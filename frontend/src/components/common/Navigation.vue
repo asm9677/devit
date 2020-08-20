@@ -26,7 +26,6 @@
             :v-model="item.active"
             :prepend-icon="item.icon"            
             no-action
-            v-show="item.title!='마이페이지' || $router.app.$store.state.token"
           >
             <template v-slot:activator>
               <v-list-item-content>
@@ -48,6 +47,7 @@
           <v-list-item          
                 link
                 @click="changeCategory(myPage);" 
+                v-show="$router.app.$store.state.token"
               >       
                 <v-list-item-icon>
                   <v-icon>{{myPage.icon}}</v-icon>
