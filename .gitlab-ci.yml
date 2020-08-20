@@ -6,8 +6,7 @@ stages:
 gradle-build:
     only:
         - develop
-        - backend
-        - cicd
+        - master
     stage: build
     script:
         - echo '빌드를 실행할 폴더로 이동'
@@ -24,7 +23,7 @@ gradle-build:
 vue-build:
     only:
         - develop
-        - frontend
+        - master
     stage: build
     script:
         - echo '빌드를 실행할 폴더로 이동'
