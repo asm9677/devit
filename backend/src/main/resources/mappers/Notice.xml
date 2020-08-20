@@ -79,7 +79,7 @@
             a.sub_id = l.sub_id and 
             a.sub_his_id = l.sub_his_id 
 	  where a.user_id = #{userId}
-   order by a.created_date desc;
+   order by IF(a.read_yn = 'N', 1, 2), a.created_date desc;
 	</select>
 	
 	<!-- 하나의 알람에 대한 조회 -->
@@ -87,21 +87,23 @@
 	 
 	 UPDATE notice SET read_yn = 'Y' WHERE notice_id  = #{noticeId};
 	
-	 select notice_id as noticeId, 
-	 		notice_yn as noticeYn,
-	 		read_yn as readYn,
-			notice_type as noticeType, 
-			user_id as userId, 
-			notice_yn as noticeYn, 
-			read_yn as readYn, 
-			board_id as boardId, 
-			board_reply_id as boardReplyId, 
-			sub_his_id as subHisId,
-			lecture_id as lectureId,
-			sub_id as subId,
-			created_date as createdDate
-	   from notice
-	  where notice_id = #{noticeId};
+	 select n.notice_id as noticeId, 
+	 		n.notice_yn as noticeYn,
+	 		n.read_yn as readYn,
+			n.notice_type as noticeType, 
+			n.user_id as userId, 
+			n.notice_yn as noticeYn, 
+			n.read_yn as readYn, 
+			n.board_id as boardId, 
+			n.board_reply_id as boardReplyId, 
+			n.sub_his_id as subHisId,
+			n.lecture_id as lectureId,
+			n.sub_id as subId,
+			n.created_date as createdDate,
+			(select type from board where board_id = n.board_id) as boardType,
+			(select lsi.order from lecture_sub_index lsi where lsi.sub_id = n.sub_id) as indexOrder
+	   from notice n
+	  where n.notice_id = #{noticeId};
 	</select>
 	
 	<!--  알람 개수 가져오기 -->

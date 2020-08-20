@@ -75,6 +75,10 @@ public interface LectureRepository {
 	@Transactional
 	public void updateLectureAuth(LectureAuthRequest request) throws Exception;
 	
+	//강의 소유자 변경
+	@Transactional
+	public void changeLectureOwner(LectureAuthRequest request) throws Exception;
+	
 	// 공동 관리자 제거
 	@Transactional
 	public void deleteLectureAuth(@Param("authId") long authId) throws Exception;
@@ -129,5 +133,7 @@ public interface LectureRepository {
 	
 	// 요청 리스트 가져오기
 	public List<RequestHistoryResponse> myReqList(@Param("userId") long userId, @Param("startPage") long startPage, @Param("itemsperpage") long itemsperpage) throws Exception;
-		
+
+	public List<LecturesResponse> bestLectureList(long userId) throws Exception;
+	public List<TheOhterSubLectureResponse> bestVideoList(long userId) throws Exception;
 }

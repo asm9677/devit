@@ -20,15 +20,15 @@
                                 style="border-radius:5px;"
                             >
 
-                            <template v-slot:placeholder>
-                                <v-row
-                                class="fill-height ma-0"
-                                align="center"
-                                justify="center"
-                                >
-                                    <v-progress-circular indeterminate color="primary lighten-4"></v-progress-circular>
-                                </v-row>
-                            </template>
+                                <template v-slot:placeholder>
+                                    <v-row
+                                    class="fill-height ma-0"
+                                    align="center"
+                                    justify="center"
+                                    >
+                                        <v-progress-circular indeterminate color="primary lighten-4"></v-progress-circular>
+                                    </v-row>
+                                </template>
                             
                             </v-img>
                         </v-avatar>
@@ -75,6 +75,7 @@
                             size=20
                         >
                             <v-img 
+                                v-if="item.profile"
                                 :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
                             ></v-img>
                         </v-avatar>
@@ -136,6 +137,7 @@ export default {
         document.addEventListener('scroll', this.handleScroll2);
     },
     mounted() {
+        setTimeout(this.handleResize2, 100);
         window.addEventListener('resize', this.handleResize2)
         if(this.$refs.img0){
                 this.height = this.$refs.img0[0].$el.offsetHeight - this.$refs.content0[0].$el.offsetHeight-25
@@ -156,7 +158,6 @@ export default {
             this.scrollPos = $(document).scrollTop();
 
             if($(document).scrollTop() + $(document)[0].scrollingElement.clientHeight + 100 >= $(document).height()){
-                console.dir(this.page)
                 if(!this.$router.app.$store.state.loading)
                     this.search(this.type);
             }          
@@ -164,7 +165,7 @@ export default {
         handleResize2() {
             if(this.$refs.main && this.$refs.left)  
                 this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
-            if(this.$refs.img0){
+            if(this.$refs.img0[0]){
                 this.height = this.$refs.img0[0].$el.offsetHeight - this.$refs.content0[0].$el.offsetHeight-25
                 if(this.height < 0)
                     this.height = 0;
@@ -196,7 +197,6 @@ export default {
                     for(let i in data.result)
                         this.items.push(data.result[i])
                     this.total = data.result[0].totalCount;
-                    console.dir(this.items)
                 }else{
                     // console.dir
                 }

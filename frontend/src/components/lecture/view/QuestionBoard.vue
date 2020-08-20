@@ -44,6 +44,7 @@
                                     size=15
                                 >
                                     <v-img 
+                                        v-if="item.profile"
                                         :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
                                     ></v-img>
                                 </v-avatar>
@@ -125,14 +126,13 @@ export default {
             }else{
                 eventBus.$emit('doLogin');
             }
-            
         },
         questionBoardResize() {
             this.questionHeight = $('body').height()-$('#question').offset().top
         },
         initBoard() {
             http.axios.get(`/api/v1/board/lecture?lectureId=${this.lectureId}&subId=${this.subId}`).then(({data}) => {
-                console.dir(data)
+                
                 this.items = data.result;
             })
         },

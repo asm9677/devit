@@ -24,10 +24,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ssafy.devit.model.CommonResponse;
+import com.ssafy.devit.model.request.BoardWithLectureRequest;
+import com.ssafy.devit.model.request.EmailRequest;
 import com.ssafy.devit.model.request.SignUpRequest;
 import com.ssafy.devit.model.user.UserAuthDetails;
 import com.ssafy.devit.service.MailService;
 import com.ssafy.devit.service.UserAuthDetailService;
+import com.ssafy.devit.service.UserService;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -47,6 +50,9 @@ public class MailController {
 	
 	@Autowired // 회원 관리
 	UserAuthDetailService userAuthDetailService;
+
+	@Autowired
+	UserService userService;
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
@@ -141,19 +147,28 @@ public class MailController {
 	@PostMapping("/password")
 	@ApiOperation(value = "비밀번호 변경 확인 메일을 보낸다")
 	// 비밀번호 찾기 요청으로써, 실행되면 비밀번호 찾기 요청을 본인이 한게 맞는지 확인하는 메일이 보내진다.
-	public ResponseEntity<CommonResponse> passwordConfirmMail(@RequestParam("email_to") String email_to) {
+	public ResponseEntity<CommonResponse> passwordConfirmMail(@RequestBody EmailRequest request) {
 		log.info(">> Load : passeordConfirmMail <<");
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 
 		try {
-			mailService.sendPasswordFindConfirmEmail(email_to);
-			result.msg = "success";
-			result.result = "성공적으로 비밀번호 변경 확인 메일이 보내졌습니다.";
-			response = new ResponseEntity<>(result, HttpStatus.OK);
+			String email = request.getEmail();
+			if (userService.getUserByEmail(email) == null) {
+				result.msg = "notexist";
+				result.result = "가입되지 않은 이메일입니다";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			}else {
+				
+				mailService.sendPasswordFindConfirmEmail(email);
+				result.msg = "success";
+				result.result = "성공적으로 비밀번호 변경 확인 메일이 보내졌습니다.";
+				response = new ResponseEntity<>(result, HttpStatus.OK);
+			}
+			
 		} catch (Exception e) {
 			log.info(">> Error : passwordConfirmMail <<");
-			log.info(e.getMessage().toString());
+//			log.info(e.getMessage().toString());
 			result.msg = "fail";
 			result.result = "비밀번호 변경 확인 메일이 발송 실패.";
 			response = new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
@@ -192,7 +207,7 @@ public class MailController {
 			result.result = "비밀번호 변경 실패.";			
 		}
 		
-		return "redirect:http://i3a101.p.ssafy.io/";
+		return "redirect:http://i3a101.p.ssafy.io/changedpw";
 	}
 
 	

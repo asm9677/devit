@@ -284,4 +284,12 @@
 		  limit #{startPage} , #{itemsperpage};
 		  
       </select>
+      
+      
+	<!-- 게시글의 boardType 조회 -->
+	      <select id="getBoardTypeById" resultType="long">
+         select ifnull((select type from board where board_id = #{boardId}), 0) as boardType
+           from dual;
+		  
+      </select>
 </mapper>

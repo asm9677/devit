@@ -15,6 +15,7 @@ public interface UserService {
 
 	public User getUserByNickname(String nickname) throws Exception;
 
+	public User getUserByEmail(String email) throws Exception;
 
 	public void registRole(long userId, String role) throws Exception;
 

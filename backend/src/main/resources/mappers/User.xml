@@ -17,8 +17,8 @@
 	
 	<!-- 이메일 닉네임 체크  -->
 	<select id="checkValidEmailOrNickname" resultType="Integer">
-		SELECT COUNT(*) FROM user
-		WHERE email = #{email} OR nickname = #{nickname};
+		select (select count(1) from user where upper(email) = upper(#{email}) OR upper(nickname) = upper(#{nickname})) as cnt
+		  from dual;
 	</select>
 	
 	<!-- 사용자 Email로 검색 -->
@@ -63,7 +63,13 @@
 	<select id="findUserByNickname" resultType="User">
 		select user_id as userId, nickname, email, password, active, created, deleted
 		from user
-		where nickname = #{nickname}
+		where upper(nickname) = upper(#{nickname})
+	</select>
+	<!-- 사용자 email로 검색 -->
+	<select id="findUserByEmailAddress" resultType="User">
+		select user_id as userId, nickname, email, password, active, created, deleted
+		from user
+		where upper(email) = upper(#{email})
 	</select>
 	
 

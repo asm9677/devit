@@ -8,12 +8,15 @@
                                     <v-list-item-title>프로젝트명</v-list-item-title> 
                                 </v-list-item>
                                 <v-list-item>
-                                    <v-list-item-title><v-text-field
-                                        v-model="title"
-                                        counter="50"
-                                        ref="title"
-                                        id="title"
-                                    ></v-text-field></v-list-item-title>
+                                    <v-list-item-title>
+                                        <v-text-field
+                                            v-model="title"
+                                            counter="50"
+                                            ref="title"
+                                            id="title"
+                                            @change="changeForm(true)"
+                                        ></v-text-field>
+                                    </v-list-item-title>
                                 </v-list-item>
                             </v-list> 
                             
@@ -55,33 +58,87 @@
                             <v-list style="padding:20px 100px;">
                                 <v-list-item>
                                     <v-list-item-title>
-                                        <v-radio-group v-model="type" id="type">
+                                        <v-radio-group v-model="category" id="category" @change="changeForm(true); changeCategory();">
                                             <template v-slot:label>
-                                                <div style="color:rgba(0, 0, 0, 0.87)">레벨</div>
+                                                <div style="color:rgba(0, 0, 0, 0.87)">카테고리</div>
                                             </template>
-                                            <p/>
+                                            <p style="height:20px"/>
+                                            <v-radio :value="0">
+                                                <template v-slot:label>
+                                                    <div><span style="color:#1976D2">기술 스택</span> <br>
+                                                    <span class="text-caption">사람들과 함께 강의의 완성도를 높여보세요.<div class=""></div></span></div>
+                                                </template>
+                                            </v-radio>
                                             <v-radio :value="1">
                                                 <template v-slot:label>
-                                                    <div><span style="color:#1976D2">초급</span> <br>
-                                                    <span class="text-caption">별다른 사전 지식 없이도 바로 시작할 수 있는 강의입니다.</span></div>
-                                                </template>
-                                            </v-radio>
-                                            <v-radio :value="2">
-                                                <template v-slot:label>
-                                                    <div><span style="color:#1976D2">중급</span> <br>
-                                                    <span class="text-caption">수강을 위해 관련 분야의 기본 지식이 권장됩니다.</span></div>
-                                                </template>
-                                            </v-radio>
-                                            <v-radio :value="3">
-                                                <template v-slot:label>
-                                                    <div> <span style="color:#1976D2">고급</span> <br>
-                                                    <span class="text-caption">수강을 위해 관련 분야에 대한 충분한 경험이 필요합니다.</span></div>
+                                                    <div><span style="color:#1976D2">스터디</span> <br>
+                                                    <span class="text-caption">같은 목표를 가진 사람들과 함께 만들어보세요.</span></div>
                                                 </template>
                                             </v-radio>
                                         </v-radio-group>
                                     </v-list-item-title> 
                                 </v-list-item>
                             </v-list>
+                            <v-expand-transition>
+                                <v-list style="padding:20px 100px;" v-show="category >= 0">
+                                    <v-list-item>
+                                        <v-list-item-title>
+                                            <v-radio-group v-model="type" id="type" @change="changeForm(true)">
+                                                <template v-slot:label>
+                                                    <div style="color:rgba(0, 0, 0, 0.87)">{{['레벨','기술'][category  ]}}</div>
+                                                </template>
+                                                <p style="height:20px"/>
+                                                <div v-if="category == 0">
+                                                    <v-radio :value="1">
+                                                        <template v-slot:label>
+                                                            <div><span style="color:#1976D2">초급</span> <br>
+                                                            <span class="text-caption">별다른 사전 지식 없이도 볼 수 있습니다.</span></div>
+                                                        </template>
+                                                    </v-radio>
+                                                    <v-radio :value="2">
+                                                        <template v-slot:label>
+                                                            <div><span style="color:#1976D2">중급</span> <br>
+                                                            <span class="text-caption">관련 분야에 대한 기본 지식이 필요합니다.</span></div>
+                                                        </template>
+                                                    </v-radio>
+                                                    <v-radio :value="3">
+                                                        <template v-slot:label>
+                                                            <div> <span style="color:#1976D2">고급</span> <br>
+                                                            <span class="text-caption">관련 분야에 대한 충분한 이해가 필요합니다</span></div>
+                                                        </template>
+                                                    </v-radio>
+                                                </div>
+                                                <div v-else>
+                                                    <v-radio :value="101">
+                                                        <template v-slot:label>
+                                                            <div><span style="color:#1976D2">프로그래밍</span> <br>
+                                                            <span class="text-caption">프로그래밍 언어에 대한 지식을 공유해보세요.</span></div>
+                                                        </template>
+                                                    </v-radio>
+                                                    <v-radio :value="102">
+                                                        <template v-slot:label>
+                                                            <div><span style="color:#1976D2">알고리즘</span> <br>
+                                                            <span class="text-caption"> 대회, 코딩 테스트 등의 같은 목표를 가진 사람들과 지식을 공유해보세요.  </span></div>
+                                                        </template>
+                                                    </v-radio>
+                                                    <v-radio :value="103">
+                                                        <template v-slot:label>
+                                                            <div> <span style="color:#1976D2">자격증</span> <br>
+                                                            <span class="text-caption">IT자격증에 대한 지식을 공유해보세요.</span></div>
+                                                        </template>
+                                                    </v-radio>
+                                                    <v-radio :value="104">
+                                                        <template v-slot:label>
+                                                            <div> <span style="color:#1976D2">기타</span> <br>
+                                                            <span class="text-caption">다양한 주제에 대해 지식을 공유해보세요.</span></div>
+                                                        </template>
+                                                    </v-radio>
+                                                </div>
+                                            </v-radio-group>
+                                        </v-list-item-title> 
+                                    </v-list-item>
+                                </v-list>
+                            </v-expand-transition>
 
                             <v-list style="padding:20px 100px;">
                                 <v-list-item>
@@ -100,6 +157,7 @@
                                             v-model="tags"
                                             id="tags"
                                             ref="tags"
+                                            @change="changeForm(true)"
                                         >
                                             <template v-slot:selection="{ attrs, item, parent, selected }">
                                                 <v-chip
@@ -121,7 +179,7 @@
                             <v-list style="padding:20px 100px;">
                                 <v-layout>
                                     <v-spacer></v-spacer>
-                                    <v-btn  color="success" outlined @click="ValidationForm">
+                                    <v-btn  color="primary" outlined @click="ValidationForm">
                                         저장하기
                                     </v-btn>    
                                     <div style="margin-right:5px"></div>
@@ -195,7 +253,10 @@ export default {
             if(this.tab == this.curTab){
                 this.getDefaultPage();
             }
-        }
+        },
+        /*category() {
+            this.type = this.category * 100 + 1;
+        }*/
     },
     data() {
         return {  
@@ -211,6 +272,8 @@ export default {
             color: 'success',
             
             height: 300,
+
+            category: -1,
         }
     },
     created(){
@@ -222,13 +285,18 @@ export default {
     },
     
     methods: {
+        changeCategory(){
+            this.type = this.category * 100 + 1;
+        },
+        changeForm(flag){
+            this.$router.app.$store.commit('setChange', flag);
+        },
         clickImg(){
             $("#file").click();
         },
         changeImg(e){	
             var frm = new FormData();
             frm.append("file", document.getElementById("file").files[0]);
-            console.dir(document.getElementById("file").files[0])
             
             axios.post('http://i3a101.p.ssafy.io:8080/api/v1/file/upload', frm, {
                 headers: {
@@ -238,6 +306,7 @@ export default {
                 }
             }).then(({data}) => {
                 this.thumbnailUrl = data.result;
+                this.changeForm(true);
             })
             .catch((error) => {
                 console.dir(error)
@@ -276,12 +345,16 @@ export default {
         getDefaultPage(){
             http.axios.get(`/api/v1/lectures/${this.lectureId}`).then(({data}) => {
                 if(data.msg == 'success') {
-                    console.dir(data)
                     this.title = data.result.title;
                     this.thumbnailUrl = data.result.thumbnailUrl;                    
                     this.type = data.result.type;
                     if(data.result.tagName != null) {
                         this.tags = data.result.tagName.split(',')
+                    }
+                    if(this.type < 100 && this.type > 0){
+                        this.category = 0;
+                    }else if(this.type > 100){
+                        this.category = 1;
                     }
                     this.commonId = data.result.commonId;
                 }
@@ -299,6 +372,7 @@ export default {
                 this.snackbar = true;
                 this.msg = '저장되었습니다.';
                 this.color = "success"
+                this.changeForm(false);
             })
         }
         

@@ -70,16 +70,16 @@ public class AccountController {
 					result.result = "이미 탈퇴한 계정입니다.";
 					response = new ResponseEntity<>(result, HttpStatus.OK);
 				} else {
-//					LoginResponse loginResponse = new LoginResponse();
-//					loginResponse.setToken(jwtTokenProvider.createToken(String.valueOf(user.getUserId()),
-//							userAuthDetailService.getRoles(user.getUserId())));
-//					loginResponse.setUserId(user.getUserId());
-//					loginResponse.setNickname(user.getNickname());
-//					loginResponse.setProfile(user.getNickname());
+					LoginResponse loginResponse = new LoginResponse();
+					loginResponse.setToken(jwtTokenProvider.createToken(String.valueOf(user.getUserId()),
+							userAuthDetailService.getRoles(user.getUserId())));
+					loginResponse.setUserId(user.getUserId());
+					loginResponse.setNickname(user.getNickname());
+					loginResponse.setProfile(user.getProfile());
 					result.msg = "success";
-//					result.result = loginResponse;
-					result.result = jwtTokenProvider.createToken(String.valueOf(user.getUserId()),
-							userAuthDetailService.getRoles(user.getUserId()));
+					result.result = loginResponse;
+//					result.result = jwtTokenProvider.createToken(String.valueOf(user.getUserId()),
+//							userAuthDetailService.getRoles(user.getUserId()));
 					response = new ResponseEntity<>(result, HttpStatus.OK);
 				}
 			}else {

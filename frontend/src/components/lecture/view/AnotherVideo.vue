@@ -10,6 +10,7 @@
                             tile
                         >                        
                             <v-img 
+                                v-if="item.thumbnailUrl"
                                 :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                                 aspect-ratio="1.7"
                                 :ref="'img'+i"
@@ -127,10 +128,8 @@
             },
 
             getList() {
-                console.dir(this.subId)
                 http.axios.get(`/api/v1/lectures/sub/history/${this.subId}`).then(({data}) => {
                     this.items = data.result;
-                    console.dir(data)
                 })
             }
         }

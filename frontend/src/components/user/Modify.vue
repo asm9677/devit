@@ -5,11 +5,11 @@
 
             <v-layout wrap="wrap">
                 <v-flex
-                    xs12="xs12"
-                    sm12="sm12"
-                    md9="md9"
-                    lg9="lg9"
-                    xl9="xl9"
+                    xs12
+                    sm12
+                    md9
+                    lg8
+                    xl6
                     style="margin:0 auto;">
                     <h1
                         class="primary--text"
@@ -193,7 +193,7 @@
             changeImg(e) {
                 var frm = new FormData();
                 frm.append("file", document.getElementById("file").files[0]);
-
+                this.$router.app.$store.commit('startLoading');
                 axios
                     .post('http://i3a101.p.ssafy.io:8080/api/v1/file/upload', frm, {
                         headers: {
@@ -220,8 +220,9 @@
                     })
                     .catch((error) => {
                         console.dir(error)
+                    }).finally(() => {
+                        this.$router.app.$store.commit('endLoading');
                     })
-                    . finally(() => {})
                 this.$refs.file.value = ''
             },
             deleteImg() {

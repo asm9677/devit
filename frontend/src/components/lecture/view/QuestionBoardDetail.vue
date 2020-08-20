@@ -11,6 +11,7 @@
                 <v-list-item>
                     <v-list-item-avatar size="30" style="margin-right:10px;">
                             <v-img 
+                                v-if="item.profile"
                                 :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
                             ></v-img>
                     </v-list-item-avatar >
@@ -77,6 +78,7 @@
                     <v-list-item  :key="`${i}_reply`" three-line v-if="editReplyIdx != i">
                         <v-list-item-avatar size="30" style="margin-right:10px;">
                             <v-img 
+                                v-if="replyItem.profile"
                                 :src="'http://i3a101.p.ssafy.io/images/' + replyItem.profile"
                             ></v-img>
                         </v-list-item-avatar >
@@ -150,11 +152,9 @@ export default {
         }
     },
     created(){
-        console.dir('created')
         this.initBoard()       
     },
     mounted() {
-        console.dir('mounted')
         this.detailBoardResize()
         window.addEventListener('resize', this.detailBoardResize)
     },
@@ -187,11 +187,9 @@ export default {
         },
         initBoard(){
             http.axios.get(`/api/v1/board/${this.boardId}`).then(({data}) => {
-                console.dir(data.result)
                 this.item = data.result
             })
             http.axios.get(`/api/v1/reply/${this.boardId}`).then(({data}) => {
-                console.dir(data.result)
                 this.reply = data.result
             }) 
         },

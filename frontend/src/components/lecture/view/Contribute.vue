@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="dialog" max-width="768px" hide-overlay persistent :dark="darkOption">       
+    <v-dialog v-model="dialog" max-width="768px" persistent :dark="darkOption">       
         <v-tabs v-model="tabs" icons-and-text grow hide-slider color="success" :dark="darkOption">
             <v-tab>
                 <span>영상</span>
@@ -189,6 +189,7 @@ import http from "@/util/http_common.js";
 import axios from "axios";
 import Editor from "@/components/common/Editor.vue"
 import parse from "@/lib/markdown/ParseMd.js";
+import convertHTML from "@/lib/markdown/ConvertHTML.js";
 
 export default {
     components: {
@@ -227,6 +228,7 @@ export default {
     },
     methods: {
         parse,
+        convertHTML,        
         initPreview() {
             this.preview=true;
             $('#videoFrame2').html(
@@ -274,10 +276,8 @@ export default {
                     var key = setInterval(() => {
                         if(myPlayer.duration()){
                             setPlayTime(myPlayer.duration())
-                            console.dir(myPlayer.duration())
                             clearInterval(key);
                         }else{
-                            console.dir('zz')
                         }
                     }, 100)
                 });
@@ -318,15 +318,13 @@ export default {
         },
 
         requestWiki(){
-            console.dir
             http.axios.post('/api/v1/lectures/sub/history', {
                 "lectureId": this.lectureId,
                 "subId": this.subId,
                 "reqType": "wiki",
-                "wikiContent": this.content,
+                "wikiContent": this.convertHTML(this.parse(this.content)),
                 "wikiContentHtml": this.content,
             }).then(({data}) => {
-                console.dir(data)
                 this.$emit('closeDialog');
                 this.snackbar = true;
                 this.msg = '정상적으로 요청되었습니다.';

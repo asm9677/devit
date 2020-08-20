@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Main from '@/components/common/Main.vue'
 import Join from '@/components/user/Join.vue'
+import FindPassword from '@/components/user/FindPassword.vue'
+import ChangedPassword from '@/components/user/ChangedPassword.vue'
 import UserModify from '@/components/user/Modify.vue'
 import EmailCertify from '@/components/user/EmailCertify.vue'
 
@@ -9,6 +11,7 @@ import Board from '@/components/board/Board.vue'
 import BoardDetail from '@/components/board/BoardDetail.vue'
 import BoardEdit from '@/components/board/BoardEdit.vue'
 import TempBoard from "@/components/board/TempBoard.vue";
+import InvalidBoard from '@/components/board/InvalidBoard.vue'
 
 import LectureList from '@/components/lecture/view/LectureList.vue'
 import LectureManagement from '@/components/lecture/manager/LectureManagement.vue'
@@ -18,12 +21,9 @@ import LecturePlayer from '@/components/lecture/view/LecturePlayer.vue'
 
 import SearchList from '@/components/lecture/view/SearchList.vue'
 
-import MyBoard from '@/components/myactivity/MyBoard.vue'
-import MyLike from '@/components/myactivity/MyLike.vue'
-import MyLikeLecture from '@/components/myactivity/MyLikeLecture.vue'
-import MyLikeVideo from '@/components/myactivity/MyLikeVideo.vue'
-import MyMngLecture from '@/components/myactivity/MyMngLecture.vue'
-import MyReqList from '@/components/myactivity/MyReqList.vue'
+import MyPage from '@/components/mypage/MyPageManagement.vue'
+
+
 
 
 Vue.use(VueRouter)
@@ -39,6 +39,16 @@ const routes = [
     path: '/join',
     name: 'Join',
     component: Join
+  },  
+  {
+    path: '/findpw',
+    name: 'FindPassword',
+    component: FindPassword
+  },
+  {
+    path: '/changedpw',
+    name: 'ChangedPassword',
+    component: ChangedPassword
   },
   {
     path: '/user/modify',
@@ -64,6 +74,11 @@ const routes = [
     path: '/board/edit',
     name: 'BoardEdit',
     component: BoardEdit
+  },
+  {
+    path: '/board/invalid',
+    name: 'InvalidBoard',
+    component: InvalidBoard
   },
   {
     path: '/lecture',
@@ -98,41 +113,11 @@ const routes = [
     name: 'LecturePlayer',
     component: LecturePlayer
   },
-
+ 
   {
-    path: '/myboard',
-    name: 'MyBoard',
-    component: MyBoard
-  },
-
-  {
-    path: '/mylike',
-    name: 'MyLike',
-    component: MyLike
-  },
-
-  {
-    path: '/mylike/lecture',
-    name: 'MyLikeLecture',
-    component: MyLikeLecture
-  },
-
-  {
-    path: '/mylike/video',
-    name: 'MyLikeVideo',
-    component: MyLikeVideo
-  },
-
-  {
-    path: '/mymnglecture',
-    name: 'MyMngLecture',
-    component: MyMngLecture
-  },
-
-  {
-    path: '/myreqlist',
-    name: 'MyReqList',
-    component: MyReqList
+    path: '/mypage/:tabName',
+    name: 'MyPage',
+    component: MyPage
   },
 ]
 

@@ -72,6 +72,9 @@
                     <v-btn text="text" v-bind="attrs" color="success" @click="snackbar = false">닫기</v-btn>
                 </template>
             </v-snackbar>
+            <v-snackbar v-model="errorSnackbar" timeout="1500" color="error">
+                {{errorMsg}}
+            </v-snackbar>
         </v-container>
     </div>
 </template>
@@ -81,6 +84,7 @@
     import store from "@/store/index.js" 
     import Editor from "@/components/common/Editor.vue"
     import parse from "@/lib/markdown/ParseMd.js";
+    import convertHTML from "@/lib/markdown/ConvertHTML.js";
 
     export default {
         components: {
@@ -119,6 +123,8 @@
                 //boardType: '0',
                 snackbar: false,
                 text: "",
+                errorSnackbar: false,
+                errorMsg:"",
                 content:""
             }
         },
@@ -141,7 +147,7 @@
                         this.boardId = data.result.boardId,
                         this.boardTitle = data.result.boardTitle,
                         //this.boardContent = data.result.boardContent,         
-                        this.content = data.result.boardContent,                        
+                        this.content = data.result.boardContentHtml,                        
                         this.boardType = this.boardtypeitems[data.result.boardType-1];
                         // this.boardType = data.result.boardType,
                         
@@ -160,13 +166,13 @@
         },
         methods: {
             parse,
+            convertHTML,
             saveTemp() {
                 var date = new Date();
                 var jsonData = {
                     boardTitle: this.boardTitle,
                     //boardContent: this.boardContent,
                     boardContent: this.content,
-                    boardContentHtml: this.content,
                     boardType: this.boardType.type,
                     createDate: date
                 };
@@ -178,6 +184,7 @@
                 }
                 jsonArray.push(jsonData);
                 localStorage.setItem(store.state.email, JSON.stringify(jsonArray));
+                this.$router.app.$store.commit('setChange', false);    
                 this.text = "임시저장 되었습니다."
                 this.snackbar = true;
             },
@@ -190,7 +197,7 @@
                         .post("/api/v1/board", {
                             boardTitle: this.boardTitle,
                             //boardContent: this.boardContent,
-                            boardContent: this.content,
+                            boardContent: this.convertHTML(this.parse(this.content)),
                             boardContentHtml: this.content,
                             boardType: this.boardType.type,
                             boardCreated: "",
@@ -198,7 +205,15 @@
                             boardModified: ""
                         })
                         .then(({data}) => {
-                            this
+
+                            if(data.msg == "noauth"){
+
+                                this.errorMsg = '글쓰기 권한이 없습니다.';
+                                this.errorSnackbar = true;
+
+                            }else{
+                                this.$router.app.$store.commit('setChange', false);    
+                                this
                                 .$router
                                 .push({
                                     name: 'BoardDetail',
@@ -211,9 +226,7 @@
                                         'boardId': data.result, //data.boardId
                                     }
                                 });
-                            
-                            
-
+                            }                            
                         })
                         .catch((error) => {
                             console.dir(error)
@@ -227,26 +240,33 @@
                             boardId: this.$route.query.boardId,
                             boardTitle: this.boardTitle,
                             //boardContent: this.boardContent,
-                            boardContent: this.content,
+                            boardContent: this.convertHTML(this.parse(this.content)),
                             boardContentHtml: this.content,
                             boardType: this.boardType.type,
                             //boardCreated: "",
                             boardCount: "",
                             boardModified: ""
                         })
-                        .then(({data}) => {                          
-                            this
-                                .$router
-                                .push({path:'/board/detail', 
-                                    params:{
-                                        "showMsg": true,
-                                        "msgText": "수정이 완료되었습니다."
-                                        },
-                                        query:{
-                                    "boardtype": this.boardType.type,
-                                    "boardId": data.result,/*data.boardId*/
-                                }});
+                        .then(({data}) => {   
+                            if(data.msg == "noauth"){
 
+                                this.errorMsg = '수정 권한이 없습니다.';
+                                this.errorSnackbar = true;
+                                
+                            }else{                       
+                                this.$router.app.$store.commit('setChange', false);    
+                                this
+                                    .$router
+                                    .push({path:'/board/detail', 
+                                        params:{
+                                            "showMsg": true,
+                                            "msgText": "수정이 완료되었습니다."
+                                            },
+                                            query:{
+                                        "boardtype": this.boardType.type,
+                                        "boardId": data.result,/*data.boardId*/
+                                    }});
+                            }
                         })
                         .catch((error) => {
                             console.dir(error)

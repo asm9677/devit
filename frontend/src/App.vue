@@ -1,5 +1,5 @@
 <template>
-  <v-app >
+  <v-app id="frame">
     <Header></Header>
     <Navigation ></Navigation>
     <Content></Content>
@@ -26,7 +26,9 @@ export default {
   },
 
   created() {
-      console.dir(localStorage.getItem('autoLogin'))
+      document.addEventListener('beforeunload', () =>{
+          alert('zz')
+      })
   },
   
   methods: {
@@ -96,13 +98,13 @@ export default {
     pre {
         font-family: "Menlo", "DejaVu Sans Mono", "Liberation Mono", "Consolas", "Ubuntu Mono", "Courier New", "andale mono", "lucida console", monospace;
         display: block;
-        padding: 18px 12px 0px 12px;
+        padding: 5px 12px 5px 12px;
         margin: 8px 0px ;
         font-size: 13px;
         word-break: break-all;
         word-wrap: break-word;
         color: #2e2e2e;
-        background-color: #e1e1e1;
+        background-color: #FAFAFA;
         border: 1px solid #e5e5e5;
         border-radius: 2px;
     }
@@ -135,4 +137,25 @@ export default {
         z-index: inherit;
         box-shadow: 0px 11px 15px -7px rgba(0, 0, 0, 0.2), 0px 24px 38px 3px rgba(0, 0, 0, 0.14), 0px 9px 46px 8px rgba(0, 0, 0, 0.12);
     }
+
+    iframe {
+        width:100%;
+        max-width:560px;        
+        height:315px; 
+    }
+
+    #like .v-overlay__content {     
+        height:100% !important;
+        width:100% !important;
+        position: relative;
+    }
+    /* #frame {
+        background-color: #FAFAFA;    
+    }
+
+    .v-list, .v-card {
+        background-color: #FAFAFA;    
+    } */
+
+    
 </style>

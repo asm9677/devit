@@ -241,6 +241,10 @@ public class LectureServiceImpl implements LectureService {
 			throw new Exception("로그인이 필요합니다");
 		}
 		for (LectureAuthRequest auth : auths) {
+			if("Owner".equals(auth.getLectureRole())) { //Owner 권한 위임 시 lecture.user_id 변경
+				lectureRepository.changeLectureOwner(auth);
+			}
+			
 			if (auth.getAuthId() == 0) { // 서버에 등록되어있지 않은 사람
 				lectureRepository.insertLectureAuth(auth);
 			} else { // 서버에 등록되어있는 사람
@@ -373,4 +377,34 @@ public class LectureServiceImpl implements LectureService {
 		startPage = (startPage - 1) * itemsperpage;
 		return lectureRepository.myReqList(user.getUserId(), startPage, itemsperpage);
 	};
+	
+
+	// 최근 좋아요 가장 많이 받은 프로젝트 가져오기
+	@Override
+	public List<LecturesResponse> bestLectureList() throws Exception {
+		
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			user = new UserAuthDetails();
+			user.setUserId(0);
+		}
+		return lectureRepository.bestLectureList(user.getUserId());
+	}
+
+	// 최근 좋아요 가장 많이 받은 동영상 가져오기
+	@Override
+	public List<TheOhterSubLectureResponse> bestVideoList() throws Exception {
+		
+		UserAuthDetails user = null;
+		try {
+			user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		} catch (Exception e) {
+			user = new UserAuthDetails();
+			user.setUserId(0);
+		}
+		return lectureRepository.bestVideoList(user.getUserId());
+	}
+		
 }

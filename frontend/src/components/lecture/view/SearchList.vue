@@ -19,6 +19,7 @@
                                                     size="100%"
                                                     tile>
                                                     <v-img 
+                                                        v-if="item.thumbnailUrl"
                                                         :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                                                         aspect-ratio="1.7"
                                                         :ref="'img'+i"
@@ -72,9 +73,9 @@
                                                         size=20
                                                     >
                                                         <v-img 
-                                                                :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
-                                                                
-                                                            ></v-img>
+                                                            v-if="item.profile"
+                                                            :src="'http://i3a101.p.ssafy.io/images/' + item.profile"                                                                
+                                                        ></v-img>
                                                         </v-avatar>
                                                     <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
                                             </v-row>
@@ -94,6 +95,7 @@
                                                     size="100%"
                                                     tile>
                                                     <v-img 
+                                                        v-if="item.thumbnailUrl"
                                                         :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                                                         aspect-ratio="1.7"
                                                         :ref="'img'+i"
@@ -147,9 +149,9 @@
                                                         size=20
                                                     >
                                                         <v-img 
-                                                                :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
-                                                                
-                                                            ></v-img>
+                                                            v-if="item.profile"
+                                                            :src="'http://i3a101.p.ssafy.io/images/' + item.profile"                                                                
+                                                        ></v-img>
                                                         </v-avatar>
                                                     <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
                                             </v-row>
@@ -234,7 +236,7 @@ export default {
             wiki:[],
             option: true,
             keyword: [],
-            height: 20,
+            height: 0,
             page: 1,
             tags: [],
             scrollPos:0,
@@ -245,7 +247,6 @@ export default {
         }
     },
     created(){
-        console.dir('hello')
         this.keyword = this.$route.query.keyword;   
         if(typeof this.keyword == 'string') {
             this.keyword = [this.keyword]
@@ -256,6 +257,7 @@ export default {
         this.wikiSearch();
     },
     mounted() {
+        setTimeout(this.handleResize, 100);
         window.addEventListener('resize', this.handleResize)
         this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
         if(this.$refs.img0){
@@ -268,10 +270,10 @@ export default {
         document.removeEventListener('resize', this.handleResize);
     },
     methods: {
-        handleResize() {
+        handleResize() {            
             if(this.$refs.main && this.$refs.left)  
                 this.option = this.$refs.main.clientWidth != this.$refs.left.clientWidth;
-            if(this.$refs.img0){
+            if(this.$refs.img0[0]){
                 this.height = this.$refs.img0[0].$el.offsetHeight - this.$refs.content0[0].$el.offsetHeight-25
                 if(this.height < 0)
                     this.height = 0;
@@ -315,7 +317,6 @@ export default {
             }
             http.axios.get(request).then(({data}) => {
                 this.wiki = [];
-                console.dir(data)
                 if(data.result[0]) {
                     this.wiki = data.result.slice(0,5);
                     this.totalWiki = data.result[0].totalCount;

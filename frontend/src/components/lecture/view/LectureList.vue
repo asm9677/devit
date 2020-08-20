@@ -1,12 +1,16 @@
 <template>
   <div style="margin:50px">
       
+        <div v-if="items.length > 0">
     <v-layout row wrap>
       <v-flex v-for="(item,i) in items" :key="`4${i}`" xs12 sm6 md4 lg3 xl2 >        
             <v-card tile flat style="margin-left:10px; margin-top:20px;cursor:pointer;">
                 <v-img 
+                    v-if="item.thumbnailUrl"
                     :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
                     lazy-src="@/assets/images/empty.png"
+                    position="left center"
+                    contain
                     aspect-ratio="1.77"
                     @click="move(`/lecture/detail/${item.lectureId}`)"
                 >
@@ -25,8 +29,8 @@
                 <!-- <v-card-actions> -->
                                     <v-list>
                                             <div @click="move(`/lecture/detail/${item.lectureId}`)">
-                                            <v-list-item-title>
-                                                <h3>{{item.title}}</h3>
+                                            <v-list-item-title style="font-size: 1.17em; font-weight: bold;">
+                                                {{item.title}}
                                             </v-list-item-title>
                                             <v-list-item-subtitle>
                                                 조회수 {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}
@@ -57,6 +61,7 @@
                                                 size=20
                                             >
                                                 <v-img 
+                                                    v-if="item.profile"
                                                     :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
                                                 ></v-img>
                                             </v-avatar>
@@ -67,6 +72,21 @@
             </v-card>            
       </v-flex>
     </v-layout>
+      </div>
+        <div v-else>
+            <v-container fluid style="width:100%;">         
+                <v-row>
+                    <v-col cols="12">
+                        <v-row align="start" justify="center">                                    
+                            <v-icon style="font-size:150px; color:rgba(0, 0, 0, 0.54); margin:30px 0 20px 0"> mdi-emoticon-cry-outline </v-icon>                               
+                        </v-row>
+                        <v-row align="start" justify="center">       
+                            <div style="font-size:20px; margin-bottom:20px;"> 프로젝트가 존재하지 않습니다 :( </div>    
+                        </v-row>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </div>
   </div>
 </template>
 
@@ -87,22 +107,7 @@ export default {
     },
     filters: {
         convertView(num) {
-            if(num < 1000){
-                return num + '회'
-            }
-
-            if(num >= 100000000){
-                num /= 100000000;
-                return parseFloat(num).toFixed(2) + '억회'
-            }
-            if(num >= 10000){
-                num /= 10000;
-                return parseFloat(num).toFixed(0) + '만회'
-            }
-            if(num >= 1000){
-                num /= 1000;
-                return parseFloat(num).toFixed(1) + '천회'
-            }
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '회';
         },
         convertLike(num){
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -113,7 +118,6 @@ export default {
         http.axios.get(`/api/v1/lectures?page=${this.page}&type=${this.level}`).then(({data}) => {
             this.page++;
             this.items = data.result;
-            console.dir(data.result)
         }).finally(() => {
             this.$router.app.$store.commit('endLoading')
         })
@@ -152,6 +156,11 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+    .v-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 3px 8px 0 rgba(0,0,0,.08), 0 0 1px 0 rgba(0,0,0,.44);
+        cursor:pointer;
+    }
 
 </style>
