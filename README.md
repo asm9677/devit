@@ -144,7 +144,7 @@ Notion으로 오세요! [DevIT Up! - 참여형 강의 플랫폼](https://www.not
 
 ## Wireframe
 
-<img src="./image/DevIT_Wireframe_Final_quarterhalf.png">
+<img src="./image/DevIT_Wireframe_Final.png">
 
 <br>
 
