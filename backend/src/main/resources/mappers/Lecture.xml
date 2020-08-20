@@ -416,9 +416,8 @@
 	<!-- 강의, 위키 리퀘스트 날리기 -->
 	<insert id="insertSubHistory" useGeneratedKeys="true" keyProperty="subHisId" parameterType="LectureSubHistoryRequest" >
 		INSERT INTO lecture_sub_history(lecture_id, sub_id, user_id, modifier, play_time, player_url, wiki_content, wiki_content_html, req_type, title, thumbnail_url)
-		VALUES(#{lectureId}, #{subId}, #{userId}, #{userId}, #{playTime}, #{playerUrl}, #{wikiContent}, #{wikiContentHtml}, #{reqType}, #{title}, #{thumbnailUrl})
+		VALUES(#{lectureId}, #{subId}, #{userId}, #{userId}, concat(SUBSTRING_INDEX(#{playTime}, ':', 1),':', IF(SUBSTRING_INDEX(#{playTime}, ':', -1)&lt;10, concat('0',SUBSTRING_INDEX(#{playTime}, ':', -1)), SUBSTRING_INDEX(#{playTime}, ':', -1)) ), #{playerUrl}, #{wikiContent}, #{wikiContentHtml}, #{reqType}, #{title}, #{thumbnailUrl})
 	</insert>
-	
 	<!-- 권한자에게 리퀘스트 알림 날리기 -->
 	<insert id="uploadNoticeAuth">
 		INSERT INTO notice(
