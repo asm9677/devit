@@ -7,14 +7,16 @@ public class BoardUpdateRequest {
 	private long boardId;
 	private String boardTitle;
 	private String boardContent;
+	private String boardContentHtml;
 	private long boardType;
 	private long boardCount; // 조회수
 
-	public BoardUpdateRequest(long boardId, String boardTitle, String boardContent, long boardType, long boardCount) {
+	public BoardUpdateRequest(long boardId, String boardTitle, String boardContent, String boardContentHtml, long boardType, long boardCount) {
 		super();
 		this.boardId = boardId;
 		this.boardTitle = boardTitle;
 		this.boardContent = boardContent;
+		this.boardContentHtml = boardContentHtml;
 		this.boardType = boardType;
 		this.boardCount = boardCount;
 	}
@@ -45,6 +47,14 @@ public class BoardUpdateRequest {
 
 	public void setBoardContent(String boardContent) {
 		this.boardContent = boardContent;
+	}
+
+	public String getBoardContentHtml() {
+		return boardContentHtml;
+	}
+
+	public void setBoardContentHtml(String boardContentHtml) {
+		this.boardContentHtml = boardContentHtml;
 	}
 
 	public long getBoardType() {

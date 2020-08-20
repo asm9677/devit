@@ -13,20 +13,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.devit.model.CommonResponse;
-import com.ssafy.devit.model.board.Board;
-import com.ssafy.devit.model.board.BoardResponse;
+import com.ssafy.devit.model.lecture.BoardResponse;
+import com.ssafy.devit.model.request.BoardRequest;
 import com.ssafy.devit.model.request.BoardUpdateRequest;
 import com.ssafy.devit.model.request.BoardUploadRequest;
+import com.ssafy.devit.model.request.BoardWithLectureRequest;
 import com.ssafy.devit.model.user.User;
+import com.ssafy.devit.model.user.UserAuthDetails;
+import com.ssafy.devit.model.user.UserResponse;
 import com.ssafy.devit.service.BoardService;
 import com.ssafy.devit.service.UserService;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
@@ -52,25 +57,43 @@ public class BoardController {
 	@ApiOperation(value = "게시물 등록")
 	public ResponseEntity<CommonResponse> upload(@RequestBody BoardUploadRequest request) throws Exception{
 		log.info(">> boardUpLoad <<");
-		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		final CommonResponse result = new CommonResponse();
 		ResponseEntity<CommonResponse> response = null;
-		Board board = null;
-		board = new Board(user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardType(), request.getBoardCount());
 		try {
-			boardService.upload(board);
-			 // bid에 해당하는 게시글을 조회한다.
-			result.msg = "success";
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			BoardRequest board = null;
+			board = new BoardRequest(user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardContentHtml(), request.getBoardType(), request.getBoardCount());
+			
+			String isAdmin = "Y";
+			if(board.getBoardType() == 1) { //공지사항에 글 작성할 경우 권한 체크
+				isAdmin = userService.getUserIsAdmin(user.getUserId());
+			}
+			if("N".equals(isAdmin)) {
+				result.msg = "noauth";
+				result.result = "글쓰기 권한이 없습니다.";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			}else {
+				
+				boardService.upload(board);
+				// bid에 해당하는 게시글을 조회한다.
+				if(board.getBoardType() == 1) { // 공지사항 알림
+					boardService.uploadNotice(board.getBoardId());
+				}
+				result.msg = "success";
+				result.result = board.getBoardId();
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			}
+		
+
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "권한 오류";
+			log.info(">> boardUpLoad Error <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
 	
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
 	@GetMapping("board/{bid}")
 	@ApiOperation(value = "게시글 상세 조회")
 	public ResponseEntity<CommonResponse> info(@PathVariable final long bid) throws Exception {
@@ -78,24 +101,26 @@ public class BoardController {
 		// PathVariable로 bid를 받아서 해당 게시글을 조회한다.
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
-		Board board = null;
 		BoardResponse boardResponse = null;
 		try {
-			//board = boardService.info(bid);
+			
+			
+
 			boardResponse = boardService.info(bid);
+			
 			if(boardResponse != null) {
 				result.msg = "success";
-				System.out.println(boardResponse.getBoardTitle());
 				result.result = boardResponse;
 				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 			} else {
 				result.msg = "not found";
-				System.out.println("Not Found");
 				response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "권한 오류";
+			log.info(">> boardinfo Error <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} // bid에 해당하는 게시글을 조회한다.
 		return response;
 	}
@@ -110,12 +135,26 @@ public class BoardController {
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		try {
-			result.msg = "success";
-			boardService.delete(bid);
-			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+
+			UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			String isAdmin = "Y";
+			if(boardService.getBoardTypeById(bid) == 1) { //공지사항에 글 작성할 경우 권한 체크
+				isAdmin = userService.getUserIsAdmin(user.getUserId());
+			}
+			if("N".equals(isAdmin)) {
+				result.msg = "noauth";
+				result.result = "삭제 권한이 없습니다.";
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			}else {
+				result.msg = "success";
+				boardService.delete(bid);
+				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "오류";
+			log.info(">> delete Error <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}
@@ -132,43 +171,114 @@ public class BoardController {
 		BoardResponse boardResponse = null;
 		try {
 			boardResponse = boardService.info(request.getBoardId());
+			
 			if(boardResponse != null) {
+				
 				boardResponse.setBoardTitle(request.getBoardTitle());
 				boardResponse.setBoardContent(request.getBoardContent());
+				boardResponse.setBoardContentHtml(request.getBoardContentHtml());
 				boardResponse.setBoardType(request.getBoardType());
 				boardResponse.setBoardCount(request.getBoardCount());
-				boardService.update(boardResponse, request.getBoardId());
-				result.msg = "Success";
-				result.result = request.getBoardId();
-				response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+				
+				UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				String isAdmin = "Y";
+				if(boardResponse.getBoardType() == 1) { //공지사항에 글 작성할 경우 권한 체크
+					isAdmin = userService.getUserIsAdmin(user.getUserId());
+				}
+				if("N".equals(isAdmin)) {
+					result.msg = "noauth";
+					result.result = "수정 권한이 없습니다.";
+					response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+				}else {
+					boardService.update(boardResponse, request.getBoardId());
+					result.msg = "Success";
+					result.result = request.getBoardId();
+					response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+				}
 			} else {
 				result.msg = "not found";
-				System.out.println("Not Found");
 				response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			result.msg = "fail";
+			result.result = e.getMessage().toString();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.BAD_REQUEST);
 			e.printStackTrace();
 		}
 		return response;
 	}
 	
-	@ApiImplicitParams({
-		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
-	@GetMapping("board/list/{type}")
+	@GetMapping("board/list")
 	@ApiOperation(value = "게시글 목록 조회")
-	public ResponseEntity<CommonResponse> listinfo(@PathVariable final long type) throws Exception {
+	public ResponseEntity<CommonResponse> listinfo(@RequestParam("page") int startPage,
+			@RequestParam("type") int type, @RequestParam("itemsperpage") int itemsperpage,
+			@ApiParam(value = "검색조건", required = false)@RequestParam("searchselect") String searchselect, 
+			@ApiParam(value = "검색할단어", required = false)@RequestParam("searchtxt") String searchtxt) throws Exception {
 		log.info(">> board list info <<");
 		// PathVariable로 type를 받아서 해당 게시글 목록을 조회한다.
 		ResponseEntity<CommonResponse> response = null;
 		final CommonResponse result = new CommonResponse();
 		try {
 			result.msg = "success";
-			result.result = boardService.listinfo(type);
+			result.result = boardService.listinfo(startPage, type, itemsperpage, searchselect, searchtxt);
 			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			result.msg = "fail";
+			result.result = "오류";
+			log.info(">> listinfo Error <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		}
+		return response;
+	}
+	
+	@ApiImplicitParams({
+		@ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header") })
+	@PostMapping("/board/lecture")
+	@ApiOperation(value = "강의 관련 질문 게시물 등록")
+	public ResponseEntity<CommonResponse> createBoardWithLecture(@RequestBody BoardWithLectureRequest request) throws Exception{
+		log.info(">> createBoardWithLecture <<");
+		
+		final CommonResponse result = new CommonResponse();
+		
+		ResponseEntity<CommonResponse> response = null;
+		
+		try {
+			UserAuthDetails user = (UserAuthDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			BoardWithLectureRequest boardWithLectureRequest = null;
+			
+//			boardWithLectureRequest = new BoardWithLectureRequest(request.getLectureId(), request.getSubId(), user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardType(), request.getBoardCount());
+			boardWithLectureRequest = new BoardWithLectureRequest(request.getLectureId(), request.getSubId(), user.getUserId(), request.getBoardTitle(), request.getBoardContent(), request.getBoardContentHtml());
+			
+			boardService.createBoardWithLecture(boardWithLectureRequest);
+			 // bid에 해당하는 게시글을 조회한다.
+			result.msg = "success";
+			result.result = boardWithLectureRequest.getBoardId();
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			result.result = "권한 오류";
+			log.info(">> createBoardWithLecture Error <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		}
+		return response;
+	}	
+	
+	@GetMapping("board/lecture")
+	@ApiOperation(value = "강의 관련 게시글 목록 조회")
+	public ResponseEntity<CommonResponse> lectureQnaList(@RequestParam("lectureId") long lectureId, @RequestParam("subId") long subId) throws Exception {
+		log.info(">> lecture qna list info <<");
+
+		ResponseEntity<CommonResponse> response = null;
+		final CommonResponse result = new CommonResponse();
+		try {
+			result.msg = "success";
+			result.result = boardService.lectureQnaList(lectureId, subId);
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
+		} catch (Exception e) {
+			result.msg = "fail";
+			result.result = "에러";
+			log.info(">> lectureQnaList Error <<");
+			response = new ResponseEntity<CommonResponse>(result, HttpStatus.OK);
 		}
 		return response;
 	}

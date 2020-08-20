@@ -4,35 +4,40 @@ import java.util.Date;
 
 public class LectureOneResponse {
 	private long lectureId;
+	private long userId;
+	private long commonId;
 	private String title;
 	private String content;
 	private String thumbnailUrl;
 	private String nickname;
+	private String profile;
 	private Date created;
+	private int type;
 	private int lectureCount;
 	private int viewCount;
 	private int likeCount;
 	private String tagName;
 	private boolean userLikeYn;
+	private boolean manageYn;
 
 	public LectureOneResponse() {
 
 	}
 
-	public LectureOneResponse(long lectureId, String title, String content, String thumbnailUrl, String nickname,
-			Date created, int lectureCount, int viewCount, int likeCount, String tagName, boolean userLikeYn) {
-		super();
-		this.lectureId = lectureId;
-		this.title = title;
-		this.content = content;
-		this.thumbnailUrl = thumbnailUrl;
-		this.nickname = nickname;
-		this.created = created;
-		this.lectureCount = lectureCount;
-		this.viewCount = viewCount;
-		this.likeCount = likeCount;
-		this.tagName = tagName;
-		this.userLikeYn = userLikeYn;
+	public boolean isManageYn() {
+		return manageYn;
+	}
+
+	public void setManageYn(boolean manageYn) {
+		this.manageYn = manageYn;
+	}
+
+	public String getProfile() {
+		return profile;
+	}
+
+	public void setProfile(String profile) {
+		this.profile = profile;
 	}
 
 	public long getLectureId() {
@@ -41,6 +46,22 @@ public class LectureOneResponse {
 
 	public void setLectureId(long lectureId) {
 		this.lectureId = lectureId;
+	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	public long getCommonId() {
+		return commonId;
+	}
+
+	public void setCommonId(long commonId) {
+		this.commonId = commonId;
 	}
 
 	public String getTitle() {
@@ -123,12 +144,21 @@ public class LectureOneResponse {
 		this.userLikeYn = userLikeYn;
 	}
 
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
 	@Override
 	public String toString() {
-		return "LectureOneResponse [lectureId=" + lectureId + ", title=" + title + ", content=" + content
-				+ ", thumbnailUrl=" + thumbnailUrl + ", nickname=" + nickname + ", created=" + created
-				+ ", lectureCount=" + lectureCount + ", viewCount=" + viewCount + ", likeCount=" + likeCount
-				+ ", tagName=" + tagName + ", userLikeYn=" + userLikeYn + "]";
+		return "LectureOneResponse [lectureId=" + lectureId + ", userId=" + userId + ", commonId=" + commonId
+				+ ", title=" + title + ", content=" + content + ", thumbnailUrl=" + thumbnailUrl + ", nickname="
+				+ nickname + ", created=" + created + ", type=" + type + ", lectureCount=" + lectureCount
+				+ ", viewCount=" + viewCount + ", likeCount=" + likeCount + ", tagName=" + tagName + ", userLikeYn="
+				+ userLikeYn + "]";
 	}
 
 }

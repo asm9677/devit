@@ -1,22 +1,36 @@
 <template>
   <div style="margin:50px">
       
+        <div v-if="items.length > 0">
     <v-layout row wrap>
       <v-flex v-for="(item,i) in items" :key="`4${i}`" xs12 sm6 md4 lg3 xl2 >        
             <v-card tile flat style="margin-left:10px; margin-top:20px;cursor:pointer;">
                 <v-img 
+                    v-if="item.thumbnailUrl"
                     :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
-                    :lazy-src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
-                    aspect-ratio="1.7"
+                    lazy-src="@/assets/images/empty.png"
+                    position="left center"
+                    contain
+                    aspect-ratio="1.77"
                     @click="move(`/lecture/detail/${item.lectureId}`)"
-                ></v-img>
+                >
+                    <template v-slot:placeholder>
+                        <v-row
+                        class="fill-height ma-0"
+                        align="center"
+                        justify="center"
+                        >
+                            <v-progress-circular indeterminate color="primary lighten-4"></v-progress-circular>
+                        </v-row>
+                    </template>
+                </v-img>
                 
                     
                 <!-- <v-card-actions> -->
                                     <v-list>
                                             <div @click="move(`/lecture/detail/${item.lectureId}`)">
-                                            <v-list-item-title>
-                                                <h3>{{item.title}}</h3>
+                                            <v-list-item-title style="font-size: 1.17em; font-weight: bold;">
+                                                {{item.title}}
                                             </v-list-item-title>
                                             <v-list-item-subtitle>
                                                 조회수 {{item.viewCount | convertView}}&nbsp;<v-icon size="16" :color="item.userLikeYn ? 'pink' : 'gray'">mdi-heart</v-icon>{{item.likeCount | convertLike}}
@@ -47,18 +61,32 @@
                                                 size=20
                                             >
                                                 <v-img 
-                                                    :src="'http://i3a101.p.ssafy.io/images/' + item.thumbnailUrl"
+                                                    v-if="item.profile"
+                                                    :src="'http://i3a101.p.ssafy.io/images/' + item.profile"
                                                 ></v-img>
                                             </v-avatar>
                                             <span style="margin-left:5px;font-size:12px">{{item.nickname}}</span>
 
                                     </v-list>   
-                <!-- </v-card-actions> -->
-                
-            </v-card>
-        
+                <!-- </v-card-actions> -->                
+            </v-card>            
       </v-flex>
     </v-layout>
+      </div>
+        <div v-else>
+            <v-container fluid style="width:100%;">         
+                <v-row>
+                    <v-col cols="12">
+                        <v-row align="start" justify="center">                                    
+                            <v-icon style="font-size:150px; color:rgba(0, 0, 0, 0.54); margin:30px 0 20px 0"> mdi-emoticon-cry-outline </v-icon>                               
+                        </v-row>
+                        <v-row align="start" justify="center">       
+                            <div style="font-size:20px; margin-bottom:20px;"> 프로젝트가 존재하지 않습니다 :( </div>    
+                        </v-row>
+                    </v-col>
+                </v-row>
+            </v-container>
+        </div>
   </div>
 </template>
 
@@ -74,39 +102,24 @@ export default {
             ],
             level: this.$route.query.level,
             page: 1,
-            loading: false,
+            offset: 0,
         }
     },
     filters: {
         convertView(num) {
-            if(num < 1000){
-                return num + '회'
-            }
-
-            if(num >= 100000000){
-                num /= 100000000;
-                return parseFloat(num).toFixed(2) + '억회'
-            }
-            if(num >= 10000){
-                num /= 10000;
-                return parseFloat(num).toFixed(0) + '만회'
-            }
-            if(num >= 1000){
-                num /= 1000;
-                return parseFloat(num).toFixed(1) + '천회'
-            }
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '회';
         },
         convertLike(num){
             return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         },
     },
     created(){        
-        this.loading = true;
+        this.$router.app.$store.commit('startLoading')
         http.axios.get(`/api/v1/lectures?page=${this.page}&type=${this.level}`).then(({data}) => {
             this.page++;
             this.items = data.result;
         }).finally(() => {
-            this.loading = false;
+            this.$router.app.$store.commit('endLoading')
         })
 
         document.addEventListener('scroll', this.handleScroll);
@@ -116,9 +129,14 @@ export default {
     },
     methods: {
         handleScroll(){
-            if($(document).scrollTop() + $(document)[0].scrollingElement.clientHeight + 100 >= $(document).height()){
-                if(!this.loading){
-                    this.loading = true;
+            if($(document).scrollTop() + $(document)[0].scrollingElement.clientHeight + 10 >= $(document).height()){
+                if(this.offset >= $(document).scrollTop()) {
+                    this.offset = $(document).scrollTop();
+                    return;
+                }
+                this.offset = $(document).scrollTop();
+                if(!this.$router.app.$store.state.loading){
+                    this.$router.app.$store.commit('startLoading', true)
                     http.axios.get(`/api/v1/lectures?page=${this.page}&type=${this.level}`)
                         .then(({data}) => {
                             this.page++;
@@ -126,23 +144,10 @@ export default {
                             for(let i in data.result)
                                 this.items.push(data.result[i]);
                         }).finally(() => {
-                            this.loading = false;
+                            this.$router.app.$store.commit('endLoading', false)
                         })
                 }
             }          
-        },
-        addItem(i){
-            this.items.push({
-                "lectureId": i,
-                "title": '다 같이 배우는 파이썬',
-                "thumbnailUrl": `https://picsum.photos/500/300?image=${i*5}`,
-                "nickname": "미용쓰기",
-                "lectureCount": 20,
-                "viewCount": 9900000,
-                "likeCount": 999,
-                "tagName": 'python,프로그래밍 언어,GUI',
-                "userLikeYn": i%3 == 0
-            })
         },
         move(url){            
             this.$router.push(url)
@@ -151,6 +156,11 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+    .v-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 3px 8px 0 rgba(0,0,0,.08), 0 0 1px 0 rgba(0,0,0,.44);
+        cursor:pointer;
+    }
 
 </style>

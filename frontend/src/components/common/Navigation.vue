@@ -17,7 +17,7 @@
         >
         <v-list-item>
             <v-list-item-icon>              
-                <v-icon @click="fixedNav">{{expandOnHover ? 'mdi-sort-variant' : 'mdi-menu'}}</v-icon>              
+                <v-icon @click="!$router.app.$store.state.smallMode ? fixedNav() : true">{{expandOnHover && !$router.app.$store.state.smallMode ? 'mdi-sort-variant' : 'mdi-menu'}}</v-icon>              
             </v-list-item-icon>
           </v-list-item>
           <v-list-group
@@ -26,11 +26,10 @@
             :v-model="item.active"
             :prepend-icon="item.icon"            
             no-action
-            color="white"
           >
             <template v-slot:activator>
               <v-list-item-content>
-                <v-list-item-title v-text="item.title" color="white"></v-list-item-title>
+                <v-list-item-title v-text="item.title"></v-list-item-title>
               </v-list-item-content>
             </template>
 
@@ -39,15 +38,25 @@
                 :key="subItem.title"
                 link
                 @click="changeCategory(subItem);" 
-              >
-                
+              >                
                 <v-list-item-content>
                   <v-list-item-title v-text="subItem.title"></v-list-item-title>
-                </v-list-item-content>
-                
+                </v-list-item-content>                
               </v-list-item>
-
           </v-list-group>
+          <v-list-item          
+                link
+                @click="changeCategory(myPage);" 
+                v-show="$router.app.$store.state.token"
+              >       
+                <v-list-item-icon>
+                  <v-icon>{{myPage.icon}}</v-icon>
+
+                </v-list-item-icon>         
+                <v-list-item-content>
+                  <v-list-item-title v-text="myPage.title"></v-list-item-title>
+                </v-list-item-content>                
+              </v-list-item>
         </v-list>
       <!-- </v-img> -->
       </div>
@@ -86,18 +95,24 @@ export default {
             ],
           },
           {
-            icon: 'mdi-account',
-            title: '나의 활동',
+            icon: 'mdi-book-open-page-variant',
+            title: '스터디',
             active: true,
             items: [
-              { title: '내가 쓴 글/댓글', active: false, path: '/' },
-              { title: '참여중인 프로젝트', active: false, path: '/' },
-              { title: '수강한 강의', active: false, path: '/' },
-              { title: '기여해본 프로젝트', active: false, path: '/' },
-              { title: '내가 좋아요한 강의', active: false, path: '/' },
+              { title: '프로그래밍', active: false, path: '/lecture?level=101' },
+              { title: '알고리즘', active: false, path: '/lecture?level=102' },
+              { title: '자격증', active: false, path: '/lecture?level=103' },
+              { title: '기타', active: false, path: '/lecture?level=104' },
             ],
-          },
-        ],        
+          },          
+        ],  
+        
+        myPage: {
+          icon: 'mdi-account',
+          title: '마이페이지',
+          active: true,
+          path: '/mypage/info'
+        },
         expandOnHover: true,
       }
   },
@@ -130,6 +145,17 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+  .v-application .primary--text {
+    color: #ffffff !important;
+    caret-color: #ffffff !important;
+  }
 
+  .v-list-item__title {
+    color:#FFFFFFBF;
+  }
+
+  .v-list-item__title:hover {
+    color:#FFFFFF !important;
+  }
 </style>

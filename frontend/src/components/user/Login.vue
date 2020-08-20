@@ -7,32 +7,31 @@
             <v-img src="@/assets/logo.png" max-width="250px" style="margin:0px auto"></v-img>
             <!--<v-card flat>-->
                 <v-form>
-                    <v-text-field prepend-icon="mdi-account" name="Email" label="Email" v-model="email"></v-text-field>
-                    <v-text-field prepend-icon="mdi-lock" name="Password" label="Password" type="password" v-model="password" @keydown.enter="login"></v-text-field>
-                    <v-checkbox label="자동 로그인" dense style="margin:0px"></v-checkbox>
+                    <v-text-field autofocus prepend-icon="mdi-account" name="Email" label="Email" v-model="email"></v-text-field>
+                    <v-text-field prepend-icon="mdi-lock" name="Password" label="Password" type="password" v-model="password" @keydown.enter="login"></v-text-field>                    
                     <v-card-actions>
                     <v-btn primary large block color="primary" @click="login" style="margin-bottom:18px">Login</v-btn>
                     </v-card-actions>                
+                    <v-checkbox label="자동 로그인" dense style="margin:0px" @change="autoLogin"></v-checkbox>
                 </v-form>
 
                 <div class="find_info">
                     <div class="add-option">
-                        <div class="wrap">
+                        <div class="wrap" style="margin-bottom:10px;">
                             <p>다른 서비스로 로그인</p>
-                            <a class="_kakao _serviceIcon" title="kakao" href="#" @click="forKakaoLogin"></a>
-                            <a class="_naver _serviceIcon" title="naver" href="#"></a>
-                            <a class="_github _serviceIcon" title="github" href="#"></a>
+                            <a class="_kakao _serviceIcon" title="kakao" href="#" @mouseover="switchButton" @click="forKakaoLogin"></a>
+                            <a class="_naver _serviceIcon" title="naver" href="#" @mouseover="switchButton" @click="forKakaoLogin"></a>
+                            <a class="_github _serviceIcon" title="github" href="#" @mouseover="switchButton" @click="forKakaoLogin"></a>
                         </div>
-                    </div>
-
-                    <a href="#">아이디 찾기</a>
-                    <span class="bar" aria-hidden="true">|</span>
-                    <a href="#">비밀번호 찾기</a>
-                    <span class="bar" aria-hidden="true">|</span>
-                    <a href="#" @click="moveJoin">회원가입</a>                 
+                        <a href="#" @click="findPW">비밀번호 찾기</a> <span class="bar" aria-hidden="true">|</span> <a href="#" @click="moveJoin">회원가입</a>     
+                    </div>            
                 </div>
+
                 <!-- hover underline 추가예정 -->
             <!--</v-card>-->
+            <v-snackbar v-model="errorSnackbar" timeout="1500" color="error">
+                {{errorMsg}}
+            </v-snackbar>
             </v-container>
         </v-flex>
         </v-layout>
@@ -52,53 +51,99 @@ export default {
         return {
             email: '',
             password: '',
+            errorMsg: "",
+            errorSnackbar: false,
         }
     },
     created(){
         eventBus.$on('socialLogin', (email, nickname, password) => {
+            this.$router.app.$store.commit('startLoading');
             http.axios.post('/api/v1/account/login', {
                 email: email,
                 password: password
-            }).then(({data}) => {                
-                store.commit('login', {token: data.result, email: email})
-                this.$emit('closeDialog');
-                location.reload(true);
-            }).catch((error) => {
-                console.log(error)
-                http.axios.post("/api/v1/account/signup", {
-                    nickname: nickname,
-                    password: password,
-                    email: email
-                }).then(() => {
-                    http.axios.post('/api/v1/account/login', {
-                        email: email,
-                        password: password
-                    }).then(({data}) => {
-                        store.commit('login', {token: data.result, email: email})      
-                        this.$emit('closeDialog');
-                        location.reload(true);
+            }).then(({data}) => {  
+                if(data.msg == 'fail') {
+                    http.axios.post("/api/v1/account/signup", {
+                        nickname: nickname,
+                        password: password,
+                        email: email
+                    }).then(() => {
+                        http.axios.post('/api/v1/account/login', {
+                            email: email,
+                            password: password
+                        }).then(({data}) => {
+                            if(data.msg=="fail"){
+                                this.errorMsg = `${email} 계정이 이미 사용중입니다.`;
+                                this.errorSnackbar = true;
+                                return;
+                            }
+                            store.commit('login', {token: data.result.token, email: email, profile: data.result.profile})
+                            this.$emit('closeDialog');
+                            location.reload(true);
+                        })
                     })
-                })
+                }else if(data.msg == 'success'){
+                    store.commit('login', {token: data.result.token, email: email, profile: data.result.profile})
+                    this.$emit('closeDialog');                
+                    location.reload(true);
+                }
+            }).catch((error) => {
+                console.log(error)                
             }).finally(() => {
+                this.$router.app.$store.commit('endLoading');
             })
         })
     },
     methods:{
-        forKakaoLogin(){
+        switchButton(e) {
+            var kakaoIcon = $('._kakao');            
+            var className = e.target.classList;
+            for(let i=0; i < e.target.classList.length; i++)
+                if(e.target.classList[i] != '_serviceIcon')
+                    className = e.target.classList[i];
+            
+            var targetIcon = $(`.${className}`);
+            if(kakaoIcon.selector != targetIcon.selector) {
+                kakaoIcon.addClass(className);
+                kakaoIcon.removeClass('_kakao');
+
+                targetIcon.addClass('_kakao');
+                targetIcon.removeClass(className);
+            }
+        },
+        forKakaoLogin(){            
             KaKaoLogin.loginWithKakao();
         },
         login(){
+            this.$router.app.$store.commit('startLoading');
             http.axios.post("/api/v1/account/login", {
                 email: this.email,
                 password: this.password
             }).then(({data}) => {
-                store.commit('login', {token: data.result, email: this.email});
+                if(data.msg=="fail"){
+
+                    this.errorMsg = data.result;
+                    this.errorSnackbar = true;
+                    return;
+                }
+
+                store.commit('login', {token: data.result.token, email: this.email, profile: data.result.profile})
                 this.$emit('closeDialog');
+
                 location.reload(true);
+            }).finally(() => {
+                this.$router.app.$store.commit('endLoading');
             })
+        },
+        autoLogin(e) {
+            localStorage.setItem('autoLogin', e.toString())
         },
         moveJoin(){
             this.$router.push('/join')
+            this.$emit('closeDialog');
+        },
+        findPW(){
+            this.$router.push('/findpw')
             this.$emit('closeDialog');
         },
     }
@@ -106,6 +151,10 @@ export default {
 </script>
 
 <style scoped>
+    a {
+        font-weight: 300;
+    }
+
     .find_info {
         font-size:14px;
         line-height:14px;

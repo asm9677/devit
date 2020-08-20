@@ -4,37 +4,37 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.devit.repository.UserRepository">
 	
-	<!-- 회원상세 -->
-	<select id="findUsers" resultType="UserResponse">
-		select user_id as userId, nickname, email from user
+	<!-- 사용자 등록  -->
+	<insert id="insertUser">
+		INSERT INTO user(email, nickname, password, email_confirm)
+		VALUES(#{email}, #{nickname}, #{password}, 'Y');
+		
+		SELECT @userId := max(user_id) FROM user;
+		
+		INSERT INTO user_role
+		VALUES(@userId, 'ROLE_USER')
+	</insert>
+	
+	<!-- 이메일 닉네임 체크  -->
+	<select id="checkValidEmailOrNickname" resultType="Integer">
+		select (select count(1) from user where upper(email) = upper(#{email}) OR upper(nickname) = upper(#{nickname})) as cnt
+		  from dual;
 	</select>
 	
 	<!-- 사용자 Email로 검색 -->
-	<select id="findUserByUserEmail" resultType="User">
-		select user_id as userId, nickname, email, password, active, created, deleted
-		from user
-		where email = #{email}
+	<select id="findUserByEmail" resultType="UserAuthDetails">
+		SELECT 
+		    u.user_id AS userId, nickname, email, password, profile
+		FROM user u
+		WHERE email = #{email};
 	</select>
 	
-	<!-- 사용자 user_id로 검색 -->
-	<select id="findUserByUserId" resultType="User">
-		select user_id as userId, nickname, email, password, active, created, deleted
+	<!-- 사용자 userId로 검색 -->
+	<select id="findUserByUserId" resultType="UserAuthDetails">
+		select user_id AS userId, nickname, email, password, profile
 		from user
 		where user_id = #{userId}
 	</select>
-	
-	<!-- 사용자 user_id로 검색 -->
-	<select id="findUserByNickname" resultType="User">
-		select user_id as userId, nickname, email, password, active, created, deleted
-		from user
-		where nickname = #{nickname}
-	</select>
-	
-	<!-- 사용자 등록  -->
-	<insert id="insertUser">
-		insert into user(email, nickname, password)
-		values(#{email}, #{nickname}, #{password})
-	</insert>
 	
 	<!-- 사용자 권한 검색 -->
 	<select id="findRoles" resultType="String">
@@ -43,6 +43,37 @@
 		where user_id = #{userId}
 	</select>
 	
+	<!-- 회원 아이디로 상세 정보 반환 -->
+	<select id="selectOneUserInfo" resultType="User">
+		select user_id as userId, nickname, email, active, created, deleted, email_confirm emailConfirm, profile
+		from user
+		where user_id = #{userId}
+	</select>
+	
+	<!-- 회원상세 -->
+	<select id="findUsers" resultType="UserResponse">
+		select user_id as userId, nickname, email, active, created, deleted, email_confirm emailConfirm, profile from user
+	</select>
+	
+
+	
+
+	
+	<!-- 사용자 nickname로 검색 -->
+	<select id="findUserByNickname" resultType="User">
+		select user_id as userId, nickname, email, password, active, created, deleted
+		from user
+		where upper(nickname) = upper(#{nickname})
+	</select>
+	<!-- 사용자 email로 검색 -->
+	<select id="findUserByEmailAddress" resultType="User">
+		select user_id as userId, nickname, email, password, active, created, deleted
+		from user
+		where upper(email) = upper(#{email})
+	</select>
+	
+
+	
 	<!-- 사용자 권한 입력 -->
 	<insert id="insertRole" parameterType="map">
 		insert into user_role
@@ -50,14 +81,69 @@
 	</insert>
 	
 	<!-- like 닉네임 으로 사용자 검색 -->
-	<select id="findUsersByLikeNickname" resultType="UserResponse">
-		select user_id as userId, nickname, email
-		from user
-		where nickname like concat('%', #{nickname},'%');
+	<select id="findUsersByLikeSearchText" resultType="UserResponse">
+		SELECT 
+		    a.user_id userId, a.nickname, a.email, a.profile
+		FROM
+		    (SELECT user_id, nickname, email, nickname AS val, profile
+		    FROM user
+		    WHERE
+		        UPPER(nickname) LIKE CONCAT(UPPER(#{search}), '%')
+		    UNION ALL
+		    SELECT user_id, nickname, email, email AS val, profile
+		    FROM user
+		    WHERE
+		        UPPER(email) LIKE CONCAT(UPPER(#{search}), '%')
+		    ) a
+		WHERE
+		    NOT EXISTS( SELECT 1
+		        FROM lecture_auth la
+		        WHERE la.user_id = a.user_id AND la.lecture_id = #{lectureId} AND la.delete_yn = 'N')
+		GROUP BY a.user_id , a.nickname , a.email
+		ORDER BY a.val
+		LIMIT 0 , 10;
 	</select>
 	
-	<!-- 서비스를 이용하는 사용자 누적수 -->
-	<select id="getUsersCount" resultType="Integer">
-		select count(1) from user
+	<!-- 회원정보 수정 -->
+	<update id="updateUserInfo">
+		UPDATE user 
+		SET 
+		    nickname = if(#{modifyType}='nickname', #{nickname}, nickname),
+		    profile = if(#{modifyType}='profile', #{profile}, profile),
+		    password = if(#{modifyType}='password', #{newPassword}, password)
+		WHERE
+		    user_id = #{userId};
+	</update>
+	
+	<!-- 회원비밀번호 -->
+	<select id="getUserPasswordByUserId" resultType="String">
+		select password
+		  from user
+		 where user_id = #{userId};
+	</select>
+	
+	<!-- 유저 admin 여부 -->
+	<select id="getUserIsAdmin" resultType="String">
+		select case when exists (select 1 from user_role where user_id = #{userId} and user_role = 'ROLE_ADMIN') then 'Y' else 'N' end as isAdmin
+  		  from dual;
+	</select>
+	
+	
+	<!-- 회원 탈퇴 -->
+	<update id="userWithdraw">
+		UPDATE user 
+		SET 
+		    active = 'N'
+		WHERE
+		    user_id = #{userId};
+	</update>
+	
+	
+	<!-- 사용자 Email로  활성화 여부 -->
+	<select id="findUserActiveByEmail" resultType="String">
+		SELECT 
+		    u.active
+		FROM user u
+		WHERE email = #{email};
 	</select>
 </mapper>
