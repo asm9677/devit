@@ -348,6 +348,11 @@ export default {
                     if(data.result.tagName != null) {
                         this.tags = data.result.tagName.split(',')
                     }
+                    if(this.type < 100 && this.type > 0){
+                        this.category = 0;
+                    }else if(this.type > 100){
+                        this.category = 1;
+                    }
                     this.commonId = data.result.commonId;
                 }
             })
