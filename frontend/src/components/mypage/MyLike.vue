@@ -70,7 +70,7 @@
                     </v-hover>
                 </slide>
             </carousel-3d>
-        <div style="width:100%;">
+        <div style="width:100%; margin-top:100px;">
             <span style="font-size:20px; font-weight:600; color:#1976d2 !important">내가 좋아요한 프로젝트</span>
             <span style="float:right; font-size:14px; color:#585858; cursor:pointer" @click="goToLectureList">더보기</span>
         </div>
@@ -335,4 +335,6 @@
         box-shadow: 0 3px 1px -2px rgba(0,0,0,.2), 0 2px 2px 0 rgba(0,0,0,.14), 0 1px 5px 0 rgba(0,0,0,.12);
         border-radius: 4px;
     }
+
+    
 </style>
