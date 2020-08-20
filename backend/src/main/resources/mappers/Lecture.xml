@@ -70,7 +70,7 @@
 		    l.type = #{type}
 		  and l.deleted_flag = 'N'
 		GROUP BY l.lecture_id
-		ORDER BY l.lecture_id
+		ORDER BY IFNULL(likeCount, 0) desc, l.lecture_id desc
 		LIMIT #{startPage}, 20;
 	</select>
 	
@@ -865,6 +865,8 @@
              lsh.play_time playTime, 
              lsh.wiki_content wikiContent, 
              lsh.wiki_content_html wikiContentHtml, 
+             lsh_org.wiki_content indexWikiContent,
+             lsh_org.wiki_content_html indexWikiContentHtml,
              lsh.sub_his_id subHisId,
              CASE
 		        WHEN lsh.sub_his_id = lsi.wiki_id or lsh.sub_his_id = lsi.video_id THEN TRUE
@@ -884,6 +886,11 @@
 	         lecture l
 	         on
 	         lsh.lecture_id = l.lecture_id
+	         LEFT OUTER JOIN
+	         lecture_sub_history lsh_org
+	         ON
+	         lsh_org.sub_his_id = lsi.wiki_id AND 
+	         lsh_org.req_type = 'wiki'
 	   WHERE 1=1 
 	     AND lsh.user_id = #{userId}
 	     and lsh.req_type in ('video', 'wiki')
