@@ -75,6 +75,10 @@ public interface LectureRepository {
 	@Transactional
 	public void updateLectureAuth(LectureAuthRequest request) throws Exception;
 	
+	//강의 소유자 변경
+	@Transactional
+	public void changeLectureOwner(LectureAuthRequest request) throws Exception;
+	
 	// 공동 관리자 제거
 	@Transactional
 	public void deleteLectureAuth(@Param("authId") long authId) throws Exception;

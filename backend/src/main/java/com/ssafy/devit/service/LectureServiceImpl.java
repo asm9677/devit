@@ -241,6 +241,10 @@ public class LectureServiceImpl implements LectureService {
 			throw new Exception("로그인이 필요합니다");
 		}
 		for (LectureAuthRequest auth : auths) {
+			if("Owner".equals(auth.getLectureRole())) { //Owner 권한 위임 시 lecture.user_id 변경
+				lectureRepository.changeLectureOwner(auth);
+			}
+			
 			if (auth.getAuthId() == 0) { // 서버에 등록되어있지 않은 사람
 				lectureRepository.insertLectureAuth(auth);
 			} else { // 서버에 등록되어있는 사람
