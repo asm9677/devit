@@ -18,7 +18,7 @@
                 <v-row
                     justify="start"
                     align="center"             
-                    style="max-width:1380px; margin:0px auto; height:400px;"   
+                    style="max-width:1180px; margin:0px auto; height:400px;"   
                 >
                     <v-col :cols="6">
                         <div style="color:#333333; font-size:32px; font-weight:bold; margin-bottom: 8px;">{{ title }}</div>

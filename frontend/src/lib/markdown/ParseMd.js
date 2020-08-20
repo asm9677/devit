@@ -4,6 +4,7 @@ export default function(md){
     if(!md)
         return '';
     md = md.replace(/^\>(.+)/gm, '<blockquote>$1</blockquote>');
+    md = md.replace(/[\`]{3}([^\`]+)[\`]{3}/g, '<pre>$1</pre>');
     
     //h
     md = md.replace(/[\#]{6}(.+)/g, '<h6>$1</h6>');
@@ -16,6 +17,8 @@ export default function(md){
     //alt h
     md = md.replace(/^(.+)\n\=+/gm, '<h1>$1</h1>');
     md = md.replace(/^(.+)\n\-+/gm, '<h2>$1</h2>');
+
+
     
     //images
     md = md.replace(/\!\[([^\]]+)\]\(([^\)]+)\)/g, '<img src="$2" alt="$1" />');
@@ -30,7 +33,8 @@ https://vimeo.com/321466973
     md = md.replace(/[\[]{1}([^\]]+)[\]]{1}[\(]{1}([^\)\"]+)(\"(.+)\")?[\)]{1}/g, '<a href="$2" title="$4">$1</a>');
     
     
-    md = md.replace(/[\`]{3}([^\`]+)[\`]{3}/g, '<pre>$1</pre>');
+    
+
 
     //font styles
     md = md.replace(/[\*\_]{3}([^\*\_]+)[\*\_]{3}/g, '<u>$1</u>');
@@ -38,9 +42,11 @@ https://vimeo.com/321466973
     md = md.replace(/[\_]{1}([^\_]+)[\_]{1}/g, '<i>$1</i>');
     md = md.replace(/[\~]{2}([^\~]+)[\~]{2}/g, '<del>$1</del>');
     
-    //pre
-    md = md.replace(/^\s*\n\`\`\`(([^\s]+))?/gm, '<pre class="$2">');
-    md = md.replace(/^\`\`\`\s*\n/gm, '</pre>\n\n');
+//             //pre
+// md = md.replace(/^\s*\n\`\`\`(([^\s]+))?/gm, '<pre class="$2">');
+// md = md.replace(/^\`\`\`\s*\n/gm, '</pre>\n\n');
+    
+
     
     //code
     

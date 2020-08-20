@@ -261,7 +261,7 @@ export default {
         updateChapter() {
             let request = []
             for(let i in this.chapter) {
-                if(this.chapter[i].order != parseInt(i)+1){
+                if(parseInt(this.chapter[i].order) != parseInt(i)+1){
                     request.push({
                         "commonId": this.chapter[i].commonId,
                         "lectureId": this.lectureId,
@@ -284,6 +284,7 @@ export default {
             }                        
             
             this.removeChapter = []
+            
             http.axios.post('/api/v1/lectures/sub', request).then(({data}) => {                
                 this.$router.app.$store.commit('setChange', false); 
             }).finally(() => {

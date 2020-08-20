@@ -67,6 +67,10 @@ export default {
         },        
         hideTab(){
             
+        },
+        value()
+        {
+            // console.dir(this.parse(this.value))
         }
     },
     data() {
