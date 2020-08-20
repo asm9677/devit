@@ -4,7 +4,7 @@
             cycle
             height="400"
             hide-delimiter-background
-            show-arrows-on-hover
+            interval="7000"
         >
             <v-carousel-item
             v-for="(title, i) in titles"
@@ -13,24 +13,20 @@
             <v-sheet
                 :color="colors[i]"
                 height="100%"
+                style="background-color:#87ceeb26;"
             >
-                <v-row>
-
-                </v-row>
                 <v-row
                     justify="start"
                     align="center"             
-                    style="max-width:1180px; margin:0px auto; height:400px; "   
+                    style="max-width:1180px; margin:0px auto; height:400px;"   
                 >
                     <v-col :cols="6">
                         <div style="color:#333333; font-size:32px; font-weight:bold; margin-bottom: 8px;">{{ title }}</div>
                         <div style="color:#333333; font-size:16px;" v-html="contents[i]"></div>
                     </v-col>
                     <v-col :cols="6">
-                        <v-img src="https://themes.3rdwavemedia.com/coderpro/bs4/2.0/assets/images/promo-figure-alt.svg" />
+                        <v-img :src="`/${images[i]}`" height="400" contain />
                     </v-col>
-                </v-row>
-                    
                 </v-row>
             </v-sheet>
             </v-carousel-item>
@@ -388,8 +384,13 @@
                 ],
                 contents: [
                     '누구나 만들고 수정할 수 있는 참여형 강의 플랫폼입니다. 다른 사람의 강의에 부족한 점이 있거나 잘못된 정보가 있다면 자유롭게 추가/수정하여 강의의 품질을 높여보세요.',
-                    '아직도 강의를 처음부터 순서대로 들으시나요? 필요한 챕터만 골라서 듣고 시간을 절약해보세요.',
+                    '아직도 강의를 처음부터 순서대로 들으시나요? 필요한 챕터만 골라서 듣고 시간을 절약해보세요. 이해가 안된다구요? 걱정하지마세요. 보충 강의도 있답니다.',
                     '강의를 수강하며 이해가 되지 않는다면, 혹은 홀로 개발을 하다 막힌다면 바로 질문게시판에 질문을 올려보세요. 강의를 올린 사람 뿐만 아니라 다양한 분야의 베테랑 개발자님들께 답변을 받을 수 있답니다.'
+                ],
+                images: [
+                    'main1.jpg',
+                    'main2.png',
+                    'main3.png',
                 ],
                 letureItems: [], videoItems: [], 
                 totalUsers: "",
