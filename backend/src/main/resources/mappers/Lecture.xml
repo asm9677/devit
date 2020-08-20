@@ -297,6 +297,13 @@
 		SET lecture_role = #{lectureRole}, modified = now()
 		WHERE auth_id = #{authId}
 	</update>
+
+	<!-- 프로젝트 소유자 변경 -->
+	<update id="changeLectureOwner">
+		UPDATE lecture
+		SET user_id = #{userId}, modified = now()
+		WHERE lecture_id = #{lectureId}
+	</update>
 	
 	<!-- 프로젝트 권한 제거 -->
 	<update id="deleteLectureAuth">
