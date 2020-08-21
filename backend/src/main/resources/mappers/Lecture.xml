@@ -941,11 +941,20 @@
              SELECT lecture_id, COUNT(1) AS likeCount
 			   FROM lecture_like
 			  WHERE like_flag = 'Y'
-				AND modified between DATE_ADD(now(), INTERVAL -7 DAY) and now()
 		   GROUP BY lecture_id
-			) ll 
+			) ll
             ON 
             l.lecture_id = ll.lecture_id
+			LEFT OUTER JOIN
+		    (
+             SELECT lecture_id, COUNT(1) AS likeCountInWeek
+			   FROM lecture_like
+			  WHERE like_flag = 'Y'
+				AND modified between DATE_ADD(now(), INTERVAL -7 DAY) and now()
+		   GROUP BY lecture_id
+			) lcw
+            ON 
+            l.lecture_id = lcw.lecture_id
 		    LEFT OUTER JOIN
 		    (
              SELECT common_id, GROUP_CONCAT(tag_name) tagName
@@ -957,8 +966,8 @@
 	  WHERE 1=1
 		AND l.deleted_flag = 'N'
    GROUP BY l.lecture_id
-   ORDER BY likeCount desc, l.lecture_id desc
-	  LIMIT 1, 6;
+   ORDER BY likeCountInWeek desc, l.lecture_id desc
+	  LIMIT 0, 6;
       </select>
       
       
@@ -991,17 +1000,28 @@
              SELECT COUNT(1) like_count, lecture_id, sub_id, sub_his_id
 			   FROM lecture_sub_his_like lshl
 			  WHERE like_flag = 'Y'
-				AND modified between DATE_ADD(now(), INTERVAL -7 DAY) and now()
 		   GROUP BY sub_id, sub_his_id
             ) lg 
             ON 
             lsh.lecture_id = lg.lecture_id AND 
             lsh.sub_id = lg.sub_id AND 
             lsh.sub_his_id = lg.sub_his_id
+			LEFT OUTER JOIN
+		    (
+             SELECT COUNT(1) likeCntInWeek, lecture_id, sub_id, sub_his_id
+			   FROM lecture_sub_his_like lshl
+			  WHERE like_flag = 'Y'
+				AND modified between DATE_ADD(now(), INTERVAL -7 DAY) and now()
+		   GROUP BY sub_id, sub_his_id
+            ) lgw
+            ON 
+            lsh.lecture_id = lgw.lecture_id AND 
+            lsh.sub_id = lgw.sub_id AND 
+            lsh.sub_his_id = lgw.sub_his_id
 	  WHERE lsh.player_url IS NOT NULL
 	    and lsh.delete_yn = 'N'
-   ORDER BY likeCount desc, lsh.sub_his_id desc
-	  LIMIT 1, 6;
+   ORDER BY likeCntInWeek desc, lsh.sub_his_id desc
+	  LIMIT 0, 6;
 	</select>
 			
 		
