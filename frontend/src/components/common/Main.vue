@@ -472,6 +472,7 @@
                 .get(`/api/v1/commons/main/bestVideos`)
                 .then(({data}) => {
                     this.videoItems = data.result;
+                    console.dir(data)
                 })
             },
             getDevitStatus(){
