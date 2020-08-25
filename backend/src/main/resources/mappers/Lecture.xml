@@ -343,7 +343,7 @@
 		    lshv.thumbnail_url thumbnailUrl,
 		    <![CDATA[
 		    	if(1 < #{order}, true, false) prePage,
-            	if(#{order} < (SELECT COUNT(1) FROM lecture_sub_index WHERE lecture_id = 106 AND lecture_sub_index.order != 0), true, false) tailPage,
+            	if(#{order} < (SELECT COUNT(1) FROM lecture_sub_index WHERE lecture_id = #{lectureId} AND lecture_sub_index.order != 0), true, false) tailPage,
 		    ]]>
 			(SELECT COUNT(1) FROM lecture_sub_index WHERE lecture_id = #{lectureId} AND lecture_sub_index.order != 0) AS lectureCount,
 		    CASE
