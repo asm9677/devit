@@ -244,7 +244,7 @@ Notion으로 오세요! [DevIT Up! - 참여형 강의 플랫폼](https://www.not
 ## Video
 > 아래 이미지를 클릭하면 시연 영상을 시청할 수 있습니다.
 
-[<img src="./img/logo.png" width=70%>](https://youtu.be/HwFIETCquiU)
+[<img src="./image/logo.png" width=70%>](https://youtu.be/HwFIETCquiU)
 
 
 
